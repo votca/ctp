@@ -69,7 +69,7 @@ void PDB2Map::Initialize(Property* options)
 {   
 
     // update options with the VOTCASHARE defaults   
-    //    UpdateWithDefaults( options );
+    //    UpdateWithDefaults( options, "ctp" );
     
     // fill in periodic table
     el2mass["H"]        = 1;

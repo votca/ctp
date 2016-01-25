@@ -10,7 +10,7 @@ namespace votca { namespace ctp {
 void JobWriter::Initialize(Property *options) {   
     
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options );
+    UpdateWithDefaults( options, "ctp" );
 
     // REGISTER FUNCTIONS
     _key_funct["mps.single"] = &JobWriter::mps_single;

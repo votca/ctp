@@ -58,7 +58,7 @@ void IImport::Initialize(Property *options) {
     _importFromIDFT = false;
 
      // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options );
+    UpdateWithDefaults( options, "ctp" );
     
     string key = "options." + Identify();
 

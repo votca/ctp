@@ -90,7 +90,7 @@ complex <double> cgamma (complex <double> argument)
 void Rates::Initialize(Property *options) {
 
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options );
+    UpdateWithDefaults( options, "ctp" );
     std::string key = "options." + Identify();
 
     /* ---- OPTIONS.XML Structure -----
