@@ -17,9 +17,28 @@ enable_language(CXX)
 
 include(CheckCXXCompilerFlag)
 
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set ( OMP TRUE )
+endif()
+
+
 ########################################################################
 # User input options                                                   #
 ########################################################################
+
+
+find_package(LIBXC)
+if (LIBXC_FOUND)
+        include_directories(${LIBXC_INCLUDE_DIRS})
+        set (LIBXC TRUE )
+else()
+        set(LIBXC_LIBRARIES)
+endif()
+
+
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
 if (NOT DEFINED LIB)
   set(LIB "lib")
@@ -58,6 +77,7 @@ if(NOT TARGET manpages)
   add_custom_target(manpages ALL)
 endif()
 
+
 #message(STATUS "BOOST_LIBRARIES='${BOOST_LIBRARIES}'")
 
 find_package(VOTCA_TOOLS REQUIRED)
@@ -74,8 +94,6 @@ option(WITH_LINALG "Checking which BLAS libraries are installed" ON)
 if (WITH_LINALG)
 
   find_package(Eigen)
-  find_package(GSL)
-  find_package(MKL)
 
 
   if (EIGEN_FOUND) 
@@ -89,6 +107,11 @@ if (WITH_LINALG)
 
   set(MKL FALSE)
   set(GSL FALSE)
+
+  #find_package(GSL)
+  find_package(MKL)
+
+
   if (MKL_FOUND AND CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message("-- MKL found, overloading uBLAS prod()")
     set(MKL TRUE) #used in votca_ctp_config.h
@@ -140,7 +163,5 @@ add_subdirectory(include/votca/ctp)
 add_subdirectory(scripts)
 add_subdirectory(src/libctp)
 add_subdirectory(src/tools)
-#add_subdirectory(src/dipro)
-#add_subdirectory(share/scripts/dipro) 
 add_subdirectory(share)  
 add_subdirectory(share/man)

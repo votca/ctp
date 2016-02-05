@@ -71,6 +71,8 @@ public:
    
    void doGetCharges(bool do_get_charges) { _get_charges = do_get_charges; }
    
+   string getBasisSetName(){return _basisset_name;}
+   
 protected:
 
     int                                 _charge;
@@ -87,6 +89,7 @@ protected:
     
     string                              _run_dir;
         
+    string                              _basisset_name;
     list< string >                      _cleanup_list;
     
     bool                                _get_orbitals;

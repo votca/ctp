@@ -368,7 +368,9 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
            _store_integrals = false; 
            LOG(logINFO,*pLog) << "Not storing integrals" << flush;           
        } else {
-           _orbitalsAB.setIntegrals( &_JAB );
+           // _orbitalsAB.setIntegrals( &_JAB );
+           ub::matrix<double>& _JAB_store = _orbitalsAB.MOCouplings();
+           _JAB_store = _JAB;
        }
 
        _orbitalsAB.setStorage( _store_orbitals, _store_overlap, _store_integrals );
