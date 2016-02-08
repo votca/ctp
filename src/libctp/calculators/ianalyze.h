@@ -47,7 +47,7 @@ private:
 void IAnalyze::Initialize(Property *opt) {
 
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( opt, "ctp" );
+    UpdateWithDefaults( opt );
     string key = "options." + Identify();
  
     _resolution_logJ2 = opt->get(key+".resolution_logJ2").as< double >();

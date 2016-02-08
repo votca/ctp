@@ -34,7 +34,7 @@ private:
 void PairDump::Initialize(Property *options) {
 
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options, "ctp" );
+    UpdateWithDefaults( options );
     string key = "options." + Identify();
     
     int useQMPos = options->get(key+".useQMcoords").as< int >();

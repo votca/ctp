@@ -44,7 +44,7 @@ public:
 void Sandbox::Initialize(Property *options) {
 
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options, "ctp" );
+    UpdateWithDefaults( options );
 
     _nThreads = 1;
 

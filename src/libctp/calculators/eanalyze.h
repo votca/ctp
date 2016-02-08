@@ -51,7 +51,7 @@ private:
 void EAnalyze::Initialize( Property *opt ) {
 
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( opt, "ctp" );
+    UpdateWithDefaults( opt );
     string key = "options." + Identify();
 
     _resolution_pairs = opt->get(key+".resolution_pairs").as< double >();

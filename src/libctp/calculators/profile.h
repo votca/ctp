@@ -49,7 +49,7 @@ private:
 void Profile::Initialize(Property *options) {
     
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options, "ctp" );
+    UpdateWithDefaults( options );
 
     string key      = "options." + Identify();
     

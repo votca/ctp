@@ -70,7 +70,7 @@ private:
 void StateServer::Initialize(Property *opt) {
     
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( opt, "ctp" );
+    UpdateWithDefaults( opt );
 
     string tag = "options.stateserver";
 
