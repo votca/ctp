@@ -42,6 +42,11 @@ public:
     virtual void    Initialize(Property *options) = 0;
     virtual bool    EvaluateFrame(CTP::Topology *top) { return true; }
     virtual void    EndEvaluate(CTP::Topology *top) { }
+    
+    void UpdateWithDefaults( TOOLS::Property *options ) {
+        TOOLS::Calculator::UpdateWithDefaults(options, "ctp");
+    }
+    
 
 protected:
 

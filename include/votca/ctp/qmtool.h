@@ -23,12 +23,12 @@
 
 
 #include <votca/tools/property.h>
-#include <votca/tools/calculator.h>
+#include <votca/ctp/qmcalculator.h>
 #include <boost/format.hpp>
 
 namespace votca { namespace ctp {
 
-class QMTool : public votca::tools::Calculator
+class QMTool : public QMCalculator
 {
 public:
 
