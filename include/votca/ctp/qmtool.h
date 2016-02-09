@@ -28,7 +28,7 @@
 
 namespace votca { namespace ctp {
 
-class QMTool : public votca::ctp::Calculator
+class QMTool : public votca::tools::Calculator
 {
 public:
 
