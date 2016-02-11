@@ -115,22 +115,28 @@ bool Coupling::Evaluate() {
      Orbitals _orbitalsA, _orbitalsB, _orbitalsAB;
   
     _qmpackage->setOrbitalsFileName( _orbA );
-    int _parse_orbitalsA_status = _qmpackage->ParseOrbitalsFile( &_orbitalsA );
+    bool _parse_orbitalsA_status = _qmpackage->ParseOrbitalsFile( &_orbitalsA );
+    if ( !_parse_orbitalsA_status ) { LOG(logERROR,_log) << "Failed to read orbitals of molecule A" << std::flush; }
 
     _qmpackage->setOrbitalsFileName( _orbB );   
-    int _parse_orbitalsB_status = _qmpackage->ParseOrbitalsFile( &_orbitalsB );
+    bool _parse_orbitalsB_status = _qmpackage->ParseOrbitalsFile( &_orbitalsB );
+    if ( !_parse_orbitalsB_status ) { LOG(logERROR,_log) << "Failed to read orbitals of molecule B" << std::flush; }
     
     _qmpackage->setOrbitalsFileName( _orbAB );   
-    int _parse_orbitalsAB_status = _qmpackage->ParseOrbitalsFile( &_orbitalsAB );
-    
+    bool _parse_orbitalsAB_status = _qmpackage->ParseOrbitalsFile( &_orbitalsAB );
+     if ( !_parse_orbitalsAB_status ) { LOG(logERROR,_log) << "Failed to read orbitals of dimer AB" << std::flush; }
+   
     _qmpackage->setLogFileName( _logA );
-    int _parse_logA_status = _qmpackage->ParseLogFile( &_orbitalsA );
+    bool _parse_logA_status = _qmpackage->ParseLogFile( &_orbitalsA );
+    if ( !_parse_logA_status ) { LOG(logERROR,_log) << "Failed to read log of molecule A" << std::flush; }
     
     _qmpackage->setLogFileName( _logB );
-    int _parse_logB_status = _qmpackage->ParseLogFile( &_orbitalsB );
+    bool _parse_logB_status = _qmpackage->ParseLogFile( &_orbitalsB );
+    if ( !_parse_logB_status ) { LOG(logERROR,_log) << "Failed to read log of molecule B" << std::flush; }
     
     _qmpackage->setLogFileName( _logAB );
-    int _parse_logAB_status = _qmpackage->ParseLogFile( &_orbitalsAB );
+    bool _parse_logAB_status = _qmpackage->ParseLogFile( &_orbitalsAB );
+    if ( !_parse_logAB_status ) { LOG(logERROR,_log) << "Failed to read log of molecule AB" << std::flush; }
 
     if ( _orbitalsA.getNumberOfElectrons()*(_trimA-1) <   _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() ){
 
@@ -152,7 +158,9 @@ bool Coupling::Evaluate() {
     _overlap.setLogger(&_log);
           
     ub::matrix<double> _JAB;
-     bool _calculate_integrals = _overlap.CalculateIntegrals( &_orbitalsA, &_orbitalsB, &_orbitalsAB, &_JAB );   
+    bool _calculate_integrals = _overlap.CalculateIntegrals( &_orbitalsA, &_orbitalsB, &_orbitalsAB, &_JAB );  
+    if ( !_calculate_integrals ) { LOG(logERROR,_log) << "Failed to evaluate integrals" << std::flush; }
+
      std::cout << _log;
  
      
