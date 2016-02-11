@@ -1026,7 +1026,10 @@ inline void AOBasis::ECPFill(BasisSet* bs , vector<QMAtom* > _atoms  ) {
 
                 // split combined shells
                 int _i_func = -1;
-                int i_act;
+                
+                //[-Wunused-variable]
+                //int i_act;
+                
                 for (int i = 0; i < shell_type.length(); ++i) {
                     string single_shell = string(shell_type, i, 1);
                     // single type shells

@@ -407,7 +407,9 @@ bool BSECoupling::CalculateCouplings(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     int _levelsB = _orbitalsB->getNumberOfLevels();
     
     boost::timer t; // start timing
-    double _st = t.elapsed();
+    
+    //[-Wunused-variable]
+    //double _st = t.elapsed();
         
     // get exciton information of molecule A
     int _bseA_cmax        = _orbitalsA->getBSEcmax();

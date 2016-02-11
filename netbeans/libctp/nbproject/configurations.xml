@@ -234,6 +234,7 @@
       <itemPath>../../src/libctp/qmmachine.cc</itemPath>
       <itemPath>../../src/libctp/qmtool.cc</itemPath>
       <itemPath>../../src/libctp/statesaversqlite.cc</itemPath>
+      <itemPath>../../src/libctp/threecenter_rep.cc</itemPath>
       <itemPath>../../src/libctp/threecenters.cc</itemPath>
       <itemPath>../../src/libctp/threecenters_dft.cc</itemPath>
       <itemPath>../../src/libctp/threecenters_tools.cc</itemPath>
@@ -931,6 +932,11 @@
       <item path="../../src/libctp/sqlapplication.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/statesaversqlite.cc"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/libctp/threecenter_rep.cc"
             ex="false"
             tool="1"
             flavor2="0">
@@ -1672,6 +1678,11 @@
       <item path="../../src/libctp/sqlapplication.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/statesaversqlite.cc"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/libctp/threecenter_rep.cc"
             ex="false"
             tool="1"
             flavor2="0">

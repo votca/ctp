@@ -216,6 +216,8 @@ namespace votca {
                 _gwbse.Initialize(&_gwbse_options);
                 _gwbse.setLogger(pLog);
                 bool _evaluate = _gwbse.Evaluate(&_orbitals);
+                
+                if ( !_evaluate ) { LOG(logDEBUG, *pLog) << " GWBSE failed " << flush; }
 
             }
 

@@ -242,8 +242,8 @@ namespace votca {
 	    */
 
 
-
-           int size4c=_dftbasis.AOBasisSize();
+           //[-Wunused-variable]
+           //int size4c=_dftbasis.AOBasisSize();
 
            LOG(logDEBUG, *_pLog) << TimeStamp() << " Setup Initial Guess "<< flush;
            LOG(logDEBUG, *_pLog) << TimeStamp() << " Num of electrons "<< _gridIntegration.IntegrateDensity(_dftAOdmat, basis) << flush;

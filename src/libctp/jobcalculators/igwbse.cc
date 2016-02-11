@@ -284,6 +284,7 @@ Job::JobResult IGWBSE::EvalJob(Topology *top, Job *job, QMThread *opThread) {
         _gwbse.setLogger(pLog);
         _gwbse.Initialize( &_gwbse_options );
         bool _evaluate = _gwbse.Evaluate( &_orbitalsAB );
+        if ( !_evaluate ) { LOG(logERROR,*pLog) << "Failed GWBSE " << flush;  }
         // std::cout << *pLog;
     } // end of excited state calculation, exciton data is in _orbitalsAB
 
@@ -765,17 +766,23 @@ void IGWBSE::ReadJobFile(Topology *top) {
                 list<Property*> pOverlapB = pBridge_B->Select("overlap");
 
                 // IDs of the Donor and Acceptor
-                int IdA = segmentA->getId();
-                int IdB = segmentB->getId();
+                
+                //[-Wunused-variable]
+                //int IdA = segmentA->getId();
+                //int IdB = segmentB->getId();
 
 
                                 
                 // IDs stored in the file
                 int id1A = pBridge_A->getAttribute<int>("idA");
-                int id2A = pBridge_A->getAttribute<int>("idB");
+                
+                //[-Wunused-variable]
+                //int id2A = pBridge_A->getAttribute<int>("idB");
 
                 int id1B = pBridge_B->getAttribute<int>("idA");
-                int id2B = pBridge_B->getAttribute<int>("idB");
+                
+                //[-Wunused-variable]
+                //int id2B = pBridge_B->getAttribute<int>("idB");
 
                 // suffix for the donor and acceptor 
                 string suffixA = ( id1A == IDBridge ) ? "B" : "A"; // use "A" as a bridge 
@@ -791,7 +798,8 @@ void IGWBSE::ReadJobFile(Topology *top) {
                 //double check if the records are correct
                 int homoBridgeA = pBridge_A->getAttribute<int>("homo" + suffixBridgeA );
                 int homoBridgeB = pBridge_B->getAttribute<int>("homo" + suffixBridgeB );
-                assert( homoBridgeA == homoBridgeB );
+                
+                if ( homoBridgeA != homoBridgeB ) assert( homoBridgeA == homoBridgeB );
                 int homoBridge = homoBridgeA;
                
                 //exit(0);

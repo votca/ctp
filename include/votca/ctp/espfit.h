@@ -68,7 +68,9 @@ public:
        // _TholeEwaldatGrid = TholeEwald2Grid( _gridpoints );
        
        Grid Fittingcenters;
-       double _netcharge=0.0;
+       
+       //[-Wunused-variable]
+       //double _netcharge=0.0;
        
 
        

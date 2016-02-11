@@ -394,7 +394,8 @@ bool Orbitals::Load(string file_name) {
            }
      }
      
-     int _bse_total = this->_bse_size;
+     //[-Wunused-variable]
+     //int _bse_total = this->_bse_size;
      
      
      

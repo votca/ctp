@@ -108,8 +108,9 @@ namespace votca { namespace ctp {
        
                 if ( _exparg > 30.0 ) { continue; }
         
-        const double _fak3 = 3.0 * _fak;
-        const double _fak4 = 4.0 * _fak;
+        //[-Wunused-variable]
+        //const double _fak3 = 3.0 * _fak;
+        //const double _fak4 = 4.0 * _fak;
 
         _pma[0] = _fak2*( _decay_row * _pos_row.getX() + _decay_col * _pos_col.getX() ) - _pos_row.getX();
         _pma[1] = _fak2*( _decay_row * _pos_row.getY() + _decay_col * _pos_col.getY() ) - _pos_row.getY();

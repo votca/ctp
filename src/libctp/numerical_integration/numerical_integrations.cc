@@ -1581,7 +1581,11 @@ namespace votca {
                 
                 // now the partition function magic for this _atomgrid
                 // some parameters
-                double eps = 0.002;
+                
+                //[-Wunused-variable]   
+                //double eps = 0.002;
+                
+                
                 double ass = 0.725;
                 
                 // get all distances from grid points to centers
@@ -1639,7 +1643,9 @@ namespace votca {
                 }// bit centers
                  // cout << " Nearest neighbor of atom " << i_atom << " is atom " << i_NN << " at distance " << distNN << endl;
                 
-                double radwgh = (1.0 - ass ) * sqrt(distNN) * 0.5;
+                //[-Wunused-variable]
+                //double radwgh = (1.0 - ass ) * sqrt(distNN) * 0.5;
+                
                 /* according to SSW scheme, all gridpoints within radwgh 
                  * of its parent center have weight one, and we can skip
                  * calculating the weighting function explicitly.

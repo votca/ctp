@@ -96,6 +96,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1ce03da5/segmenttype.o \
 	${OBJECTDIR}/_ext/1ce03da5/sqlapplication.o \
 	${OBJECTDIR}/_ext/1ce03da5/statesaversqlite.o \
+	${OBJECTDIR}/_ext/1ce03da5/threecenter_rep.o \
 	${OBJECTDIR}/_ext/1ce03da5/threecenters.o \
 	${OBJECTDIR}/_ext/1ce03da5/threecenters_dft.o \
 	${OBJECTDIR}/_ext/1ce03da5/threecenters_tools.o \
@@ -440,6 +441,11 @@ ${OBJECTDIR}/_ext/1ce03da5/statesaversqlite.o: nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce03da5/statesaversqlite.o ../../src/libctp/statesaversqlite.cc
+
+${OBJECTDIR}/_ext/1ce03da5/threecenter_rep.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libctp/threecenter_rep.cc 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce03da5/threecenter_rep.o ../../src/libctp/threecenter_rep.cc
 
 ${OBJECTDIR}/_ext/1ce03da5/threecenters.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libctp/threecenters.cc 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5

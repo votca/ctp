@@ -256,6 +256,9 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
 
         // for GW-BSE, we also need to parse the orbitals file
         int _parse_orbitals_status = _qmpack->ParseOrbitalsFile( &orb_iter_output );
+        if ( _parse_orbitals_status != 0 ) LOG(logERROR,*_log) << "Error parsing orbitals " << flush; 
+
+        
         std::vector<int> _state_index;
        _gwbse.Initialize( &_gwbse_options );
       if ( _state > 0 ){
@@ -281,6 +284,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
         // actual GW-BSE run
 
         bool _evaluate = _gwbse.Evaluate( &orb_iter_output );
+        if ( !_evaluate ) LOG(logERROR,*_log) << "Failed GWBSE " << flush; 
         
        
         // write logger to log file
@@ -329,7 +333,10 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
             std::vector<int> _state_index_copy;
              // go through list of singlets
             const std::vector<double>& dQ_fragA = orb_iter_output.FragmentAChargesEXC();
-            const std::vector<double>& dQ_fragB = orb_iter_output.FragmentBChargesEXC();
+            
+            //[-Wunused-variable]
+            //const std::vector<double>& dQ_fragB = orb_iter_output.FragmentBChargesEXC();
+            
             for (int _i=0; _i < _state_index.size(); _i++ ) {
                 if ( std::abs(dQ_fragA[_i]) > _dQ_threshold ) {
                     _state_index_copy.push_back(_state_index[_i]);

@@ -797,7 +797,7 @@ void IDFT::ReadJobFile(Topology *top) {
                 //double check if the records are correct
                 int homoBridgeA = pBridge_A->getAttribute<int>("homo" + suffixBridgeA );
                 int homoBridgeB = pBridge_B->getAttribute<int>("homo" + suffixBridgeB );
-                assert( homoBridgeA == homoBridgeB );
+                if ( homoBridgeA != homoBridgeB ) assert( homoBridgeA == homoBridgeB );
                 int homoBridge = homoBridgeA;
                
                 //exit(0);

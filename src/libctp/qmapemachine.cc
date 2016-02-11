@@ -133,7 +133,11 @@ void QMAPEMachine<QMPackage>::Evaluate(XJob *job) {
     int iterMax = _maxIter;
     for ( ; iterCnt < iterMax; ++iterCnt) {
         
-        bool code = Iterate(jobFolder, iterCnt);
+        
+        //[-Wunused-variable]
+        //bool code = Iterate(jobFolder, iterCnt);
+       
+        Iterate(jobFolder, iterCnt);       
         if (hasConverged()) { break; }
     }
     
@@ -348,7 +352,12 @@ template<class QMPackage>
 bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 
 	// for GW-BSE, we also need to parse the orbitals file
-	int _parse_orbitals_status = _qmpack->ParseOrbitalsFile(&orb);
+    
+        //[-Wunused-variable]
+	//int _parse_orbitals_status = _qmpack->ParseOrbitalsFile(&orb);
+        
+        _qmpack->ParseOrbitalsFile(&orb);
+        
 	std::vector<int> _state_index;
 	_gwbse.Initialize( &_gwbse_options );
 	if ( _state > 0 ){
@@ -373,8 +382,10 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 
 	// actual GW-BSE run
 
-	bool _evaluate = _gwbse.Evaluate(&orb);
+        //[-Wunused-variable]
+	//bool _evaluate = _gwbse.Evaluate(&orb);
 
+        _gwbse.Evaluate(&orb);
 
 	// write logger to log file
 	ofstream ofs;
@@ -422,7 +433,10 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 		std::vector<int> _state_index_copy;
 		 // go through list of singlets
 		const std::vector<double>& dQ_fragA = orb.FragmentAChargesEXC();
-		const std::vector<double>& dQ_fragB = orb.FragmentBChargesEXC();
+                
+                //[-Wunused-variable]
+		//const std::vector<double>& dQ_fragB = orb.FragmentBChargesEXC();
+                
 		for (int _i=0; _i < _state_index.size(); _i++ ) {
 			if ( std::abs(dQ_fragA[_i]) > _dQ_threshold ) {
 				_state_index_copy.push_back(_state_index[_i]);

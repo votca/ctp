@@ -118,7 +118,8 @@ namespace votca { namespace ctp {
 
             }    
 
-                double boxdimx=xmax-xmin+2*_padding;
+            //[-Wunused-variable]
+            //double boxdimx=xmax-xmin+2*_padding;
                
 
                 double x=xmin-_padding;

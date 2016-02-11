@@ -981,7 +981,10 @@ void Ewald3DnD::WriteInductionStateTable() {
         ofs.open(tabfile.c_str(), ofstream::out);
         for (vector<PolarSeg*>::iterator sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
             PolarSeg *pseg = *sit1;
-            Segment *seg = _top->getSegment(pseg->getId());
+            
+            //[-Wunused-variable]
+            //Segment *seg = _top->getSegment(pseg->getId());
+            
             for (PolarSeg::iterator pit1 = pseg->begin(); pit1 < pseg->end(); ++pit1) {
                 vec fp = (*pit1)->getFieldP();
                 vec fu = (*pit1)->getFieldU();
@@ -1008,7 +1011,10 @@ void Ewald3DnD::WriteInductionStateTable() {
         }
         for (vector<PolarSeg*>::iterator sit1 = _fg_C.begin(); sit1 < _fg_C.end(); ++sit1) {
             PolarSeg *pseg = *sit1;
-            Segment *seg = _top->getSegment(pseg->getId());
+            
+            //[-Wunused-variable]
+            //Segment *seg = _top->getSegment(pseg->getId());
+            
             for (PolarSeg::iterator pit1 = pseg->begin(); pit1 < pseg->end(); ++pit1) {
                 vec fp = (*pit1)->getFieldP();
                 vec fu = (*pit1)->getFieldU();
@@ -1084,7 +1090,9 @@ void Ewald3DnD::WriteInductionStateTable() {
             PolarSeg *pseg_n = *sit2;
 
             vec dr = pseg_h->getPos() - _polar_qm0[0]->getPos();
-            double dR = votca::tools::abs(dr);
+            
+            //[-Wunused-variable]
+            //double dR = votca::tools::abs(dr);
 
             assert(pseg_h->getId() == pseg_n->getId());
             assert(pseg_h->size() == pseg_n->size());

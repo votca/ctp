@@ -98,7 +98,9 @@ namespace votca { namespace ctp {
         
             // some helpers
             const double _fak3 = 3.0 * _fak;
-            const double _fak4 = 4.0 * _fak;
+            
+            //[-Wunused-variable]
+            //const double _fak4 = 4.0 * _fak;
 
             
             if ( sqrt(_distsq) > 0.01  ){

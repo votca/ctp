@@ -203,7 +203,10 @@ namespace votca {
                 for (vector< AOShell* >::iterator _is = gwbasis.firstShell(); _is != gwbasis.lastShell(); _is++) {
                     AOShell* _shell = gwbasis.getShell(_is);
                     double decay = (*_shell->firstGaussian())->decay;
-                    int _lmax    = _shell->getLmax();
+                    
+                    //[-Wunused-variable]
+                    //int _lmax    = _shell->getLmax();
+                    
                     int _size    = _shell->getNumFunc();
                     int _start  = _shell->getStartIndex();
 

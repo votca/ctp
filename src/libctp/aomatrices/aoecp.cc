@@ -51,17 +51,21 @@ namespace votca { namespace ctp {
         /*cout << "\nAO block: "<< endl;
         cout << "\t row: " << _shell_row->getType() << " at " << _shell_row->getPos() << endl;
         cout << "\t col: " << _shell_col->getType() << " at " << _shell_col->getPos() << endl;*/
-        const double pi = boost::math::constants::pi<double>();
+        
+        //[-Wunused-variable]
+        //const double pi = boost::math::constants::pi<double>();
        
         
         // cout << _gridpoint << endl;
         // shell info, only lmax tells how far to go
-        int _lmax_row = _shell_row->getLmax();
-        int _lmax_col = _shell_col->getLmax();
+        //[-Wunused-variable]
+        //int _lmax_row = _shell_row->getLmax();
+        //int _lmax_col = _shell_col->getLmax();
 
         // set size of internal block for recursion
-        int _nrows = this->getBlockSize( _lmax_row ); 
-        int _ncols = this->getBlockSize( _lmax_col ); 
+        //[-Wunused-variable]
+        //int _nrows = this->getBlockSize( _lmax_row ); 
+        //int _ncols = this->getBlockSize( _lmax_col ); 
         
         // get shell positions
         const vec& _pos_row = _shell_row->getPos();
@@ -154,7 +158,9 @@ namespace votca { namespace ctp {
                                 // get info for this angular momentum shell
                                 const double& _decay_ecp = (*itecp)->decay;
                                 const double& _contraction_ecp = (*itecp)->contraction[0];
-                                const int& _power_ecp = (*itecp)->power;
+                                
+                                //[-Wunused-variable]
+                                //const int& _power_ecp = (*itecp)->power;
 
 
                                 
@@ -288,7 +294,9 @@ namespace votca { namespace ctp {
                 
 
                 double DFAK = 0.5 * double(N + 3);
-                double DFAKP1 = DFAK + 1.0;
+                
+                //[-Wunused-variable]
+                //double DFAKP1 = DFAK + 1.0;
 
                  //cout << np << " " << DFAK << " " << DFAKP1 << " " <<  DGAMAF << endl;
                 

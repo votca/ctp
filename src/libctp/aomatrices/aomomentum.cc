@@ -134,7 +134,9 @@ namespace votca { namespace ctp {
         
         
         const double _fak3 = 3.0 * _fak;
-        const double _fak4 = 4.0 * _fak;
+        
+        //[-Wunused-variable]
+        //const double _fak4 = 4.0 * _fak;
         
         // calculate s-s- overlap matrix element
         _ol(0,0) = pow(4.0*_decay_row*_decay_col,0.75) * pow(_fak2,1.5)*exp(-_fak2 * _decay_row * _decay_col *_distsq); // s-s element
