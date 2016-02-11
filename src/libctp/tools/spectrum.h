@@ -21,7 +21,7 @@
 #define _VOTCA_CTP_SPECTRUM_H
 
 #include <stdio.h>
-#include <boost/math/constants/constants.hpp>
+#include <votca/tools/constants.h>
 #include <votca/ctp/logger.h>
 // #include <votca/ctp/mbgft.h>
 // #include <votca/ctp/qmpackagefactory.h>
@@ -29,6 +29,8 @@
 namespace votca { namespace ctp {
     using namespace std;
     
+namespace CONV = votca::tools::conv;    
+
 class Spectrum : public QMTool
 {
 public:
@@ -67,7 +69,7 @@ private:
     
     double _fwhm; // in eV
     double _shiftby; 
-    const double _rydtoev = 13.6058;  
+    //const double CONV::rydtoev = votca::tools::conv::rydtoev;  
     
     string _spectrum_type;
     // lineshape functions
@@ -163,7 +165,7 @@ bool Spectrum::Evaluate() {
     }
  
   
-    LOG(logDEBUG, _log) << " Considering " << _n_exc << " excitation with max energy " << BSESingletEnergies[_maxexc] * _rydtoev << " eV / min wave length " <<  evtonm(BSESingletEnergies[_maxexc-1] * _rydtoev) << " nm" << flush;
+    LOG(logDEBUG, _log) << " Considering " << _n_exc << " excitation with max energy " << BSESingletEnergies[_maxexc] * CONV::rydtoev << " eV / min wave length " <<  evtonm(BSESingletEnergies[_maxexc-1] * CONV::rydtoev) << " nm" << flush;
     
     /*
      * 
@@ -211,11 +213,11 @@ bool Spectrum::Evaluate() {
     
     
     if ( _spectrum_type == "energy"){
-        _fwhm = _fwhm / _rydtoev;
+        _fwhm = _fwhm / CONV::rydtoev;
         ofs << "# E(eV)    epsGaussian    IM(eps)Gaussian   epsLorentz    Im(esp)Lorentz\n";
         for ( int _i_pt = 0 ; _i_pt <= _n_pt; _i_pt++ ){
     
-           double _e = (_lower + _i_pt * ( _upper - _lower)/_n_pt)/_rydtoev;
+           double _e = (_lower + _i_pt * ( _upper - _lower)/_n_pt)/CONV::rydtoev;
         
            double _eps_Gaussian     = 0.0;
            double _imeps_Gaussian   = 0.0;
@@ -225,7 +227,7 @@ bool Spectrum::Evaluate() {
            double _imeps_TruncLorentzian = 0.0;
            
            for ( int _i_exc = _minexc ; _i_exc <= _maxexc ; _i_exc++){
-              _eps_Gaussian     +=  _osc[_i_exc-_minexc] * Gaussian(_e, BSESingletEnergies[_i_exc]+_shiftby/_rydtoev, _fwhm);
+              _eps_Gaussian     +=  _osc[_i_exc-_minexc] * Gaussian(_e, BSESingletEnergies[_i_exc]+_shiftby/CONV::rydtoev, _fwhm);
               _imeps_Gaussian   +=  _osc[_i_exc-_minexc] *  BSESingletEnergies[_i_exc ] * Gaussian(_e, BSESingletEnergies[_i_exc], _fwhm);
               _eps_Lorentzian   +=  _osc[_i_exc-_minexc] * Lorentzian(_e, BSESingletEnergies[_i_exc], _fwhm);
               _imeps_Lorentzian +=  _osc[_i_exc-_minexc] *  BSESingletEnergies[_i_exc ] * Lorentzian(_e, BSESingletEnergies[_i_exc], _fwhm);
@@ -233,11 +235,11 @@ bool Spectrum::Evaluate() {
               _imeps_TruncLorentzian +=  _osc[_i_exc-_minexc] *  BSESingletEnergies[_i_exc ] * TruncatedLorentzian(_e, BSESingletEnergies[_i_exc], _fwhm);
            }
         
-           ofs << _e*_rydtoev << "    " << _eps_Gaussian << "   " << _imeps_Gaussian << "   " << _eps_Lorentzian << "   " << _imeps_Lorentzian << "  " << _eps_TruncLorentzian << "   " << _imeps_TruncLorentzian  << endl;
+           ofs << _e*CONV::rydtoev << "    " << _eps_Gaussian << "   " << _imeps_Gaussian << "   " << _eps_Lorentzian << "   " << _imeps_Lorentzian << "  " << _eps_TruncLorentzian << "   " << _imeps_TruncLorentzian  << endl;
     
        }
         
-        LOG(logDEBUG, _log) << " Spectrum in energy range from  " << _lower << " to " << _upper << " eV and with broadening of FWHM " << _fwhm*_rydtoev << " eV written to file  " << _output_file << flush;
+        LOG(logDEBUG, _log) << " Spectrum in energy range from  " << _lower << " to " << _upper << " eV and with broadening of FWHM " << _fwhm*CONV::rydtoev << " eV written to file  " << _output_file << flush;
     }
     
     if ( _spectrum_type == "wavelength"){
@@ -257,8 +259,8 @@ bool Spectrum::Evaluate() {
             double _imeps_TruncLorentzian = 0.0;
             
             for ( int _i_exc = _minexc ; _i_exc <= _maxexc ; _i_exc++){
-                //cout << BSESingletEnergies[_i_exc]*_rydtoev << "  " << nmtoev(BSESingletEnergies[_i_exc]*_rydtoev) << endl;
-              double _exc_lambda = nmtoev(BSESingletEnergies[_i_exc]*_rydtoev + _shiftby);
+                //cout << BSESingletEnergies[_i_exc]*CONV::rydtoev << "  " << nmtoev(BSESingletEnergies[_i_exc]*CONV::rydtoev) << endl;
+              double _exc_lambda = nmtoev(BSESingletEnergies[_i_exc]*CONV::rydtoev + _shiftby);
               _eps_Gaussian     +=  _osc[_i_exc-_minexc] * Gaussian(_lambda, _exc_lambda, _fwhm);
               _imeps_Gaussian   +=  _osc[_i_exc-_minexc] *  _exc_lambda * Gaussian(_lambda, _exc_lambda, _fwhm);
               _eps_Lorentzian   +=  _osc[_i_exc-_minexc] * Lorentzian(_lambda, _exc_lambda, _fwhm);
@@ -295,8 +297,8 @@ bool Spectrum::Evaluate() {
         double _eps = 0.0;
         double _imeps = 0.0;
         for ( int _i_exc = 0 ; _i_exc < _n_exc ; _i_exc++){
-           _eps += 2.175e8 * _osc[_i_exc]/_fwhm * exp(-2.772 * pow(( _nu - evtoinvcm(_rydtoev * BSESingletEnergies[_i_exc]) )/_fwhm,2));
-           _imeps += 2.175e8 * _osc[_i_exc]/_fwhm / evtoinvcm(_rydtoev * BSESingletEnergies[_i_exc ]) * exp(-2.772 * pow(( _nu - evtoinvcm(_rydtoev * BSESingletEnergies[_i_exc]) )/_fwhm,2));
+           _eps += 2.175e8 * _osc[_i_exc]/_fwhm * exp(-2.772 * pow(( _nu - evtoinvcm(CONV::rydtoev * BSESingletEnergies[_i_exc]) )/_fwhm,2));
+           _imeps += 2.175e8 * _osc[_i_exc]/_fwhm / evtoinvcm(CONV::rydtoev * BSESingletEnergies[_i_exc ]) * exp(-2.772 * pow(( _nu - evtoinvcm(CONV::rydtoev * BSESingletEnergies[_i_exc]) )/_fwhm,2));
         }
         
         _wave_number.push_back( _nu );

@@ -79,7 +79,7 @@ namespace votca { namespace ctp {
                   xyz_to_tp(x[_i],y[_i],z[_i],&t,&p);
                   _theta.push_back(t);
                   _phi.push_back(p);
-                  _weight.push_back(4.0*pi*w[_i]);
+                  _weight.push_back(4.0*pi<double>()*w[_i]);
                   
               }               
     
@@ -110,7 +110,7 @@ namespace votca { namespace ctp {
                   xyz_to_tp(x[_i],y[_i],z[_i],&t,&p);
                   _theta.push_back(t);
                   _phi.push_back(p);
-                  _weight.push_back(4.0*pi*w[_i]);
+                  _weight.push_back(4.0*pi<double>()*w[_i]);
                   
               }               
     
@@ -7065,8 +7065,8 @@ void LebedevGrid::xyz_to_tp ( double x, double y, double z, double *t, double *p
 //
 //  Convert to degrees.
 //
-  *t = *t * 180.0 / pi;
-  *p = *p * 180.0 / pi;
+  *t = *t * 180.0 / pi<double>();
+  *p = *p * 180.0 / pi<double>();
 
   return;
 }

@@ -25,7 +25,7 @@
 #include <votca/ctp/grid_containers.h>
 #include <boost/math/constants/constants.hpp>
 using namespace std;
-
+using boost::math::constants::pi;
 
 namespace votca {
     namespace ctp {
@@ -49,7 +49,9 @@ namespace votca {
             
 
         private:
-            const double pi = boost::math::constants::pi<double>();
+            
+            //const double pi = boost::math::constants::pi<double>();
+            
             int available_table(int rule);
             int gen_oh(int code, double a, double b, double v, double *x,
                     double *y, double *z, double *w);
@@ -234,7 +236,7 @@ namespace votca {
 
 
         };
-
+        
     }
 }
 #endif	/* LEBEDEV_H */
