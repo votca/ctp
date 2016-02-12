@@ -84,7 +84,7 @@ class QMAPEIter
 
 public:
 
-    QMAPEIter(int id) : _hasdRdQ(false), _hasQM(false), _hasMM(false), _id(id) { ; }
+    QMAPEIter(int id) : _id(id), _hasdRdQ(false), _hasQM(false), _hasMM(false)  { ; }
    ~QMAPEIter() { ; }
 
    void ConvertPSitesToQMAtoms(vector< PolarSeg* > &, vector< QMAtom* > &);
@@ -170,23 +170,22 @@ public:
 private:    
     
 
-    Logger *_log;
-    int _subthreads;
-
     bool _run_ape;
     bool _run_dft;
     bool _run_gwbse;
 
     XJob *_job;
     XInductor *_xind;
-    QMPackage *_qmpack;
     Ewald3DnD *_cape;
+    QMPackage *_qmpack;
+
+    Logger *_log;
+    int _subthreads;
 
     vector<QMAPEIter*> _iters;
     int _maxIter;
     bool _isConverged;
 
-    // GWBSE object
     GWBSE _gwbse;
     Property _gwbse_options;
     int      _state;

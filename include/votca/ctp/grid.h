@@ -184,9 +184,9 @@ namespace votca { namespace ctp {
         void setupCHELPgrid(const vector< QMAtom* >& Atomlist){
             
 
+            _cutoff=2.8;
             _padding=2.8; // Additional distance from molecule to set up grid according to CHELPG paper [Journal of Computational Chemistry 11, 361, 1990]
             _gridspacing=0.3; // Grid spacing according to same paper 
-            _cutoff=2.8;
             _outsidemolecule=true;
             _createpolarsites=false;
             
@@ -205,9 +205,9 @@ namespace votca { namespace ctp {
       std::vector< ub::vector<double> > _gridpoints;
       std::vector< APolarSite > _gridsites;
       
-      double _gridspacing;
       double _cutoff;
       double _padding;
+      double _gridspacing;
       bool   _outsidemolecule;
       bool   _createpolarsites;
       

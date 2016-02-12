@@ -114,6 +114,8 @@ public:
 
 private:
 
+    Topology        *_top;
+
     double EP;       //   <- Interaction permanent multipoles (inter-site)
     double EU_INTRA; //   <- Interaction induction multipoles (intra-site)
     double EU_INTER; //   <- Interaction induction multipoles (inter-site)
@@ -348,8 +350,6 @@ private:
     inline double T22c_21s() { return R5 * 0.5 * (35*rby*rbz*rax*rax - 35*rby*rbz*ray*ray + 10*rby*rax*cxz - 10*rby*ray*cyz + 10*rbz*rax*cxy - 10*rbz*ray*cyy + 2*cxy*cxz - 2*cyy*cyz); }
     inline double T22s_21s() { return R5 * (35*rby*rbz*rax*ray + 5*rby*rax*cyz + 5*rby*ray*cxz + 5*rbz*rax*cyy + 5*rbz*ray*cxy + cxy*cyz + cyy*cxz); }
     inline double T22s_22c() { return R5 * 0.5 * (35*rbx*rbx*rax*ray - 35*rby*rby*rax*ray + 10*rbx*rax*cyx + 10*rbx*ray*cxx - 10*rby*rax*cyy - 10*rby*ray*cxy + 2*cxx*cyx - 2*cxy*cyy); }
-
-    Topology        *_top;
 
 };
 

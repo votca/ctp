@@ -154,9 +154,7 @@ private:
 
     EwdInteractor _ewdactor;                  // Long-range scheme (default)
     XInteractor _actor;                       // Cut-off scheme (option)
-    Logger *_log;
-    int _n_threads;
-
+ 
     // CHECKPOINTING & RESTART OPTIONS
     bool _do_checkpointing;
     bool _do_restart;
@@ -176,6 +174,10 @@ private:
     bool _do_compensate_net_dipole;          
     string _dipole_compensation_type;        // "system" or "segment"
     string _dipole_compensation_direction;   // "xyz" or "z"
+
+    // Logger and number of threads
+    Logger *_log;
+    int _n_threads;
     
     // CONVERGENCE
     // Part I - Ewald

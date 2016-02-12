@@ -152,10 +152,7 @@ protected:
 
     EwdInteractor _ewdactor;
     XInteractor _actor;
-
-    Logger *_log;
-    bool _started_from_archived_indu_state;
-    
+   
     // PERIODIC BOUNDARY
     Topology *_top;
     vec _center;
@@ -164,6 +161,10 @@ protected:
     // Part I - Ewald
     PolarTop *_ptop;
 
+    // [-Wreorder] requires _log to be after _ptop
+    Logger *_log;
+    bool _started_from_archived_indu_state;
+    
     vector< PolarSeg* > _bg_P;         // Period. density = BGN + FGN
     vector< PolarSeg* > _bg_N;         // Neutral background
     vector< PolarSeg* > _mg_N;         // Neutral midground

@@ -99,13 +99,13 @@ private:
   
   // Multithreading
   bool _maverick;
-  bool _writePreface;
   
-  std::string _timePreface;
   std::string _errorPreface;
   std::string _warnPreface;
   std::string _infoPreface;
   std::string _dbgPreface;
+  std::string _timePreface;
+  bool _writePreface;
   
 
 protected:
