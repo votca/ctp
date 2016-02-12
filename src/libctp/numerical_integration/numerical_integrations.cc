@@ -135,15 +135,15 @@ namespace votca {
                     _blocksize.push_back(_size);
             cout << " Number of atoms " << _atomshells.size() << endl;
             
-            for ( int iatom = 0 ; iatom < _atomshells.size(); iatom++ ){
+            for ( vector< vector< AOShellIterator > >::size_type iatom = 0 ; iatom < _atomshells.size(); iatom++ ){
                 cout << "atom " << iatom << " number of shells " << _atomshells[iatom].size() << " block start " << _startIdx[iatom] << " functions in atom " << _blocksize[iatom] << endl; 
             }
 
             
             vector < ub::matrix_range< ub::matrix<double> > > _DMATblocks;
             // get stupid index magic vector of matrix_ranges per atom block
-            for ( int rowatom = 0; rowatom < _atomshells.size(); rowatom++){
-                for ( int colatom = 0 ; colatom <= rowatom; colatom++ ){
+            for ( vector< vector< AOShellIterator > >::size_type rowatom = 0; rowatom < _atomshells.size(); rowatom++){
+                for ( unsigned int colatom = 0 ; colatom <= rowatom; colatom++ ){
                     _DMATblocks.push_back(ub::subrange(_density_matrix,_startIdx[rowatom], _startIdx[rowatom]+_blocksize[rowatom], _startIdx[colatom], _startIdx[colatom]+_blocksize[colatom]));
                 }
             }
@@ -213,12 +213,12 @@ namespace votca {
             vector< vector< vector<int> > > _significant_atoms;
             
             // each atomic grid
-            for (int i = 0; i < _grid.size(); i++) {
+            for (std::vector< GridContainers::integration_grid >::size_type i = 0; i < _grid.size(); i++) {
             
                 vector< vector<int> > _significant_atoms_atomgrid;
                 
                 // each point of the atomic grid
-                for (int j = 0; j < _grid[i].size(); j++) {
+                for (std::vector< GridContainers::integration_grid >::size_type j = 0; j < _grid[i].size(); j++) {
 
                     vector<int> _significant_atoms_gridpoint;
                     vec grid;
@@ -229,7 +229,7 @@ namespace votca {
                     
                     
                     // check all atoms
-                    for ( int iatom = 0 ; iatom < _minimal_decay.size(); iatom++){
+                    for ( std::vector<double>::size_type iatom = 0 ; iatom < _minimal_decay.size(); iatom++){
 
                         vec dist = grid - _positions[iatom];
                         double distsq = dist.getX()*dist.getX() + dist.getY()*dist.getY()  + dist.getZ()*dist.getZ() ;
@@ -271,11 +271,11 @@ namespace votca {
             
             int total_grid =0;
             int significant_grid = 0;
-            for ( int i = 0; i < _significant_atoms.size(); i++ ){
+            for ( vector< vector< vector<int> > >::size_type i = 0; i < _significant_atoms.size(); i++ ){
                 
                 total_grid += _grid[i].size(); 
                 
-                for ( int j = 0; j < _significant_atoms[i].size(); j++ ){
+                for ( vector< vector< vector<int> > >::size_type j = 0; j < _significant_atoms[i].size(); j++ ){
                     
                     int gridpointsize = _significant_atoms[i][j].size();
                     significant_grid += gridpointsize*(gridpointsize+1);
@@ -314,7 +314,7 @@ namespace votca {
             
             
             // for every atom
-            for (int i = 0; i < _grid.size(); i++) {
+            for (std::vector< GridContainers::integration_grid >::size_type i = 0; i < _grid.size(); i++) {
 	      // for each point in atom grid
                 
                 // number of points in this atomgrid
@@ -340,7 +340,7 @@ namespace votca {
                 
                 #pragma omp parallel for
                 for ( int i_thread = 0 ; i_thread < nthreads; i_thread++ ){
-                for (int j = _thread_start[i_thread]; j < _thread_stop[i_thread]; j++) {
+                for ( int j = _thread_start[i_thread]; j < _thread_stop[i_thread]; j++) {
 
 
                    boost::timer::cpu_times t0 = cpu_t.elapsed();
@@ -364,7 +364,7 @@ namespace votca {
 		    // evaluate AO Functions for all shells, NOW BLOCKWISE
 
                     // for each significant atom for this grid point
-                    for ( int sigrow = 0; sigrow < _significant_atoms[i][j].size() ; sigrow++){
+                    for ( vector< vector< vector<int> > >::size_type sigrow = 0; sigrow < _significant_atoms[i][j].size() ; sigrow++){
                     
                         // this atom
                         int rowatom = _significant_atoms[i][j][sigrow];
@@ -372,7 +372,7 @@ namespace votca {
                     
                     
                         // for each shell in this atom
-                        for ( int ishell = 0 ; ishell < _atomshells[rowatom].size() ; ishell++ ){
+                        for ( vector< vector< AOShellIterator > >::size_type ishell = 0 ; ishell < _atomshells[rowatom].size() ; ishell++ ){
                             boost::timer::cpu_times tstartshells = cpu_t.elapsed();
                             AOShellIterator _row = _atomshells[rowatom][ishell];
                             // for density, fill sub-part of AOatgrid
@@ -407,7 +407,7 @@ namespace votca {
 
                         // for each atom
                         // for all significant atoms of triangular matrix
-                        for ( int sigcol = 0; sigcol < _significant_atoms[i][j].size() ; sigcol++){
+                        for ( vector< vector< vector<int> > >::size_type  sigcol = 0; sigcol < _significant_atoms[i][j].size() ; sigcol++){
                             int colatom = _significant_atoms[i][j][sigcol];
                             if ( colatom > rowatom ) break;
                             
@@ -555,7 +555,7 @@ namespace votca {
                     // for each significant atom for this grid point
                     // parallelization only accesses atomblock information (_addXC, AOgrid -> XCmatblock), so no trouble with shared memory access )
                     // #pragma omp parallel for
-                    for (int sigrow = 0; sigrow < _significant_atoms[i][j].size(); sigrow++) {
+                    for (vector< vector< vector<int> > >::size_type sigrow = 0; sigrow < _significant_atoms[i][j].size(); sigrow++) {
                         
                         // this atom
                         int rowatom = _significant_atoms[i][j][sigrow];
@@ -563,7 +563,7 @@ namespace votca {
                         //ub::matrix_range< ub::matrix<double> > _rowXC = ub::subrange( _addXC, _startIdx[rowatom], _startIdx[rowatom]+_blocksize[rowatom], 0, 1);
                         ub::matrix_range< ub::matrix<double> > _rowXC = ub::subrange( _addXC, 0 , 1, _startIdx[rowatom], _startIdx[rowatom]+_blocksize[rowatom]);    
 
-                        for (int sigcol = 0; sigcol < _significant_atoms[i][j].size(); sigcol++) {
+                        for (vector< vector< vector<int> > >::size_type sigcol = 0; sigcol < _significant_atoms[i][j].size(); sigcol++) {
                             int colatom = _significant_atoms[i][j][sigcol];
                             // if (colatom > rowatom) break;
 
@@ -600,9 +600,9 @@ namespace votca {
             for ( int i_thread = 0 ; i_thread < nthreads; i_thread++ ){
                 EXC += EXC_thread[i_thread];
                 #pragma omp parallel for
-                for (int _i = 0; _i < XCMAT.size1(); _i++) {
+                for (ub::matrix<double>::size_type _i = 0; _i < XCMAT.size1(); _i++) {
                     //for (int _j = 0; _j <= _i; _j++) {
-                        for (int _j = 0; _j <XCMAT.size2(); _j++) {
+                        for (ub::matrix<double>::size_type _j = 0; _j <XCMAT.size2(); _j++) {
                     XCMAT( _i, _j ) += XCMAT_thread[i_thread](_i, _j);
                     }
                 }
@@ -628,7 +628,7 @@ namespace votca {
             const ub::vector<double> DMAT_array = _density_matrix.data();
             const ub::vector<double> XCMAT_array = XCMAT.data();
             
-            for ( int i = 0; i < DMAT_array.size(); i++ ){
+            for ( ub::vector<double>::size_type i = 0; i < DMAT_array.size(); i++ ){
                 EXC -= DMAT_array[i] * XCMAT_array[i];
             }
 
@@ -720,9 +720,9 @@ namespace votca {
             ub::matrix<double> XCMAT = ub::zero_matrix<double>(basis->_AOBasisSize, basis->_AOBasisSize);
             
             // for every atom
-            for (int i = 0; i < _grid.size(); i++) {
+            for (std::vector< GridContainers::integration_grid >::size_type i = 0; i < _grid.size(); i++) {
 	      // for each point in atom grid
-                for (int j = 0; j < _grid[i].size(); j++) {
+                for (std::vector< GridContainers::integration_grid >::size_type j = 0; j < _grid[i].size(); j++) {
 
 
                     boost::timer::cpu_times t0 = cpu_t.elapsed();
@@ -876,7 +876,7 @@ namespace votca {
             const ub::vector<double> DMAT_array = _density_matrix.data();
             const ub::vector<double> XCMAT_array = XCMAT.data();
             
-            for ( int i = 0; i < DMAT_array.size(); i++ ){
+            for ( ub::vector<double>::size_type i = 0; i < DMAT_array.size(); i++ ){
             
                 EXC -= DMAT_array[i] * XCMAT_array[i];
                 
@@ -949,13 +949,14 @@ namespace votca {
             double _t_AOxc_rho=0.0;
             double _t_AOxc_grad=0.0;
             double _t_sum = 0.0;
-            double _t_total;
-                                boost::timer::cpu_times tenter = cpu_t.elapsed();
+            double _t_total = 0.0;
+            
+            boost::timer::cpu_times tenter = cpu_t.elapsed();
             ub::matrix<double> XCMAT = ub::zero_matrix<double>(basis->_AOBasisSize, basis->_AOBasisSize);
             // for every atom
-            for (int i = 0; i < _grid.size(); i++) {
+            for (std::vector< GridContainers::integration_grid >::size_type i = 0; i < _grid.size(); i++) {
 	      // for each point in atom grid
-                for (int j = 0; j < _grid[i].size(); j++) {
+                for (std::vector< GridContainers::integration_grid >::size_type j = 0; j < _grid[i].size(); j++) {
 
 
                    boost::timer::cpu_times t0 = cpu_t.elapsed();
@@ -1095,7 +1096,7 @@ namespace votca {
             
             const ub::vector<double> DMAT_array = _density_matrix.data();
             const ub::vector<double> XCMAT_array = XCMAT.data();
-            for ( int i = 0; i < DMAT_array.size(); i++ ){
+            for ( ub::vector<double>::size_type i = 0; i < DMAT_array.size(); i++ ){
             
                 EXC -= DMAT_array[i] * XCMAT_array[i];
                 
@@ -1278,8 +1279,8 @@ namespace votca {
             double result = 0.0;
             const ub::vector<double> DMAT_array=_density_matrix.data();
              // for every gridpoint
-            for (int i = 0; i < _grid.size(); i++) {
-                for (int j = 0; j < _grid[i].size(); j++) {
+            for (std::vector< GridContainers::integration_grid >::size_type i = 0; i < _grid.size(); i++) {
+                for (std::vector< GridContainers::integration_grid >::size_type j = 0; j < _grid[i].size(); j++) {
                     // get value of orbitals at each gridpoint
                     ub::matrix<double> tmat = ub::zero_matrix<double>(basis->_AOBasisSize, 1);
 
@@ -1295,7 +1296,7 @@ namespace votca {
                     // density at grid point is sum of element-wise product of density matrix x _AOmatrix
                     ub::vector<double> _AO_array  =_AOmatrix_at_grid.data();
                     double density_at_grid = 0.0;
-                    for ( int _i =0; _i < DMAT_array.size(); _i++ ){
+                    for ( ub::vector<double>::size_type _i =0; _i < DMAT_array.size(); _i++ ){
                         density_at_grid += DMAT_array(_i)*_AO_array(_i);
                     }   
                     
@@ -1326,8 +1327,8 @@ namespace votca {
 
             ub::matrix<double> OLMAT = ub::zero_matrix<double>(basis->_AOBasisSize, basis->_AOBasisSize);
             // for every gridpoint
-            for (int i = 0; i < _grid.size(); i++) {
-                for (int j = 0; j < _grid[i].size(); j++) {
+            for (std::vector< GridContainers::integration_grid >::size_type i = 0; i < _grid.size(); i++) {
+                for (std::vector< GridContainers::integration_grid >::size_type j = 0; j < _grid[i].size(); j++) {
                     // get value of orbitals at each gridpoint
                     ub::matrix<double> tmat = ub::zero_matrix<double>(basis->_AOBasisSize, 1);
 
@@ -1362,8 +1363,8 @@ namespace votca {
             
             double integral = 0.0;
             int _i_point = 0;
-            for ( int i = 0 ; i < _grid.size(); i++){
-                for ( int j = 0 ; j < _grid[i].size(); j++){
+            for ( std::vector< GridContainers::integration_grid >::size_type i = 0 ; i < _grid.size(); i++){
+                for ( std::vector< GridContainers::integration_grid >::size_type j = 0 ; j < _grid[i].size(); j++){
 
                     
                     integral += _data[_i_point] * _grid[i][j].grid_weight;
@@ -1384,8 +1385,8 @@ namespace votca {
             _gridpoints = ub::zero_matrix<double>(_totalgridsize,4);
             
             int _i_point = 0;
-            for ( int i = 0 ; i < _grid.size(); i++){
-                for ( int j = 0 ; j < _grid[i].size(); j++){
+            for ( std::vector< GridContainers::integration_grid >::size_type i = 0 ; i < _grid.size(); i++){
+                for ( std::vector< GridContainers::integration_grid >::size_type j = 0 ; j < _grid[i].size(); j++){
                     
                     _gridpoints(_i_point,0) = _grid[i][j].grid_x;
                     _gridpoints(_i_point,1) = _grid[i][j].grid_y;
@@ -1499,7 +1500,7 @@ namespace votca {
                 std::vector<double> _weight;
 
                 // for each radial value
-                for (int _i_rad = 0; _i_rad < _radial_grid.radius.size(); _i_rad++) {
+                for (std::vector<double>::size_type _i_rad = 0; _i_rad < _radial_grid.radius.size(); _i_rad++) {
                     double r = _radial_grid.radius[_i_rad];
                     int order;
                     // which Lebedev order for this point?
@@ -1545,7 +1546,7 @@ namespace votca {
                     // for each (theta,phi)
                     // for (int _i_sph = 0; _i_sph < _spherical_grid.phi.size(); _i_sph++) {
 
-                    for (int _i_sph = 0; _i_sph < _phi.size(); _i_sph++) {
+                    for (std::vector<double>::size_type _i_sph = 0; _i_sph < _phi.size(); _i_sph++) {
                         /* double p   = _spherical_grid.phi[_i_sph] * pi / 180.0; // back to rad
                         double t   = _spherical_grid.theta[_i_sph] * pi / 180.0; // back to rad
                         double ws  = _spherical_grid.weight[_i_sph];
@@ -1617,7 +1618,8 @@ namespace votca {
                 double distNN = 1e10;
 
                 vector< QMAtom* > ::iterator NNit;
-                int i_NN;
+                
+                //int i_NN;
 
                 // now check all other centers
                 int i_b =0;
@@ -1635,7 +1637,7 @@ namespace votca {
                         if ( distSQ < distNN ) {
                             distNN = distSQ;
                             NNit = bit;
-                            i_NN = i_b;
+                            //i_NN = i_b;
                         }
 
                     } // if ( ait != bit) 
@@ -1696,14 +1698,14 @@ namespace votca {
                  * have to evaluate the weights explicitly
                  */
                 //for ( int i_grid = _idx_left; i_grid <= _idx_right ; i_grid++){
-                for ( int i_grid = 0; i_grid < _atomgrid.size() ; i_grid++){
+                for ( std::vector< GridContainers::integration_grid >::size_type i_grid = 0; i_grid < _atomgrid.size() ; i_grid++){
                     //cout << " modifying point " << i_grid << endl;
                     // call some shit called grid_ssw0 in NWChem
                     std::vector<double> _p = SSWpartition( _atomgrid.size(), i_grid, _atoms.size(),rq, ass );
                     //cout << " partition for gridpoint " << i_grid << endl;
                     // check weight sum
                     double wsum = 0.0;
-                    for (int i =0 ; i < _p.size(); i++ ){
+                    for (std::vector<double>::size_type i =0 ; i < _p.size(); i++ ){
                         wsum += _p[i];
                     }
                     //cout << " sum of partition weights " << wsum << endl;
@@ -1747,8 +1749,8 @@ namespace votca {
             points.open("molgrid.xyz", ofstream::out);
             points << _totalgridsize << endl;
             points << endl;
-            for ( int i = 0 ; i < _grid.size(); i++){
-                for ( int j = 0 ; j < _grid[i].size(); j++){
+            for ( std::vector< std::vector< GridContainers::integration_grid > >::size_type i = 0 ; i < _grid.size(); i++){
+                for ( std::vector< std::vector< GridContainers::integration_grid > >::size_type j = 0 ; j < _grid[i].size(); j++){
                 points << "X " << _grid[i][j].grid_x/ang2bohr << " " << _grid[i][j].grid_y/ang2bohr << " " << _grid[i][j].grid_z/ang2bohr << " "  << _grid[i][j].grid_weight << endl;
                 }
             }

@@ -524,7 +524,7 @@ EWD::triple<> PEwald3D3D::ConvergeRealSpaceSum(vector<PolarSeg*> &target) {
         this->SetupMidground(R_max);
         
         // FOR EACH FOREGROUND SEGMENT (FGC) ...
-        int energy_converged_count = 0;
+        unsigned int energy_converged_count = 0;
         for (sit1 = target.begin(); sit1 != target.end(); ++sit1) {        
             (*sit1)->ClearPolarNbs();
 
@@ -1257,9 +1257,11 @@ void PEwald3D3D::Potential_ConvergeRealSpaceSum(vector<PolarSeg*> &target) {
                     }
                 }
             }
-            if (tools::globals::verbose) LOG(logDEBUG,*_log)
+            if (tools::globals::verbose) {
+                LOG(logDEBUG,*_log)
                 << (format("  o Id = %5$-4d Rc = %1$+02.7f   |MGN| = %2$5d   dF(rms) = %3$+1.3e V/m   [1eA => %4$+1.3e eV]") 
                 % -1.0 % nbs.size() % -1.0  % -1.0 % ((*sit1)->getId())).str() << flush;
+            }
         }
         _potential_converged_R = true;
     }
@@ -1274,7 +1276,7 @@ void PEwald3D3D::Potential_ConvergeRealSpaceSum(vector<PolarSeg*> &target) {
         this->SetupMidground(R_max);
         
         // FOR EACH FOREGROUND SEGMENT (FGC) ...
-        int energy_converged_count = 0;
+        unsigned int energy_converged_count = 0;
         for (sit1 = target.begin(); sit1 != target.end(); ++sit1) {        
             (*sit1)->ClearPolarNbs();
 
@@ -1315,15 +1317,19 @@ void PEwald3D3D::Potential_ConvergeRealSpaceSum(vector<PolarSeg*> &target) {
                 }
                 shell_rms = sqrt(shell_rms/shell_count)*EWD::int2eV;
                 sum += shell_sum;
-                if (tools::globals::verbose) LOG(logDEBUG,*_log)
+                if (tools::globals::verbose) {
+                    LOG(logDEBUG,*_log)
                     << (format("  o ID = %5$-4d Rc = %1$+02.7f   |MGN| = %3$5d   ER = %2$+1.7f V   dER2(sum) = %4$+1.3e V") 
                     % shell_R % (sum*EWD::int2eV) % shell_mg.size() % (shell_rms*shell_count) % (*sit1)->getId()).str() << flush;
+                }
 
                 if (shell_rms*shell_count <= _crit_dE && shell_R >= _R_co) {
                     energy_converged_count += 1;
-                    if (tools::globals::verbose) LOG(logDEBUG,*_log)  
+                    if (tools::globals::verbose) { 
+                        LOG(logDEBUG,*_log)  
                         << (format("  :: ID = %2$-4d : Converged to precision as of Rc = %1$+1.3f nm") 
                         % shell_R % (*sit1)->getId()) << flush;
+                    }
                     break;
                 }
             }
@@ -1409,12 +1415,14 @@ void PEwald3D3D::Potential_ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target)
         shell_rms = (rms_count > 0) ? sqrt(shell_rms/rms_count)*EWD::int2eV : 0.0;
         double e_measure = shell_rms*rms_count;
         
-        if (rms_count > 0) LOG(logDEBUG,*_log)
-             << (format("  o M = %1$04d   G = %2$+1.3e   dPhi(rms) = %3$+1.3e V   [1e => %4$+1.3e eV]")
-             % rms_count
-             % crit_grade
-             % shell_rms
-             % e_measure).str() << flush;
+        if (rms_count > 0) {
+            LOG(logDEBUG,*_log)
+                << (format("  o M = %1$04d   G = %2$+1.3e   dPhi(rms) = %3$+1.3e V   [1e => %4$+1.3e eV]")
+                % rms_count
+                % crit_grade
+                % shell_rms
+                % e_measure).str() << flush;
+        }
         
         if (rms_count > 10 && e_measure <= _crit_dE) {
             LOG(logINFO,*_log)
@@ -1452,12 +1460,14 @@ void PEwald3D3D::Potential_ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target)
         shell_rms = (rms_count > 0) ? sqrt(shell_rms/rms_count)*EWD::int2eV : 0.0;
         double e_measure = shell_rms*1e-10*rms_count;
         
-        if (rms_count > 0) LOG(logDEBUG,*_log)
-             << (format("  o M = %1$04d   G = %2$+1.3e   dF(rms) = %3$+1.3e V   [1e => %4$+1.3e eV]")
-             % rms_count
-             % crit_grade
-             % shell_rms
-             % e_measure).str() << flush;
+        if (rms_count > 0) { 
+            LOG(logDEBUG,*_log)
+                << (format("  o M = %1$04d   G = %2$+1.3e   dF(rms) = %3$+1.3e V   [1e => %4$+1.3e eV]")
+                % rms_count
+                % crit_grade
+                % shell_rms
+                % e_measure).str() << flush; 
+        }
         
         if (rms_count > 10 && e_measure <= _crit_dE) {
             LOG(logINFO,*_log)
