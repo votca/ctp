@@ -109,8 +109,7 @@ void QMAPEMachine<QMPackage>::Evaluate(XJob *job) {
 	bool created = boost::filesystem::create_directory(jobFolder);
 
 	LOG(logINFO,*_log) << flush;
-	if (created)
-		LOG(logINFO,*_log) << "Created directory " << jobFolder << flush;
+	if (created) { LOG(logINFO,*_log) << "Created directory " << jobFolder << flush; }
 
     LOG(logINFO,*_log)
        << format("... dR %1$1.4f dQ %2$1.4f QM %3$1.4f MM %4$1.4f IT %5$d")
@@ -364,8 +363,8 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 	LOG(logDEBUG,*_log) << "Excited state via GWBSE: " <<  flush;
 	LOG(logDEBUG,*_log) << "  --- type:              " << _type << flush;
 	LOG(logDEBUG,*_log) << "  --- state:             " << _state << flush;
-	if ( _has_osc_filter) LOG(logDEBUG,*_log) << "  --- filter: osc.str. > " << _osc_threshold << flush;
-	if ( _has_dQ_filter)  LOG(logDEBUG,*_log) << "  --- filter: crg.trs. > " << _dQ_threshold << flush;
+	if ( _has_osc_filter) { LOG(logDEBUG,*_log) << "  --- filter: osc.str. > " << _osc_threshold << flush; }
+	if ( _has_dQ_filter)  { LOG(logDEBUG,*_log) << "  --- filter: crg.trs. > " << _dQ_threshold << flush; }
 
 	if ( _has_osc_filter && _has_dQ_filter ){
 		LOG(logDEBUG,*_log) << "  --- WARNING: filtering for optically active CT transition - might not make sense... "  << flush;
@@ -417,11 +416,11 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 	} else {
 
 		if ( _type == "singlet" ){
-		   for (int _i=0; _i < orb.TransitionDipoles().size(); _i++ ) {
+		   for (std::vector<std::vector<double> >::size_type _i=0; _i < orb.TransitionDipoles().size(); _i++ ) {
 			   _state_index.push_back(_i);
 		   }
 		} else {
-		   for (int _i=0; _i < orb.BSETripletEnergies().size(); _i++ ) {
+		   for (std::vector<float>::size_type _i=0; _i < orb.BSETripletEnergies().size(); _i++ ) {
 			   _state_index.push_back(_i);
 		   }
 		}
@@ -437,7 +436,7 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
                 //[-Wunused-variable]
 		//const std::vector<double>& dQ_fragB = orb.FragmentBChargesEXC();
                 
-		for (int _i=0; _i < _state_index.size(); _i++ ) {
+		for (std::vector<int>::size_type _i=0; _i < _state_index.size(); _i++ ) {
 			if ( std::abs(dQ_fragA[_i]) > _dQ_threshold ) {
 				_state_index_copy.push_back(_state_index[_i]);
 			}
@@ -450,8 +449,11 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 		throw runtime_error("Excited state filter yields no states! ");
 
 	}
-	// - output its energy
+	
+        // - output its energy
+        //[-Wunused-but-set-variable]
 	double energy___ex = 0.0;
+        
 	if ( _type == "singlet" ){
 		energy___ex = orb.BSESingletEnergies()[_state_index[_state-1]]*13.6058; // to eV
 	} else if ( _type == "triplet" ) {
@@ -571,9 +573,9 @@ void QMAPEIter::UpdatePosChrgFromQMAtoms(vector< QMAtom* > &qmatoms,
     double dQ_RMS = 0.0;
     double dQ_SUM = 0.0;
     
-    for (int i = 0, qac = 0; i < psegs.size(); ++i) {
+    for (vector<APolarSite*>::size_type i = 0, qac = 0; i < psegs.size(); ++i) {
         PolarSeg *pseg = psegs[i];
-        for (int j = 0; j < pseg->size(); ++j, ++qac) {
+        for (vector<APolarSite*>::size_type j = 0; j < pseg->size(); ++j, ++qac) {
             
             // Retrieve info from QMAtom
             QMAtom *qmatm = qmatoms[qac];
@@ -613,9 +615,9 @@ void QMAPEIter::GenerateQMAtomsFromPolarSegs(vector<PolarSeg*> &qm,
     double AA_to_NM = 0.1; // Angstrom to nanometer
     
     // QM REGION
-    for (int i = 0; i < qm.size(); ++i) {
+    for (vector<PolarSeg*>::size_type i = 0; i < qm.size(); ++i) {
         vector<APolarSite*> *pseg = qm[i];
-        for (int j = 0; j < pseg->size(); ++j) {
+        for (vector<APolarSite*>::size_type j = 0; j < pseg->size(); ++j) {
             APolarSite *aps = (*pseg)[j];
             string type = "qm";
             vec pos = aps->getPos()/AA_to_NM;
@@ -625,9 +627,9 @@ void QMAPEIter::GenerateQMAtomsFromPolarSegs(vector<PolarSeg*> &qm,
     }
     
     // MM REGION (EXPANDED VIA PARTIAL CHARGES)
-    for (int i = 0; i < mm.size(); ++i) {
+    for (vector<APolarSite*>::size_type i = 0; i < mm.size(); ++i) {
     	vector<APolarSite*> *pseg = mm[i];
-        for (int j = 0; j < pseg->size(); ++j) {
+        for (vector<APolarSite*>::size_type j = 0; j < pseg->size(); ++j) {
             APolarSite *aps = (*pseg)[j];
             string type = "mm";
             vec pos = aps->getPos()/AA_to_NM;

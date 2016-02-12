@@ -76,7 +76,7 @@ namespace votca { namespace ctp {
             points.open(_filename, ofstream::out);
             points << _gridpoints.size() << endl;
             points << endl;
-            for ( int i = 0 ; i < _gridpoints.size(); i++){
+            for ( std::vector< ub::vector<double> >::size_type i = 0 ; i < _gridpoints.size(); i++){
                 points << "X " << _gridpoints[i](0) << " " << _gridpoints[i](1) << " " << _gridpoints[i](2) << endl;
 
             }

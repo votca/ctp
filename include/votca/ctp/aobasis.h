@@ -345,7 +345,7 @@ inline int AOShell::detlmax( string shell_type ) {
     } else {
         // for combined shells check all contributions
         _lmax = 0;
-        for( int i = 0; i < shell_type.length(); ++i) {
+        for( size_t i = 0; i < shell_type.length(); ++i) {
             string local_shell =    string( shell_type, i, 1 );
             int _test = this->detlmax( local_shell  );
             if ( _test > _lmax ) { _lmax = _test;} 
@@ -816,7 +816,7 @@ inline void AOBasis::ECPFill(BasisSet* bs , vector<QMAtom* > _atoms  ) {
             // split combined shells
             int _i_func = -1;
             int i_act;
-            for (int i = 0; i < shell_type.length(); ++i) {
+            for (size_t i = 0; i < shell_type.length(); ++i) {
                 string single_shell = string(shell_type, i, 1);
                 // single type shells
                 if ( single_shell == "S") {
@@ -1030,7 +1030,7 @@ inline void AOBasis::ECPFill(BasisSet* bs , vector<QMAtom* > _atoms  ) {
                 //[-Wunused-variable]
                 //int i_act;
                 
-                for (int i = 0; i < shell_type.length(); ++i) {
+                for (size_t i = 0; i < shell_type.length(); ++i) {
                     string single_shell = string(shell_type, i, 1);
                     // single type shells
                     if (single_shell == "S") {
@@ -1072,7 +1072,7 @@ inline void AOBasis::ECPFill(BasisSet* bs , vector<QMAtom* > _atoms  ) {
                 // split combined shells
                 int _i_func = -1;
                 int i_act;
-                for (int i = 0; i < shell_type.length(); ++i) {
+                for (size_t i = 0; i < shell_type.length(); ++i) {
                     string single_shell = string(shell_type, i, 1);
                     // single type shells
                     if (single_shell == "S") {
@@ -1199,7 +1199,7 @@ inline void AOBasis::ECPFill(BasisSet* bs , vector<QMAtom* > _atoms  ) {
 
                 // split combined shells
                 int _i_func = -1;
-                for (int i = 0; i < shell_type.length(); ++i) {
+                for (size_t i = 0; i < shell_type.length(); ++i) {
                     string single_shell = string(shell_type, i, 1);
                     // single type shells
                     if (single_shell == "S") {
