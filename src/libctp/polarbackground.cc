@@ -272,8 +272,11 @@ void PolarBackground::Polarize(int n_threads = 1) {
     LOG(logDEBUG,*_log) << "  o kx(max), ky(max), kz(max): " << _NA_max << ", " << _NB_max << ", " << _NC_max << flush;    
     
     TLogLevel dbg = logDEBUG;
-    TLogLevel inf = logINFO;
-    TLogLevel err = logERROR;
+    
+    //[-Wunused-variable]
+    //TLogLevel inf = logINFO;
+    //TLogLevel err = logERROR;
+    
     Logger &log = *_log;
     _n_threads = n_threads;
     
@@ -511,7 +514,10 @@ void PolarBackground::Polarize(int n_threads = 1) {
         ofs.open("ewdbgpol.indu_state.tab", ofstream::out);
         for (vector<PolarSeg*>::iterator sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
             PolarSeg *pseg = *sit1;
-            Segment *seg = _top->getSegment(pseg->getId());
+            
+            //[-Wunused-variable]
+            //Segment *seg = _top->getSegment(pseg->getId());
+            
             for (PolarSeg::iterator pit1 = pseg->begin(); pit1 < pseg->end(); ++pit1) {
                 vec fp = (*pit1)->getFieldP();
                 vec fu = (*pit1)->getFieldU();

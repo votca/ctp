@@ -303,7 +303,10 @@ bool Exciton::Evaluate() {
          _log.setReportLevel( _ReportLevel ); // go silent again during numerical force calculation, if requested
       
       }
-      double energy_new;
+      
+      //[-Wunused-variable]
+      //double energy_new;
+      
       // now iterate
       while ( ! _converged ){ 
            _geoopt_preface = "\n... ... GEOOPT " + boost::lexical_cast<std::string>(_iteration+1);
@@ -534,10 +537,10 @@ bool Exciton::Evaluate() {
      
      
      
-     
-    Property _summary; 
-    Property *_job_output = &_summary.add("output","");
-    votca::tools::PropertyIOManipulator iomXML(votca::tools::PropertyIOManipulator::XML, 1, "");
+    //[-Wunused-variable]
+    //Property _summary; 
+    //Property *_job_output = &_summary.add("output","");
+    //votca::tools::PropertyIOManipulator iomXML(votca::tools::PropertyIOManipulator::XML, 1, "");
      
     //ofs (_output_file.c_str(), std::ofstream::out);
     //ofs << *_job_output;    
@@ -1026,7 +1029,9 @@ void Exciton::BFGSStep(int& _iteration, bool& _update_hessian, ub::matrix<double
     // make sure there is no CoM movement
        for ( int _i_atom = 0; _i_atom < _natoms; _i_atom++){
         for ( int _i_cart = 0; _i_cart < 3; _i_cart++ ){
-             int _idx = 3*_i_atom + _i_cart;
+            
+            //[-Wunused-variable]
+            //int _idx = 3*_i_atom + _i_cart;
             //_current_xyz(_i_atom,_i_cart) -= _total_shift(_i_cart)/_natoms;
             // _trial_xyz(_i_atom,_i_cart) -= _total_shift(_i_cart)/_natoms;
         }
@@ -1078,14 +1083,16 @@ void Exciton::ExcitationEnergies(QMPackage* _qmpackage, vector<Segment*> _segmen
       // parse DFT data, if required
       if ( _do_dft_parse ){
         LOG(logDEBUG,_log) << "Parsing DFT data " << _output_file << flush;
+
         _qmpackage->setOrbitalsFileName( _orbfile );
-        int _parse_orbitals_status = _qmpackage->ParseOrbitalsFile( _orbitals );
+        bool _parse_orbitals_status = _qmpackage->ParseOrbitalsFile( _orbitals );
+        if ( !_parse_orbitals_status ) { LOG(logERROR,_log) << "Parsing DFT orbitals failed" << flush; }
+        
         _qmpackage->setLogFileName( _logfile );
-        int _parse_log_status = _qmpackage->ParseLogFile( _orbitals );
+        bool _parse_log_status = _qmpackage->ParseLogFile( _orbitals );
+        if ( !_parse_log_status ) { LOG(logERROR,_log) << "Parsing DFT log failed" << flush; }
+
         _orbitals->setDFTbasis(_qmpackage->getBasisSetName());
- 
-        
-        
         
      }
 
@@ -1099,6 +1106,7 @@ void Exciton::ExcitationEnergies(QMPackage* _qmpackage, vector<Segment*> _segmen
         _gwbse.setLogger(&_log);
         _gwbse.Initialize( &_gwbse_options );
         bool _evaluate = _gwbse.Evaluate( _orbitals );
+        if ( !_evaluate ) { LOG(logERROR,_log) << "GWBSE failed" << flush; } 
         // std::cout << _log;
      }
      
@@ -1138,10 +1146,15 @@ void Exciton::ReadXYZ(Segment* _segment, string filename){
                
                 ifstream in;
                 double x, y, z;
-                int natoms, id;
-                string label, type;
-                vec pos;
+                
+                //[-Wunused-variable]
+                //int natoms, id;
+                //string label, type;
+                //vec pos;
 
+                int id;
+                string type;
+                
                 LOG(logDEBUG,_log) << " Reading molecular coordinates from " << _xyzfile << flush;
                 in.open(_xyzfile.c_str(), ios::in);
                 if (!in) throw runtime_error(string("Error reading coordinates from: ")
@@ -1345,9 +1358,9 @@ void Exciton::Orbitals2Segment(Segment* _segment, Orbitals* _orbitals){
             
       string type;
       
-      //[-Wunused-variable]
+      //[-Wunused-variable]    
+      //int id = 1;
       
-      int id = 1;
       for (segait = _segatoms.begin(); segait < _segatoms.end(); ++segait) {
                 
                 // Atom *pAtom = new Atom(id++, type);

@@ -217,7 +217,8 @@ bool DFT::Evaluate() {
     _log.setPreface(logWARNING, "\n... ...");
     _log.setPreface(logDEBUG,   "\n... ..."); 
 
-    TLogLevel _ReportLevel = _log.getReportLevel( ); // backup report level
+    //[-Wunused-variable]
+    //TLogLevel _ReportLevel = _log.getReportLevel( ); // backup report level
 
     // Create new orbitals object and fill with atom coordinates
     Orbitals _orbitals;
@@ -232,10 +233,15 @@ bool DFT::Evaluate() {
 
                 ifstream in;
                 double x, y, z;
-                int natoms, id;
-                string label, type;
-                vec pos;
+                
+                //[-Wunused-variable]
+                //int natoms, id;
+                //string label, type;
+                //vec pos;              
 
+                int id;
+                string type;
+                
                 LOG(logDEBUG,_log) << " Reading molecular coordinates from " << _xyzfile << flush;
                 in.open(_xyzfile.c_str(), ios::in);
                 if (!in) throw runtime_error(string("Error reading coordinates from: ")
@@ -284,10 +290,13 @@ bool DFT::Evaluate() {
       //if ( _do_dft_parse ){
         LOG(logDEBUG,_log) << "Parsing DFT data " << _output_file << flush;
         _qmpackage->setOrbitalsFileName( _orbfile );
-        int _parse_orbitals_status = _qmpackage->ParseOrbitalsFile( &_orbitals );
+        bool _parse_orbitals_status = _qmpackage->ParseOrbitalsFile( &_orbitals );
+        if ( !_parse_orbitals_status ) { LOG(logERROR,_log) << "Error parsing the orbitals file" << flush; }
+        
         _qmpackage->setLogFileName( _logfile );
-        int _parse_log_status = _qmpackage->ParseLogFile( &_orbitals );
+        bool _parse_log_status = _qmpackage->ParseLogFile( &_orbitals );
         _orbitals.setDFTbasis(_qmpackage->getBasisSetName());
+        if ( !_parse_log_status ) { LOG(logERROR,_log) << "Error parsing the log file" << flush; }
  
         
 
@@ -314,10 +323,10 @@ bool DFT::Evaluate() {
      
      
      
-     
-    Property _summary; 
-    Property *_job_output = &_summary.add("output","");
-    votca::tools::PropertyIOManipulator iomXML(votca::tools::PropertyIOManipulator::XML, 1, "");
+    //[-Wunused-variable]
+    //Property _summary; 
+    //Property *_job_output = &_summary.add("output","");
+    //votca::tools::PropertyIOManipulator iomXML(votca::tools::PropertyIOManipulator::XML, 1, "");
      
     //ofs (_output_file.c_str(), std::ofstream::out);
     //ofs << *_job_output;    
@@ -359,9 +368,8 @@ void DFT::XYZ2Orbitals(Orbitals* _orbitals, string filename){
                
                 ifstream in;
                 double x, y, z;
-                int natoms, id;
-                string label, type;
-                vec pos;
+                int id;
+                string type;
 
                 LOG(logDEBUG,_log) << " Reading molecular coordinates from " << _xyzfile << flush;
                 in.open(_xyzfile.c_str(), ios::in);

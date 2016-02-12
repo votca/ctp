@@ -128,7 +128,9 @@ bool ExcitonCoupling::Evaluate() {
      ub::matrix<float> _JAB_triplet;
 
      // bool _calculate_integrals = _bsecoupling.CalculateCouplings( &_orbitalsA, &_orbitalsB, &_orbitalsAB, &_JAB );   
-     bool _calculate_integrals = _bsecoupling.CalculateCouplings( &_orbitalsA, &_orbitalsB, &_orbitalsAB, &_JAB_singlet, &_JAB_triplet, _spintype );   
+     bool _calculate_integrals = _bsecoupling.CalculateCouplings( &_orbitalsA, &_orbitalsB, &_orbitalsAB, &_JAB_singlet, &_JAB_triplet, _spintype );  
+     if ( !_calculate_integrals ) { LOG(logERROR, _log) << "Calculation of couplings failed" << flush; }
+     
      std::cout << _log;
  
      

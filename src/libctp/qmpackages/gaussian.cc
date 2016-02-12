@@ -127,8 +127,8 @@ bool Gaussian::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gu
     vector< Atom* > _atoms;
     vector< Atom* > ::iterator ait;
     vector< Segment* >::iterator sit;
-    
-    int qmatoms = 0;
+    //[-Wunused-variable]
+    //int qmatoms = 0;
 
     ofstream _com_file;
     
@@ -569,6 +569,7 @@ bool Gaussian::Run()
         }
 
         int i = system ( _command.c_str() );
+        LOG(logDEBUG,*_pLog) << "GAUSSIAN: finished running with the status " << i << flush;
         
         if ( CheckLogFile() ) {
             LOG(logDEBUG,*_pLog) << "GAUSSIAN: finished job" << flush;
@@ -663,8 +664,10 @@ bool Gaussian::ParseOrbitalsFile( Orbitals* _orbitals )
     std::vector<string> strs;
     boost::algorithm::split(strs, _line, boost::is_any_of("(D)"));
     //clog << strs.at(1) << endl;
-    int nrecords_in_line = boost::lexical_cast<int>(strs.at(1));
-    string format = strs.at(2);
+    
+    //[-Wunused-variable]
+    //int nrecords_in_line = boost::lexical_cast<int>(strs.at(1));
+    //string format = strs.at(2);
 
     //clog << endl << "Orbital file " << filename << " has " 
     //        << nrecords_in_line << " records per line, in D"
@@ -1039,7 +1042,10 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
                 
                 while ( nfields == 3 ) {
                     int atom_id = boost::lexical_cast< int >( _row.at(0) );
-                    int atom_number = boost::lexical_cast< int >( _row.at(0) );
+                    
+                    //[-Wunused-variable]
+                    //int atom_number = boost::lexical_cast< int >( _row.at(0) );
+                    
                     string atom_type = _row.at(1);
                     double atom_charge = boost::lexical_cast< double >( _row.at(2) );
                     //if ( tools::globals::verbose ) cout << "... ... " << atom_id << " " << atom_type << " " << atom_charge << endl;

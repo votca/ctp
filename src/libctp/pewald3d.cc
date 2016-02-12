@@ -856,7 +856,8 @@ EWD::triple<> PEwald3D3D::CalculateForegroundCorrection(vector<PolarSeg*> &targe
     vector<APolarSite*> ::iterator pit1;
     vector<PolarSeg*>::iterator sit2; 
     vector<APolarSite*> ::iterator pit2;
-    double EC = 0.0;
+    //[-Wunused-variable]
+    //double EC = 0.0;
     double sum_pp = 0.0;
     double sum_pu = 0.0;
     double sum_uu = 0.0;
@@ -882,8 +883,9 @@ EWD::triple<> PEwald3D3D::CalculateForegroundCorrection(vector<PolarSeg*> &targe
 
 
 void PEwald3D3D::Field_ConvergeRealSpaceSum() {
+    //[-Wunused-variable]
+    //double sum = 0.0;
     
-    double sum = 0.0;
     _field_converged_R = false;
     
     LOG(logDEBUG,*_log) << flush 

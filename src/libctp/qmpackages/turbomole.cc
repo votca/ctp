@@ -142,6 +142,7 @@ bool Turbomole::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_g
     _command  = "cd " + _run_dir + "; " + _input_exe + " <  ./" + _input_file_name + " >& " + _input_file_name + ".log" ;
     //cerr << _command << flush;
     int i = system ( _command.c_str() );
+    LOG(logDEBUG,*_pLog) << "TURBOMOLE: Finished DEFINE with status " << i << flush;
     
     // postprocess the output of define - scratch dir
     //cout <<  "TEMP DIR: " << _scratch_dir + temp_suffix << endl;
@@ -254,7 +255,7 @@ bool Turbomole::Run()
         _command  = "cd " + _run_dir + "; " + _executable + " >& " + _executable + ".log ";
         
         int i = system ( _command.c_str() );
-        LOG(logDEBUG,*_pLog) << "TURBOMOLE: Finished job" << flush;
+        LOG(logDEBUG,*_pLog) << "TURBOMOLE: Finished job with status " << i << flush;
         return true;
     }
     else {
@@ -312,7 +313,8 @@ bool Turbomole::ParseOrbitalsFile( Orbitals* _orbitals )
     std::map <int, std::vector<double> > _coefficients;
     std::map <int, double> _energies;
     
-    double _conv_Hrt_eV = 27.21138386;
+    //[-Wunused-variable]
+    //double _conv_Hrt_eV = 27.21138386;
     
     std::string _line;
     unsigned _levels = 0;
@@ -497,11 +499,16 @@ bool Turbomole::ParseLogFile( Orbitals* _orbitals ) {
     bool _has_overlap_matrix = false;
     bool _has_charges = false;
     bool _has_coordinates = false;
-    bool _has_qm_energy = false;
+    
+    //[-Wunused-variable]
+    //bool _has_qm_energy = false;
+    
     bool _has_self_energy = false;
     
-    int _occupied_levels = 0;
-    int _unoccupied_levels = 0;
+    //[-Wunused-variable]
+    //int _occupied_levels = 0;
+    //int _unoccupied_levels = 0;
+    
     int _number_of_electrons = 0;
     int _basis_set_size = 0;
 
@@ -593,8 +600,10 @@ bool Turbomole::ParseLogFile( Orbitals* _orbitals ) {
                 boost::trim( _line );
                 
                 vector<string> _row;
-                boost::algorithm::split( _row , _line, boost::is_any_of(" "), boost::algorithm::token_compress_on);   
-                int nfields =  _row.size();
+                boost::algorithm::split( _row , _line, boost::is_any_of(" "), boost::algorithm::token_compress_on); 
+                
+                //[-Wunused-variable]
+                //int nfields =  _row.size();
                 //cout << nfields << endl;
                 
                 for ( vector<string>::iterator it = _row.begin() ; it < _row.end() ; it++   ) {
