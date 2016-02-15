@@ -256,7 +256,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
 
         // for GW-BSE, we also need to parse the orbitals file
         int _parse_orbitals_status = _qmpack->ParseOrbitalsFile( &orb_iter_output );
-        if ( _parse_orbitals_status != 0 ) LOG(logERROR,*_log) << "Error parsing orbitals " << flush; 
+        if ( _parse_orbitals_status != 0 ) { LOG(logERROR,*_log) << "Error parsing orbitals " << flush; }
 
         
         std::vector<int> _state_index;
@@ -265,8 +265,8 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
         LOG(logDEBUG,*_log) << "Excited state via GWBSE: " <<  flush;
         LOG(logDEBUG,*_log) << "  --- type:              " << _type << flush;
         LOG(logDEBUG,*_log) << "  --- state:             " << _state << flush;
-        if ( _has_osc_filter) LOG(logDEBUG,*_log) << "  --- filter: osc.str. > " << _osc_threshold << flush;
-        if ( _has_dQ_filter)  LOG(logDEBUG,*_log) << "  --- filter: crg.trs. > " << _dQ_threshold << flush;
+        if ( _has_osc_filter) { LOG(logDEBUG,*_log) << "  --- filter: osc.str. > " << _osc_threshold << flush; }
+        if ( _has_dQ_filter)  { LOG(logDEBUG,*_log) << "  --- filter: crg.trs. > " << _dQ_threshold << flush; }
         
         if ( _has_osc_filter && _has_dQ_filter ){
             LOG(logDEBUG,*_log) << "  --- WARNING: filtering for optically active CT transition - might not make sense... "  << flush;
@@ -284,7 +284,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
         // actual GW-BSE run
 
         bool _evaluate = _gwbse.Evaluate( &orb_iter_output );
-        if ( !_evaluate ) LOG(logERROR,*_log) << "Failed GWBSE " << flush; 
+        if ( !_evaluate ) { LOG(logERROR,*_log) << "Failed GWBSE " << flush; }
         
        
         // write logger to log file
@@ -346,10 +346,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
          }
         
         
-        if ( _state_index.size() < 1 ){
-            throw runtime_error("Excited state filter yields no states! ");
-            
-        }
+        if ( _state_index.size() < 1 ){ throw runtime_error("Excited state filter yields no states! "); }
         // - output its energy
         if ( _type == "singlet" ){
             energy___ex = orb_iter_output.BSESingletEnergies()[_state_index[_state-1]]*13.6058; // to eV

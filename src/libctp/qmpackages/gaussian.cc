@@ -940,6 +940,9 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
                     // _orbitals->_has_unoccupied_levels = true;
                     LOG(logDEBUG,*_pLog) << "Occupied levels: " << _occupied_levels << flush;
                     LOG(logDEBUG,*_pLog) << "Unoccupied levels: " << _unoccupied_levels << flush;
+                    
+                    if ( _occupied_levels != _number_of_electrons ) { std::runtime_error("Gaussian Log file has energy fields merged"); }
+                    
                 }
             } // end of the while loop              
         } // end of the eigenvalue parsing

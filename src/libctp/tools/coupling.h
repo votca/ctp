@@ -138,21 +138,18 @@ bool Coupling::Evaluate() {
     bool _parse_logAB_status = _qmpackage->ParseLogFile( &_orbitalsAB );
     if ( !_parse_logAB_status ) { LOG(logERROR,_log) << "Failed to read log of molecule AB" << std::flush; }
 
-    if ( _orbitalsA.getNumberOfElectrons()*(_trimA-1) <   _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() ){
-
-    
-    LOG(logDEBUG,_log) << "Trimming virtual orbitals A:" 
+    if ( _orbitalsA.getNumberOfElectrons()*(_trimA-1) <   _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() ) {
+        LOG(logDEBUG,_log) << "Trimming virtual orbitals A:" 
                     << _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() << "->" 
                     << _orbitalsA.getNumberOfElectrons()*(_trimA-1) << std::flush;  
-    _orbitalsA.Trim(_trimA);
+        _orbitalsA.Trim(_trimA);
     }
     
-    if ( _orbitalsA.getNumberOfElectrons()*(_trimA-1) <   _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() ){
-
-    LOG(logDEBUG,_log) << "Trimming virtual orbitals B:" 
+    if ( _orbitalsB.getNumberOfElectrons()*(_trimB-1) <   _orbitalsB.getNumberOfLevels() - _orbitalsB.getNumberOfElectrons() ) {
+        LOG(logDEBUG,_log) << "Trimming virtual orbitals B:" 
                     << _orbitalsB.getNumberOfLevels() - _orbitalsB.getNumberOfElectrons() << "->" 
                     << _orbitalsB.getNumberOfElectrons()*(_trimB-1) << std::flush;      
-    _orbitalsB.Trim(_trimB);
+        _orbitalsB.Trim(_trimB);
     }    
      Overlap _overlap; 
     _overlap.setLogger(&_log);
