@@ -64,8 +64,8 @@ private:
     double _upper; // in eV
     int _n_pt;
 
-    int _minexc; // in eV
-    int _maxexc; // in eV
+    std::vector<std::vector<double> >::size_type _minexc; // in eV
+    std::vector<std::vector<double> >::size_type _maxexc; // in eV
     
     double _fwhm; // in eV
     double _shiftby; 
@@ -157,7 +157,7 @@ bool Spectrum::Evaluate() {
     
 
     //int _n_exc = TransitionDipoles.size();
-    int _n_exc = _maxexc - _minexc +1;
+    int _n_exc = _maxexc - _minexc + 1;
 
     if ( _maxexc > TransitionDipoles.size() ) {
       LOG(logDEBUG, _log) << " Transition dipoles for some excitations missing! " << flush;
@@ -203,7 +203,7 @@ bool Spectrum::Evaluate() {
     // get averaged oscillator strength for each excitation
     // f = 1/3 * Omega(Ryd) * |td|^2
     std::vector<double> _osc;
-    for ( int _i_exc = _minexc ; _i_exc <= _maxexc; _i_exc++ ){
+    for ( std::vector<std::vector<double> >::size_type _i_exc = _minexc ; _i_exc <= _maxexc; _i_exc++ ){
         _osc.push_back(  BSESingletEnergies[_i_exc ] * (TransitionDipoles[_i_exc][0] * TransitionDipoles[_i_exc][0] + TransitionDipoles[_i_exc][1] * TransitionDipoles[_i_exc][1] + TransitionDipoles[_i_exc][2] * TransitionDipoles[_i_exc][2]) / 3.0  );
     }
     
@@ -226,7 +226,7 @@ bool Spectrum::Evaluate() {
            double _eps_TruncLorentzian   = 0.0;
            double _imeps_TruncLorentzian = 0.0;
            
-           for ( int _i_exc = _minexc ; _i_exc <= _maxexc ; _i_exc++){
+           for ( std::vector<std::vector<double> >::size_type _i_exc = _minexc ; _i_exc <= _maxexc ; _i_exc++){
               _eps_Gaussian     +=  _osc[_i_exc-_minexc] * Gaussian(_e, BSESingletEnergies[_i_exc]+_shiftby/CONV::rydtoev, _fwhm);
               _imeps_Gaussian   +=  _osc[_i_exc-_minexc] *  BSESingletEnergies[_i_exc ] * Gaussian(_e, BSESingletEnergies[_i_exc], _fwhm);
               _eps_Lorentzian   +=  _osc[_i_exc-_minexc] * Lorentzian(_e, BSESingletEnergies[_i_exc], _fwhm);
@@ -258,7 +258,7 @@ bool Spectrum::Evaluate() {
             double _eps_TruncLorentzian   = 0.0;
             double _imeps_TruncLorentzian = 0.0;
             
-            for ( int _i_exc = _minexc ; _i_exc <= _maxexc ; _i_exc++){
+            for ( std::vector<std::vector<double> >::size_type _i_exc = _minexc ; _i_exc <= _maxexc ; _i_exc++){
                 //cout << BSESingletEnergies[_i_exc]*CONV::rydtoev << "  " << nmtoev(BSESingletEnergies[_i_exc]*CONV::rydtoev) << endl;
               double _exc_lambda = nmtoev(BSESingletEnergies[_i_exc]*CONV::rydtoev + _shiftby);
               _eps_Gaussian     +=  _osc[_i_exc-_minexc] * Gaussian(_lambda, _exc_lambda, _fwhm);

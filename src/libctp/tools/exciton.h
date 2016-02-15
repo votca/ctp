@@ -487,10 +487,10 @@ bool Exciton::Evaluate() {
         }
         // output Hessian
         fprintf(restart, "Hessian \n");
-        for ( int _i = 0; _i < _hessian.size1() ; _i++){
-            for ( int _j = 0; _j < _hessian.size2() ; _j++){
+        for ( ub::matrix<double>::size_type _i = 0; _i < _hessian.size1() ; _i++){
+            for ( ub::matrix<double>::size_type _j = 0; _j < _hessian.size2() ; _j++){
                 
-                fprintf(restart, "%d %d %le \n", _i,_j,_hessian(_i,_j)); 
+                fprintf(restart, "%lu %lu %lf \n", _i, _j, _hessian(_i,_j) ); 
                 
             }
         }
@@ -1213,8 +1213,8 @@ void Exciton::Orbitals2Segment(Segment* _segment, Orbitals* _orbitals){
 
    double _maximum = 0.0;
 
-   for ( int _i = 0; _i < _matrix.size1(); _i++ ){
-     for ( int _j = 0; _j < _matrix.size2(); _j++ ){
+   for ( ub::matrix<double>::size_type _i = 0; _i < _matrix.size1(); _i++ ){
+     for ( ub::matrix<double>::size_type _j = 0; _j < _matrix.size2(); _j++ ){
        if ( std::abs(_matrix(_i,_j)) > _maximum ) {
 	 _maximum = std::abs(_matrix(_i,_j));
        }				   
@@ -1230,8 +1230,8 @@ void Exciton::Orbitals2Segment(Segment* _segment, Orbitals* _orbitals){
    double _rms = 0.0;
    int _n = 0;
 
-   for ( int _i = 0; _i < _matrix.size1(); _i++ ){
-     for ( int _j = 0; _j < _matrix.size2(); _j++ ){
+   for ( ub::matrix<double>::size_type _i = 0; _i < _matrix.size1(); _i++ ){
+     for ( ub::matrix<double>::size_type _j = 0; _j < _matrix.size2(); _j++ ){
        _rms += _matrix(_i,_j) * _matrix(_i,_j);
        _n++;
      }
@@ -1430,7 +1430,7 @@ void Exciton::Orbitals2Segment(Segment* _segment, Orbitals* _orbitals){
             linalg_eigenvalues( _MOoverlap_eigenvalues, _MOoverlap);
 
             ub::matrix<double> _diagS = ub::zero_matrix<double>( _AOoverlap._aomatrix.size1(), _AOoverlap._aomatrix.size1());
-            for ( int _i =0; _i <  _AOoverlap._aomatrix.size1(); _i++){
+            for ( ub::matrix<double>::size_type _i =0; _i <  _AOoverlap._aomatrix.size1(); _i++){
                 _diagS(_i,_i) = 1.0/sqrt(_MOoverlap_eigenvalues[_i]);
             }
             // ub::matrix<double> _transform = ub::prod( _MOoverlap, ub::prod( _diagS, ub::trans(_MOoverlap) )  );

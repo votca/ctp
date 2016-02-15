@@ -205,9 +205,9 @@ namespace votca {
                 }
                 fprintf(out, "Created by VOTCA-CTP \n");
                 if ( _do_qp ){
-                    fprintf(out, "-%d %f %f %f \n", _atoms.size(), xstart, ystart, zstart);
+                    fprintf(out, "-%lu %f %f %f \n", _atoms.size(), xstart, ystart, zstart);
                 } else {
-                    fprintf(out, "%d %f %f %f \n", _atoms.size(), xstart, ystart, zstart);
+                    fprintf(out, "%lu %f %f %f \n", _atoms.size(), xstart, ystart, zstart);
                 }
                     
                 fprintf(out, "%d %f 0.0 0.0 \n", _xsteps + 1, xincr);
@@ -365,7 +365,7 @@ namespace votca {
                                 }
 
                                 double QP_at_grid = 0.0;
-                                for (int _i = 0; _i < Ftemp.size1(); _i++) {
+                                for (ub::matrix<double>::size_type _i = 0; _i < Ftemp.size1(); _i++) {
                                     QP_at_grid += Ftemp(_i,0) * tmat(_i,0);
                                 }
 
@@ -591,46 +591,29 @@ bool GenCube::Evaluate() {
     return true;
         }
 
-        int GenCube::element2number(string element) {
+int GenCube::element2number(string element) {
 
-            if (element == "H") {
-                return 1;
-            } else if (element == "He") {
-                return 2;
-            } else if (element == "C") {
-                return 6;
-            } else if (element == "N") {
-                return 7;               
-            } else if (element == "O") {
-                return 8;
-            } else if (element == "S") {
-                return 16;
-            }
-
-
-
-        }
+    if      (element == "H" ) { return 1; } 
+    else if (element == "He") { return 2; } 
+    else if (element == "C" ) { return 6; } 
+    else if (element == "N" ) { return 7; } 
+    else if (element == "O" ) { return 8; } 
+    else if (element == "S" ) { return 16;} 
+    else { return 0; }
+}
 
         
         
-        double GenCube::element2core_ECP(string element){
+double GenCube::element2core_ECP(string element){
             
-            if (element == "H") {
-                return 1.0;
-            } else if (element == "He") {
-                return 2.0;
-            } else if (element == "C") {
-                return 4.0;
-            } else if (element == "N") {
-                return 5.0;
-            } else if (element == "O") {
-                return 6.0;
-            } else if (element == "S") {
-                return 6.0;
-            }
-            
-            
-        }
+    if      (element == "H" ) { return 1.0; } 
+    else if (element == "He") { return 2.0; } 
+    else if (element == "C" ) { return 4.0; } 
+    else if (element == "N" ) { return 5.0; } 
+    else if (element == "O" ) { return 6.0; } 
+    else if (element == "S" ) { return 6.0; }
+    else { return 0.0; }
+}
 
 
 }}
