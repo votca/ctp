@@ -1,10 +1,12 @@
 #include <votca/ctp/ewald2d.h>
+#include <votca/tools/constants.h>
 #include <boost/format.hpp>
 #include <algorithm>
 
 
 using boost::format;
 
+namespace CONV = votca::tools::conv;
 
 namespace votca { namespace ctp {
 
@@ -100,8 +102,8 @@ EWD::triple<> Ewald3D2D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
         
         LOG(logDEBUG,*_log)  
             << (format("   dE = %1$+1.7f   EKK = %2$+1.7f   RMS(%4$d) = %3$+1.7f") 
-            % (dEKK*2*M_PI/_LxLy*_actor.int2eV) % (EKK_fgC_bgP*2*M_PI/_LxLy*_actor.int2eV)
-            % (dEKK_rms*2*M_PI/_LxLy*_actor.int2eV) % N_EKK_memory) << flush;
+            % (dEKK*2*M_PI/_LxLy*CONV::int2eV) % (EKK_fgC_bgP*2*M_PI/_LxLy*CONV::int2eV)
+            % (dEKK_rms*2*M_PI/_LxLy*CONV::int2eV) % N_EKK_memory) << flush;
         
 //        cout << endl;
 //        for (int i = 0; i < dEKKs.size(); ++i) {
@@ -109,8 +111,8 @@ EWD::triple<> Ewald3D2D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
 //        }
 //        cout << flush;
         
-        if (dEKK_rms*2*M_PI/_LxLy*_actor.int2eV <= _crit_dE && N_K_proc > 10) {
-        //if (dEKK_rms*2*M_PI/LxLy*_actor.int2eV <= dEKK_rms_crit) {
+        if (dEKK_rms*2*M_PI/_LxLy*CONV::int2eV <= _crit_dE && N_K_proc > 10) {
+        //if (dEKK_rms*2*M_PI/LxLy*CONV::int2eV <= dEKK_rms_crit) {
             _converged_K = true;
             LOG(logDEBUG,*_log)  
                 << (format(":::: Converged to precision as of |K| = %1$+1.3f 1/nm") 
