@@ -387,7 +387,7 @@ bool NWChem::ParseOrbitalsFile( Orbitals* _orbitals )
     std::map <int, double> _occ;
     
     std::string _line;
-    unsigned _levels = 0;
+    unsigned int _levels = 0;
     //[-Wunused-variable]
     //unsigned _level;
     unsigned _basis_size = 0;
@@ -477,7 +477,7 @@ bool NWChem::ParseOrbitalsFile( Orbitals* _orbitals )
 
     // Now, the same for the coefficients
     double coef;
-    for ( int _imo=0; _imo < _levels ; _imo++ ){
+    for ( unsigned int _imo=0; _imo < _levels ; _imo++ ){
         for ( i=1; i<=_n_lines; i++ ) {
             for ( int j=0; j<3; j++ ){
                 _input_file >> coef;
@@ -616,7 +616,7 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
 
     bool _has_overlap_matrix = false;
     bool _has_charges = false;
-    bool _has_coordinates = false;
+    //bool _has_coordinates = false;
     bool _has_qm_energy = false;
     bool _has_self_energy = false;
     bool _has_basis_set_size = false;
@@ -806,7 +806,7 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
         if ( _found_optimization && coordinates_pos != std::string::npos) {
             LOG(logDEBUG,*_pLog) << "Getting the coordinates" << flush;
             
-            _has_coordinates = true;
+            //_has_coordinates = true;
             bool _has_QMAtoms = _orbitals->hasQMAtoms();
 
             // three garbage lines

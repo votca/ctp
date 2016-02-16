@@ -498,7 +498,7 @@ bool Turbomole::ParseLogFile( Orbitals* _orbitals ) {
     bool _has_basis_set_size = false;
     bool _has_overlap_matrix = false;
     bool _has_charges = false;
-    bool _has_coordinates = false;
+    //bool _has_coordinates = false;
     
     //[-Wunused-variable]
     //bool _has_qm_energy = false;
@@ -651,7 +651,7 @@ bool Turbomole::ParseLogFile( Orbitals* _orbitals ) {
         
         if (coordinates_pos != std::string::npos) {
             LOG(logDEBUG,*_pLog) << "Getting the coordinates" << flush;
-            _has_coordinates = true;
+            //_has_coordinates = true;
             LOG(logDEBUG, *_pLog) << "QM energy " << _orbitals->getQMEnergy() <<  flush;
                     
             //_orbitals->_has_atoms = true;

@@ -347,6 +347,7 @@ bool GW::CheckLogFile() {
     }
     
     _input_file.close();
+    return true;
     
 }
 
@@ -359,7 +360,8 @@ bool GW::ParseLogFile( Orbitals* _orbitals ) {
     
     std::string _line;
     unsigned _levels = 0;
-    unsigned _level;
+    //[-Wunused-but-set-variable]
+    //unsigned _level;
     
     //[-Wunused-variable]
     //unsigned _basis_size = 0;
@@ -414,13 +416,15 @@ bool GW::ParseLogFile( Orbitals* _orbitals ) {
                 if ( _line.find("GWA setting up full QP") != std::string::npos ){
                     _is_QPdata = false;
                 } else {
-                    int level;
+                    //[-Wunused-but-set-variable]
+                    //int level;
                     boost::trim( _line );
                     _levels++;
                     boost::algorithm::split(results, _line, boost::is_any_of("\t ="),
                     boost::algorithm::token_compress_on); 
                     // get QP level index and save in orbitals
-                    level = boost::lexical_cast<int>(results[2]);
+                    //[-Wunused-but-set-variable]
+                    //level = boost::lexical_cast<int>(results[2]);
                     //_orbitals->_QP_levels_index.push_back(boost::lexical_cast<int>(results[2]));
                     // get the five (DFT, S_x,S_c, V_xc, E_qp) energies in temporary map
                     for (size_t ite=0; ite<5; ite++) {
@@ -544,7 +548,8 @@ bool GW::ParseLogFile( Orbitals* _orbitals ) {
             boost::trim( _line );
             boost::algorithm::split(results, _line, boost::is_any_of("\t ="),
             boost::algorithm::token_compress_on); 
-            _level = boost::lexical_cast<int>(results.front());
+            //[-Wunused-but-set-variable]
+            //_level = boost::lexical_cast<int>(results.front());
             _orbitals->_QPdiag_energies.push_back(boost::lexical_cast<double>(results.back()));
             // next _levels lines contain expansion coefficients
             for (size_t _i_coef = 0; _i_coef < _levels; _i_coef++ ){

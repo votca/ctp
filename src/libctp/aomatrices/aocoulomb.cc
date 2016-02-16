@@ -5731,8 +5731,8 @@ namespace votca { namespace ctp {
 
             // put _cou[i][j][0] into ublas matrix
             ub::matrix<double> _coumat = ub::zero_matrix<double>(_nrows, _ncols);
-            for (int i = 0; i < _coumat.size1(); i++) {
-                for (int j = 0; j < _coumat.size2(); j++) {
+            for (ub::matrix<double>::size_type i = 0; i < _coumat.size1(); i++) {
+                for (ub::matrix<double>::size_type j = 0; j < _coumat.size2(); j++) {
                     _coumat(i, j) = _cou[i][j][0];
                 }
             }
@@ -5741,8 +5741,8 @@ namespace votca { namespace ctp {
             ub::matrix<double> _trafo_col_tposed = ub::trans(_trafo_col);
             ub::matrix<double> _cou_sph = ub::prod(_cou_tmp, _trafo_col_tposed);
             // save to _matrix
-            for (int i = 0; i < _matrix.size1(); i++) {
-                for (int j = 0; j < _matrix.size2(); j++) {
+            for (ub::matrix<double>::size_type i = 0; i < _matrix.size1(); i++) {
+                for (ub::matrix<double>::size_type j = 0; j < _matrix.size2(); j++) {
                     _matrix(i, j) += _cou_sph(i + _shell_row->getOffset(), j + _shell_col->getOffset());
                 }
             }
@@ -5782,8 +5782,8 @@ namespace votca { namespace ctp {
             //_gwoverlap_cholesky.Print( "ChoS" );
 
             // remove L^T from Cholesky
-            for (int i =0; i < _gwoverlap_cholesky._aomatrix.size1(); i++ ){
-                for (int j = i+1; j < _gwoverlap_cholesky._aomatrix.size1(); j++ ){
+            for (ub::matrix<double>::size_type i =0; i < _gwoverlap_cholesky._aomatrix.size1(); i++ ){
+                for (ub::matrix<double>::size_type j = i+1; j < _gwoverlap_cholesky._aomatrix.size1(); j++ ){
                     _gwoverlap_cholesky._aomatrix(i,j) = 0.0;
                 }
             }

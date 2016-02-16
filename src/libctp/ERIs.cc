@@ -325,8 +325,8 @@ namespace votca {
                 
                     ub::matrix<double>& _3c = _threecenter.getDatamatrix(_j);
 
-                    for ( int alpha = 0 ; alpha < DMAT.size1(); alpha++ ){
-                        for ( int beta = 0 ; beta < DMAT.size2(); beta++ ){
+                    for ( ub::matrix<double>::size_type alpha = 0 ; alpha < DMAT.size1(); alpha++ ){
+                        for ( ub::matrix<double>::size_type beta = 0 ; beta < DMAT.size2(); beta++ ){
                         
                             _FITMAT(alpha,beta) += _inverse(_i,_j)*_3c(alpha,beta)*_AOIntegrals(0,_i);
                             cout << " inV " << _inverse(_i,_j) << " 3C " << _3c(alpha,beta) << endl;
@@ -348,8 +348,8 @@ namespace votca {
 
             double _Nfit = 0.0;
             
-            for ( int alpha = 0 ; alpha < DMAT.size1(); alpha++ ){
-                        for ( int beta = 0 ; beta < DMAT.size1(); beta++ ){
+            for ( ub::matrix<double>::size_type alpha = 0 ; alpha < DMAT.size1(); alpha++ ){
+                        for ( ub::matrix<double>::size_type beta = 0 ; beta < DMAT.size1(); beta++ ){
                     
                         cout << alpha << "  " << beta << "  " << _FITMAT(alpha,beta) << endl;  
                         
@@ -376,14 +376,14 @@ namespace votca {
                 ub::vector<double>threecenterasarray=(_threecenter.getDatamatrix(_i)).data();
                 //cout << _threecenter.getDatamatrix(_i).size1() << "x"<< _threecenter.getDatamatrix(_i).size2() <<" Size-Threecenter,matrix"<<endl;
                 // Trace over prod::DMAT,I(l)=componentwise product over 
-                for ( int _j=0; _j<threecenterasarray.size();_j++){
+                for ( ub::vector<double>::size_type _j=0; _j<threecenterasarray.size();_j++){
                     Itilde(_i,0)+=dmatasarray[_j]*threecenterasarray[_j];
                 }
             }
             //cout << "Itilde " <<Itilde << endl;
             ub::matrix<double>K=ub::prod(_Vcoulomb,Itilde);
             //cout << "K " << K << endl;
-            for ( int _i=0; _i<K.size1(); _i++){
+            for ( ub::matrix<double>::size_type _i=0; _i<K.size1(); _i++){
                 
             _ERIs+=_threecenter.getDatamatrix(_i)*K(_i,0);    
             //cout << "I " << _threecenter.getDatamatrix(_i) << endl;
@@ -429,7 +429,7 @@ namespace votca {
         void ERIs::CalculateEnergy(ub::vector<double> &dmatasarray){
             _ERIsenergy=0;
             ub::vector<double> ERIsasarray=_ERIs.data();
-            for ( int _i=0;_i<ERIsasarray.size();_i++){
+            for ( ub::vector<double>::size_type _i=0;_i<ERIsasarray.size();_i++){
                 _ERIsenergy+=dmatasarray[_i]*ERIsasarray[_i];
                 
             }
@@ -441,8 +441,8 @@ namespace votca {
         
         
         void ERIs::printERIs(){
-          for (int i=0; i< _ERIs.size1(); i++){
-                for (int j=0; j< _ERIs.size2();j++){
+          for (ub::matrix<double>::size_type i=0; i< _ERIs.size1(); i++){
+                for (ub::matrix<double>::size_type j=0; j< _ERIs.size2();j++){
                     cout << "ERIs [" << i<<":"<<j<<"]="<<_ERIs(i,j)<<endl;
                 }
             }

@@ -1084,8 +1084,8 @@ namespace votca { namespace ctp {
             ub::matrix<double> _dip_sph = ub::prod( _dip_tmp, _trafo_col_tposed );
             
             // save to _matrix
-            for ( int i = 0; i< _matrix[0].size1(); i++ ) {
-                for (int j = 0; j < _matrix[0].size2(); j++){
+            for ( ub::matrix_range< ub::matrix<double> >::size_type i = 0; i< _matrix[0].size1(); i++ ) {
+                for (ub::matrix_range< ub::matrix<double> >::size_type j = 0; j < _matrix[0].size2(); j++){
                     _matrix[ _i_comp ](i,j) += _dip_sph(i+_shell_row->getOffset(),j+_shell_col->getOffset());
                 }
             }

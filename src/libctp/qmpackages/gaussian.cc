@@ -251,7 +251,7 @@ bool Gaussian::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gu
                             GaussianPrimitive* gaussian = *itg;
                             //_com_file << gaussian->decay << " " << gaussian->contraction << endl;
                             _el_file << FortranFormat( gaussian->decay ) ;
-                            for ( int _icontr = 0 ; _icontr < gaussian->contraction.size(); _icontr++){
+                            for ( std::vector<double>::size_type _icontr = 0 ; _icontr < gaussian->contraction.size(); _icontr++){
                                 if ( gaussian->contraction[_icontr] != 0.0 ){
                                    _el_file << " " << FortranFormat( gaussian->contraction[_icontr] ) ;
                                 }
@@ -430,7 +430,7 @@ bool Gaussian::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gu
                             GaussianPrimitive* gaussian = *itg;
                             //_com_file << gaussian->decay << " " << gaussian->contraction << endl;
                                                         _el_file << FortranFormat( gaussian->decay ) ;
-                            for ( int _icontr = 0 ; _icontr < gaussian->contraction.size(); _icontr++){
+                            for ( std::vector<double>::size_type _icontr = 0 ; _icontr < gaussian->contraction.size(); _icontr++){
                                 if ( gaussian->contraction[_icontr] != 0.0 ){
                                    _el_file << " " << FortranFormat( gaussian->contraction[_icontr] ) ;
                                 }
@@ -808,10 +808,13 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
     bool _has_number_of_electrons = false;
     bool _has_basis_set_size = false;
     bool _has_overlap_matrix = false;
-    bool _has_vxc_matrix = false;
+    //[-Wunused-but-set-variable]
+    //bool _has_vxc_matrix = false;
     bool _has_charges = false;
-    bool _has_coordinates = false;
-    bool _has_qm_energy = false;
+    //[-Wunused-but-set-variable]
+    //bool _has_coordinates = false;
+    //[-Wunused-but-set-variable]
+    //bool _has_qm_energy = false;
     bool _has_self_energy = false;
     
     bool _read_vxc = false;
@@ -1080,7 +1083,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
         if (coordinates_pos != std::string::npos && cpn == 0) {
             ++cpn; // updates but ignores
             LOG(logDEBUG,*_pLog) << "Getting the coordinates" << flush;
-            _has_coordinates = true;
+            //_has_coordinates = true;
             boost::trim(_line);
             string archive = _line;
             while ( _line.size() != 0 ) {
@@ -1143,7 +1146,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
                 properties[property[0]] = property[1];                
             }
             LOG(logDEBUG, *_pLog) << "QM energy " << _orbitals->getQMEnergy() <<  flush;
-            _has_qm_energy = true;
+            //_has_qm_energy = true;
             //_orbitals->_has_atoms = true;
             //_orbitals->_has_qm_energy = true;
             if (properties.count("HF") > 0) {
@@ -1220,7 +1223,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
        _vxc.resize( _cart_basis_set_size  );
             
 
-       _has_vxc_matrix = true;
+       //_has_vxc_matrix = true;
        //cout << "Found the overlap matrix!" << endl;   
        vector<int> _j_indeces;
         
@@ -1308,7 +1311,7 @@ bool Gaussian::ConvertToGW( Orbitals* _orbitals ) {
     vector< QMAtom* >::iterator ita;
     LOG(logDEBUG,*_pLog) << "Rewriting molecular orbitals " << flush;
     // Loop over all molecular orbitals
-    for ( int _i_orbital = 0; _i_orbital < _basis_size ; _i_orbital++ ) {
+    for ( std::vector<double>::size_type _i_orbital = 0; _i_orbital < _basis_size ; _i_orbital++ ) {
         _orb_file << _i_orbital+1 << " " << FortranFormat(energies(_i_orbital)) << endl;
         int _i_coef_qc = 0;
         int _i_coef_gw = 0;
@@ -1600,8 +1603,8 @@ bool Gaussian::ConvertToGW( Orbitals* _orbitals ) {
     // output to file
     ofstream _vxc_file;
     _vxc_file.open ( _vxc_file_name_full.c_str() );
-    for (int _i_orbital = 0; _i_orbital < _basis_size ; _i_orbital++ ){
-        for (int _j_orbital = 0; _j_orbital < _basis_size ; _j_orbital++ ){
+    for (std::vector<double>::size_type _i_orbital = 0; _i_orbital < _basis_size ; _i_orbital++ ){
+        for (std::vector<double>::size_type _j_orbital = 0; _j_orbital < _basis_size ; _j_orbital++ ){
             _vxc_file << _i_orbital+1 << "  " << _j_orbital+1 << "  " << FortranFormat( 2.0*vxc_expect( _i_orbital , _j_orbital ) ) << endl; 
         }
     }

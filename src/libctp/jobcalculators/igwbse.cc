@@ -710,19 +710,21 @@ void IGWBSE::ReadJobFile(Topology *top) {
             list<Property*> pOverlap = pair_property->Select("overlap");
             
             // this is to select HOMO_A and HOMO_B 
-            double overlapAB;
+            // [-Wunused-but-set-variable]
+            //double overlapAB;
             int orbA;
             int orbB;
-            double energyA;
-            double energyB;
+            //double energyA;
+            //double energyB;
             
             for (list<Property*> ::iterator itOverlap = pOverlap.begin(); itOverlap != pOverlap.end(); ++itOverlap) {
                orbA = (*itOverlap)->getAttribute<int>("orbA");
                orbB = (*itOverlap)->getAttribute<int>("orbB");
                if ( orbA == homoA && orbB == homoB ) {  
-                    overlapAB = (*itOverlap)->getAttribute<double>("jAB");
-                    energyA = (*itOverlap)->getAttribute<double>("eA");
-                    energyB = (*itOverlap)->getAttribute<double>("eB");
+                   //[-Wunused-but-set-variable]
+                   // overlapAB = (*itOverlap)->getAttribute<double>("jAB");
+                   //energyA = (*itOverlap)->getAttribute<double>("eA");
+                   //energyB = (*itOverlap)->getAttribute<double>("eB");
                     break;
                 }
             }

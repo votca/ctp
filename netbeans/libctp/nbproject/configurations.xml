@@ -44,6 +44,7 @@
         <itemPath>../../src/libctp/jobcalculators/idft.h</itemPath>
         <itemPath>../../src/libctp/jobcalculators/igwbse.cc</itemPath>
         <itemPath>../../src/libctp/jobcalculators/igwbse.h</itemPath>
+        <itemPath>../../src/libctp/jobcalculators/qmape.h</itemPath>
         <itemPath>../../src/libctp/jobcalculators/qmmm.h</itemPath>
         <itemPath>../../src/libctp/jobcalculators/xqmultipole.h</itemPath>
       </logicalFolder>
@@ -812,6 +813,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/libctp/jobcalculators/qmape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/libctp/jobcalculators/qmmm.h"
             ex="false"
             tool="3"
@@ -1556,6 +1562,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libctp/jobcalculators/igwbse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libctp/jobcalculators/qmape.h"
             ex="false"
             tool="3"
             flavor2="0">

@@ -184,8 +184,8 @@ namespace votca { namespace ctp {
                                    
                                    // consider contractions
                                    // cut out block that is needed. sum
-                                           for ( int i = 0; i< _matrix.size1(); i++ ) {
-                                               for (int j = 0; j < _matrix.size2(); j++){
+                                           for ( ub::matrix_range< ub::matrix<double> >::size_type i = 0; i< _matrix.size1(); i++ ) {
+                                               for (ub::matrix_range< ub::matrix<double> >::size_type j = 0; j < _matrix.size2(); j++){
                                                 _matrix(i,j) += VNL_ECP(i+_shell_row->getOffset(),j+_shell_col->getOffset()) * _contractions_row_full[i+_shell_row->getOffset()]* _contractions_col_full[j+_shell_col->getOffset()];
                                                }
                                               }
@@ -689,8 +689,8 @@ namespace votca { namespace ctp {
       
       // now finally calculate matrix
 
-            for (int i = 0; i < matrix.size1(); i++) {
-                for (int j = 0; j < matrix.size2(); j++) {
+            for (ub::matrix<double>::size_type i = 0; i < matrix.size1(); i++) {
+                for (ub::matrix<double>::size_type j = 0; j < matrix.size2(); j++) {
 
                     for (index L = 1; L <= 3; L++) {
                         for (index L1 = 1; L1 <= 3; L1++) {
@@ -717,8 +717,8 @@ namespace votca { namespace ctp {
       
       
       
-        for (int i = 0; i < matrix.size1(); i++) {
-                for (int j = 0; j < matrix.size2(); j++) {
+        for (ub::matrix<double>::size_type i = 0; i < matrix.size1(); i++) {
+                for (ub::matrix<double>::size_type j = 0; j < matrix.size2(); j++) {
 
                     matrix(i,j) = matrix(i,j) * GAUSS * NormA[i] * NormB[j];
 

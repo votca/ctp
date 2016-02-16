@@ -99,16 +99,23 @@ void XInductor::Evaluate(XJob *job) {
     // Compute state energy       //
     // ++++++++++++++++++++++++++ //
 
-    double  E_state  = 0.0;
+    //[-Wunused-but-set-variable]
+    //double  E_state  = 0.0;
+    
     int     iter     = 0;
     
     boost::timer::cpu_timer cpu_t;
     cpu_t.start();
     boost::timer::cpu_times t0 = cpu_t.elapsed();    
-    if (this->_induce) iter      = this->Induce(job);
+    if (this->_induce) { iter      = this->Induce(job); }
     boost::timer::cpu_times t1 = cpu_t.elapsed();
-    if (this->_induce) E_state   = this->Energy(job);
-    else               E_state   = this->EnergyStatic(job);
+    
+    
+    //[-Wunused-but-set-variable]
+    //if (this->_induce) E_state   = this->Energy(job);
+    //else               E_state   = this->EnergyStatic(job);
+    
+    
     boost::timer::cpu_times t2 = cpu_t.elapsed();
     
     double t_indu = (t1.wall - t0.wall)/1e9/60.;
