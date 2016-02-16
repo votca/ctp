@@ -130,20 +130,15 @@ namespace votca { namespace ctp {
         }
     
     
-    int LebedevGrid::getOrder(string element, string type){
+int LebedevGrid::getOrder(string element, string type){
         
-        if ( type == "medium"){
-            
-            return MediumOrder.at(element);            
-            
-        }
-        
-        
-        
-        
-        
-        
+    if ( type == "medium"){
+        return MediumOrder.at(element);            
+    } else {
+        throw std::runtime_error("Sphere Lebedev Rule exception: no implementation");
+        return -1;
     }
+}
     
     
     

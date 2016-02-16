@@ -368,7 +368,7 @@ void DFT::XYZ2Orbitals(Orbitals* _orbitals, string filename){
                
                 ifstream in;
                 double x, y, z;
-                int id;
+                //int id;
                 string type;
 
                 LOG(logDEBUG,_log) << " Reading molecular coordinates from " << _xyzfile << flush;
@@ -376,7 +376,7 @@ void DFT::XYZ2Orbitals(Orbitals* _orbitals, string filename){
                 if (!in) throw runtime_error(string("Error reading coordinates from: ")
                         + _xyzfile);
 
-                id = 1;
+                //id = 1;
                 while (in.good()) { // keep reading until end-of-file
                     in >> type;
                     in >> x;

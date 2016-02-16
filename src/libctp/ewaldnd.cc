@@ -1089,7 +1089,8 @@ void Ewald3DnD::WriteInductionStateTable() {
             PolarSeg *pseg_h = *sit1;
             PolarSeg *pseg_n = *sit2;
 
-            vec dr = pseg_h->getPos() - _polar_qm0[0]->getPos();
+            //[-Wunused-but-set-variable]
+            //vec dr = pseg_h->getPos() - _polar_qm0[0]->getPos();
             
             //[-Wunused-variable]
             //double dR = votca::tools::abs(dr);

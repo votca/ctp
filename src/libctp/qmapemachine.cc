@@ -452,14 +452,17 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 	
         // - output its energy
         //[-Wunused-but-set-variable]
-	double energy___ex = 0.0;
-        
+        /*
+	double energy___ex;
 	if ( _type == "singlet" ){
 		energy___ex = orb.BSESingletEnergies()[_state_index[_state-1]]*13.6058; // to eV
 	} else if ( _type == "triplet" ) {
 		energy___ex = orb.BSETripletEnergies()[_state_index[_state-1]]*13.6058; // to eV
-	}
-
+	} else {
+            energy___ex = 0.0;
+        }
+        */
+        
 	// ub::matrix<double> &_dft_orbitals_GS = orb_iter_output.MOCoefficients();
 	// int _parse_orbitals_status_GS = _qmpack->ParseOrbitalsFile( &orb_iter_output );
 

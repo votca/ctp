@@ -52,7 +52,7 @@ namespace votca {
             // constructing full QP Hamiltonian, storage in vxc
             _vxc = -_vxc + _sigma_x + _sigma_c;
             // diagonal elements are given by _qp_energies
-            for (int _m = 0; _m < _vxc.size1(); _m++ ){
+            for (ub::matrix<double>::size_type _m = 0; _m < _vxc.size1(); _m++ ){
               _vxc( _m,_m ) = _qp_energies( _m + _qpmin );
             }
 
@@ -83,9 +83,9 @@ namespace votca {
         void GWBSE::sigma_c_setup(const TCMatrix& _Mmn, const ub::vector<double>& _edft){
             
             // iterative refinement of qp energies
-            int _max_iter = 5;
-            int _levelsum = _Mmn[0].size2(); // total number of bands
-            int _gwsize  = _Mmn[0].size1(); // size of the GW basis
+            unsigned int _max_iter = 5;
+            unsigned int _levelsum = _Mmn[0].size2(); // total number of bands
+            unsigned int _gwsize  = _Mmn[0].size1(); // size of the GW basis
             const double pi = boost::math::constants::pi<double>();
             
 
@@ -95,22 +95,22 @@ namespace votca {
      
 
 	    // only diagonal elements except for in final iteration
-            for ( int _i_iter = 0 ; _i_iter < _max_iter-1 ; _i_iter++ ){
+            for ( unsigned int _i_iter = 0 ; _i_iter < _max_iter-1 ; _i_iter++ ){
                 
 	      // initialize sigma_c to zero at the beginning of each iteration
 	      _sigma_c = ub::zero_matrix<double>(_qptotal,_qptotal);
 
 	      // loop over all GW levels
               #pragma omp parallel for
-	      for (int _gw_level = 0; _gw_level < _qptotal ; _gw_level++ ){
+	      for (unsigned int _gw_level = 0; _gw_level < _qptotal ; _gw_level++ ){
                   
                 const ub::matrix<double>& Mmn = _Mmn[ _gw_level + _qpmin ];
               
 		// loop over all functions in GW basis
-		for ( int _i_gw = 0; _i_gw < _gwsize ; _i_gw++ ){
+		for ( unsigned int _i_gw = 0; _i_gw < _gwsize ; _i_gw++ ){
                     
 		  // loop over all bands
-		  for ( int _i = 0; _i < _levelsum ; _i++ ){
+		  for ( unsigned int _i = 0; _i < _levelsum ; _i++ ){
                     
 		    double occ = 1.0;
 		    if ( _i > _homo ) occ = -1.0; // sign for empty levels
@@ -160,16 +160,16 @@ namespace votca {
 
             // loop over col  GW levels
             #pragma omp parallel for
-	    for (int _gw_level = 0; _gw_level < _qptotal ; _gw_level++ ){
+	    for (unsigned int _gw_level = 0; _gw_level < _qptotal ; _gw_level++ ){
               
                 const ub::matrix<double>& Mmn =  _Mmn[ _gw_level + _qpmin ];
 
 		// loop over all functions in GW basis
-		for ( int _i_gw = 0; _i_gw < _gwsize ; _i_gw++ ){
+		for ( unsigned int _i_gw = 0; _i_gw < _gwsize ; _i_gw++ ){
                     
 
 		  // loop over all screening levels
-		  for ( int _i = 0; _i < _levelsum ; _i++ ){
+		  for ( unsigned int _i = 0; _i < _levelsum ; _i++ ){
                     
 		    double occ = 1.0;
 		    if ( _i > _homo ) occ = -1.0; // sign for empty levels
@@ -185,7 +185,7 @@ namespace votca {
 		    double _factor = _ppm_weight( _i_gw ) * _ppm_freq( _i_gw) *   Mmn(_i_gw, _i) *_stab/_denom; // contains conversion factor 2!
 		    
 		    // loop over row GW levels
-		    for ( int _m = 0 ; _m < _qptotal ; _m++) {
+		    for ( unsigned int _m = 0 ; _m < _qptotal ; _m++) {
                     
 		    
 		    // sigma_c all elements
@@ -203,25 +203,25 @@ namespace votca {
         
             // initialize sigma_x
             _sigma_x = ub::zero_matrix<double>(_qptotal,_qptotal);
-            int _size  = _Mmn[0].size1();
+            unsigned int _size  = _Mmn[0].size1();
 
             // band 1 loop over all GW levels
             #pragma omp parallel for
             //for ( int _m1 = _qpmin ; _m1 <= _qpmax ; _m1++ ){
-            for ( int _m1 = 0 ; _m1 < _qptotal ; _m1++ ){
+            for ( unsigned int _m1 = 0 ; _m1 < _qptotal ; _m1++ ){
                 
                 const ub::matrix<double>& M1mn =  _Mmn[ _m1 + _qpmin ];
                 
                 // band 2 loop over all GW levels
                 //for ( int _m2 = _qpmin ; _m2 <= _qpmax ; _m2++ ){
-                for ( int _m2 = 0 ; _m2 < _qptotal ; _m2++ ){
+                for ( unsigned int _m2 = 0 ; _m2 < _qptotal ; _m2++ ){
                     
                     const ub::matrix<double>& M2mn =  _Mmn[ _m2 + _qpmin ];
                     
                     // loop over all basis functions
-                    for ( int _i_gw = 0 ; _i_gw < _size ; _i_gw++ ){
+                    for ( unsigned int _i_gw = 0 ; _i_gw < _size ; _i_gw++ ){
                         // loop over all occupied bands used in screening
-                        for ( int _i_occ = 0 ; _i_occ <= _homo ; _i_occ++ ){
+                        for ( unsigned int _i_occ = 0 ; _i_occ <= _homo ; _i_occ++ ){
                             _sigma_x( _m1, _m2 ) -= 2.0 * M1mn( _i_gw , _i_occ ) * M2mn( _i_gw , _i_occ );
                         } // occupied bands
                     } // gwbasis functions

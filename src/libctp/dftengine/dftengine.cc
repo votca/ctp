@@ -494,13 +494,13 @@ namespace votca {
             //set number of electrons and such
            _orbitals->setBasisSetSize(_dftbasis.AOBasisSize());
            
-           for (int i=0;i<_atoms.size();i++){
+           for (std::vector<QMAtom*>::size_type i=0;i<_atoms.size();i++){
                _numofelectrons+=_elements.getNucCrg(_atoms[i]->type);
            }
 
             // if ECP
             if (_with_ecp) {
-                for (int i = 0; i < _atoms.size(); i++) {
+                for (std::vector<QMAtom*>::size_type i = 0; i < _atoms.size(); i++) {
                     _numofelectrons-= _ecpbasisset.getElement(_atoms[i]->type)->getNcore() ;
                 }
             }

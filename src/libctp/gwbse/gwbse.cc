@@ -258,8 +258,8 @@ namespace votca {
            _bse_size   = _bse_vtotal * _bse_ctotal;
             
            // indexing info BSE vector index to occupied/virtual orbital
-           for ( int _v = 0; _v < _bse_vtotal; _v++ ){
-               for ( int _c = 0; _c < _bse_ctotal ; _c++){
+           for ( unsigned int _v = 0; _v < _bse_vtotal; _v++ ){
+               for ( unsigned int _c = 0; _c < _bse_ctotal ; _c++){
                    _index2v.push_back( _bse_vmin + _v );
                    _index2c.push_back( _bse_cmin + _c );
                }
@@ -317,7 +317,7 @@ namespace votca {
             }
             
             
-            /******* TESTING VXC 
+            /* TESTING VXC 
             
             // test total number of electrons
             //ub::matrix<double> _ddft_orbitals = *(_orbitals->getOrbitals()); 
@@ -344,7 +344,7 @@ namespace votca {
             }
             
             exit(0);
-            //****************/
+            */
          
             
             
@@ -485,7 +485,7 @@ namespace votca {
             while ( ! _shift_converged ){
                 
                 // for symmetric PPM, we can initialize _epsilon with the overlap matrix!
-                for ( int _i_freq = 0 ; _i_freq < _screening_freq.size1() ; _i_freq++ ){
+                for ( unsigned int _i_freq = 0 ; _i_freq < _screening_freq.size1() ; _i_freq++ ){
                     _epsilon[ _i_freq ] = _gwoverlap._aomatrix ;
                 }
             
@@ -548,7 +548,7 @@ namespace votca {
             
             LOG(logINFO,*_pLog) << (format("  ====== Perturbative quasiparticle energies (Rydberg) ====== ")).str() << flush;
             LOG(logINFO,*_pLog) << (format("   DeltaHLGap = %1$+1.4f Ryd") % _shift ).str()  <<  flush;
-            for ( int _i = 0 ; _i < _qptotal ; _i++ ){
+            for ( unsigned int _i = 0 ; _i < _qptotal ; _i++ ){
                 if ( (_i + _qpmin) == _homo ){
                     LOG(logINFO,*_pLog) << (format("  HOMO  = %1$4d DFT = %2$+1.4f VXC = %3$+1.4f S-X = %4$+1.4f S-C = %5$+1.4f GWA = %6$+1.4f") % (_i+_qpmin+1) % _dft_energies( _i + _qpmin ) % _vxc(_i,_i) % _sigma_x(_i,_i) % _sigma_c(_i,_i) % _qp_energies(_i + _qpmin ) ).str() << flush;
                 } else if ( (_i + _qpmin) == _homo+1 ){
@@ -566,7 +566,7 @@ namespace votca {
             if ( _store_qp_pert ){
                 ub::matrix<double>& _qp_energies_store = _orbitals->QPpertEnergies();
                 _qp_energies_store.resize(_qptotal,5);
-                for ( int _i = 0 ; _i < _qptotal ; _i++ ){
+                for ( unsigned int _i = 0 ; _i < _qptotal ; _i++ ){
                     _qp_energies_store( _i, 0 ) = _dft_energies( _i + _qpmin );
                     _qp_energies_store( _i, 1 ) = _sigma_x(_i,_i);
                     _qp_energies_store( _i, 2 ) = _sigma_c(_i,_i);
@@ -582,7 +582,7 @@ namespace votca {
                 if (_do_qp_diag) {
                     LOG(logDEBUG, *_pLog) << TimeStamp() << " Full quasiparticle Hamiltonian  " << flush;
                     LOG(logINFO, *_pLog) << (format("  ====== Diagonalized quasiparticle energies (Rydberg) ====== ")).str() << flush;
-                    for (int _i = 0; _i < _qptotal; _i++) {
+                    for (unsigned int _i = 0; _i < _qptotal; _i++) {
                         if ((_i + _qpmin) == _homo) {
                             LOG(logINFO, *_pLog) << (format("  HOMO  = %1$4d PQP = %2$+1.4f DQP = %3$+1.4f ") % (_i + _qpmin + 1) % _qp_energies(_i + _qpmin ) % _qp_diag_energies(_i)).str() << flush;
                         } else if ((_i + _qpmin) == _homo + 1) {
@@ -599,9 +599,9 @@ namespace votca {
                         ub::matrix<double>& _qp_diag_coefficients_store = _orbitals->QPdiagCoefficients();
                         _qp_diag_energies_store.resize( _qptotal );
                         _qp_diag_coefficients_store.resize( _qptotal, _qptotal);
-                        for  (int _i = 0; _i < _qptotal; _i++) {
+                        for  (unsigned int _i = 0; _i < _qptotal; _i++) {
                            _qp_diag_energies_store[_i] = _qp_diag_energies( _i );
-                           for  (int _j = 0; _j < _qptotal; _j++) {
+                           for  (unsigned int _j = 0; _j < _qptotal; _j++) {
                                _qp_diag_coefficients_store( _i, _j ) = _qp_diag_coefficients(_i,_j);
                            }
                         }
@@ -647,7 +647,7 @@ namespace votca {
                     std::vector<float> _contrib_x(_bse_nprint, 0.0);
                     std::vector<float> _contrib_d(_bse_nprint, 0.0);
                     std::vector<float> _contrib_qp(_bse_nprint, 0.0);
-                    for (int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
+                    for (unsigned int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
                         // get slice of _bse_triplet_coefficients
                         ub::matrix<float> _slice = ub::project(_bse_triplet_coefficients, ub::range(0, _bse_size), ub::range(_i_exc, _i_exc + 1));
 
@@ -665,10 +665,10 @@ namespace votca {
 
 
                     LOG(logINFO, *_pLog) << (format("  ====== triplet energies (eV) ====== ")).str() << flush;
-                    for (int _i = 0; _i < _bse_nprint; _i++) {
+                    for (unsigned int _i = 0; _i < _bse_nprint; _i++) {
                         LOG(logINFO, *_pLog) << (format("  T = %1$4d Omega = %2$+1.4f eV  lamdba = %3$+3.2f nm <FT> = %4$+1.4f <K_x> = %5$+1.4f <K_d> = %6$+1.4f") % (_i + 1) % (13.6058 * _bse_triplet_energies(_i)) % (1240.0/(13.6058 * _bse_triplet_energies(_i))) % (13.6058 * _contrib_qp[_i]) % (13.6058 * _contrib_x[_i]) % (13.6058 * _contrib_d[ _i ])).str() << flush;
                         
-                        for (int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
+                        for (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
                             // if contribution is larger than 0.2, print
                             float _weight = pow(_bse_triplet_coefficients(_i_bse, _i), 2);
                             if (_weight > 0.2) {
@@ -684,9 +684,9 @@ namespace votca {
                         ub::matrix<float>& _bse_triplet_coefficients_store = _orbitals->BSETripletCoefficients();
                         _bse_triplet_energies_store.resize( _bse_nmax );
                         _bse_triplet_coefficients_store.resize( _bse_size, _bse_nmax);
-                        for  (int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
+                        for  (unsigned int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
                            _bse_triplet_energies_store[_i_exc] = _bse_triplet_energies( _i_exc );
-                           for  (int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
+                           for  (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
                                _bse_triplet_coefficients_store( _i_bse, _i_exc ) = _bse_triplet_coefficients(_i_bse,_i_exc);
                            }
                         }
@@ -726,7 +726,7 @@ namespace votca {
                     std::vector<float> _contrib_x(_bse_nprint, 0.0);
                     std::vector<float> _contrib_d(_bse_nprint, 0.0);
                     std::vector<float> _contrib_qp(_bse_nprint, 0.0);
-                    for (int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
+                    for (unsigned int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
 
                         ub::matrix<float> _slice = ub::project(_bse_singlet_coefficients, ub::range(0, _bse_size), ub::range(_i_exc, _i_exc + 1));
 
@@ -779,7 +779,7 @@ namespace votca {
                         _popA = nucA - _popA;
                         _popB = nucB - _popB;
                         
-                        for (int _i_state = 0; _i_state < _bse_nprint; _i_state++) {
+                        for (unsigned int _i_state = 0; _i_state < _bse_nprint; _i_state++) {
                         
                             // checking Density Matrices
                             std::vector<ub::matrix<double> > &DMAT = _orbitals->DensityMatrixExcitedState(_dft_orbitals , _bse_singlet_coefficients, _i_state );
@@ -842,11 +842,11 @@ namespace votca {
                     std::vector<std::vector<double> > _transition_dipoles;
                     std::vector<double> _oscillator_strength;
                     std::vector<double> _transition_dipole_strength;
-                    for (int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
+                    for (unsigned int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
                         std::vector<double> _tdipole(3, 0.0);
 
-                        for (int _v = 0; _v < _bse_vtotal; _v++) {
-                            for (int _c = 0; _c < _bse_ctotal; _c++) {
+                        for (unsigned int _v = 0; _v < _bse_vtotal; _v++) {
+                            for (unsigned int _c = 0; _c < _bse_ctotal; _c++) {
 
                                 int index_vc = _bse_ctotal * _v + _c;
 
@@ -865,11 +865,11 @@ namespace votca {
 
 
                     LOG(logINFO, *_pLog) << (format("  ====== singlet energies (eV) ====== ")).str() << flush;
-                    for (int _i = 0; _i < _bse_nprint; _i++) {
+                    for (unsigned int _i = 0; _i < _bse_nprint; _i++) {
 
                         LOG(logINFO, *_pLog) << (format("  S = %1$4d Omega = %2$+1.4f eV  lamdba = %3$+3.2f nm <FT> = %4$+1.4f <K_x> = %5$+1.4f <K_d> = %6$+1.4f") % (_i + 1) % (13.6058 * _bse_singlet_energies(_i)) % (1240.0/(13.6058 * _bse_singlet_energies(_i))) % (13.6058 * _contrib_qp[_i]) % (13.6058 * _contrib_x[_i]) % (13.6058 * _contrib_d[ _i ])).str() << flush;
                         LOG(logINFO, *_pLog) << (format("           TrDipole length gauge   dx = %1$+1.4f dy = %2$+1.4f dz = %3$+1.4f |d|^2 = %4$+1.4f f = %5$+1.4f") % (_transition_dipoles[_i][0]) % (_transition_dipoles[_i][1]) % (_transition_dipoles[_i][2]) % (_transition_dipole_strength[_i]) % (_oscillator_strength[_i])).str() << flush;
-                        for (int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
+                        for (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
                             // if contribution is larger than 0.2, print
                             double _weight = pow(_bse_singlet_coefficients(_i_bse, _i), 2);
                             if (_weight > 0.2) {
@@ -892,9 +892,9 @@ namespace votca {
                         _bse_singlet_energies_store.resize( _bse_nmax );
                         _bse_singlet_coefficients_store.resize( _bse_size, _bse_nmax);
                         _transition_dipoles_store.resize( _bse_nprint );
-                        for  (int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
+                        for  (unsigned int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
                            _bse_singlet_energies_store[_i_exc] = _bse_singlet_energies( _i_exc );
-                           for  (int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
+                           for  (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
                                _bse_singlet_coefficients_store( _i_bse, _i_exc ) = _bse_singlet_coefficients(_i_bse,_i_exc);
                            }
 

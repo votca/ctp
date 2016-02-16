@@ -571,11 +571,11 @@ bool BSECoupling::CalculateCouplings(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
         linalg_eigenvalues(*_JAB_singlet, _coupled_energies, _coupled_coefficients,_JAB_singlet->size1() );
         LOG(logDEBUG,*_pLog)  << "   calculated EVs of coupling matrix " << flush;
 	cout << "\n" << endl;
-        for ( int i =0 ; i< _JAB_singlet->size1(); i++){
+        for ( ub::matrix<float>::size_type i =0 ; i< _JAB_singlet->size1(); i++){
             
             
 	    std::vector<double> tdipole(3,0.0);
-            for ( int j = 0; j < 50; j++){
+            for ( unsigned int j = 0; j < 50; j++){
 	      tdipole[0] += _coupled_coefficients(j,i)*_free_dipolesA[j][0] + _coupled_coefficients(j+50,i)*_free_dipolesB[j][0];
 	      tdipole[1] += _coupled_coefficients(j,i)*_free_dipolesA[j][1] + _coupled_coefficients(j+50,i)*_free_dipolesB[j][1];
 	      tdipole[2] += _coupled_coefficients(j,i)*_free_dipolesA[j][2] + _coupled_coefficients(j+50,i)*_free_dipolesB[j][2];
@@ -585,7 +585,7 @@ bool BSECoupling::CalculateCouplings(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
 
 	    LOG(logINFO, *_pLog) << (format("  S = %1$4d Omega = %2$+1.4f eV  lamdba = %3$+3.2f nm ") % (i + 1) % (13.6058 * _coupled_energies(i)) % (1240.0/(13.6058 * _coupled_energies(i))) ).str() << flush;
 	    LOG(logINFO, *_pLog) << (format("           TrDipole length gauge   dx = %1$+1.4f dy = %2$+1.4f dz = %3$+1.4f |d|^2 = %4$+1.4f f = %5$+1.4f") % (tdipole[0]) % (tdipole[1]) % (tdipole[2]) % (tdipole_strength) % (oscillator_strength)).str() << flush;
-	    for (int _i_bse = 0; _i_bse < _JAB_singlet->size1(); _i_bse++) {
+	    for (ub::matrix<float>::size_type _i_bse = 0; _i_bse < _JAB_singlet->size1(); _i_bse++) {
 	      // if contribution is larger than 0.2, print
 	      double _weight = pow(_coupled_coefficients(_i_bse, i), 2);
 	      if (_weight > 0.2) {
