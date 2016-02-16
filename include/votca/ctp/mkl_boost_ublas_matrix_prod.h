@@ -35,7 +35,9 @@
 #if defined (BOOST_VERSION) && (BOOST_VERSION >= 103401)
 
 #include <boost/numeric/ublas/matrix.hpp>
-#include <omp.h>
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 #include <mkl.h>
 #include "mkl_boost_ublas_gemm.hpp"
 

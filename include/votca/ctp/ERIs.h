@@ -30,7 +30,7 @@
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <votca/tools/linalg.h>
-#include <omp.h>
+//#include <omp.h>
 
 
 using namespace std;

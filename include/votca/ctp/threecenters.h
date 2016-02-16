@@ -31,8 +31,9 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/multi_array.hpp>
 #include <votca/ctp/aomatrix.h>
-#include <omp.h>
-
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 using namespace std;
 using namespace votca::tools;
