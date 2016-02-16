@@ -1284,7 +1284,10 @@ bool Gaussian::ConvertToGW( Orbitals* _orbitals ) {
     //int _basis_size      = _orbitals->getBasisSetSize();
     std::vector<double>::size_type _basis_size = _orbitals->getBasisSetSize();
     //int _cart_basis_size = _orbitals->_vxc.size1();
-    ub::matrix<double>::size_type _cart_basis_size = _orbitals->AOVxc().size1();
+
+    // [-Wall=unused-variable]
+    //ub::matrix<double>::size_type _cart_basis_size = _orbitals->AOVxc().size1();
+
     //cout << "\nSpherical basis size is " << _basis_size << endl;
     //cout << "\nCartesian basis size is " << _cart_basis_size << endl;
     

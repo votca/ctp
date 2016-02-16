@@ -117,7 +117,7 @@ void QMAPEMachine<QMPackage>::Evaluate(XJob *job) {
     
     // FIGURE OUT CHARGE + MULTIPLICITY
     double dQ = 0.0;
-    for (int i = 0; i < _job->getPolarTop()->QM0().size(); ++i) {
+    for ( std::vector<PolarSeg*>::size_type i = 0; i < _job->getPolarTop()->QM0().size(); ++i) {
         dQ += _job->getPolarTop()->QM0()[i]->CalcTotQ();
     }
     int chrg = round(dQ);
@@ -405,7 +405,7 @@ bool QMAPEMachine<QMPackage>::EvaluateGWBSE(Orbitals &orb, string runFolder) {
 
 		// go through list of singlets
 		const std::vector<std::vector<double> >& TDipoles = orb.TransitionDipoles();
-		for (int _i=0; _i < TDipoles.size(); _i++ ) {
+		for (std::vector<std::vector<double> >::size_type _i=0; _i < TDipoles.size(); _i++ ) {
 
 			double osc = (TDipoles[_i][0] * TDipoles[_i][0] + TDipoles[_i][1] * TDipoles[_i][1] + TDipoles[_i][2] * TDipoles[_i][2]) * 1.0 / 3.0 * (orb.BSESingletEnergies()[_i]) ;
 			if ( osc > _osc_threshold ) _state_index.push_back(_i);

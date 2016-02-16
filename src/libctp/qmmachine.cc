@@ -306,7 +306,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
             
             // go through list of singlets
             const std::vector<std::vector<double> >& TDipoles = orb_iter_output.TransitionDipoles();
-            for (int _i=0; _i < TDipoles.size(); _i++ ) {
+            for (std::vector<std::vector<double> >::size_type _i=0; _i < TDipoles.size(); _i++ ) {
                 
                 double osc = (TDipoles[_i][0] * TDipoles[_i][0] + TDipoles[_i][1] * TDipoles[_i][1] + TDipoles[_i][2] * TDipoles[_i][2]) * 1.0 / 3.0 * (orb_iter_output.BSESingletEnergies()[_i]) ;
                 if ( osc > _osc_threshold ) _state_index.push_back(_i);
@@ -317,11 +317,11 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
         } else {
             
             if ( _type == "singlet" ){
-               for (int _i=0; _i < orb_iter_output.TransitionDipoles().size(); _i++ ) {
+               for (std::vector<std::vector<double> >::size_type _i=0; _i < orb_iter_output.TransitionDipoles().size(); _i++ ) {
                    _state_index.push_back(_i);
                }
             } else {
-               for (int _i=0; _i < orb_iter_output.BSETripletEnergies().size(); _i++ ) {
+               for ( std::vector<float>::size_type _i=0; _i < orb_iter_output.BSETripletEnergies().size(); _i++ ) {
                    _state_index.push_back(_i);
                }
             }
@@ -337,7 +337,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
             //[-Wunused-variable]
             //const std::vector<double>& dQ_fragB = orb_iter_output.FragmentBChargesEXC();
             
-            for (int _i=0; _i < _state_index.size(); _i++ ) {
+            for (std::vector<int>::size_type _i=0; _i < _state_index.size(); _i++ ) {
                 if ( std::abs(dQ_fragA[_i]) > _dQ_threshold ) {
                     _state_index_copy.push_back(_state_index[_i]);
                 }
