@@ -142,8 +142,9 @@ private:
      
     string _atomname;
     int _atomindex;
-     
-    AOBasis* _aobasis;
+    
+    //[-Werror,-Wunused-private-field]
+    //AOBasis* _aobasis;
     int detlmax( string shell );
     // vector of pairs of decay constants and contraction coefficients
     vector< AOGaussianPrimitive* > _gaussians;
