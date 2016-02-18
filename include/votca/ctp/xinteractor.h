@@ -114,6 +114,7 @@ public:
 
 private:
 
+    //[-Wunused-private-field]
     Topology        *_top;
 
     double EP;       //   <- Interaction permanent multipoles (inter-site)

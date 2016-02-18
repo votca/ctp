@@ -185,7 +185,8 @@ void Fragment::Rigidify(bool Auto) {
     }
 
     _symmetry = trihedron.size();
-    if (!trihedron.size() == _trihedron.size()) {
+    // [-Wlogical-not-parentheses]
+    if ( trihedron.size() != _trihedron.size() ) {
         cout << endl << "ERROR Local frame ill-defined" << flush;
     }
 
