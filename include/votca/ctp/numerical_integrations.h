@@ -62,8 +62,8 @@ namespace votca { namespace ctp {
             
         private:
             
-            const static double alpha_erf1=1.0/0.30;
             //static const double ang2bohr = 1.8897259886;
+            //const static double alpha_erf1=1.0/0.30;
             std::vector<double> SSWpartition( int ngrid, int igrid, int ncenters ,  std::vector< std::vector<double> >& rq, double ass );
             std::vector<double> Rij;
             ub::matrix<double> Rij_mat;

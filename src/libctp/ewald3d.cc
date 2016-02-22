@@ -1,11 +1,10 @@
 #include <votca/ctp/ewald3d.h>
-#include <votca/tools/constants.h>
+#include <votca/tools/globals.h>
 #include <boost/format.hpp>
 #include <algorithm>
 
 
 using boost::format;
-namespace conv = votca::tools::conv;
 
 namespace votca { namespace ctp {
 
@@ -19,6 +18,8 @@ Ewald3D3D::Ewald3D3D(Topology *top, PolarTop *ptop, Property *opt, Logger *log)
 
 EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
 
+    const double int2eV = votca::tools::globals::conversion::int2eV;
+        
     vector<PolarSeg*>::iterator sit;
     vector<APolarSite*> ::iterator pit;    
     
@@ -136,11 +137,11 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
 
             LOG(logDEBUG,*_log)
                 << (format("    Re(dE) = %1$+1.7f")
-                % (re_dE/_LxLyLz*conv::int2eV));
+                % (re_dE/_LxLyLz*int2eV));
 
             LOG(logDEBUG,*_log)
                 << (format("    Re(E) = %1$+1.7f Im(E) = %2$+1.7f")
-                % (re_E/_LxLyLz*conv::int2eV) % (im_E/_LxLyLz*conv::int2eV));        
+                % (re_E/_LxLyLz*int2eV) % (im_E/_LxLyLz*int2eV));        
 
             // CONVERGED?
             double dEKK = sqrt(re_dE*re_dE + im_dE*im_dE);
@@ -159,9 +160,9 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
 
             LOG(logDEBUG,*_log)
                 << (format("   RMS(%2$d) = %1$+1.7f") 
-                % (dEKK_rms/_LxLyLz*conv::int2eV) % N_EKK_memory) << flush;
+                % (dEKK_rms/_LxLyLz*int2eV) % N_EKK_memory) << flush;
 
-            if (dEKK_rms/_LxLyLz*conv::int2eV <= _crit_dE && N_K_proc > 2 && N_shells_proc > 0) {
+            if (dEKK_rms/_LxLyLz*int2eV <= _crit_dE && N_K_proc > 2 && N_shells_proc > 0) {
                 _converged_K = true;
                 LOG(logDEBUG,*_log)
                     << (format(":::: Converged to precision as of |K| = %1$+1.3f 1/nm") 

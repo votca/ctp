@@ -19,11 +19,10 @@
 // Overload of uBLAS prod function with MKL/GSL implementations
 #include <votca/ctp/votca_ctp_config.h>
 #include <votca/tools/globals.h>
-
 #include <votca/ctp/numerical_integrations.h>
-#include <boost/math/constants/constants.hpp>
 #include <votca/ctp/radial_euler_maclaurin_rule.h>
 #include <votca/ctp/sphere_lebedev_rule.h>
+#include <votca/tools/globals.h>
 
 #ifdef LIBXC
 #include <xc.h>
@@ -1407,7 +1406,8 @@ namespace votca {
         
         void NumericalIntegration::GridSetup(string type, BasisSet* bs, vector<QMAtom*> _atoms) {
 
-            const double pi = boost::math::constants::pi<double>();
+            const double pi = votca::tools::globals::constants::pi;
+            const double ang2bohr = votca::tools::globals::conversion::Ang2Bohr;
             // get GridContainer
             GridContainers _grids;
 
@@ -1827,8 +1827,8 @@ namespace votca {
 
         double NumericalIntegration::erf1c(double x){
              
-            
-            return 0.5*erfcc((x/(1.0-x*x))*alpha_erf1);    
+            // return 0.5*erfcc((x/(1.0-x*x))*alpha_erf1
+            return 0.5*erfcc((x/(1.0-x*x))/0.3);    
             
         }
         
