@@ -1649,36 +1649,26 @@ int Gaussian::NumbfGW( string shell_type ) {
 
 
 int Gaussian::NumbfQC( string shell_type ) {
-    int _nbf;
-    if ( shell_type == "S" ){
-        _nbf = 1;
-    } else if ( shell_type == "P" ){
-        _nbf = 3;
-    } else if ( shell_type == "D" ){
-        _nbf = 5;
-    } else if ( shell_type == "SP" ) {
-        _nbf = 4;
-    } else if ( shell_type == "SPD" ) {
-        _nbf = 9;
-    }
-    return _nbf;
+    
+    if      ( shell_type == "S"   )  { return 1; } 
+    else if ( shell_type == "P"   )  { return 3; }
+    else if ( shell_type == "D"   )  { return 5; } 
+    else if ( shell_type == "SP"  )  { return 4; } 
+    else if ( shell_type == "SPD" )  { return 9; }
+    else { return 0; }
+    
 }
 
 
 int Gaussian::NumbfQC_cart( string shell_type ) {
-    int _nbf;
-    if ( shell_type == "S" ){
-        _nbf = 1;
-    } else if ( shell_type == "P" ){
-        _nbf = 3;
-    } else if ( shell_type == "D" ){
-        _nbf = 6;
-    } else if ( shell_type == "SP" ) {
-        _nbf = 4;
-    } else if ( shell_type == "SPD" ) {
-        _nbf = 10;
-    }
-    return _nbf;
+
+    if      ( shell_type == "S"   )  { return 1; } 
+    else if ( shell_type == "P"   )  { return 3; } 
+    else if ( shell_type == "D"   )  { return 6; }
+    else if ( shell_type == "SP"  )  { return 4; }
+    else if ( shell_type == "SPD" )  { return 10;}
+    else { return 0; }
+
 }
 
 

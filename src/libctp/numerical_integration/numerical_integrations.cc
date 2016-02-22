@@ -18,7 +18,7 @@
  */
 // Overload of uBLAS prod function with MKL/GSL implementations
 #include <votca/ctp/votca_ctp_config.h>
-
+#include <votca/tools/globals.h>
 
 #include <votca/ctp/numerical_integrations.h>
 #include <boost/math/constants/constants.hpp>
@@ -1440,16 +1440,16 @@ namespace votca {
             int i = 1;
             for (ait = _atoms.begin() + 1; ait != _atoms.end(); ++ait) {
                 // get center coordinates in Bohr
-                double x_a = (*ait)->x * ang2bohr;
-                double y_a = (*ait)->y * ang2bohr;
-                double z_a = (*ait)->z * ang2bohr;
+                double x_a = (*ait)->x * votca::tools::globals::conversion::Ang2Bohr;
+                double y_a = (*ait)->y * votca::tools::globals::conversion::Ang2Bohr;
+                double z_a = (*ait)->z * votca::tools::globals::conversion::Ang2Bohr;
                 int j = 0;
                 for (bit = _atoms.begin(); bit != ait; ++bit) {
                     ij++;
                     // get center coordinates in Bohr
-                    double x_b = (*bit)->x * ang2bohr;
-                    double y_b = (*bit)->y * ang2bohr;
-                    double z_b = (*bit)->z * ang2bohr;
+                    double x_b = (*bit)->x * votca::tools::globals::conversion::Ang2Bohr;
+                    double y_b = (*bit)->y * votca::tools::globals::conversion::Ang2Bohr;
+                    double z_b = (*bit)->z * votca::tools::globals::conversion::Ang2Bohr;
 
                     Rij.push_back(1.0 / sqrt((x_a - x_b)*(x_a - x_b) + (y_a - y_b)*(y_a - y_b) + (z_a - z_b)*(z_a - z_b)));
 
@@ -1473,9 +1473,9 @@ namespace votca {
             for (ait = _atoms.begin(); ait < _atoms.end(); ++ait) {
                 // get center coordinates in Bohr
                 std::vector< GridContainers::integration_grid > _atomgrid;
-                double x_c = (*ait)->x * ang2bohr;
-                double y_c = (*ait)->y * ang2bohr;
-                double z_c = (*ait)->z * ang2bohr;
+                double x_c = (*ait)->x * votca::tools::globals::conversion::Ang2Bohr;
+                double y_c = (*ait)->y * votca::tools::globals::conversion::Ang2Bohr;
+                double z_c = (*ait)->z * votca::tools::globals::conversion::Ang2Bohr;
                 string name = (*ait)->type;
 
                 // get radial grid information for this atom type
@@ -1594,9 +1594,9 @@ namespace votca {
                 // for each center
                 for (bit = _atoms.begin(); bit < _atoms.end(); ++bit) {
                     // get center coordinates
-                    double x_b = (*bit)->x * ang2bohr;
-                    double y_b = (*bit)->y * ang2bohr;
-                    double z_b = (*bit)->z * ang2bohr;
+                    double x_b = (*bit)->x * tools::globals::conversion::Ang2Bohr;
+                    double y_b = (*bit)->y * tools::globals::conversion::Ang2Bohr;
+                    double z_b = (*bit)->z * tools::globals::conversion::Ang2Bohr;
 
                     std::vector<double> temp;
                     // for each gridpoint
@@ -1627,9 +1627,9 @@ namespace votca {
 
                     if (bit != ait) {
                         // get center coordinates
-                        double x_b = (*bit)->x * ang2bohr;
-                        double y_b = (*bit)->y * ang2bohr;
-                        double z_b = (*bit)->z * ang2bohr;
+                        double x_b = (*bit)->x * votca::tools::globals::conversion::Ang2Bohr;
+                        double y_b = (*bit)->y * votca::tools::globals::conversion::Ang2Bohr;
+                        double z_b = (*bit)->z * votca::tools::globals::conversion::Ang2Bohr;
 
                         double distSQ = (x_c - x_b)*(x_c - x_b) + (y_c - y_b)*(y_c - y_b) + (z_c - z_b)*(z_c - z_b);
 
@@ -1751,7 +1751,10 @@ namespace votca {
             points << endl;
             for ( std::vector< std::vector< GridContainers::integration_grid > >::size_type i = 0 ; i < _grid.size(); i++){
                 for ( std::vector< std::vector< GridContainers::integration_grid > >::size_type j = 0 ; j < _grid[i].size(); j++){
-                points << "X " << _grid[i][j].grid_x/ang2bohr << " " << _grid[i][j].grid_y/ang2bohr << " " << _grid[i][j].grid_z/ang2bohr << " "  << _grid[i][j].grid_weight << endl;
+                points << "X " << _grid[i][j].grid_x/votca::tools::globals::conversion::Ang2Bohr 
+                        << " " << _grid[i][j].grid_y/votca::tools::globals::conversion::Ang2Bohr 
+                        << " " << _grid[i][j].grid_z/votca::tools::globals::conversion::Ang2Bohr 
+                        << " " << _grid[i][j].grid_weight << endl;
                 }
             }
             points.close();
