@@ -296,6 +296,37 @@ void Orbitals::Trim( int factor ) {
     }
 }
 
+// reduces the number of orbitals to [HOMO-degH:LUMO+degL]
+void Orbitals::Trim( int degH, int degL ) {
+    
+    
+    
+    if ( _has_mo_coefficients ) {
+        
+        _mo_coefficients = ub::project( _mo_coefficients , ub::range(_occupied_levels -degH , _occupied_levels + degL), ub::range ( 0, _basis_set_size ) ) ;
+        
+    }
+
+    if ( _has_mo_energies ) {
+        
+        ub::vector<double> _temp(degH+degL); 
+        
+        for ( int i = 0; i< degH+degL ; i++ ) {
+            
+            _temp(i) = _mo_energies(_occupied_levels-degH + i);
+            
+        }
+        _mo_energies = _temp;
+ 
+    }
+
+    _occupied_levels = degH;
+    _unoccupied_levels = degL;        
+
+
+
+}
+
 bool Orbitals::Load(string file_name) {
     try {
         std::ifstream ifs( file_name.c_str() );
