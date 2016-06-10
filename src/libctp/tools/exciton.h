@@ -1121,13 +1121,15 @@ double Exciton::GetTotalEnergy(Orbitals* _orbitals, string _spintype, int _opt_s
     
     // total energy of the excited state
     double _total_energy ;
-    double _omega;
+    double _omega = 0.0;
     
     double _dft_energy = _orbitals->getQMEnergy();
     
     if ( _spintype == "singlet" ){
        _omega      = _orbitals->BSESingletEnergies()[_opt_state - 1];
-    } else if ( _spintype == "triplet" ){
+    } 
+    
+    if ( _spintype == "triplet" ){
         _omega      = _orbitals->BSETripletEnergies()[_opt_state - 1];
     }
 

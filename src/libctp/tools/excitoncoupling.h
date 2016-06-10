@@ -48,7 +48,6 @@ private:
     string      _orbA, _orbB, _orbAB;
     string      _logA, _logB, _logAB;
     int         _levA, _levB;
-    int         _trimA, _trimB;
     double      _degeneracy;
 
     string      _spintype;

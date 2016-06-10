@@ -55,7 +55,6 @@ namespace votca {
             
             void calculateCube();
             void subtractCubes();
-            static const double ang2bohr = 1.8897259886;
             string _orbfile;
             string _output_file;
             string _infile1;
@@ -161,9 +160,9 @@ namespace votca {
                 vector< QMAtom* > ::iterator ait;
                 for (ait = _atoms.begin(); ait != _atoms.end(); ++ait) {
                     // get center coordinates in Bohr
-                    double x = (*ait)->x * ang2bohr;
-                    double y = (*ait)->y * ang2bohr;
-                    double z = (*ait)->z * ang2bohr;
+                    double x = (*ait)->x * votca::tools::globals::conversion::Ang2Bohr;
+                    double y = (*ait)->y * votca::tools::globals::conversion::Ang2Bohr;
+                    double z = (*ait)->z * votca::tools::globals::conversion::Ang2Bohr;
 
                     if (x > xmax) xmax = x;
                     if (x < xmin) xmin = x;
@@ -215,9 +214,9 @@ namespace votca {
                 fprintf(out, "%d 0.0 0.0 %f \n", _zsteps + 1, zincr);
                 for (ait = _atoms.begin(); ait != _atoms.end(); ++ait) {
                     // get center coordinates in Bohr
-                    double x = (*ait)->x * ang2bohr;
-                    double y = (*ait)->y * ang2bohr;
-                    double z = (*ait)->z * ang2bohr;
+                    double x = (*ait)->x * votca::tools::globals::conversion::Ang2Bohr;
+                    double y = (*ait)->y * votca::tools::globals::conversion::Ang2Bohr;
+                    double z = (*ait)->z * votca::tools::globals::conversion::Ang2Bohr;
 
                     string element = (*ait)->type;
                     int atnum = element2number(element);
