@@ -138,20 +138,24 @@ bool Coupling::Evaluate() {
     bool _parse_logAB_status = _qmpackage->ParseLogFile( &_orbitalsAB );
     if ( !_parse_logAB_status ) { LOG(logERROR,_log) << "Failed to read log of molecule AB" << std::flush; }
 
+    int _degAH = 1;
+    int _degAL = 1;
+    int _degBH = 1;
+    int _degBL = 1;
     
     // trim monomers A and B to one level 
     if ((_trimA == -1) || (_trimB == -1) ) { // any -1 overrides the specification of the other 
         
         // find degeneracy of HOMOs and LUMOs
         std::vector<int> list_levelsAH  = (*_orbitalsA.getDegeneracy( _orbitalsA.getNumberOfElectrons()-1, _degeneracy ));
-        int _degAH = list_levelsAH.size();
+        _degAH = list_levelsAH.size();
         std::vector<int> list_levelsAL  = (*_orbitalsA.getDegeneracy( _orbitalsA.getNumberOfElectrons(), _degeneracy ));
-        int _degAL = list_levelsAL.size();  
+        _degAL = list_levelsAL.size();  
         
         std::vector<int> list_levelsBH  = (*_orbitalsB.getDegeneracy( _orbitalsB.getNumberOfElectrons()-1, _degeneracy ));
-        int _degBH = list_levelsBH.size();
+        _degBH = list_levelsBH.size();
         std::vector<int> list_levelsBL  = (*_orbitalsB.getDegeneracy( _orbitalsB.getNumberOfElectrons(), _degeneracy ));
-        int _degBL = list_levelsBL.size();  
+        _degBL = list_levelsBL.size();  
         
         _orbitalsA.Trim(_degAH,_degAL);
         _orbitalsB.Trim(_degBH,_degBL);

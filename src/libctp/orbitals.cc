@@ -307,13 +307,13 @@ void Orbitals::Trim( int degH, int degL ) {
     
     
     
-    if ( _has_mo_coefficients ) {
+    if ( hasMOCoefficients() ) {
         
         _mo_coefficients = ub::project( _mo_coefficients , ub::range(_occupied_levels -degH , _occupied_levels + degL), ub::range ( 0, _basis_set_size ) ) ;
         
     }
 
-    if ( _has_mo_energies ) {
+    if ( hasMOEnergies() ) {
         
         ub::vector<double> _temp(degH+degL); 
         
