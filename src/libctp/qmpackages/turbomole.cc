@@ -85,7 +85,7 @@ bool Turbomole::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_g
     
     LOG(logDEBUG,*_pLog) << "TURBOMOLE: Preparing input " << flush;
     
-    ofstream _coord_file;
+    std::ofstream _coord_file;
 
     string _xyz_file_name_full = _run_dir + "/" + _xyz_file_name;
     
@@ -132,7 +132,7 @@ bool Turbomole::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_g
     string _command;
     string _input_file_name_full = _run_dir + "/" + _input_file_name;
 
-    ofstream _input_file;
+    std::ofstream _input_file;
     _input_file.open ( _input_file_name_full.c_str() );
     _input_file << "\n" << _options;
     _input_file.close();
@@ -153,8 +153,8 @@ bool Turbomole::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_g
 
         boost::filesystem::create_directories( _scratch_dir + temp_suffix );
     
-        ifstream _input_file;
-        ofstream _temp_input_file;
+        std::ifstream _input_file;
+        std::ofstream _temp_input_file;
  
         string _control_file_name_full = _run_dir + "/control";
         string _temp_control_file_name_full = _run_dir + "/control.temp";
@@ -188,7 +188,7 @@ bool Turbomole::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_g
         if ( orbitals_guess == NULL ) {
             throw std::runtime_error( "A guess for dimer orbitals has not been prepared.");
         } else {
-            ofstream _orb_file;
+            std::ofstream _orb_file;
             string _orb_file_name_full = _run_dir + "/" + _orb_file_name;
             _orb_file.open ( _orb_file_name_full.c_str() );
 
@@ -446,7 +446,7 @@ bool Turbomole::CheckLogFile() {
     char ch;
     path arg_path;
     string logFileName = (arg_path / _run_dir / _log_file_name ).string();
-    ifstream _input_file( logFileName.c_str() );
+    std::ifstream _input_file( logFileName.c_str() );
     //cout << (_run_dir + "/" + _log_file_name).c_str();
     if (_input_file.fail()) {
         LOG(logERROR,*_pLog) << "TURBOMOLE: "<< _log_file_name << " is not found" << flush;
@@ -524,7 +524,7 @@ bool Turbomole::ParseLogFile( Orbitals* _orbitals ) {
     // Start parsing the file line by line
     path arg_path;
     string logFileName = (arg_path / _run_dir / _log_file_name ).string();
-    ifstream _input_file( logFileName.c_str() );
+    std::ifstream _input_file( logFileName.c_str() );
     
     while (_input_file) {
 
