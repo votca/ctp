@@ -37,7 +37,7 @@ class XInteractor
 public:
 
     XInteractor(Topology *top, double aDamp) : _top(top),  a(aDamp) {};
-    XInteractor() :                            _top(NULL), a(0.390) {};
+    XInteractor() :                            _top(NULL), a(0.390) { _top = NULL; };
    ~XInteractor() {};
 
     // UNITS IN INPUT FILES

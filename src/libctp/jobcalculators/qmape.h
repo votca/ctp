@@ -50,14 +50,16 @@ private:
     // ======================================== //
 
     // Induction, subthreading (-> base class)
-    bool                            _induce;
-    bool                            _induce_intra_pair;
+    // [-Wunused-private-field]    
+    //bool                            _induce;
+    //bool                            _induce_intra_pair;
 
     // Multipole Interaction parameters
     string                          _method;
-    bool                            _useCutoff;
-    double                          _cutoff1;
-    double                          _cutoff2;
+    //[-Wunused-private-field]
+    //bool                            _useCutoff;
+    //double                          _cutoff1;
+    //double                          _cutoff2;
     
     // QM Package options
     string                          _package;
@@ -70,7 +72,8 @@ private:
 
     // XJob logbook (file output)
     string                          _outFile;
-    bool                            _energies2File;
+    //[-Wunused-private-field]
+    //bool                            _energies2File;
     
     Property                       *_options;
 };

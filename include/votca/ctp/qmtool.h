@@ -41,6 +41,9 @@ public:
     virtual bool    EndEvaluate() { return true; }
 
 protected:
+    
+private:
+    using QMCalculator::EndEvaluate;
 
 };
 
