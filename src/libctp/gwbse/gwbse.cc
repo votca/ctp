@@ -647,7 +647,7 @@ namespace votca {
                     std::vector<float> _contrib_x(_bse_nprint, 0.0);
                     std::vector<float> _contrib_d(_bse_nprint, 0.0);
                     std::vector<float> _contrib_qp(_bse_nprint, 0.0);
-                    for (unsigned int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
+                    for (int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
                         // get slice of _bse_triplet_coefficients
                         ub::matrix<float> _slice = ub::project(_bse_triplet_coefficients, ub::range(0, _bse_size), ub::range(_i_exc, _i_exc + 1));
 
@@ -665,7 +665,7 @@ namespace votca {
 
 
                     LOG(logINFO, *_pLog) << (format("  ====== triplet energies (eV) ====== ")).str() << flush;
-                    for (unsigned int _i = 0; _i < _bse_nprint; _i++) {
+                    for (int _i = 0; _i < _bse_nprint; _i++) {
                         LOG(logINFO, *_pLog) << (format("  T = %1$4d Omega = %2$+1.4f eV  lamdba = %3$+3.2f nm <FT> = %4$+1.4f <K_x> = %5$+1.4f <K_d> = %6$+1.4f") % (_i + 1) % (13.6058 * _bse_triplet_energies(_i)) % (1240.0/(13.6058 * _bse_triplet_energies(_i))) % (13.6058 * _contrib_qp[_i]) % (13.6058 * _contrib_x[_i]) % (13.6058 * _contrib_d[ _i ])).str() << flush;
                         
                         for (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
@@ -684,7 +684,7 @@ namespace votca {
                         ub::matrix<float>& _bse_triplet_coefficients_store = _orbitals->BSETripletCoefficients();
                         _bse_triplet_energies_store.resize( _bse_nmax );
                         _bse_triplet_coefficients_store.resize( _bse_size, _bse_nmax);
-                        for  (unsigned int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
+                        for  (int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
                            _bse_triplet_energies_store[_i_exc] = _bse_triplet_energies( _i_exc );
                            for  (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
                                _bse_triplet_coefficients_store( _i_bse, _i_exc ) = _bse_triplet_coefficients(_i_bse,_i_exc);
@@ -726,7 +726,7 @@ namespace votca {
                     std::vector<float> _contrib_x(_bse_nprint, 0.0);
                     std::vector<float> _contrib_d(_bse_nprint, 0.0);
                     std::vector<float> _contrib_qp(_bse_nprint, 0.0);
-                    for (unsigned int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
+                    for (int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
 
                         ub::matrix<float> _slice = ub::project(_bse_singlet_coefficients, ub::range(0, _bse_size), ub::range(_i_exc, _i_exc + 1));
 
@@ -779,7 +779,7 @@ namespace votca {
                         _popA = nucA - _popA;
                         _popB = nucB - _popB;
                         
-                        for (unsigned int _i_state = 0; _i_state < _bse_nprint; _i_state++) {
+                        for (int _i_state = 0; _i_state < _bse_nprint; _i_state++) {
                         
                             // checking Density Matrices
                             std::vector<ub::matrix<double> > &DMAT = _orbitals->DensityMatrixExcitedState(_dft_orbitals , _bse_singlet_coefficients, _i_state );
@@ -842,7 +842,7 @@ namespace votca {
                     std::vector<std::vector<double> > _transition_dipoles;
                     std::vector<double> _oscillator_strength;
                     std::vector<double> _transition_dipole_strength;
-                    for (unsigned int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
+                    for (int _i_exc = 0; _i_exc < _bse_nprint; _i_exc++) {
                         std::vector<double> _tdipole(3, 0.0);
 
                         for (unsigned int _v = 0; _v < _bse_vtotal; _v++) {
@@ -865,7 +865,7 @@ namespace votca {
 
 
                     LOG(logINFO, *_pLog) << (format("  ====== singlet energies (eV) ====== ")).str() << flush;
-                    for (unsigned int _i = 0; _i < _bse_nprint; _i++) {
+                    for (int _i = 0; _i < _bse_nprint; _i++) {
 
                         LOG(logINFO, *_pLog) << (format("  S = %1$4d Omega = %2$+1.4f eV  lamdba = %3$+3.2f nm <FT> = %4$+1.4f <K_x> = %5$+1.4f <K_d> = %6$+1.4f") % (_i + 1) % (13.6058 * _bse_singlet_energies(_i)) % (1240.0/(13.6058 * _bse_singlet_energies(_i))) % (13.6058 * _contrib_qp[_i]) % (13.6058 * _contrib_x[_i]) % (13.6058 * _contrib_d[ _i ])).str() << flush;
                         LOG(logINFO, *_pLog) << (format("           TrDipole length gauge   dx = %1$+1.4f dy = %2$+1.4f dz = %3$+1.4f |d|^2 = %4$+1.4f f = %5$+1.4f") % (_transition_dipoles[_i][0]) % (_transition_dipoles[_i][1]) % (_transition_dipoles[_i][2]) % (_transition_dipole_strength[_i]) % (_oscillator_strength[_i])).str() << flush;
@@ -892,7 +892,7 @@ namespace votca {
                         _bse_singlet_energies_store.resize( _bse_nmax );
                         _bse_singlet_coefficients_store.resize( _bse_size, _bse_nmax);
                         _transition_dipoles_store.resize( _bse_nprint );
-                        for  (unsigned int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
+                        for  (int _i_exc = 0; _i_exc < _bse_nmax; _i_exc++) {
                            _bse_singlet_energies_store[_i_exc] = _bse_singlet_energies( _i_exc );
                            for  (unsigned int _i_bse = 0; _i_bse < _bse_size; _i_bse++) {
                                _bse_singlet_coefficients_store( _i_bse, _i_exc ) = _bse_singlet_coefficients(_i_bse,_i_exc);
