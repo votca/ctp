@@ -1,17 +1,15 @@
 #ifndef VOTCA_CTP_LOG2MPS_H
 #define VOTCA_CTP_LOG2MPS_H
 
-
+#include <votca/ctp/logger.h>
 #include <votca/ctp/qmtool.h>
-#include <votca/ctp/topology.h>
-#include <votca/ctp/qmpackagefactory.h>
 #include <votca/ctp/qmmachine.h>
+#include <votca/ctp/qmpackagefactory.h>
 
 
 namespace votca { namespace ctp {
 
-
-class Log2Mps : public QMTool
+class Log2Mps : public votca::ctp::QMTool
 {
 public:
 

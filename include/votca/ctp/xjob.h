@@ -29,7 +29,7 @@ class XJob
 {
 public:
 
-    XJob(int id, std::string tag, vector<Segment*> &qmSegs, 
+    XJob(int id, std::string tag, std::vector<Segment*> &qmSegs, 
          vector<std::string> &qmSegMps, Topology *top);
     
     XJob(PolarTop *ptop, bool start_from_cpt);
@@ -38,8 +38,8 @@ public:
 
    int                  getId()                     { return _id; }
    std::string               getTag()                    { return _tag; }
-   vector<Segment*>    &getSegments()               { return _qmSegs; }
-   vector<std::string>      &getSegMps()                 { return _qmSegMps; }
+   std::vector<Segment*>    &getSegments()               { return _qmSegs; }
+   std::vector<std::string>      &getSegMps()                 { return _qmSegMps; }
    Topology            *getTop()                    { return _top; }
    PolarTop            *getPolarTop()               { return _ptop; }
    int                  getIter()                   { return _iter; }

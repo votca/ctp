@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef _VOTCA_CTP_COUPLINGH_H
-#define _VOTCA_CTP_COUPLINGH_H
+#ifndef _VOTCA_CTP_TOOLS_COUPLINGH_H
+#define _VOTCA_CTP_TOOLS_COUPLINGH_H
 
 #include <stdio.h>
 
@@ -27,7 +27,6 @@
 #include <votca/ctp/qmpackagefactory.h>
 
 namespace votca { namespace ctp {
-    using namespace std;
     
 class Coupling : public QMTool
 {
@@ -36,7 +35,7 @@ public:
     Coupling() { };
    ~Coupling() { };
 
-    string Identify() { return "coupling"; }
+    std::string Identify() { return "coupling"; }
 
     void   Initialize(Property *options);
     bool   Evaluate();
@@ -45,16 +44,16 @@ public:
 
 private:
     
-    string      _orbA, _orbB, _orbAB;
-    string      _logA, _logB, _logAB;
+    std::string      _orbA, _orbB, _orbAB;
+    std::string      _logA, _logB, _logAB;
     int         _levA, _levB;
     int         _trimA, _trimB;
     double      _degeneracy;
 
-    string      _package;
+    std::string      _package;
     Property    _package_options; 
     
-    string      _output_file;
+    std::string      _output_file;
     
     Logger      _log;
 
@@ -89,7 +88,7 @@ void Coupling::Initialize(Property* options)
     // get the path to the shared folders with xml files
     char *votca_share = getenv("VOTCASHARE");    
     if(votca_share == NULL) throw std::runtime_error("VOTCASHARE not set, cannot open help files.");
-    string xmlFile = string(getenv("VOTCASHARE")) + string("/ctp/qmpackages/") + _package + string("_idft_pair.xml");
+    std::string xmlFile = std::string(getenv("VOTCASHARE")) + string("/ctp/qmpackages/") + _package + string("_idft_pair.xml");
     load_property_from_xml( _package_options, xmlFile );    
 
     // register all QM packages (Gaussian, TURBOMOLE, etc)
@@ -175,6 +174,7 @@ bool Coupling::Evaluate() {
                     << _orbitalsB.getNumberOfLevels() - _orbitalsB.getNumberOfElectrons() << "->" 
                     << _orbitalsB.getNumberOfElectrons()*(_trimB-1) << std::flush;      
             _orbitalsB.Trim(_trimB);
+        }
     
     }
     
