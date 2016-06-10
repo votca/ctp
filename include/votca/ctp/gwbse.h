@@ -238,8 +238,8 @@ public:
     unsigned int                        _bse_size;
     unsigned int                        _bse_vtotal;
     unsigned int                        _bse_ctotal;
-    unsigned int                        _bse_nmax;
-    unsigned int                        _bse_nprint;
+    int                        _bse_nmax;
+    int                        _bse_nprint;
          
     double                              _shift;  // pre-shift of DFT energies
 
