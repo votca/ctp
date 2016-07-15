@@ -1,0 +1,7 @@
+<options>
+
+<binary help="Kinetic Monte Carlo simulations using binary tree" label="calc:binary" section="sec:kmc">
+
+</binary>
+
+</options>

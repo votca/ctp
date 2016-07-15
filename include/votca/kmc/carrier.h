@@ -20,25 +20,15 @@
 
 #include <votca/tools/vec.h>
 
-typedef votca::tools::vec myvec;
-
 namespace votca { namespace kmc {
   
-using namespace std;
-
-enum CarrierType{ Electron, Hole};
-
 class Carrier {
 
 public:
     
-    CarrierType carrier_type;
-    int carrier_node_ID;
-    int carrier_ID;
-    bool is_in_sim_box;
-    myvec carrier_distance;
-    double srfrom;
-    vector<double> srto;
+    int type;
+    int ID;
+    votca::tools::vec distance;
 };
 
 }} 

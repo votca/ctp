@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2013 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,31 @@
  *
  */
 
-#include <votca/kmc/kmccalculatorfactory.h>
-#include "calculators/kmcmultiple.h"
-#include "calculators/kmcparallel.h"
-#include "calculators/binary.h"
+#ifndef __VOTCA_KMC_BNODE_H_
+#define	__VOTCA_KMC_BNODE_H_
+
+#include <votca/tools/vec.h>
+#include <votca/kmc/carrier.h>
+
+typedef votca::tools::vec myvec;
 
 namespace votca { namespace kmc {
+  
+class BNode {
+    
+public:
 
-void KMCCalculatorFactory::RegisterAll(void)
-{
-    Calculators().Register<KMCMultiple>("kmcmultiple"); // multiple charge carriers
-    Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
-    Calculators().Register<Binary>("binary"); // multiple charge types in 2D PBC
-}
+    void AddNeighbor(){};
+    void RemoveNeighbor(){};
+    
+    int node_ID;
+    votca::tools::vec node_position;
+    std::vector<Node*> neighbours;
+     
+};
 
-}}
+        
+}} 
+
+#endif
+
