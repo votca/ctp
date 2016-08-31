@@ -62,6 +62,9 @@ void Binary::RunKMC() {
 
     std::cout << "Running KMC binary" << endl;
 
+    Graph graph;
+    std::string filename( "state.sql" );
+    graph.Load( filename );
     
 }
 

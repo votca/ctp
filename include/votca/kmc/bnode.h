@@ -21,19 +21,18 @@
 #include <votca/tools/vec.h>
 #include <votca/kmc/carrier.h>
 
-typedef votca::tools::vec myvec;
-
 namespace votca { namespace kmc {
   
 class BNode {
     
 public:
 
-    void AddNeighbor(){};
-    void RemoveNeighbor(){};
-    
-    int node_ID;
-    votca::tools::vec node_position;
+    void AddNeighbour(){};
+    void RemoveNeighbour(){};
+    void PrintNode(){};
+            
+    int id;
+    votca::tools::vec position;
     std::vector<Node*> neighbours;
      
 };
