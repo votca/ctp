@@ -67,15 +67,43 @@ void Graph::Load(std::string filename) {
         double y = stmt->Column<double>(2);
         double z = stmt->Column<double>(3);
     
-        cout << "position: " <<  x << " " << y << " " << z << endl;  
+        //cout << "position: " <<  x << " " << y << " " << z << endl;  
         
         myvec position = myvec(x, y, z); 
         node->position = position;
-
+        i++;
+    }
+    
+    delete stmt;
+    
+    //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table)  
+    int pairs_list = 0;
+    stmt = db.Prepare("SELECT _id, id, seg1, seg2 FROM pairs;");
+    while (stmt->Step() != SQLITE_DONE)     
+    {
+        
+        //cout << "id 1: " << stmt->Column<int>(0) << "; "; 
+        int _id = stmt->Column<int>(0);
+        //cout << "id 2: " << stmt->Column<int>(1) << "; ";
+        int id = stmt->Column<int>(1);
+        //node-> id = id;
+        
+        
+        int seg1 = stmt->Column<int>(2);
+        int seg2 = stmt->Column<int>(3);
+        
+        cout << "Neighbour pairs: " << seg1 << " " << seg2 << endl;
+        pairs_list ++;
+         
     }
     delete stmt;
 
 /*    
+<<<<<<< HEAD
+    
+    // Load pairs and rates
+    
+=======
     if(votca::tools::globals::verbose) { cout << "segments: " << node.size() << endl; }
     
     // Load pairs and rates
@@ -86,6 +114,7 @@ void Graph::Load(std::string filename) {
         int seg1 = stmt->Column<int>(0);
         int seg2 = stmt->Column<int>(1);
 
+>>>>>>> 4f3e1b135683f0385e7be3c2fda36073f30e0fa7
         double rate12 = stmt->Column<double>(2);
 
         myvec dr = myvec(stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9, stmt->Column<double>(5)*1E-9); // converted from nm to m
