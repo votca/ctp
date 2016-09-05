@@ -19,7 +19,6 @@
 #define	__VOTCA_KMC_BNODE_H_
 
 #include <votca/tools/vec.h>
-#include <votca/kmc/carrier.h>
 
 namespace votca { namespace kmc {
   
@@ -27,13 +26,27 @@ class BNode {
     
 public:
 
-    void AddNeighbor(){};
+    void AddNeighbor( BNode* node ) {
+        std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
+        neighbours.push_back(node);
+    };
+    
     void RemoveNeighbor(){};
-    void PrintNode(){};
-            
+    
+    void PrintNode(){
+        std::cout << "Printing node " << id << " ";
+        for (std::vector< BNode* >::iterator node = neighbours.begin() ; node != neighbours.end(); ++node) {
+            std::cout << (*node)->id << " ";
+        }
+        std::cout << std::endl;
+    };
+    
     int id;
     votca::tools::vec position;
-    std::vector<Node*> neighbours;
+    
+private:
+    
+    std::vector< BNode* > neighbours;
      
 };
 

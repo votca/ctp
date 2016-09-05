@@ -65,6 +65,7 @@ void Binary::RunKMC() {
     Graph graph;
     std::string filename( "state.sql" );
     graph.Load( filename );
+    graph.PrintGraph();
     
 }
 
