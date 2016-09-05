@@ -20,6 +20,7 @@
 
 #include <votca/kmc/bnode.h>
 
+
 namespace votca { namespace kmc {
   
 class Graph {
@@ -58,7 +59,7 @@ void Graph::Load(std::string filename) {
        
         BNode *node = AddNode();
 
-        //cout << "id: " << stmt->Column<int>(0) << "; ";
+       // cout << "id: " << stmt->Column<int>(0) << "; ";
         int id = stmt->Column<int>(0);
         node->id = id;
         
@@ -71,31 +72,30 @@ void Graph::Load(std::string filename) {
         
         myvec position = myvec(x, y, z); 
         node->position = position;
-
+        i++;
     }
+    
     delete stmt;
     
-    //List of neighbours - pairs   
-    int numberofpairs = 0;
+    //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table)  
+    int pairs_list = 0;
     stmt = db.Prepare("SELECT _id, id, seg1, seg2 FROM pairs;");
     while (stmt->Step() != SQLITE_DONE)     
     {
-        //Is node ID the same for both neighbours?
-        cout << "id 1: " << stmt->Column<int>(0) << "; "; 
+        
+        //cout << "id 1: " << stmt->Column<int>(0) << "; "; 
         int _id = stmt->Column<int>(0);
-        cout << "id 2: " << stmt->Column<int>(1) << "; ";
+        //cout << "id 2: " << stmt->Column<int>(1) << "; ";
         int id = stmt->Column<int>(1);
-
+        //node-> id = id;
+        
         
         int seg1 = stmt->Column<int>(2);
         int seg2 = stmt->Column<int>(3);
         
         cout << "Neighbour pairs: " << seg1 << " " << seg2 << endl;
-        numberofpairs ++;
-        
-        //vector neighbours = vector (seg1, seg2);
-        //node->neighbours = neighbours;
-        
+        pairs_list ++;
+         
     }
     delete stmt;
 
