@@ -27,8 +27,8 @@ class BNode {
     
 public:
 
-    void AddNeighbour(){};
-    void RemoveNeighbour(){};
+    void AddNeighbor(){};
+    void RemoveNeighbor(){};
     void PrintNode(){};
             
     int id;

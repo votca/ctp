@@ -20,13 +20,12 @@
 
 #include <votca/kmc/bnode.h>
 
-
 namespace votca { namespace kmc {
   
 class Graph {
 public:
     
-    void Load(std::string filename);   
+    void Load(std::string filename);    
     void PrintGraph(){};
     
     // add a node to the vector of Nodes
@@ -47,7 +46,7 @@ void Graph::Load(std::string filename) {
     
     std::cout << "Loading the graph from " << filename << std::endl;
     
-    // initialising the database file
+    // initializing the database file
     votca::tools::Database db;
     db.Open( filename );
     
@@ -59,7 +58,7 @@ void Graph::Load(std::string filename) {
        
         BNode *node = AddNode();
 
-       // cout << "id: " << stmt->Column<int>(0) << "; ";
+        cout << "id: " << stmt->Column<int>(0) << "; ";
         int id = stmt->Column<int>(0);
         node->id = id;
         
@@ -100,9 +99,22 @@ void Graph::Load(std::string filename) {
     delete stmt;
 
 /*    
+<<<<<<< HEAD
     
     // Load pairs and rates
     
+=======
+    if(votca::tools::globals::verbose) { cout << "segments: " << node.size() << endl; }
+    
+    // Load pairs and rates
+    int numberofpairs = 0;
+    stmt = db.Prepare("SELECT seg1-1 AS 'segment1', seg2-1 AS 'segment2', rate12"+_carriertype+" AS 'rate', drX, drY, drZ, Jeff2"+_carriertype+", lO"+_carriertype+" FROM pairs UNION SELECT seg2-1 AS 'segment1', seg1-1 AS 'segment2', rate21"+_carriertype+" AS 'rate', -drX AS 'drX', -drY AS 'drY', -drZ AS 'drZ', Jeff2"+_carriertype+", lO"+_carriertype+" FROM pairs ORDER BY segment1;");
+    while (stmt->Step() != SQLITE_DONE)
+    {
+        int seg1 = stmt->Column<int>(0);
+        int seg2 = stmt->Column<int>(1);
+
+>>>>>>> 4f3e1b135683f0385e7be3c2fda36073f30e0fa7
         double rate12 = stmt->Column<double>(2);
 
         myvec dr = myvec(stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9, stmt->Column<double>(5)*1E-9); // converted from nm to m
