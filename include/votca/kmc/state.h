@@ -18,6 +18,9 @@
 #ifndef __VOTCA_KMC_STATE_H_
 #define __VOTCA_KMC_STATE_H_
 
+#include <votca/kmc/carrier.h>
+#include <votca/kmc/carrierfactory.h>
+
 namespace votca { namespace kmc {
   
 class State {
@@ -27,8 +30,13 @@ public:
     // can be used to resume the calculation
     void Save(std::string filename);
     void Load(std::string filename);
-  
+    
+    Carrier* AddCarrier( std::string type );
+    
+    
 private:
+
+    std::vector< Carrier* > carriers;
 
 };
 
@@ -36,7 +44,14 @@ void State::Save(std::string filename){
 }
 
 void State::Load(std::string filename){
-    
+}
+
+// Add a carrier of a certain type
+inline Carrier* State::AddCarrier( std::string type ) {
+
+    cout << "Adding carrier " << type << endl;
+    Carrier *carrier =  Carriers().Create( type );
+    carriers.push_back( carrier );
 }
 
 }} 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2011 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,35 @@
  *
  */
 
-#ifndef __VOTCA_KMC_CARRIER_H_
-#define __VOTCA_KMC_CARRIER_H_
+#ifndef __VOTCA_KMC_CARRIERFACTORY_H
+#define	__VOTCA_KMC_CARRIERFACTORY_H
 
-#include <votca/tools/vec.h>
+#include <votca/tools/objectfactory.h>
+#include "carrier.h"
 
 namespace votca { namespace kmc {
-  
-class Carrier {
 
-public: 
-    
-   Carrier(){};
-   virtual ~Carrier(){};     
+using namespace tools;
 
-   virtual std::string Type() = 0;
-    
+class CarrierFactory
+: public ObjectFactory< std::string, Carrier >
+{
 private:
+    CarrierFactory() {}
+public:
     
-    int ID;
-    // distance traveled
-    votca::tools::vec distance;
-    // position
-    votca::tools::vec position;
+    static void RegisterAll(void);
+
+    friend CarrierFactory &Carriers();
 };
 
-}} 
+inline CarrierFactory &Carriers()
+{
+    static CarrierFactory _instance;
+    return _instance;
+}
 
-#endif
+}}
+
+#endif	/* __VOTCA_KMC_CARRIERFACTORY_H */
 

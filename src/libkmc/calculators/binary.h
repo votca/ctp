@@ -24,6 +24,8 @@
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
 
+#include <votca/kmc/carrierfactory.h>
+
 using namespace std;
 
 namespace votca { namespace kmc {
@@ -50,6 +52,7 @@ private:
 void Binary::Initialize(Property *options) {
     
     std::cout << "Hello from KMC binary" << endl;
+    
 }
 
 bool Binary::EvaluateFrame() {
@@ -65,8 +68,17 @@ void Binary::RunKMC() {
     Graph graph;
     std::string filename( "state.sql" );
     graph.Load( filename );
-    graph.PrintGraph();
+    //graph.Print();
+
+    // register all carrier types
+    CarrierFactory::RegisterAll();
     
+    //Create a new electron
+    Carrier *carrier =  Carriers().Create( "electron" );
+    std::cout << "Carrier says I am of the type " << carrier->Type() << endl;;
+    
+    State state;
+    state.AddCarrier( "electron" );
 }
 
 }}

@@ -26,7 +26,7 @@ class Graph {
 public:
     
     void Load(std::string filename);    
-    void PrintGraph();
+    void Print();
     
     // add a node to the vector of Nodes
     BNode* AddNode() {
@@ -77,7 +77,7 @@ void Graph::Load(std::string filename) {
         myvec position = myvec(x, y, z); 
         node->position = position;
         
-        node->PrintNode();
+        //node->PrintNode();
         
     }
     
@@ -103,7 +103,7 @@ void Graph::Load(std::string filename) {
 
 }
 
-    void Graph::PrintGraph(){
+    void Graph::Print(){
     
         for (std::vector< BNode* >::iterator node = nodes.begin() ; node != nodes.end(); ++node) {
             (*node)->PrintNode();

@@ -13,10 +13,15 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="Carriers" projectFiles="true">
+        <itemPath>../../include/votca/kmc/carrier.h</itemPath>
+        <itemPath>../../src/libkmc/carrierfactory.cc</itemPath>
+        <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
+        <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
+      </logicalFolder>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
-      <itemPath>../../include/votca/kmc/carrier.h</itemPath>
       <itemPath>../../include/votca/kmc/event.h</itemPath>
       <itemPath>../../include/votca/kmc/events.h</itemPath>
       <itemPath>../../include/votca/kmc/globaleventinfo.h</itemPath>
@@ -123,6 +128,11 @@
       </item>
       <item path="../../include/votca/kmc/carrier.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/carrierfactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/events.h" ex="false" tool="3" flavor2="0">
@@ -210,6 +220,13 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmcsingle.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carriers/electron.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -264,6 +281,11 @@
       </item>
       <item path="../../include/votca/kmc/carrier.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/carrierfactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/events.h" ex="false" tool="3" flavor2="0">
@@ -351,6 +373,13 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmcsingle.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carriers/electron.h"
             ex="false"
             tool="3"
             flavor2="0">

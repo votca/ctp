@@ -28,7 +28,7 @@ public:
 
     void AddNeighbor( BNode* node ) {
         //node seg 1 and add neighbour node seg 2
-        std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
+        //std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
         neighbours.push_back(node);
     };
     
