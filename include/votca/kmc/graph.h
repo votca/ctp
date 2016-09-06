@@ -99,6 +99,7 @@ void Graph::Load(std::string filename) {
         
         cout << "Neighbour pairs: " << seg1 << " " << seg2 << endl;
 
+        //slow function; only to construct the pair list
         BNode* node1 = GetNode( seg1 );
         BNode* node2 = GetNode( seg2 );
         
