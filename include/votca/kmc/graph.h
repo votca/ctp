@@ -52,11 +52,11 @@ void Graph::Load(std::string filename) {
     
     std::cout << "Loading the graph from " << filename << std::endl;
     
-    // initializing the database file
+    // initialising the database file
     votca::tools::Database db;
     db.Open( filename );
     
-    votca::tools::Statement *stmt = db.Prepare("SELECT _id-1, posX, posY, posZ FROM segments;");
+    votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ FROM segments;");
 
     while (stmt->Step() != SQLITE_DONE)
     {
@@ -84,25 +84,15 @@ void Graph::Load(std::string filename) {
     delete stmt;
     
     //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table)  
-    stmt = db.Prepare("SELECT _id, id, seg1, seg2 FROM pairs;");
+    stmt = db.Prepare("SELECT seg1, seg2 FROM pairs;");
     while (stmt->Step() != SQLITE_DONE)     
-    {
-        
-        //cout << "id 1: " << stmt->Column<int>(0) << "; "; 
-        int _id1 = stmt->Column<int>(0);
-        //cout << "id 2: " << stmt->Column<int>(1) << "; ";
-        int _id2 = stmt->Column<int>(1);
-        //node-> id = id;
-        
-        int seg1 = stmt->Column<int>(2);
-        int seg2 = stmt->Column<int>(3);
-        
-        cout << "Neighbour pairs: " << seg1 << " " << seg2 << endl;
+    {           
+        int seg1 = stmt->Column<int>(0);
+        int seg2 = stmt->Column<int>(1);
 
+        //Get the nodes for seg 1 and 2
         BNode* node1 = GetNode( seg1 );
         BNode* node2 = GetNode( seg2 );
-        
-        cout << node1->id << " " << node2->id << endl;
         
         // make sure no duplicates are added
         node1->AddNeighbor( node2 );
