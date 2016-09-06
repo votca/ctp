@@ -24,6 +24,7 @@ class State {
 public:
     
     // Save and Load state into a file
+    // can be used to resume the calculation
     void Save(std::string filename);
     void Load(std::string filename);
   

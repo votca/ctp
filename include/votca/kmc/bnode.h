@@ -27,6 +27,7 @@ class BNode {
 public:
 
     void AddNeighbor( BNode* node ) {
+        //node seg 1 and add neighbour node seg 2
         std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
         neighbours.push_back(node);
     };
@@ -34,11 +35,11 @@ public:
     void RemoveNeighbor(){};
     
     void PrintNode(){
-        std::cout << "Printing node " << id << " ";
+        std::cout << "Neighbour list: " << id << " "; //Node ID followed by list of neighbouring nodes
         for (std::vector< BNode* >::iterator node = neighbours.begin() ; node != neighbours.end(); ++node) {
             std::cout << (*node)->id << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;      
     };
     
     int id;
