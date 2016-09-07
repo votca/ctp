@@ -25,6 +25,7 @@
 #include <votca/kmc/bnode.h>
 
 #include <votca/kmc/carrierfactory.h>
+#include <votca/kmc/eventfactory.h>
 
 using namespace std;
 
@@ -79,6 +80,16 @@ void Binary::RunKMC() {
     
     State state;
     state.AddCarrier( "electron" );
+    
+    // register all event types
+    EventFactory::RegisterAll();
+    
+    //New event - charge transfer
+    Events().Register<chargetransfer>("charge transfer");
+    std::cout << "Event that will happen" << Event->Event_Type() << endl;;
+    
+    State state;
+    state.Event("charge transfer");
 }
 
 }}

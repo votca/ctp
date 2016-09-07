@@ -16,14 +16,13 @@
  */
 
 #include <votca/kmc/eventfactory.h>
-#include "Events/event.h"
-
+#include "Events_Factory/chargetransfer.h"
 
 namespace votca { namespace kmc {
 
-void Eventfactory::RegisterAll(void)
+void EventFactory::RegisterAll(void)
 {
-    Events().Register<charge_transfer>("charge_transfer");
+    Events().Register<chargetransfer>("charge transfer");
 }
 
 }}

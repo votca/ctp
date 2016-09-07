@@ -15,26 +15,23 @@
  *
  */
 
-#ifndef __VOTCA_KMC_CHARGE_TRANSFER_H_
-#define __VOTCA_KMC_CHARGE_TRANSFER_H_
+#ifndef __VOTCA_KMC_CHARGETRANSFER_H
+#define __VOTCA_KMC_CHARGETRANSFER_H
 
 #include <votca/kmc/event.h>
 
-namespace votca { namespace kmc {
-  
 
-class Charge_transfer {
+namespace votca { namespace kmc {
     
+class chargetransfer : public Event {
 public:
     
-    
-    
-private:
-    
+    std::string Type(){ return "charge transfer"; } ;
+ 
+    }
+   
 };
 
-
-}} 
-
-#endif
+}}
+#endif /* __VOTCA_KMC_CHARGETRANSFER_H */
 

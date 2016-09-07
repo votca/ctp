@@ -19,10 +19,15 @@
         <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
         <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="Events_Factory" projectFiles="true">
+        <itemPath>../../src/libkmc/Events_factory/chargetransfer.h</itemPath>
+        <itemPath>../../include/votca/kmc/event.h</itemPath>
+        <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
+        <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
+      </logicalFolder>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
-      <itemPath>../../include/votca/kmc/event.h</itemPath>
       <itemPath>../../include/votca/kmc/events.h</itemPath>
       <itemPath>../../include/votca/kmc/globaleventinfo.h</itemPath>
       <itemPath>../../include/votca/kmc/graph.h</itemPath>
@@ -34,6 +39,7 @@
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
       <itemPath>../../include/votca/kmc/nodesql.h</itemPath>
+      <itemPath>../../include/votca/kmc/property.h</itemPath>
       <itemPath>../../include/votca/kmc/state.h</itemPath>
       <itemPath>../../include/votca/kmc/version.h</itemPath>
       <itemPath>../../include/votca/kmc/vssmgroup.h</itemPath>
@@ -135,6 +141,11 @@
       </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/eventfactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/events.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/globaleventinfo.h"
@@ -168,6 +179,8 @@
       </item>
       <item path="../../include/votca/kmc/nodesql.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
@@ -188,6 +201,11 @@
       <item path="../../share/xml/kmcparallel.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/Events_factory/chargetransfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/binary.h"
             ex="false"
@@ -230,6 +248,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -288,6 +308,11 @@
       </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/eventfactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/events.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/globaleventinfo.h"
@@ -321,6 +346,8 @@
       </item>
       <item path="../../include/votca/kmc/nodesql.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
@@ -341,6 +368,11 @@
       <item path="../../share/xml/kmcparallel.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/Events_factory/chargetransfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/binary.h"
             ex="false"
@@ -383,6 +415,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>

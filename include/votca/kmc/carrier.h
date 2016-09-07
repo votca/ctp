@@ -34,7 +34,7 @@ public:
 private:
     
     int ID;
-    // distance traveled
+    // distance travelled
     votca::tools::vec distance;
     // position
     votca::tools::vec position;

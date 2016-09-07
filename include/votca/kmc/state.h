@@ -32,6 +32,7 @@ public:
     void Load(std::string filename);
     
     Carrier* AddCarrier( std::string type );
+    Event* Event (std::string Event_type);
     
     
 private:
@@ -50,8 +51,16 @@ void State::Load(std::string filename){
 inline Carrier* State::AddCarrier( std::string type ) {
 
     cout << "Adding carrier " << type << endl;
-    Carrier *carrier =  Carriers().Create( type );
+    Carrier *carrier = Carriers().Create( type );
     carriers.push_back( carrier );
+}
+
+// Carrying out a specific event 
+inline Event* State::Event(std::string Event_type) {
+    cout << "Carrying out event " << Event_type << endl;
+    Event *event = Events_Factory().Create(Event_type);
+    Events_Factory.push_back( event );
+
 }
 
 }} 
