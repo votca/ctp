@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2011 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,36 @@
  *
  */
 
-#ifndef __VOTCA_KMC_EVENT_H_
-#define __VOTCA_KMC_EVENT_H_
+
+#ifndef __VOTCA_KMC_EVENTFACTORY_H
+#define	__VOTCA_KMC_EVENTFACTORY_H
+
+#include <votca/tools/objectfactory.h>
+#include "event.h"
 
 namespace votca { namespace kmc {
-  
 
-class Event {
-    
+using namespace tools;
+
+class EventFactory
+: public ObjectFactory< std::string, Event >
+{
+private:
+    EventFactory() {}
 public:
     
-   Event(){};
-   virtual ~Event(){};     
+    static void RegisterAll(void);
 
-   virtual std::string Event_type() = 0;
-    
-private:
-    
+    friend EventFactory &Events();
 };
 
+inline EventFactory &Events()
+{
+    static EventFactory _instance;
+    return _instance;
+}
 
-}} 
+}}
 
-#endif
+#endif	/* __VOTCA_KMC_EVENTFACTORY_H */
 
