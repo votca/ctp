@@ -23,6 +23,7 @@
 #include <votca/kmc/graph.h>
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
+//#include <votca/kmc/property.h>
 
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
@@ -85,11 +86,11 @@ void Binary::RunKMC() {
     EventFactory::RegisterAll();
     
     //New event - charge transfer
-    Events().Register<chargetransfer>("charge transfer");
-    std::cout << "Event that will happen" << Event->Event_Type() << endl;;
+    Event *event =  Events().Create( "charge transfer" );
+    std::cout << "Event that will happen is " << event->newEvent() << endl;;
     
-    State state;
-    state.Event("charge transfer");
+    //State state;
+    state.Eventupdate("charge transfer");
 }
 
 }}

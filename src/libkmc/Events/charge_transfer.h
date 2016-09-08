@@ -23,15 +23,12 @@
 
 namespace votca { namespace kmc {
     
-class chargetransfer : public Event {
+class Chargetransfer : public Event {
 public:
     
-    std::string Type(){ return "charge transfer"; } ;
+    std::string newEvent(){ return "charge transfer"; } ;
  
-    }
-   
 };
 
 }}
-#endif /* __VOTCA_KMC_CHARGETRANSFER_H */
-
+#endif 

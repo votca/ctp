@@ -21,6 +21,9 @@
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/carrierfactory.h>
 
+#include <votca/kmc/event.h>
+#include <votca/kmc/eventfactory.h>
+
 namespace votca { namespace kmc {
   
 class State {
@@ -32,7 +35,7 @@ public:
     void Load(std::string filename);
     
     Carrier* AddCarrier( std::string type );
-    Event* Event (std::string Event_type);
+    Event* Eventupdate (std::string Event_type);
     
     
 private:
@@ -55,12 +58,13 @@ inline Carrier* State::AddCarrier( std::string type ) {
     carriers.push_back( carrier );
 }
 
-// Carrying out a specific event 
-inline Event* State::Event(std::string Event_type) {
+// Carrying out a specific event - every event should update the state
+inline Event* State::Eventupdate(std::string Event_type) {
     cout << "Carrying out event " << Event_type << endl;
-    Event *event = Events_Factory().Create(Event_type);
-    Events_Factory.push_back( event );
-
+    Event *event = Events().Create(Event_type);
+    
+//State should then be updated
+    
 }
 
 }} 

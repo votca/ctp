@@ -28,7 +28,7 @@ public:
    Event(){};
    virtual ~Event(){};     
 
-   virtual std::string Event_type() = 0;
+   virtual std::string newEvent() = 0;
     
 private:
     
@@ -38,4 +38,3 @@ private:
 }} 
 
 #endif
-

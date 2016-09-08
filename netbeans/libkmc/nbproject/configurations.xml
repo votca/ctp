@@ -19,8 +19,8 @@
         <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
         <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="Events_Factory" projectFiles="true">
-        <itemPath>../../src/libkmc/Events_factory/chargetransfer.h</itemPath>
+      <logicalFolder name="f2" displayName="Events" projectFiles="true">
+        <itemPath>../../src/libkmc/Events/charge_transfer.h</itemPath>
         <itemPath>../../include/votca/kmc/event.h</itemPath>
         <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
         <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
@@ -202,7 +202,7 @@
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events_factory/chargetransfer.h"
+      <item path="../../src/libkmc/Events/charge_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -369,7 +369,7 @@
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events_factory/chargetransfer.h"
+      <item path="../../src/libkmc/Events/charge_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">
