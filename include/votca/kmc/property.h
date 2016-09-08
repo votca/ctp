@@ -20,25 +20,34 @@
 
 #include <votca/tools/property.h>
 
+namespace votca { namespace kmc {
 class Property {
     
 public: 
     
     Property _job_summary;
+    
+    //Property &add(const string &key, const string &value);
     Property *_output_summary = &_job_summary.add("output","");
     Property *_segment_summary = &_output_summary->add("segment","");
     
+    //Property &get(const string &key);
     string segName = seg->getName();
     segId = seg->getId();
     
-    _segment_summary -> setAttribute("id", segId);
-    _segment_summary->setAttribute("type", segName);
-    _segment_summary->setAttribute("homo", _orbitals.getEnergy(_orbitals.getNumberOfElectrons() ));
-    _segment_summary->setAttribute("lumo", _orbitals.getEnergy(_orbitals.getNumberOfElectrons() + 1 ));
+    //Property &set(const string &key, const string &value);
+    _segment_summary-> setAttribute("id", segId);
+    _segment_summary-> setAttribute("type", segName);
+    _segment_summary-> setAttribute("homo", _orbitals.getEnergy(_orbitals.getNumberOfElectrons() ));
+    _segment_summary-> setAttribute("lumo", _orbitals.getEnergy(_orbitals.getNumberOfElectrons() + 1 ));
 
- };
+    
+private:
+
+};
  
+}}
 
-#endif /* _VOTCA_TOOLS_PROPERTY_H */
+#endif
 
 

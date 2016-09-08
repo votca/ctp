@@ -23,10 +23,9 @@
 #include <votca/kmc/graph.h>
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
-//#include <votca/kmc/property.h>
-
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
+//#include <votca/kmc/property.h>
 
 using namespace std;
 
