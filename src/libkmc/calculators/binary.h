@@ -81,6 +81,12 @@ void Binary::RunKMC() {
     State state;
     state.AddCarrier( "electron" );
     
+    state.Save( "state.bin" );
+    
+    //state.Clear();
+    
+    state.Load( "state.bin" );
+    
     // register all event types
     EventFactory::RegisterAll();
     
@@ -89,7 +95,7 @@ void Binary::RunKMC() {
     std::cout << "Event that will happen is " << event->newEvent() << endl;;
     
     //State state;
-    state.Eventupdate("charge transfer");
+    //state.Eventupdate("charge transfer");
 }
 
 }}

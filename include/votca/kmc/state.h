@@ -21,8 +21,34 @@
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/carrierfactory.h>
 
-#include <votca/kmc/event.h>
-#include <votca/kmc/eventfactory.h>
+//#include <votca/kmc/event.h>
+//#include <votca/kmc/eventfactory.h>
+
+// Text archive that defines boost::archive::text_oarchive
+// and boost::archive::text_iarchive
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
+// XML archive that defines boost::archive::xml_oarchive
+// and boost::archive::xml_iarchive
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+
+// XML archive which uses wide characters (use for UTF-8 output ),
+// defines boost::archive::xml_woarchive
+// and boost::archive::xml_wiarchive
+#include <boost/archive/xml_woarchive.hpp>
+#include <boost/archive/xml_wiarchive.hpp>
+
+// Binary archive that defines boost::archive::binary_oarchive
+// and boost::archive::binary_iarchive
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/version.hpp>
 
 namespace votca { namespace kmc {
   
@@ -31,23 +57,63 @@ public:
     
     // Save and Load state into a file
     // can be used to resume the calculation
-    void Save(std::string filename);
-    void Load(std::string filename);
+    bool Save(std::string filename);
+    bool Load(std::string filename);
     
     Carrier* AddCarrier( std::string type );
-    Event* Eventupdate (std::string Event_type);
+    //Event* Eventupdate (std::string Event_type);
     
     
 private:
-
+    // Allow serialization to access non-public data members
+    friend class boost::serialization::access;
+    
     std::vector< Carrier* > carriers;
 
+    std::string test = "Tata";
+    
+    // serialization itself (template implementation stays in the header)
+    template<typename Archive> 
+    void serialize(Archive& ar, const unsigned int version) {
+
+        // version-specific serialization
+        if(version == 0)  {
+            ar & test;
+            std::cout << "Serialized " <<  carriers.size() << " carriers" << std::endl;
+        } 
+    }
+    
 };
 
-void State::Save(std::string filename){
+bool State::Save(std::string filename){
+    
+    try {
+        std::ofstream ofs( filename.c_str() );
+        boost::archive::text_oarchive oa( ofs );
+        oa << *this;
+        ofs.close();
+    } catch(std::exception &err) {
+        std::cerr << "Could not write state from " << filename << flush; 
+        std::cerr << " An error occurred:\n" << err.what() << endl;
+        return false;
+    } 
+    return true;    
+    
 }
 
-void State::Load(std::string filename){
+bool State::Load(std::string filename){
+    
+    try {
+        std::ifstream ifs( filename.c_str() );
+        boost::archive::text_iarchive ia( ifs );
+        ia >> *this;
+        ifs.close();
+    } catch(std::exception &err) {
+        std::cerr << "Could not load state from " << filename << flush; 
+        std::cerr << "An error occurred:\n" << err.what() << endl;
+        return false;
+    } 
+    return true;
 }
 
 // Add a carrier of a certain type
@@ -58,16 +124,21 @@ inline Carrier* State::AddCarrier( std::string type ) {
     carriers.push_back( carrier );
 }
 
+
+
+
 // Carrying out a specific event - every event should update the state
-inline Event* State::Eventupdate(std::string Event_type) {
-    cout << "Carrying out event " << Event_type << endl;
-    Event *event = Events().Create(Event_type);
+//inline Event* State::Eventupdate(std::string Event_type) {
+//    cout << "Carrying out event " << Event_type << endl;
+//    Event *event = Events().Create(Event_type);
     
 //State should then be updated
     
-}
+//}
 
 }} 
+
+BOOST_CLASS_VERSION(votca::kmc::State, 0)
 
 #endif
 
