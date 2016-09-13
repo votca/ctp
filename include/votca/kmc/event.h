@@ -15,6 +15,8 @@
  *
  */
 
+#include <votca/kmc/state.h>
+
 #ifndef __VOTCA_KMC_EVENT_H_
 #define __VOTCA_KMC_EVENT_H_
 
@@ -27,18 +29,13 @@ public:
    Event(){};
    virtual ~Event(){};     
 
-   virtual std::string Event_type() = 0;
-   //virtual void OnExecute() = 0;
+   virtual std::string Type() = 0;
+   virtual void OnExecute( State* state ) = 0;
     
 private:
     
 };
 
- //void Event::OnExecute(){
-     //*state
-     //carrier move()
-    //std::cout << "Carrying out event : " << Event->Event_type("electron transfer") << endl;
-}
-} 
+}} 
 
 #endif

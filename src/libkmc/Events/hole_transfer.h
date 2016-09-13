@@ -26,7 +26,12 @@ namespace votca { namespace kmc {
 class Holetransfer : public Event {
 public:
     
-    std::string Event_type(){ return "hole transfer"; } ;
+    std::string Type(){ return "hole transfer"; } ;
+    
+    virtual void OnExecute( State* state ) {
+    
+        std::cout << "Moving a hole" << std::endl;
+    };
  
 };
 

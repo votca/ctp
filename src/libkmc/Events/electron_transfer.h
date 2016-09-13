@@ -19,14 +19,34 @@
 #define __VOTCA_KMC_ELECTRONTRANSFER_H
 
 #include <votca/kmc/event.h>
+#include <votca/kmc/carrier.h>
 
 
 namespace votca { namespace kmc {
     
 class Electrontransfer : public Event {
+    
 public:
     
-    std::string Event_type(){ return "electron transfer"; } ;
+    // electron to move
+    Carrier* carrier;
+    // Move from this node
+    BNode* node_from;
+    // Move to this node
+    BNode* node_to;
+    // electron transfer rate
+    double rate;
+    
+    std::string Type(){ return "electron transfer"; } ;
+
+    virtual void OnExecute(  State* state ) {
+    
+        std::cout << "Moving an " << carrier->Type() << " " << carrier->id() << 
+                " from node " <<  node_from->id << 
+                " to node "   <<  node_to->id << std::endl;
+    };
+    
+    
  
 };
 

@@ -42,11 +42,13 @@ public:
         std::cout << std::endl;      
     };
     
-    int id;
     votca::tools::vec position;
+
+    int id;
     
 private:
     
+
     std::vector< BNode* > neighbours;
      
 };

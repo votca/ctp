@@ -19,7 +19,33 @@
 #define __VOTCA_KMC_CARRIER_H_
 
 #include <votca/tools/vec.h>
-//#include <votca/kmc/state.h>
+#include "bnode.h"
+
+// Text archive that defines boost::archive::text_oarchive
+// and boost::archive::text_iarchive
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
+// XML archive that defines boost::archive::xml_oarchive
+// and boost::archive::xml_iarchive
+//#include <boost/archive/xml_oarchive.hpp>
+//#include <boost/archive/xml_iarchive.hpp>
+
+// XML archive which uses wide characters (use for UTF-8 output ),
+// defines boost::archive::xml_woarchive
+// and boost::archive::xml_wiarchive
+//#include <boost/archive/xml_woarchive.hpp>
+//#include <boost/archive/xml_wiarchive.hpp>
+
+// Binary archive that defines boost::archive::binary_oarchive
+// and boost::archive::binary_iarchive
+//#include <boost/archive/binary_oarchive.hpp>
+//#include <boost/archive/binary_iarchive.hpp>
+
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/version.hpp>
 
 namespace votca { namespace kmc {
   
@@ -32,6 +58,7 @@ public:
 
    virtual std::string Type() = 0;
    
+   int id(){ return ID; };
     
 private:
     
@@ -40,29 +67,32 @@ private:
     votca::tools::vec distance;
     // position
     votca::tools::vec position;
-    
-    
-    
+    // node on which it resides
+    BNode* node;
+ 
+/*    
     friend class boost::serialization::access;
-    
-    //serialization itself (template implementation stays in the header)
-    std::vector< Carrier* > carriers;
+   
     
     template<typename Archive> 
     void serialize(Archive& ar, const unsigned int version) {
-
+        
         //version-specific serialization
         if(version == 0)  
         {
-            ar & carriers;
-            std::cout << "Test" << carriers.size() << std::endl;
+            ar & id;
+            ar & node->id;
 
         }
     }
-      
+*/
+    
 };
 
 }} 
+
+BOOST_CLASS_VERSION(votca::kmc::Carrier, 0)
+BOOST_SERIALIZATION_ASSUME_ABSTRACT( Carrier );
 
 #endif
 

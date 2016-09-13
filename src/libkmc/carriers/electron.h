@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_Dissociation_H_
-#define __VOTCA_KMC_Dissociation_H_
+#ifndef __VOTCA_KMC_Electron_H_
+#define __VOTCA_KMC_Electron_H_
 
 #include <votca/kmc/carrier.h>
 
@@ -26,9 +26,22 @@ class Electron : public Carrier {
 public:
     
     std::string Type(){ return "electron"; } ;
-   
+
+private:
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        // serialize base class information
+        //ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Carrier);
+    }
+ 
 };
 
 }}
+
+BOOST_CLASS_VERSION(votca::kmc::Electron, 0)
+
 
 #endif

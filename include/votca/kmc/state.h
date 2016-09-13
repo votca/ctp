@@ -18,6 +18,8 @@
 #ifndef __VOTCA_KMC_STATE_H_
 #define __VOTCA_KMC_STATE_H_
 
+#include <fstream>
+
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/carrierfactory.h>
 
@@ -31,19 +33,19 @@
 
 // XML archive that defines boost::archive::xml_oarchive
 // and boost::archive::xml_iarchive
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
+//#include <boost/archive/xml_oarchive.hpp>
+//#include <boost/archive/xml_iarchive.hpp>
 
 // XML archive which uses wide characters (use for UTF-8 output ),
 // defines boost::archive::xml_woarchive
 // and boost::archive::xml_wiarchive
-#include <boost/archive/xml_woarchive.hpp>
-#include <boost/archive/xml_wiarchive.hpp>
+//#include <boost/archive/xml_woarchive.hpp>
+//#include <boost/archive/xml_wiarchive.hpp>
 
 // Binary archive that defines boost::archive::binary_oarchive
 // and boost::archive::binary_iarchive
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
+//#include <boost/archive/binary_oarchive.hpp>
+//#include <boost/archive/binary_iarchive.hpp>
 
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/map.hpp>
@@ -77,14 +79,14 @@ private:
 
         // version-specific serialization
         if(version == 0)  {
-            ar & test;
+            //ar & carriers;
             std::cout << "Serialized " <<  carriers.size() << " carriers"<< std::endl;
         } 
     }
     
 };
 
-bool State::Save(std::string filename){
+inline bool State::Save(std::string filename){
     
     try {
         std::ofstream ofs( filename.c_str() );
@@ -100,7 +102,7 @@ bool State::Save(std::string filename){
     
 }
 
-bool State::Load(std::string filename){
+inline bool State::Load(std::string filename){
     
     try {
         std::ifstream ifs( filename.c_str() );
