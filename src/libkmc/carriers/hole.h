@@ -15,20 +15,20 @@
  *
  */
 
-#ifndef __VOTCA_KMC_CHARGETRANSFER_H
-#define __VOTCA_KMC_CHARGETRANSFER_H
+#ifndef __VOTCA_KMC_HOLE_H_
+#define __VOTCA_KMC_HOLE_H_
 
-#include <votca/kmc/event.h>
-
+#include <votca/kmc/carrier.h>
 
 namespace votca { namespace kmc {
     
-class Chargetransfer : public Event {
+class Hole : public Carrier {
 public:
     
-    std::string newEvent(){ return "charge transfer"; } ;
- 
+    std::string Type(){ return "hole"; } ;
+   
 };
 
 }}
-#endif 
+
+#endif
