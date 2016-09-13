@@ -18,12 +18,14 @@
         <itemPath>../../src/libkmc/carrierfactory.cc</itemPath>
         <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
         <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
+        <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Events" projectFiles="true">
-        <itemPath>../../src/libkmc/Events/charge_transfer.h</itemPath>
+        <itemPath>../../src/libkmc/Events/electron_transfer.h</itemPath>
         <itemPath>../../include/votca/kmc/event.h</itemPath>
         <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
         <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
+        <itemPath>../../src/libkmc/Events/hole_transfer.h</itemPath>
       </logicalFolder>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
@@ -202,7 +204,12 @@
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events/charge_transfer.h"
+      <item path="../../src/libkmc/Events/electron_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/Events/hole_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -248,6 +255,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -369,7 +378,12 @@
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events/charge_transfer.h"
+      <item path="../../src/libkmc/Events/electron_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/Events/hole_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -415,6 +429,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>

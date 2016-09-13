@@ -61,7 +61,6 @@ public:
     bool Load(std::string filename);
     
     Carrier* AddCarrier( std::string type );
-    //Event* Eventupdate (std::string Event_type);
     
     
 private:
@@ -79,7 +78,7 @@ private:
         // version-specific serialization
         if(version == 0)  {
             ar & test;
-            std::cout << "Serialized " <<  carriers.size() << " carriers" << std::endl;
+            std::cout << "Serialized " <<  carriers.size() << " carriers"<< std::endl;
         } 
     }
     
@@ -123,18 +122,6 @@ inline Carrier* State::AddCarrier( std::string type ) {
     Carrier *carrier = Carriers().Create( type );
     carriers.push_back( carrier );
 }
-
-
-
-
-// Carrying out a specific event - every event should update the state
-//inline Event* State::Eventupdate(std::string Event_type) {
-//    cout << "Carrying out event " << Event_type << endl;
-//    Event *event = Events().Create(Event_type);
-    
-//State should then be updated
-    
-//}
 
 }} 
 

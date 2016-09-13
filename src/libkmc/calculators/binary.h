@@ -75,11 +75,15 @@ void Binary::RunKMC() {
     CarrierFactory::RegisterAll();
     
     //Create a new electron
-    Carrier *carrier =  Carriers().Create( "electron" );
-    std::cout << "Carrier says I am of the type " << carrier->Type() << endl;;
+    Carrier *carrier =  Carriers().Create("electron");
+    //std::cout << "Carrier says I am of the type " << carrier->Type() << endl;
+    
+    //Create a new hole
+    //Carrier *carrier = Carriers().Create("hole");
     
     State state;
     state.AddCarrier( "electron" );
+    state.AddCarrier("hole");
     
     state.Save( "state.bin" );
     
@@ -91,11 +95,11 @@ void Binary::RunKMC() {
     EventFactory::RegisterAll();
     
     //New event - charge transfer
-    Event *event =  Events().Create( "charge transfer" );
-    std::cout << "Event that will happen is " << event->newEvent() << endl;;
+    Event *event =  Events().Create( "electron transfer" );
+    //std::cout << "Event which will occur:  " << event->Event_type() << endl;;
+    //event->OnExecute();
+ 
     
-    //State state;
-    //state.Eventupdate("charge transfer");
 }
 
 }}

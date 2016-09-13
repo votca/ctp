@@ -20,7 +20,6 @@
 
 namespace votca { namespace kmc {
   
-
 class Event {
     
 public:
@@ -28,13 +27,18 @@ public:
    Event(){};
    virtual ~Event(){};     
 
-   virtual std::string newEvent() = 0;
+   virtual std::string Event_type() = 0;
+   //virtual void OnExecute() = 0;
     
 private:
     
 };
 
-
-}} 
+ //void Event::OnExecute(){
+     //*state
+     //carrier move()
+    //std::cout << "Carrying out event : " << Event->Event_type("electron transfer") << endl;
+}
+} 
 
 #endif

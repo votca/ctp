@@ -17,12 +17,14 @@
 
 #include <votca/kmc/carrierfactory.h>
 #include "carriers/electron.h"
+#include "carriers/hole.h"
 
 namespace votca { namespace kmc {
 
 void CarrierFactory::RegisterAll(void)
 {
     Carriers().Register<Electron>("electron");
+    Carriers().Register<Hole>("hole");
 }
 
 }}

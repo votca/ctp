@@ -19,6 +19,7 @@
 #define __VOTCA_KMC_CARRIER_H_
 
 #include <votca/tools/vec.h>
+//#include <votca/kmc/state.h>
 
 namespace votca { namespace kmc {
   
@@ -30,6 +31,7 @@ public:
    virtual ~Carrier(){};     
 
    virtual std::string Type() = 0;
+   
     
 private:
     
@@ -38,6 +40,26 @@ private:
     votca::tools::vec distance;
     // position
     votca::tools::vec position;
+    
+    
+    
+    friend class boost::serialization::access;
+    
+    //serialization itself (template implementation stays in the header)
+    std::vector< Carrier* > carriers;
+    
+    template<typename Archive> 
+    void serialize(Archive& ar, const unsigned int version) {
+
+        //version-specific serialization
+        if(version == 0)  
+        {
+            ar & carriers;
+            std::cout << "Test" << carriers.size() << std::endl;
+
+        }
+    }
+      
 };
 
 }} 
