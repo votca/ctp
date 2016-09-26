@@ -91,20 +91,14 @@ void Binary::RunKMC() {
     
     for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
         
-        cout << "I am in the loop" << endl;
         //New event - electron transfer
-        std::cout << (*node_to)->id << " ";
-        
         Event* _et =  Events().Create( "electron_transfer" );
         Electrontransfer* et = new Electrontransfer();
-        
         et = dynamic_cast<Electrontransfer*>(_et);
-        
-        //et->SetOrigin( node_from );
-        //et->AddElectron( electron );
-        //et->SetDestination( *node_to );
+        et->AddElectron( electron );
+        et->SetOrigin( node_from );
+        et->SetDestination( *node_to );
         events.push_back( _et );
-        //(*node_to)->PrintNode();
     }
 
 
