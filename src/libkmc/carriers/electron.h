@@ -26,9 +26,17 @@ class Electron : public Carrier {
 public:
     
     std::string Type(){ return "electron"; } ;
+    
+    //Should electron have its own ID, aside from the carrier
+    int id(){ return ID; };
 
 private:
-
+    
+    int ID;
+    votca::tools::vec distance;
+    votca::tools::vec position;
+    BNode* node;
+  
     friend class boost::serialization::access;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

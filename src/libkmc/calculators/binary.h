@@ -25,7 +25,6 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-//#include <votca/kmc/property.h>
 
 using namespace std;
 
@@ -48,7 +47,6 @@ protected:
 private:
    
 };
-
 
 void Binary::Initialize(Property *options) {
     
@@ -76,9 +74,6 @@ void Binary::RunKMC() {
     
     //Create a new electron
     Carrier* electron =  Carriers().Create("electron");
-    //std::cout << "Carrier says I am of the type " << carrier->Type() << endl;
-    
-    //Create a new hole
     //Carrier* hole = Carriers().Create("hole");
     
     State state;
@@ -96,22 +91,19 @@ void Binary::RunKMC() {
     
     //New event - hole transfer
     //Event* ht =  Events().Create( "hole transfer" );
-    //std::cout << "Event which will occur:  " << ht->Type() << endl;;
     //ht->OnExecute( &state );
  
     //New event - electron transfer
     Event* et =  Events().Create( "electron transfer" );
     std::cout << "Event which will occur:  " << et->Type() << endl;
-    
-    /*
-    et->AddElectron( electron );
-    et->AddOrigin( electron->Node() );
+  
+    //et->AddElectron( electron );
+    //et->AddOrigin( electron->id() );
+    std::cout << "Electron node : " << electron->id() << endl;
     //in the loop over the neighbours
-    et->AddDestination( electron->Node->Neighbour() )
-    et->SetRate( rate );
-    */
-    
-    et->OnExecute( &state );
+    //et->AddDestination( electron->Node->Neighbour() )
+    //et->SetRate( rate );
+    //et->OnExecute( &state );  
     
 }
 

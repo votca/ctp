@@ -58,7 +58,7 @@ public:
 
    virtual std::string Type() = 0;
    
-   int id(){ return ID; };
+   virtual int id(){ return ID; };
     
 private:
     

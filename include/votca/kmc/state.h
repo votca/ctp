@@ -58,7 +58,6 @@ class State {
 public:
     
     // Save and Load state into a file
-    // can be used to resume the calculation
     bool Save(std::string filename);
     bool Load(std::string filename);
     

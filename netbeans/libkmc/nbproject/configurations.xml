@@ -22,6 +22,7 @@
         <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Events" projectFiles="true">
+        <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
         <itemPath>../../src/libkmc/Events/electron_transfer.h</itemPath>
         <itemPath>../../include/votca/kmc/event.h</itemPath>
         <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
@@ -126,6 +127,11 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="../../include/votca/kmc/Events_update_tree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/ImagePotential.h"
             ex="false"
             tool="3"
@@ -305,6 +311,11 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="../../include/votca/kmc/Events_update_tree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/ImagePotential.h"
             ex="false"
             tool="3"

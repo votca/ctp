@@ -60,10 +60,7 @@ void Graph::Load(std::string filename) {
 
     while (stmt->Step() != SQLITE_DONE)
     {
-       
         BNode *node = AddNode();
-
-        //std::cout << "id: " << stmt->Column<int>(0) << "; ";
         int id = stmt->Column<int>(0);
         node->id = id+1;
         
@@ -71,32 +68,34 @@ void Graph::Load(std::string filename) {
         double x = stmt->Column<double>(1);
         double y = stmt->Column<double>(2);
         double z = stmt->Column<double>(3);
-    
-        //cout << "position: " <<  x << " " << y << " " << z << endl;  
         
         myvec position = myvec(x, y, z); 
         node->position = position;
         
-        //node->PrintNode();
-        
+        //node->PrintNode();   
     }
     
     delete stmt;
     
-    //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table)  
-    stmt = db.Prepare("SELECT seg1, seg2 FROM pairs;");
+    //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table) 
+    //List of rates for electron transfer from seg 1 to seg 2 and vice versa
+    stmt = db.Prepare("SELECT seg1, seg2, rate12e, rate21e FROM pairs;");
     while (stmt->Step() != SQLITE_DONE)     
     {           
         int seg1 = stmt->Column<int>(0);
         int seg2 = stmt->Column<int>(1);
-
-        //Get the nodes for seg 1 and 2
+        
         BNode* node1 = GetNode( seg1 );
         BNode* node2 = GetNode( seg2 );
         
         // make sure no duplicates are added
         node1->AddNeighbor( node2 );
         node2->AddNeighbor( node1 );
+        
+        //Rate of electron(e) transfer from seg 1 to seg 2
+        double rate12e = stmt->Column<int>(2);
+        //Rate of electron transfer from seg 2 to seg 1
+        double rate21e = stmt->Column<int>(3);
          
     }
     delete stmt;

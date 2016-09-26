@@ -31,6 +31,10 @@ public:
 
    virtual std::string Type() = 0;
    virtual void OnExecute( State* state ) = 0;
+   //virtual void AddCarrier(Carrier* carrier) = 0;
+   //virtual void AddOrigin( Carrier* node) = 0;
+   //virtual void AddDestination( Carrier* neighbour_node) = 0;
+   //double SetRate() = 0;
     
 private:
     
