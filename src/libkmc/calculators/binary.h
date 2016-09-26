@@ -26,6 +26,8 @@
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
 
+#include "Events/electron_transfer.h" 
+
 using namespace std;
 
 namespace votca { namespace kmc {
@@ -65,45 +67,43 @@ void Binary::RunKMC() {
     std::cout << "Running KMC binary" << endl;
 
     Graph graph;
+    State state;
+
     std::string filename( "state.sql" );
     graph.Load( filename );
     //graph.Print();
 
     // register all carrier types
     CarrierFactory::RegisterAll();
-    
-    //Create a new electron
-    Carrier* electron =  Carriers().Create("electron");
-    //Carrier* hole = Carriers().Create("hole");
-    
-    State state;
-    state.AddCarrier( "electron" );
-    //state.AddCarrier("hole");
-    
-    state.Save( "state.bin" );
-    
-    //state.Clear();
-    
-    state.Load( "state.bin" );
-    
+
     // register all event types
     EventFactory::RegisterAll();
     
-    //New event - hole transfer
-    //Event* ht =  Events().Create( "hole transfer" );
-    //ht->OnExecute( &state );
+    //Create a new electron
+    Carrier* electron =  Carriers().Create("electron");
+    state.AddCarrier( "electron" );
+   
+    // place the electron on the first node
+    BNode* node_from = graph.GetNode(1);
+    node_from->PrintNode();
+
+    std::vector< Event* > events;
+    
+    for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
+        //New event - electron transfer
+        std::cout << (*node_to)->id << " ";
+        Event* _et =  Events().Create( "electron transfer" );
+        Electrontransfer* et = dynamic_cast<Electrontransfer*>(_et);
+        et->SetOrigin( node_from );
+        et->AddElectron( electron );
+        et->SetDestination( *node_to );
+        events.push_back( _et );
+        //(*node_to)->PrintNode();
+    }
+
+
+    std::cout << "number of events " << events.size() << std::endl;
  
-    //New event - electron transfer
-    Event* et =  Events().Create( "electron transfer" );
-    std::cout << "Event which will occur:  " << et->Type() << endl;
-  
-    //et->AddElectron( electron );
-    //et->AddOrigin( electron->id() );
-    std::cout << "Electron node : " << electron->id() << endl;
-    //in the loop over the neighbours
-    //et->AddDestination( electron->Node->Neighbour() )
-    //et->SetRate( rate );
-    //et->OnExecute( &state );  
     
 }
 

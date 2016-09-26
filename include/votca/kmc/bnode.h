@@ -26,6 +26,13 @@ class BNode {
     
 public:
 
+    typedef std::vector< BNode* >::iterator iterator;
+    typedef const std::vector< BNode* >::iterator const_iterator;
+    
+    iterator begin() { return neighbours.begin(); }
+    iterator end() { return neighbours.end(); }
+    
+    
     void AddNeighbor( BNode* node ) {
         //node seg 1 and add neighbour node seg 2
         //std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;

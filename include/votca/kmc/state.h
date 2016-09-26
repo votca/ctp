@@ -20,9 +20,6 @@
 
 #include <fstream>
 
-#include <votca/kmc/carrier.h>
-#include <votca/kmc/carrierfactory.h>
-
 //#include <votca/kmc/event.h>
 //#include <votca/kmc/eventfactory.h>
 
@@ -52,6 +49,9 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
 
+#include <votca/kmc/carrier.h>
+#include <votca/kmc/carrierfactory.h>
+
 namespace votca { namespace kmc {
   
 class State {
@@ -78,7 +78,7 @@ private:
 
         // version-specific serialization
         if(version == 0)  {
-            //ar & carriers;
+            ar & carriers;
             std::cout << "Serialized " <<  carriers.size() << " carriers"<< std::endl;
         } 
     }

@@ -70,7 +70,6 @@ private:
     // node on which it resides
     BNode* node;
  
-/*    
     friend class boost::serialization::access;
    
     
@@ -85,14 +84,13 @@ private:
 
         }
     }
-*/
     
 };
 
 }} 
 
 BOOST_CLASS_VERSION(votca::kmc::Carrier, 0)
-BOOST_SERIALIZATION_ASSUME_ABSTRACT( Carrier );
+//BOOST_SERIALIZATION_ASSUME_ABSTRACT( Carrier );
 
 #endif
 

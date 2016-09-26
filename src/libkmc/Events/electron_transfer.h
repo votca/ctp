@@ -39,16 +39,12 @@ public:
     //rate of electron transfer
     double rate;
     
-    void AddCarrier( Carrier* electron );
-    //Also a RemoveCarrier?
-
-    void AddOrigin( Electron* node );
-   
-    //AddDestination( electron->Node->Neighbour() );
-    void AddDestination( Electron* neighbour_node);
+    void AddElectron( Carrier* _electron );
+    void SetOrigin( BNode* _node );
+    void SetDestination( BNode* _node);
    
     // electron transfer rate
-    double SetRate();
+    void SetRate( double rate );
 
     virtual void OnExecute(  State* state ) {
     
@@ -63,61 +59,26 @@ private:
  
 };
 
-void AddCarrier( Carrier* electron )
+inline void Electrontransfer::AddElectron( Carrier* _electron )
 {
-    //Carrier->Type() = electron;
-    //Carrier->id() = electron->id();
-    
-    State state;
-    state.AddCarrier("electron");
-    
+    electron = _electron;
 }
 
-void Electrontransfer::AddOrigin( Electron* node )
+inline void Electrontransfer::SetOrigin( BNode* _node )
 {
-    //assign node electron->node();
-    std::cout << "Electron sits on node: " << electron->id();
-    //electron->id() = node_from->id;   
+    node_from = _node;   
+    std::cout << "Electron " << electron->id() << " sits on node: " << node_from->id;
 }
 
-void Electrontransfer::AddDestination( Electron* neighbour_node )
+inline void Electrontransfer::SetDestination( BNode* _node )
 {
-    //Loop over all neighbouring nodes
-    node_from->PrintNode(); 
-    for (std::vector< BNode* >::iterator node = neighbours.begin() ; node != neighbours.end(); ++node) 
-    {  
-    
-    }     
-    
-    //Choose a neighbouring node to move to and get id
-    neighbour_node->id();
-    
-    //Make the move
-    
-    //If node already occupied, node should be added to a forbidden list
-    
-    //neighbour_node->id() = node_to->id;
-    std::cout << "Electron moved to node: " << node_to->id << std::endl;
-    
-    //Have to update electron->node - node_to becomes node_from
-    //go to the neighbouring nodes for the new node
-    
-    
-    //Update tree - what has to be updated after the carrier moves
-    
+    node_to = _node;   
+    std::cout << "Electron " << electron->id() << " goes to node: " << node_to->id;
 }
 
-double Electrontransfer::SetRate()
+inline void Electrontransfer::SetRate( double _rate )
 {
-    //From the graph - SQL file PAIRS table
-    
-    //Rate of electron(e) transfer from seg 1 to seg 2
-    //double rate12e = stmt->Column<int>(2);
-    //Rate of electron transfer from seg 2 to seg 1
-    //double rate21e = stmt->Column<int>(3);
-    
-     
-    
+    rate = _rate;
 }
 
 }}

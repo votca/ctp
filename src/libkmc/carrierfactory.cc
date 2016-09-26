@@ -14,9 +14,14 @@
  * limitations under the License.
  *
  */
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
 
 #include <votca/kmc/carrierfactory.h>
 #include "carriers/electron.h"
+//BOOST_CLASS_EXPORT( votca::kmc::Electron )
+
 //#include "carriers/hole.h"
 
 namespace votca { namespace kmc {

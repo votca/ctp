@@ -27,12 +27,9 @@ public:
     
     std::string Type(){ return "electron"; } ;
     
-    //Should electron have its own ID, aside from the carrier
-    int id(){ return ID; };
-
+ 
 private:
     
-    int ID;
     votca::tools::vec distance;
     votca::tools::vec position;
     BNode* node;
@@ -41,8 +38,9 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        // serialize base class information
-        //ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Carrier);
+        //serialize base class information
+        ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Carrier);
+        
     }
  
 };
@@ -50,6 +48,5 @@ private:
 }}
 
 BOOST_CLASS_VERSION(votca::kmc::Electron, 0)
-
 
 #endif
