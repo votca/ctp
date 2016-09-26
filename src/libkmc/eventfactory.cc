@@ -23,7 +23,7 @@ namespace votca { namespace kmc {
 
 void EventFactory::RegisterAll(void)
 {
-    Events().Register<Electrontransfer>("electron transfer");
+    Events().Register<Electrontransfer>("electron_transfer");
     //Events().Register<Holetransfer>("hole transfer");
 }
 
