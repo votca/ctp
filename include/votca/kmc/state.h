@@ -71,9 +71,7 @@ private:
     
     std::vector< Carrier* > carriers;
 
-    std::string test = "Tata";
-    
-    // serialization itself (template implementation stays in the header)
+     // serialization itself (template implementation stays in the header)
     template<typename Archive> 
     void serialize(Archive& ar, const unsigned int version) {
 

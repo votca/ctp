@@ -27,6 +27,7 @@ class KMCParallel : public KMCCalculator
 public:
     
     using       KMCCalculator::Initialize;
+    string  Identify() {return "kmcparallel"; };
     void        Initialize(const char *filename, Property *options );    
     bool        EvaluateFrame();
     bool        RequestNextInjection(int opId);

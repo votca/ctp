@@ -39,6 +39,7 @@ public:
     Binary() {};
    ~Binary() {};
 
+    string  Identify() {return "binary"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
