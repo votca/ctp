@@ -67,13 +67,13 @@ inline void Electrontransfer::AddElectron( Carrier* _electron )
 inline void Electrontransfer::SetOrigin( BNode* _node )
 {
     node_from = _node;   
-    std::cout << "Electron " << electron->id() << " sits on node: " << node_from->id;
+    std::cout << "Electron " << electron->id() << " sits on node: " << node_from->id << std::endl;
 }
 
 inline void Electrontransfer::SetDestination( BNode* _node )
 {
     node_to = _node;   
-    std::cout << "Electron " << electron->id() << " goes to node: " << node_to->id;
+    std::cout << "Electron " << electron->id() << " goes to node: " << node_to->id << std::endl;
 }
 
 inline void Electrontransfer::SetRate( double _rate )

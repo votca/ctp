@@ -32,6 +32,10 @@ public:
    virtual std::string Type() = 0;
    virtual void OnExecute( State* state ) = 0;
    //virtual double SetRate() = 0;
+   
+   std::vector<Event*> to_be_disabled;
+   std::vector<Event*> to_be_enabled;
+   
     
 private:
     

@@ -100,10 +100,20 @@ void Binary::RunKMC() {
         et->SetDestination( *node_to );
         events.push_back( _et );
     }
-
-
-    std::cout << "number of events " << events.size() << std::endl;
+    std::cout << "Number of events " << events.size() << std::endl;
  
+    
+    //Node_to becomes new node_from - disable the previous events and list the new events
+    
+   std::vector< Event* > to_be_disabled;
+    
+   for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
+        
+        Event* dis_et = Event().to_be_disabled;
+        
+        to_be_disabled.push_back(dis_et);
+    }
+    std::cout << "Number of events disabled " << to_be_disabled.size() << std::endl;
     
 }
 
