@@ -26,18 +26,26 @@ class Event {
     
 public:
     
-   Event(){};
+   Event(){ enabled = false; };
    virtual ~Event(){};     
 
    virtual std::string Type() = 0;
    virtual void OnExecute( State* state ) = 0;
-   //virtual double SetRate() = 0;
+          
+   bool Enabled(){ return enabled; };
+   void Disable(){ 
+       std::cout << "Disabled event " << Type() << std::endl;
+       enabled = false; 
+   };
+   void Enable(){ 
+       std::cout << "Enabled event " << Type() << std::endl;
+       enabled = true; 
+   };
+  
    
-   std::vector<Event*> to_be_disabled;
-   std::vector<Event*> to_be_enabled;
-   
-    
 private:
+    
+    bool enabled;
     
 };
 

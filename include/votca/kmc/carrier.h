@@ -60,6 +60,9 @@ public:
    
    virtual int id(){ return ID; };
     
+   void SetNode( BNode* _node ) { node = _node; };
+   BNode* GetNode() { return node; };
+   
 private:
     
     int ID;

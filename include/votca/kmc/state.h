@@ -63,6 +63,7 @@ public:
     
     Carrier* AddCarrier( std::string type );
     
+    void MoveCarrier( Carrier* carrier, BNode* node );
     
 private:
     // Allow serialization to access non-public data members
@@ -122,6 +123,12 @@ inline Carrier* State::AddCarrier( std::string type ) {
     cout << "Adding carrier " << type << endl;
     Carrier *carrier = Carriers().Create( type );
     carriers.push_back( carrier );
+    return carrier;
+}
+
+inline void State::MoveCarrier( Carrier* carrier, BNode* node_to ) {
+    carrier->SetNode( node_to );
+    // and advance its position traveled
 }
 
 }} 

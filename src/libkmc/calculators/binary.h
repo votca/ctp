@@ -80,40 +80,38 @@ void Binary::RunKMC() {
     EventFactory::RegisterAll();
     
     //Create a new electron
-    Carrier* electron =  Carriers().Create("electron");
-    state.AddCarrier( "electron" );
-   
+    Carrier* electron =  state.AddCarrier( "electron" );
+    std::cout << electron->Type() << std::endl;
+    
     // place the electron on the first node
     BNode* node_from = graph.GetNode(1);
     node_from->PrintNode();
 
     std::vector< Event* > events;
-    
+
     for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
         
         //New event - electron transfer
         Event* _et =  Events().Create( "electron_transfer" );
         Electrontransfer* et = new Electrontransfer();
+        
         et = dynamic_cast<Electrontransfer*>(_et);
         et->AddElectron( electron );
         et->SetOrigin( node_from );
         et->SetDestination( *node_to );
+        
+        // these are all transfer events originating from the node_to - they are disabled once the charge moves
+        et->AddToToBeDisabled( _et );
+        et->Enable();
+
         events.push_back( _et );
+        _et->OnExecute( &state );
+
     }
     std::cout << "Number of events " << events.size() << std::endl;
  
     
     //Node_to becomes new node_from - disable the previous events and list the new events
-    
-   std::vector< Event* > to_be_disabled;
-    
-   for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
-        
-        Event* dis_et = Event().to_be_disabled;
-        
-        to_be_disabled.push_back(dis_et);
-    }
-    std::cout << "Number of events disabled " << to_be_disabled.size() << std::endl;
     
 }
 
