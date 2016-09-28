@@ -124,6 +124,9 @@ public:
    ~KMCMultiple() {};
 
     std::string  Identify() {return "kmcmultiple"; };
+    
+        void Initialize(Property *options) {}  
+        
     void Initialize(const char *filename, Property *options, const char *outputfile );
     bool EvaluateFrame();
 
