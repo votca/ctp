@@ -46,7 +46,7 @@ public:
         for (std::vector< BNode* >::iterator node = neighbours.begin() ; node != neighbours.end(); ++node) {
             std::cout << (*node)->id << " ";
         }
-        std::cout << std::endl;      
+        std::cout << std::endl << std::endl;      
     };
     
     votca::tools::vec position;

@@ -15,9 +15,9 @@
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/eventfactory.cc</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/event.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/state.h</file>
-            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/Events_update_tree.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/Events/hole_transfer.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/graph.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/eventfactory.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/calculators/binary.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/Events/electron_transfer.h</file>
         </group>

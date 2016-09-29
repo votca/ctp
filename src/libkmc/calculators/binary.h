@@ -81,7 +81,7 @@ void Binary::RunKMC() {
     
     //Create a new electron
     Carrier* electron =  state.AddCarrier( "electron" );
-    std::cout << electron->Type() << std::endl;
+    //std::cout << electron->Type() << std::endl;
     
     // place the electron on the first node
     BNode* node_from = graph.GetNode(1);
@@ -99,19 +99,17 @@ void Binary::RunKMC() {
         et->AddElectron( electron );
         et->SetOrigin( node_from );
         et->SetDestination( *node_to );
-        
-        // these are all transfer events originating from the node_to - they are disabled once the charge moves
-        et->AddToToBeDisabled( _et );
-        et->Enable();
-
+       
         events.push_back( _et );
         _et->OnExecute( &state );
-
+        
+        // these are all transfer events originating from the node_to - they are disabled once the charge moves   
+        et->AddToToBeDisabled( _et );
+        et->AddToToBeEnabled( _et );
+        et->Enable();
+        
     }
     std::cout << "Number of events " << events.size() << std::endl;
- 
-    
-    //Node_to becomes new node_from - disable the previous events and list the new events
     
 }
 

@@ -34,11 +34,11 @@ public:
           
    bool Enabled(){ return enabled; };
    void Disable(){ 
-       std::cout << "Disabled event " << Type() << std::endl;
+       //std::cout << "Disabled event " << Type() << std::endl;
        enabled = false; 
    };
    void Enable(){ 
-       std::cout << "Enabled event " << Type() << std::endl;
+       //std::cout << "Enabled event " << Type() << std::endl;
        enabled = true; 
    };
   

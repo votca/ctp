@@ -128,7 +128,7 @@ inline Carrier* State::AddCarrier( std::string type ) {
 
 inline void State::MoveCarrier( Carrier* carrier, BNode* node_to ) {
     carrier->SetNode( node_to );
-    // and advance its position traveled
+    // and advance its position travelled
 }
 
 }} 

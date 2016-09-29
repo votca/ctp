@@ -43,11 +43,21 @@ public:
     std::vector<Event*> to_be_enabled;
 
     void AddToToBeDisabled( Event* event ) { 
-        std::cout << "Added to the to be disabled list " << node_from->id << " " << node_to->id << std::endl;
-        to_be_disabled.push_back( event ); 
+        std::cout << "Disable events from node " << node_from->id << " to nodes  ";
+        for (std::vector< BNode* >::iterator node = node_from->begin() ; node != node_from->end(); ++node){
+            std::cout << (*node)->id <<  " ";
+        }
+        std::cout << std::endl;
+        //std::cout << "Added to the to be disabled list " << node_from->id << " " << node_to->id << std::endl;
+        to_be_disabled.push_back( event );
     }
     void AddToToBeEnabled( Event* event ) { 
-        std::cout << "Added to the to be enabled list " << node_to->id << " " << node_from->id << std::endl;
+        std::cout << "Enable events from node " << node_to->id << " to nodes  ";
+        for (std::vector< BNode* >::iterator node = node_to->begin() ; node != node_to->end(); ++node){
+            std::cout << (*node)->id <<  " ";
+        }
+        std::cout << std::endl << std::endl;
+        //std::cout << "Added to the to be enabled list " << node_to->id << " " << node_from->id << std::endl;
         to_be_enabled.push_back( event ); 
     }
     
@@ -75,13 +85,13 @@ public:
 
     virtual void OnExecute(  State* state ) {
     
-        std::cout << "Moving an " << electron->Type() << " " << electron->id() << 
+        std::cout << "Moving " << electron->Type() << " " << electron->id() << 
                 " from node " <<  node_from->id << 
                 " to node "   <<  node_to->id << std::endl;
  
         // disable charge transfer events from the node_from (including itself))
-        DeactivateDisabled();
-        
+        DeactivateDisabled();  
+                
         // this is only for a single carrier - rethink for different types
         if ( to_be_enabled.size() == 0 ) {
             for (BNode::iterator node = node_to->begin() ; node != node_to->end(); ++node) {
@@ -121,13 +131,13 @@ inline void Electrontransfer::AddElectron( Carrier* _electron )
 inline void Electrontransfer::SetOrigin( BNode* _node )
 {
     node_from = _node;   
-    std::cout << "from node: " << node_from->id << std::endl;
+    //std::cout << "from node: " << node_from->id << std::endl;
 }
 
 inline void Electrontransfer::SetDestination( BNode* _node )
 {
     node_to = _node;   
-    std::cout << " to node: " << node_to->id << std::endl;
+    //std::cout << " to node: " << node_to->id << std::endl;
 }
 
 inline void Electrontransfer::SetRate( double _rate )
