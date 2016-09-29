@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2013 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,34 @@
  *
  */
 
-#include <votca/kmc/eventfactory.h>
-#include "Events/electron_transfer.h"
-//#include "Events/hole_transfer.h"
+#ifndef __VOTCA_KMC_ALGORITHM_H_
+#define __VOTCA_KMC_ALGORITHM_H_
+
+#include <votca/kmc/event.h>
 
 namespace votca { namespace kmc {
+  
+class Algorithm {
+public:
+    
+    Algorithm( std::vector<Event*> events, State* state, Graph* graph ) = 0;
+ 
+    double Time(){ return time; }
+    
+    void Run( double runtime ) = 0;
+    
+    };
+       
+private:
+   
+    double time;
+    double runtime;
+};
 
-void EventFactory::RegisterAll(void)
-{
-    Events().Register<ElectronTransfer>("electron_transfer");
-    //Events().Register<Holetransfer>("hole transfer");
-}
-
+    
 }}
+
+
+
+#endif
+

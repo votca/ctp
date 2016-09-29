@@ -29,13 +29,27 @@ using namespace tools;
 class EventFactory
 : public ObjectFactory< std::string, Event >
 {
-private:
-    EventFactory() {}
 public:
     
     static void RegisterAll(void);
 
     friend EventFactory &Events();
+
+    void AddEvent( Event* _event ) { 
+        events.push_back(_event); 
+        std::cout << "Adding event to the factory: " << _event->Type() << std::endl;
+    };
+    
+    std::vector< Event* > StoredEvents(){return events};  
+    
+private:
+    
+    std::vector< Event* > events;
+    
+    // private constructor - only one instance is allowed
+    EventFactory() {}
+    
+    
 };
 
 inline EventFactory &Events()

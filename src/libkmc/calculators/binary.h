@@ -66,7 +66,7 @@ void Binary::Initialize(Property *options) {
     std::cout << endl << "Initializing KMC binary" << endl;
 
     // update options with the VOTCASHARE defaults   
-    //UpdateWithDefaults( options );
+    UpdateWithDefaults( options );
     string key = "options." + Identify();
     
     std::string indent("          "); 
@@ -114,34 +114,32 @@ void Binary::RunKMC() {
     EventFactory::RegisterAll();
     
     //Create a new electron
-    Carrier* electron =  state.AddCarrier( "electron" );
-    //std::cout << electron->Type() << std::endl;
+    Carrier* carrier =  state.AddCarrier( "electron" );
+    Electron* electron = dynamic_cast<Electron*>(carrier);
     
     // place the electron on the first node
     BNode* node_from = graph.GetNode(1);
     node_from->PrintNode();
 
     std::vector< Event* > events;
-
-    for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
+    
+    // creates events for a specific node_to and electron and enables them
+    //for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
         
         //New event - electron transfer
-        Event* _et =  Events().Create( "electron_transfer" );
-        Electrontransfer* et = dynamic_cast<Electrontransfer*>(_et);
-        et->AddElectron( electron );
-        et->SetOrigin( node_from );
-        et->SetDestination( *node_to );
-       
-        events.push_back( _et );
-        _et->OnExecute( &state );
+
+    BNode* node_to = *node_from->begin();
+    Event* event =  Events().Create( "electron_transfer" );
+    ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*>(event);
+    electron_transfer->Initialize( electron, node_from, node_to, 0.0);
+    electron_transfer->OnExecute( &state );
+    
+    Events().AddEvent( event );
         
-        // these are all transfer events originating from the node_to - they are disabled once the charge moves   
-        et->AddToToBeDisabled( _et );
-        et->AddToToBeEnabled( _et );
-        et->Enable();
-        
-    }
-    std::cout << "Number of events " << events.size() << std::endl;
+    //}
+    //std::cout << "Number of events " << events.size() << std::endl;
+   
+    //events.front()->OnExecute( &state );
     
 }
 
