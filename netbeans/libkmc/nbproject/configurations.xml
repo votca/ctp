@@ -184,20 +184,18 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/linksql.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/longrange.h"
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/nodesql.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/vssm2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/vssmgroup.h"
             ex="false"
@@ -276,6 +274,11 @@
       <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/carrier_escape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -373,20 +376,18 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/linksql.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/longrange.h"
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/nodesql.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/vssm2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/vssmgroup.h"
             ex="false"
@@ -465,6 +466,11 @@
       <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/carrier_escape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>

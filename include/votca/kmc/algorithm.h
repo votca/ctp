@@ -25,18 +25,17 @@ namespace votca { namespace kmc {
 class Algorithm {
 public:
     
-    Algorithm( std::vector<Event*> events, State* state, Graph* graph ) = 0;
+    Algorithm(){};
+    
+    virtual void Initialize(std::vector<Event*> events, State* state, Graph* graph) = 0;
  
     double Time(){ return time; }
     
-    void Run( double runtime ) = 0;
-    
-    };
+    virtual void Run( double total_time ) = 0;
        
 private:
    
     double time;
-    double runtime;
 };
 
     

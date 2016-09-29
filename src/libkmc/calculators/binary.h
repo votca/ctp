@@ -28,6 +28,8 @@
 
 #include "Events/electron_transfer.h" 
 
+#include <votca/kmc/vssm2.h>
+
 using namespace std;
 
 namespace votca { namespace kmc {
@@ -140,6 +142,10 @@ void Binary::RunKMC() {
     //std::cout << "Number of events " << events.size() << std::endl;
    
     //events.front()->OnExecute( &state );
+    
+    VSSM2 vssm2;
+    vssm2.Initialize( events, &state, &graph );
+    vssm2.Run(0);
     
 }
 

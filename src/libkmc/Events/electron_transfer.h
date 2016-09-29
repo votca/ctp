@@ -123,9 +123,15 @@ private:
         
         std::vector<ElectronTransfer*> events;
 
-        std::cout << "Creating events for " << node->id << std::endl;
-        node->PrintNode();
-                
+        std::cout << "Creating events for charge " << electron->id() << ", node " << node->id << std::endl;
+        //node->PrintNode();
+        
+        if (status) {
+            std::cout << "To be enabled: " ;
+        } else {
+            std::cout << "To be disabled: ";
+        }
+            
         for (BNode::iterator node_to = node->begin() ; node_to != node->end(); ++node_to) {
                 //New event - electron transfer
                 Event* _et =  Events().Create( "electron_transfer" );
@@ -135,13 +141,14 @@ private:
                 et->SetDestination( *node_to );
                 if ( status ) {
                     et->Enable();
-                    std::cout << "Created a - to be enabled - event " << node->id << "-" << (*node_to)->id << std::endl;
+                    std::cout << node->id << "-" << (*node_to)->id << " ";
                 } else {
                     et->Disable();
-                    std::cout << "Created a - to be disabled - event " << node->id << "-" << (*node_to)->id << std::endl;
+                    std::cout << node->id << "-" << (*node_to)->id << " ";
                 }
                 events.push_back(et);
         }
+        std::cout << std::endl;
         return events;
     }
     

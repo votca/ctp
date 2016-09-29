@@ -40,7 +40,7 @@ public:
         std::cout << "Adding event to the factory: " << _event->Type() << std::endl;
     };
     
-    std::vector< Event* > StoredEvents(){return events};  
+    std::vector< Event* > StoredEvents(){return events; };  
     
 private:
     

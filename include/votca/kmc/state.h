@@ -57,6 +57,13 @@ namespace votca { namespace kmc {
 class State {
 public:
     
+    // iterator over carriers
+    typedef std::vector< Carrier* >::iterator iterator;
+    typedef const std::vector< Carrier* >::iterator const_iterator;
+    
+    iterator begin() { return carriers.begin(); }
+    iterator end() { return carriers.end(); }    
+    
     // Save and Load state into a file
     bool Save(std::string filename);
     bool Load(std::string filename);
