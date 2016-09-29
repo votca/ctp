@@ -26,7 +26,10 @@ class KMCParallel : public KMCCalculator
 {
 public:
     
+    void Initialize(Property *options) {}        
+
     using       KMCCalculator::Initialize;
+    string  Identify() {return "kmcparallel"; };
     void        Initialize(const char *filename, Property *options );    
     bool        EvaluateFrame();
     bool        RequestNextInjection(int opId);
@@ -139,8 +142,7 @@ public:
         void    Reset();
         
         void    Step(vec &dr, NodeBoxed *dest) { _pos += dr; _current = dest; }
-        
-    
+            
     private:
         
         int                     _id;

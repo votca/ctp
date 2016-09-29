@@ -39,6 +39,7 @@ public:
     Binary() {};
    ~Binary() {};
 
+    string  Identify() {return "binary"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
@@ -47,13 +48,46 @@ protected:
    void RunKMC(void); 
             
 private:
-   
+    
+    double _runtime;
+    int _seed;
+    int _nelectrons;
+    std::string _injection_name;
+    double _fieldX;
+    double _fieldY;
+    double _fieldZ;
+    myvec _field;
+    double _outtime;
+    std::string _trajectoryfile;
 };
 
 void Binary::Initialize(Property *options) {
     
-    std::cout << "Hello from KMC binary" << endl;
+    std::cout << endl << "Initializing KMC binary" << endl;
+
+    // update options with the VOTCASHARE defaults   
+    //UpdateWithDefaults( options );
+    string key = "options." + Identify();
     
+    std::string indent("          "); 
+    int level = 1;
+    votca::tools::PropertyIOManipulator IndentedText(votca::tools::PropertyIOManipulator::TXT,level,indent);
+    if ( tools::globals::verbose ) { 
+        std::cout << "\n... ... options\n" << IndentedText << options << "... ... options\n" << std::flush;
+    }
+    
+    //exit(0);
+    _runtime = options->get(key + ".runtime").as<double>();
+    _seed = options->get(key + ".seed").as<int>();
+    _nelectrons = options->get(key + ".nelectrons").as<int>();
+    _injection_name = options->get(key + ".injection").as<string>();
+    _fieldX = options->get(key + ".fieldX").as<double>();
+    _fieldY = options->get(key + ".fieldY").as<double>();
+    _fieldZ = options->get(key + ".fieldZ").as<double>();
+    _field = myvec(_fieldX,_fieldY,_fieldZ);
+    _outtime = options->get(key + ".outtime").as<double>();
+    _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
+
 }
 
 bool Binary::EvaluateFrame() {
@@ -93,9 +127,7 @@ void Binary::RunKMC() {
         
         //New event - electron transfer
         Event* _et =  Events().Create( "electron_transfer" );
-        Electrontransfer* et = new Electrontransfer();
-        
-        et = dynamic_cast<Electrontransfer*>(_et);
+        Electrontransfer* et = dynamic_cast<Electrontransfer*>(_et);
         et->AddElectron( electron );
         et->SetOrigin( node_from );
         et->SetDestination( *node_to );

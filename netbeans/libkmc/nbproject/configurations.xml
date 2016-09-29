@@ -61,6 +61,7 @@
       <itemPath>../../src/libkmc/version_nb.cc</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="XML" projectFiles="true">
+      <itemPath>../../share/xml/binary.xml</itemPath>
       <itemPath>../../share/xml/diffusion.xml</itemPath>
       <itemPath>../../share/xml/diode.xml</itemPath>
       <itemPath>../../share/xml/kmclight.xml</itemPath>
@@ -198,6 +199,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../share/xml/binary.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/diffusion.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -382,6 +385,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../share/xml/binary.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/diffusion.xml" ex="false" tool="3" flavor2="0">
       </item>
