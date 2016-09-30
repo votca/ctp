@@ -35,10 +35,12 @@ void Initialize ( std::vector<Event*> events, State* state, Graph* graph ) {
     for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
         std::cout << "Adding escape event for carrier " << (*carrier)->Type() << ", id " << (*carrier)->id() << std::endl;
 
+        // create the carrier escape event (leaving the site))
         Event* event = Events().Create("carrier_escape");
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event);
         carrier_escape->Initialize((*carrier));
-
+        carrier_escape->Enable();
+        
         level1.push_back(event);
 
         BNode* node_from = (*carrier)->GetNode();
@@ -47,15 +49,19 @@ void Initialize ( std::vector<Event*> events, State* state, Graph* graph ) {
         for (BNode::iterator node_to = node_from->begin(); node_to != node_from->end(); ++node_to) {
 
             //New event - electron transfer
-
             Event* event = Events().Create("electron_transfer");
             ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event);
-
             Electron* electron = dynamic_cast<Electron*> ((*carrier));
-            electron_transfer->Initialize(electron, node_from, (*node_to), 0.0);
-
-
+            electron_transfer->Initialize(electron, node_from, (*node_to), 1.0);
+            
+            // add a subordinate event
+            carrier_escape->AddCarrierMove( event );
+            std::cout << "Event rate " <<  event->Rate() << std::endl;
         }
+        
+        // evaluate the escape rate
+        carrier_escape->EvaluateEscapeRate(); 
+        std::cout << "Escape rate " <<  carrier_escape->Rate() << std::endl;
 
     }
 

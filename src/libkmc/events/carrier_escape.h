@@ -31,17 +31,26 @@ public:
     
     // electron to move
     Carrier* carrier;
-    double rate;
     
     void Initialize( Carrier* _carrier ) {
         carrier = _carrier;
         Enable();
     }
-    
-    // electron transfer rate
-    void SetRate( double _rate ) { rate = _rate; };
-    double Rate(){ return rate; }
 
+    void AddCarrierMove( Event* event ){
+        carrier_move.push_back( event );
+    }
+    
+    // sum of all subordinate rates
+    void EvaluateEscapeRate() {
+        double rate = 0.0;
+        for ( std::vector<Event*>::iterator event = carrier_move.begin(); event != carrier_move.end(); ++event  ) {
+            rate += (*event)->Rate(); 
+            std::cout << rate << " " ;
+        }
+        SetRate(rate);
+    }
+    
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state ) {
     
@@ -51,7 +60,7 @@ public:
     
 private:
     
-    std::vector< Event* > CarrierMotion;
+    std::vector< Event* > carrier_move;
 
 
 };

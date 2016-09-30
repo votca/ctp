@@ -42,10 +42,13 @@ public:
        enabled = true; 
    };
   
+   double Rate() { return rate; };
+   void SetRate( double _rate ) { rate = _rate; } ;
    
 private:
     
     bool enabled;
+    double rate;
     
 };
 

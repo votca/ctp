@@ -29,9 +29,9 @@ class ElectronTransfer : public Event {
 public:
 
     // constructor needs two nodes and a pointer to the electron carrier
-    ElectronTransfer( Electron* _electron = NULL, BNode* _node_from = NULL, BNode* _node_to = NULL, double _rate = 0)
-            : electron(NULL), node_from(NULL), node_to(NULL), rate(0.0)
-            { electron = _electron; node_from = _node_from; _node_to = node_to; rate = _rate; };
+    //ElectronTransfer( Electron* _electron = NULL, BNode* _node_from = NULL, BNode* _node_to = NULL, double _rate = 0)
+    //        : electron(NULL), node_from(NULL), node_to(NULL), rate(0.0)
+    //        { electron = _electron; node_from = _node_from; _node_to = node_to; rate = _rate; };
             
     std::string Type(){ return "electron transfer"; } ;
     
@@ -41,8 +41,6 @@ public:
     BNode* node_from;
     // Move to this node
     BNode* node_to;
-    //rate of electron transfer
-    double rate;
     
     void Initialize( Electron* _electron, BNode* _node_from, BNode* _node_to, double _rate ) {
         // create a list of events to disable after OnExecute
@@ -53,7 +51,7 @@ public:
         electron = _electron;
         node_from = _node_from;
         node_to = _node_to;
-        rate = _rate;
+        SetRate(_rate);
         // enable this event
         Enable();
     }
@@ -63,10 +61,6 @@ public:
     void SetOrigin( BNode* _node );
     void SetDestination( BNode* _node);
    
-    // electron transfer rate
-    void SetRate( double _rate ) { rate = _rate; };
-    double Rate(){ return rate; }
-
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state ) {
     
