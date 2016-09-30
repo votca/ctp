@@ -22,13 +22,13 @@
         <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Events" projectFiles="true">
-        <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
         <itemPath>../../src/libkmc/Events/electron_transfer.h</itemPath>
         <itemPath>../../include/votca/kmc/event.h</itemPath>
         <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
         <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
         <itemPath>../../src/libkmc/Events/hole_transfer.h</itemPath>
       </logicalFolder>
+      <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
@@ -137,11 +137,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/algorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/bnode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/bsumtree.h" ex="false" tool="3" flavor2="0">
@@ -194,8 +189,6 @@
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/vssm2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/vssmgroup.h"
             ex="false"
@@ -274,11 +267,6 @@
       <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/carrier_escape.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -329,11 +317,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/algorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/bnode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/bsumtree.h" ex="false" tool="3" flavor2="0">
@@ -386,8 +369,6 @@
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/vssm2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/vssmgroup.h"
             ex="false"
@@ -466,11 +447,6 @@
       <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/carrier_escape.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>

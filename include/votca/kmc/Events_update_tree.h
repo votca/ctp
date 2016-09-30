@@ -27,23 +27,36 @@ namespace votca { namespace kmc {
 class Event_update_tree {
 
 public:
-    Event_update_tree() { Root = NULL; };
+     
+    void initialise(int tree_size);
+    
+    //Event_update_tree() { Root = NULL; };
     ~Event_update_tree() {};
     
     tree_node* root() { return Root; }
     
-    void insert(tree_node*, double);
-    void remove(tree_node*, double);
+    double GetRate(Event* rate);
     
-    //The various tree search methods to choose from
+    void insert(tree_node*, double rate);
+    //void remove(tree_node*, double rate);
+    
+    //The various tree search methods
+    void FindNode ( tree_node* );
     void print_levelorder( tree_node* );
-    void print_preorder( tree_node* );
-    void print_inorder( tree_node* );
-    void print_postorder( tree_node* );
     void printpathtoNode( tree_node* ); //Probably the most useful 
    
 private:
+    
     tree_node* Root;
+    
+    //Size of the tree is the total number of nodes
+    int tree_size;
+    //Should also have the number of leaf nodes = number of events
+    int leaf_size;
+    
+    //after enabling or disabling a node - while traversing the hierarchy have to flag all tree nodes that now need updating
+    bool dirtyflag();
+    
 };
 
 class tree_node {
@@ -53,31 +66,36 @@ public:
     tree_node() {Parent = NULL; left = NULL; right = NULL; };
     ~tree_node() {};
     
-    double data() { return Data; }
-    void newData(double data) { Data = data; }
+    double rate() { return rate; }
+    void newrate(double _rate) { rate = _rate; }
     
-    tree_node* parent() { return Parent; }
-    void newParent(tree_node* parent) { Parent = parent; }
+    tree_node* parent() { return parent; }
+    void newParent(tree_node* _parent) { parent = _parent; }
     
-    tree_node* leftchild() { return left; }
-    void newLeftchild(tree_node* leftchild) { left = leftchild; }
+    tree_node* leftchild() { return leftchild; }
+    void newLeftchild(tree_node* _leftchild) { leftchild = _leftchild; }
     
-    tree_node* rightchild() { return right; }
-    void newRightchild(tree_node* rightchild) { right = rightchild; }
+    tree_node* rightchild() { return rightchild; }
+    void newRightchild(tree_node* _rightchild) { rightchild = _rightchild; }
     
         
 private:
     
-    double Data; //The information contained in each node - type of data can be changed
+    double rate; //Should be read from GetRate function
     tree_node* Parent;
-    tree_node* left;
-    tree_node* right;
+    tree_node* leftchild;
+    tree_node* rightchild;
     
+    //Flag the tree nodes that need to be newly enabled or disabled 
+    bool FlagEnabled();
+    bool FlagDisabled();
     
 };
 
-//Binary Tree Forest implementation: Grouping individual tree structures together, linked together via a vector of pointers or nodes
-//Vector points to each of the trees roots - minimising each search to one specific tree
+void Event_update_tree::initialise(int tree_size){
+    //An initial tree size, to begin with, many tree nodes may be empty - can be filled with new events
+}
+
 
 //Inserting a new node - Root node
 void Event_update_tree::insert(double data) {
@@ -93,18 +111,18 @@ void Event_update_tree::insert(double data) {
 }
 
 //Inserting a new node - child node
-void Event_update_tree::insert(tree_node* current, double new_data) 
+void Event_update_tree::insert(tree_node* current, double _rate) 
 {
-    if ( new_data <= current->data() )  //data less than goes in the left subtree, the 'equal to' also has to be considered
+    if ( _rate <= current->rate() )  //data less than goes in the left subtree, the 'equal to' also has to be considered
     {
         if ( current->leftchild() != NULL)
         {
-            insert(current->leftchild(), new_data); //while there is a left child, and new data is less than current keep moving left
+            insert(current->leftchild(), _rate); //while there is a left child, and new data is less than current keep moving left
         }
         else //When there is no child node, create a new node for the new data, with the current node as the parent
         {
             tree_node* temp = new tree_node();
-            temp->newData(new_data);
+            temp->newrate(_rate);
             temp->newParent(current);
             current->newLeftchild(temp);
         }
@@ -113,12 +131,12 @@ void Event_update_tree::insert(tree_node* current, double new_data)
     {
         if (current->rightchild() != NULL )
         {
-            insert(current->rightchild(), new_data);
+            insert(current->rightchild(), _rate);
         }
         else 
         {
             tree_node* temp = new tree_node();
-            temp->newData(new_data);
+            temp->newrate(_rate);
             temp->newParent(current);
             current->newRightchild(temp);
         }
@@ -127,15 +145,6 @@ void Event_update_tree::insert(tree_node* current, double new_data)
 
 //Print the tree in level order <root><level1><level2> ... 
 void Event_update_tree::print_levelorder(tree_node* current);
-
-//Print the tree in pre-order <root><leftsubtree><rightsubtree>
-void Event_update_tree::print_preorder(tree_node* current);
-
-//Print the tree in-order <leftsubtree><root><rightsubtree>
-void Event_update_tree::print_inorder(tree_node* current);
-
-//Print the tree in post-order <leftsubtree> <rightsubtree> <root>
-void Event_update_tree::print_postorder(tree_node* current);
 
 //Print the path from the root to the leaf node
 void Event_update_tree::printpathtoNode(tree_node* current);
