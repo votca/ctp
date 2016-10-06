@@ -28,34 +28,36 @@ class Event_update_tree {
 
 public:
      
-    void initialise(int tree_size);
-    
-    //Event_update_tree() { Root = NULL; };
     ~Event_update_tree() {};
+    Event_update_tree() { Root = NULL; }; //initial empty tree   
+    
+    void initialise(int leaf_size);
+    double GetRates(Event* rate);
+    void insert_rate(tree_node*, double new_rate);
+    void cumulative_sum(tree_node*, double rate_sum);
+    void check_tree();
     
     tree_node* root() { return Root; }
-    
-    double GetRate(Event* rate);
-    
-    void insert(tree_node*, double rate);
-    //void remove(tree_node*, double rate);
-    
-    //The various tree search methods
-    void FindNode ( tree_node* );
-    void print_levelorder( tree_node* );
-    void printpathtoNode( tree_node* ); //Probably the most useful 
+   
+    void FindLeaf ( tree_node*, double rate );
+    void path_from_leaf_to_root( tree_node* ); 
+    bool dirtyflag () { return dirtyflag; }
+    void update_tree();
    
 private:
     
     tree_node* Root;
     
-    //Size of the tree is the total number of nodes
+    //total number of nodes
     int tree_size;
+    //height of the tree - for path to nodes
+    double tree_height;
     //Should also have the number of leaf nodes = number of events
     int leaf_size;
     
     //after enabling or disabling a node - while traversing the hierarchy have to flag all tree nodes that now need updating
-    bool dirtyflag();
+    //Tree is "dirty" - contains modifications which have not been committed to the current branch
+    bool dirtyflag;
     
 };
 
@@ -65,9 +67,10 @@ public:
 
     tree_node() {Parent = NULL; left = NULL; right = NULL; };
     ~tree_node() {};
-    
+   
     double rate() { return rate; }
-    void newrate(double _rate) { rate = _rate; }
+    void new_rate(double _rate) { rate = _rate; }
+    double rate_sum();
     
     tree_node* parent() { return parent; }
     void newParent(tree_node* _parent) { parent = _parent; }
@@ -78,6 +81,12 @@ public:
     tree_node* rightchild() { return rightchild; }
     void newRightchild(tree_node* _rightchild) { rightchild = _rightchild; }
     
+    //Flag the tree nodes that need to be newly enabled or disabled 
+    void ToBeEnabled() { return FlagEnabled = true; }
+    bool FlagEnabled();
+    void ToBeDisabled() { return FlagDisabled = true; }
+    bool FlagDisabled();
+    
         
 private:
     
@@ -86,68 +95,151 @@ private:
     tree_node* leftchild;
     tree_node* rightchild;
     
-    //Flag the tree nodes that need to be newly enabled or disabled 
-    bool FlagEnabled();
-    bool FlagDisabled();
-    
+      
 };
 
-void Event_update_tree::initialise(int tree_size){
-    //An initial tree size, to begin with, many tree nodes may be empty - can be filled with new events
+void Event_update_tree::initialise(int leaf_size){
+    
+    leaf_size = sizeof(EventFactory->StoredEvents());
+ 
+    //An initial tree size, to begin with, many tree nodes may be empty - can be filled with new events - must be full and complete
+    //Assuming a perfect (full and balanced) tree - with l leaves, number of nodes n = 2l-1
+    tree_size = (2*leaf_size)-1;
+    //tree_height = (log2(tree_size+1));
+    tree_height = ((log2(leaf_size))+1);
+    
+    //Create an empty tree, with tree_size number of nodes
+    //tree_node* nodes = new tree_node(NULL);
 }
 
-
-//Inserting a new node - Root node
-void Event_update_tree::insert(double data) {
-    if ( Root == NULL ) 
-    {
-        tree_node* temp = new tree_node();
-        temp->newData(data);
-        Root = temp;
-    }
-    else {
-        insert(Root, data);
-    }
+void Event_update_tree::GetRates(Event* rate){
+    
+    //Function to read all of the rates for the events
+    Event->Rate();
+    //For each rate set as new_rate and move to insert
 }
 
-//Inserting a new node - child node
-void Event_update_tree::insert(tree_node* current, double _rate) 
-{
-    if ( _rate <= current->rate() )  //data less than goes in the left subtree, the 'equal to' also has to be considered
-    {
-        if ( current->leftchild() != NULL)
-        {
-            insert(current->leftchild(), _rate); //while there is a left child, and new data is less than current keep moving left
-        }
-        else //When there is no child node, create a new node for the new data, with the current node as the parent
-        {
-            tree_node* temp = new tree_node();
-            temp->newrate(_rate);
-            temp->newParent(current);
-            current->newLeftchild(temp);
-        }
-    }
-    else 
-    {
-        if (current->rightchild() != NULL )
-        {
-            insert(current->rightchild(), _rate);
-        }
-        else 
-        {
-            tree_node* temp = new tree_node();
-            temp->newrate(_rate);
-            temp->newParent(current);
-            current->newRightchild(temp);
-        }
-    }
+//Inserting a new node
+void Event_update_tree::insert_rate(tree_node* newLeaf, double new_rate){
+    
+    tree_node* newLeaf = new tree_node();
+    newLeaf->rate()=new_rate;
+    
+    //To set the newLeaf at the new left or right child
+    //tree_node* _leftchild = (new_rate);
+    //tree_node* _rightchild = (new_rate); 
+    
+    newLeaf->leftchild()=NULL;
+    newLeaf->rightchild()=NULL;
 }
 
-//Print the tree in level order <root><level1><level2> ... 
-void Event_update_tree::print_levelorder(tree_node* current);
+void Event_update_tree::cumulative_sum(tree_node* leftchild, tree_node* rightchild, double rate_sum, double new_rate){
+    
+    //Creating a new parent as the sum of two leaf nodes
+    if (tree_node->leftchild == NULL && tree_node->rightchild == NULL){
+        
+        tree_node* newParent = new tree_node();
+        rate_sum = leftchild()+rightchild();
+        newParent->rate()=rate_sum;
+    }
+    //Create a new parent until reaching the root node
+    while ()
+    {
+        
+    }
+    
+    //root node = left subtree + right subtree 
+}
+
+void Event_update_tree::check_tree( tree_node* ) {
+    
+    bool full_tree;
+    //Check the tree is full and complete to continue, if not add empty nodes to balance
+    if (((leaf_size)pow(1/tree_height))==2){
+        std::cout >> "Full and complete tree" << std::endl; 
+        full_tree = true;
+        return;
+    }
+    else
+    {
+         //insert rates = 0 until "if" statement is true
+        Event_update_tree->insert_rate(NULL);
+        
+    }  
+    
+}
+
+void Event_update_tree::FindLeaf(tree_node* current, tree_node* choosen_leaf, double rate, double choosen_rate){
+    
+    //Start at root
+    //If the chosen random number rand1 is < = root -> move left, else move right
+    //continue down the levels of the tree until reaching leaf node
+   
+    for (current->leftchild()==NULL && current->rightchild()==NULL){
+        if (choosen_rate = rate)
+        {
+            current = choosen_leaf;
+            
+            if (choosen_leaf->ToBeDisabled()){
+                tree_node->FlagDisabled=true;
+            }
+            else if (choosen_leaf->ToBeEnabled()){
+               tree_node->FlagEnabled=true; 
+            }
+            
+        }
+    //Once found flag as an enabled leaf or a disabled leaf with FlagEnabled() or FlagDisabled()
+
+    }
+    
+}
 
 //Print the path from the root to the leaf node
-void Event_update_tree::printpathtoNode(tree_node* current);
+void Event_update_tree::path_from_leaf_to_root(tree_node* current){
+    
+    //while it is a leaf node
+    while (current->leftchild()==NULL && current->rightchild()==NULL){
+        current = current->parent();
+        return current;
+    }
+    if (current->parent() != NULL)  
+      {
+          current = current->parent(); //Keep moving up, until reaching the root - (with no parent node)  
+      }
+    else 
+      {
+        current = root;
+        return root;
+      }
+    
+    
+}
+
+bool Event_update_tree::dirtyflag(){
+    
+    // If FlagEnabled() = true or FlagDisabled() = true
+    //Use path_from_leaf_to_root to flag all of the affected nodes
+    
+    if (tree_node->FlagDisabled=true &| tree_node->FlagEnabled=true)
+    {
+        Event_update_tree->path_from_leaf_to_root();
+        dirtyflag=true;
+    }  
+    
+}
+
+void Event_update_tree::update_tree(){
+    
+    //Every part of the tree with the dirty flag, has to be updated
+    if (dirtyflag=true){
+        
+        //search for all nodes with dirty flag, move along the path to the root and update
+        Event_update_tree->path_from_leaf_to_root();
+        Event_update_tree->cumulative_sum();
+    }
+    
+    
+}
 
 }} 
 
