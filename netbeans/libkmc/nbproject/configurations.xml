@@ -38,6 +38,7 @@
       <itemPath>../../include/votca/kmc/kmcapplication.h</itemPath>
       <itemPath>../../include/votca/kmc/kmccalculator.h</itemPath>
       <itemPath>../../include/votca/kmc/kmccalculatorfactory.h</itemPath>
+      <itemPath>../../include/votca/kmc/link.h</itemPath>
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
       <itemPath>../../include/votca/kmc/property.h</itemPath>
@@ -175,6 +176,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/link.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/longrange.h"
             ex="false"
@@ -355,6 +358,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/link.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/longrange.h"
             ex="false"

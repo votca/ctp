@@ -71,14 +71,6 @@ void Binary::Initialize(Property *options) {
     UpdateWithDefaults( options );
     string key = "options." + Identify();
     
-    std::string indent("          "); 
-    int level = 1;
-    votca::tools::PropertyIOManipulator IndentedText(votca::tools::PropertyIOManipulator::TXT,level,indent);
-    if ( tools::globals::verbose ) { 
-        std::cout << "\n... ... options\n" << IndentedText << options << "... ... options\n" << std::flush;
-    }
-    
-    //exit(0);
     _runtime = options->get(key + ".runtime").as<double>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
@@ -121,31 +113,32 @@ void Binary::RunKMC() {
     
     // place the electron on the first node
     BNode* node_from = graph.GetNode(1);
+    carrier->SetNode( node_from );
     node_from->PrintNode();
 
-    std::vector< Event* > events;
     
     // creates events for a specific node_to and electron and enables them
     //for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
         
         //New event - electron transfer
 
-    BNode* node_to = *node_from->begin();
-    Event* event =  Events().Create( "electron_transfer" );
-    ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*>(event);
-    electron_transfer->Initialize( electron, node_from, node_to, 0.0);
-    electron_transfer->OnExecute( &state );
-    
-    Events().AddEvent( event );
+//    BNode* node_to = *node_from->begin();
+//    Event* event =  Events().Create( "electron_transfer" );
+//    ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*>(event);
+//    electron_transfer->Initialize( electron, node_from, node_to, 0.0);
+//    electron_transfer->OnExecute( &state );
+//    
+//    Events().AddEvent( event );
         
-    //}
-    //std::cout << "Number of events " << events.size() << std::endl;
    
-    //events.front()->OnExecute( &state );
-    
+    std::vector< Event* > events;
+    std::cout << "----" << std::endl;
+    std::cout << "----" << std::endl;
     VSSM2 vssm2;
     vssm2.Initialize( events, &state, &graph );
     vssm2.Run(0);
+    std::cout << "----" << std::endl;
+    std::cout << "----" << std::endl;
     
 }
 

@@ -42,8 +42,9 @@ public:
     };
        
 private:
+
     std::vector< BNode* > nodes;
-    //std::unordered_map< int, BNode* > node_ids;
+    std::vector< Edge* > edges;
     
 };
 
@@ -79,7 +80,7 @@ void Graph::Load(std::string filename) {
     
     //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table) 
     //List of rates for electron transfer from seg 1 to seg 2 and vice versa
-    stmt = db.Prepare("SELECT seg1, seg2, rate12e, rate21e FROM pairs;");
+    stmt = db.Prepare("SELECT seg1, seg2e, drX, drY, drZ, rate12e, rate21 FROM pairs;");
     while (stmt->Step() != SQLITE_DONE)     
     {           
         int seg1 = stmt->Column<int>(0);
@@ -88,14 +89,23 @@ void Graph::Load(std::string filename) {
         BNode* node1 = GetNode( seg1 );
         BNode* node2 = GetNode( seg2 );
         
+        double dx_pbc = stmt->Column<double>(2);
+        double dy_pbc = stmt->Column<double>(3);
+        double dz_pbc = stmt->Column<double>(4);
+        
+        votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
+        Edge* edge = new Edge(node1, node2, distance_pbc); 
+        
+        edges.push_back( edge );
+        
         // make sure no duplicates are added
         node1->AddNeighbor( node2 );
         node2->AddNeighbor( node1 );
         
         //Rate of electron(e) transfer from seg 1 to seg 2
-        double rate12e = stmt->Column<int>(2);
+        double rate12e = stmt->Column<double>(5);
         //Rate of electron transfer from seg 2 to seg 1
-        double rate21e = stmt->Column<int>(3);
+        double rate21e = stmt->Column<double>(6);
          
     }
     delete stmt;

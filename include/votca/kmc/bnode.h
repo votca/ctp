@@ -19,9 +19,13 @@
 #define	__VOTCA_KMC_BNODE_H_
 
 #include <votca/tools/vec.h>
+#include <votca/kmc/link.h>
+#include <votca/kmc/bnode.h>
+
+class Edge;
 
 namespace votca { namespace kmc {
-  
+        
 class BNode {
     
 public:
@@ -39,14 +43,19 @@ public:
         neighbours.push_back(node);
     };
     
-    void RemoveNeighbor(){};
-    
+    void AddEdge( Edge* edge ) {
+        //node seg 1 and add neighbour node seg 2
+        //std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
+        edges.push_back(edge);
+        neighbours.push_back( edge->NodeTo() );
+    };
+       
     void PrintNode(){
-        std::cout << "Neighbour list: " << id << " "; //Node ID followed by list of neighbouring nodes
-        for (std::vector< BNode* >::iterator node = neighbours.begin() ; node != neighbours.end(); ++node) {
-            std::cout << (*node)->id << " ";
+        std::cout << "Neighbour list of node " << id << ": "; //Node ID followed by list of neighbouring nodes
+        for (std::vector< Edge* >::iterator edge = edges.begin() ; edge != edges.end(); ++edge) {
+            std::cout << (*edge)->NodeTo()->id << " ";
         }
-        std::cout << std::endl << std::endl;      
+        std::cout << std::endl;      
     };
     
     votca::tools::vec position;
@@ -57,8 +66,11 @@ private:
     
 
     std::vector< BNode* > neighbours;
+    std::vector< Edge* > edges;
      
 };
+
+
 
         
 }} 

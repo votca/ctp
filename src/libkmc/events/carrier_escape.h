@@ -32,35 +32,31 @@ public:
     // electron to move
     Carrier* carrier;
     
-    void Initialize( Carrier* _carrier ) {
+    void Initialize( Carrier* _carrier) {
         carrier = _carrier;
         Enable();
     }
-
-    void AddCarrierMove( Event* event ){
-        carrier_move.push_back( event );
-    }
-    
-    // sum of all subordinate rates
-    void EvaluateEscapeRate() {
-        double rate = 0.0;
-        for ( std::vector<Event*>::iterator event = carrier_move.begin(); event != carrier_move.end(); ++event  ) {
-            rate += (*event)->Rate(); 
-            std::cout << rate << " " ;
-        }
-        SetRate(rate);
-    }
     
     // changes to be made after this event occurs
-    virtual void OnExecute(  State* state ) {
-    
-        std::cout << "Picked " << carrier->Type() << " " << carrier->id() ;
-         
+    virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
+        
+        double u = 1.0 - RandomVariable->rand_uniform();
+        
+        // find a subordinate event to execute
+        Event* subordinate;
+        for( Event::iterator it_subordinate = begin(); it_subordinate != end() ; ++it_subordinate ) {
+            subordinate = (*it_subordinate);
+            u -= subordinate->CumulativeRate()/CumulativeRate();
+            if(u <= 0) break;
+        }
+
+        subordinate->OnExecute( state, RandomVariable );
+        subordinate->RemoveExpired();
+             
     };
     
 private:
-    
-    std::vector< Event* > carrier_move;
+
 
 
 };

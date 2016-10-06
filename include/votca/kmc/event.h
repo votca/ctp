@@ -16,6 +16,7 @@
  */
 
 #include <votca/kmc/state.h>
+#include <votca/tools/random2.h>
 
 #ifndef __VOTCA_KMC_EVENT_H_
 #define __VOTCA_KMC_EVENT_H_
@@ -26,30 +27,96 @@ class Event {
     
 public:
     
-   Event(){ enabled = false; };
+   Event(){ enabled = false; expired = false; has_expired_subordinates = false; };
    virtual ~Event(){};     
 
    virtual std::string Type() = 0;
-   virtual void OnExecute( State* state ) = 0;
+   virtual void OnExecute( State* state, votca::tools::Random2 *RandomVariable ) = 0;
           
+   void Expire() { expired = true; parent->has_expired_subordinates = true; }  
+   bool Expired(){ return expired; };
+   
+   // Disables the event (its rate is removed from the Cimulative Rate of the parent)
+   void Disable(){ enabled = false; };
+   // Enables the event (its rate is added to the Cimulative Rate of the parent)
+   void Enable(){  enabled = true;  };
    bool Enabled(){ return enabled; };
-   void Disable(){ 
-       //std::cout << "Disabled event " << Type() << std::endl;
-       enabled = false; 
-   };
-   void Enable(){ 
-       //std::cout << "Enabled event " << Type() << std::endl;
-       enabled = true; 
-   };
   
    double Rate() { return rate; };
-   void SetRate( double _rate ) { rate = _rate; } ;
+   void SetRate( double _rate ) { rate = _rate; };
    
-private:
+   Event* GetParent(){ return parent; };
+   void SetParent( Event* _parent ){ parent = _parent; };
+   
+   void AddSubordinate( Event* _event ) { 
+       _event->SetParent( this );
+       subordinate.push_back( _event ); 
+   };
+   
+   // marks all subordinate events as expired
+   void ExpireSubordinates(){
+       for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ++it ) {
+           (*it)->Expire();
+       }
+       //std::cout << "Expired " << subordinate.size() << " subordinate events" << std::endl;
+   }
+   
+   void RemoveExpired() {
+       if ( has_expired_subordinates ) {
+           Event* event;
+            int count = 0;
+           for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ) {
+               event = *it;
+               if ( event->Expired() ) {
+                   count++;
+                   delete event;
+                   subordinate.erase( it );
+               } else {
+                   ++it;
+               }
+           }
+          //std::cout << "Removing expired events: " << count << " deleted" << std::endl;
+           has_expired_subordinates = false;
+       }
+   }
+   
+   void ClearSubordinate() { subordinate.clear(); };
+   
+      // iterator over subordinate events
+    typedef std::vector< Event* >::iterator iterator;
+    typedef const std::vector< Event* >::iterator const_iterator;
     
+    iterator begin() { return subordinate.begin(); }
+    iterator end() { return subordinate.end(); }    
+
+    // sum of all rates of enabled subordinate events
+    double CumulativeRate() {
+
+        if ( subordinate.empty() ) return rate;
+        
+        double rate = 0.0;
+        for ( Event::iterator event = begin(); event != end(); ++event  ) {
+            if ( (*event)->Enabled() ) { rate += (*event)->CumulativeRate(); }
+        }
+        return rate;
+    }        
+
+    
+private:
+    // if true, the rate of this event will be added to the Cumulative Rate of the parent node
     bool enabled;
+    // if true, OnExecute of the parent node will remove this event after calling its OnExecute
+    bool expired;
+    // if the event has expired subordinates
+    bool has_expired_subordinates;
+    // Fixed rate in case the event does not have subordinate events
     double rate;
     
+    // parent event
+    Event* parent;
+    
+    // subordinate events
+    std::vector< Event* > subordinate;    
 };
 
 }} 

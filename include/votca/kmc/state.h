@@ -70,13 +70,17 @@ public:
     
     Carrier* AddCarrier( std::string type );
     
-    void MoveCarrier( Carrier* carrier, BNode* node );
+    void Print();
+    
+    void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
     
 private:
     // Allow serialization to access non-public data members
     friend class boost::serialization::access;
     
     std::vector< Carrier* > carriers;
+    
+    double time;
 
      // serialization itself (template implementation stays in the header)
     template<typename Archive> 
@@ -131,11 +135,17 @@ inline Carrier* State::AddCarrier( std::string type ) {
     return carrier;
 }
 
-inline void State::MoveCarrier( Carrier* carrier, BNode* node_to ) {
-    carrier->SetNode( node_to );
-    // and advance its position travelled
-}
 
+inline void State::Print(){
+    //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
+    Carrier* carrier;
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        carrier = *it_carrier;
+        std::cout << "Carrier " << carrier->id() << " of type " << carrier->Type() 
+                  << " at node " << carrier->GetNode()->id << " Position " 
+                  << carrier->Position() << std::endl;
+    } 
+}
 }} 
 
 BOOST_CLASS_VERSION(votca::kmc::State, 0)

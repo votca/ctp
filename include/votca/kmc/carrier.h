@@ -20,6 +20,7 @@
 
 #include <votca/tools/vec.h>
 #include "bnode.h"
+#include "link.h"
 
 // Text archive that defines boost::archive::text_oarchive
 // and boost::archive::text_iarchive
@@ -58,10 +59,17 @@ public:
 
    virtual std::string Type() = 0;
    
-   virtual int id(){ return ID; };
+   int id(){ return ID; };
     
    void SetNode( BNode* _node ) { node = _node; };
    BNode* GetNode() { return node; };
+   
+   votca::tools::vec Position() { return node->position; }; 
+   
+   void Move( Edge* edge ) {
+        distance += edge->DistancePBC();
+        node = edge->NodeTo();
+  }
    
 private:
     
