@@ -142,8 +142,8 @@ inline void State::Print(){
     for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
         carrier = *it_carrier;
         std::cout << "Carrier " << carrier->id() << " of type " << carrier->Type() 
-                  << " at node " << carrier->GetNode()->id << " Position " 
-                  << carrier->Position() << std::endl;
+                  << " at node " << carrier->GetNode()->id << " Distance " 
+                  << carrier->Distance() << std::endl;
     } 
 }
 }} 

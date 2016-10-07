@@ -807,6 +807,8 @@ void KMCMultiple::RateUpdateCoulomb(vector<Node*> &node,  vector< Chargecarrier*
 vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable, CoulombMap coulomb)
 {
 
+    clock_t begin = clock();
+
     int realtime_start = time(NULL);
     cout << endl << "Algorithm: VSSM for Multiple Charges" << endl;
     cout << "number of charges: " << numberofcharges << endl;
@@ -1345,6 +1347,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         occP[j] = node[j]->occupationtime / simtime;
     }
     
+    clock_t end = clock();    
+    printf("Elapsed: %f seconds\n", (double)(end - begin) / CLOCKS_PER_SEC);
 
     cout << endl << "finished KMC simulation after " << step << " steps." << endl;
     cout << "simulated time " << simtime << " seconds." << endl;

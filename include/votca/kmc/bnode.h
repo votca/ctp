@@ -19,7 +19,7 @@
 #define	__VOTCA_KMC_BNODE_H_
 
 #include <votca/tools/vec.h>
-#include <votca/kmc/link.h>
+#include <votca/kmc/edge.h>
 #include <votca/kmc/bnode.h>
 
 class Edge;
@@ -30,24 +30,15 @@ class BNode {
     
 public:
 
-    typedef std::vector< BNode* >::iterator iterator;
-    typedef const std::vector< BNode* >::iterator const_iterator;
+    typedef std::vector< Edge* >::iterator EdgeIterator;
+    typedef const std::vector< Edge* >::const_iterator const_EdgeIterator;
     
-    iterator begin() { return neighbours.begin(); }
-    iterator end() { return neighbours.end(); }
+    EdgeIterator EdgesBegin() { return edges.begin(); }
+    EdgeIterator EdgesEnd() { return edges.end(); }
     
     
-    void AddNeighbor( BNode* node ) {
-        //node seg 1 and add neighbour node seg 2
-        //std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
-        neighbours.push_back(node);
-    };
-    
-    void AddEdge( Edge* edge ) {
-        //node seg 1 and add neighbour node seg 2
-        //std::cout << "Node " << id << "; Adding neighbour " << node->id << endl;
+   void AddEdge( Edge* edge ) {
         edges.push_back(edge);
-        neighbours.push_back( edge->NodeTo() );
     };
        
     void PrintNode(){
@@ -64,8 +55,6 @@ public:
     
 private:
     
-
-    std::vector< BNode* > neighbours;
     std::vector< Edge* > edges;
      
 };

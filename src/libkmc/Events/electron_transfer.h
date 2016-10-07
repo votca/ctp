@@ -19,7 +19,7 @@
 #define __VOTCA_KMC_ELECTRONTRANSFER_H
 
 #include <votca/kmc/event.h>
-#include <votca/kmc/link.h>
+#include <votca/kmc/edge.h>
 #include "carriers/electron.h"
 
 namespace votca { namespace kmc {
@@ -42,6 +42,7 @@ public:
         node_from = _edge->NodeFrom();
         node_to = _edge->NodeTo();
         distance_pbc = _edge->DistancePBC();
+        SetRate( _edge->Rate() );
         // enable this event
         Enable();
     }
@@ -52,9 +53,9 @@ public:
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
     
-        std::cout << "Moving " << electron->Type() << " " << electron->id() << 
-                " from node " <<  node_from->id << 
-                " to node "   <<  node_to->id << std::endl;
+        //std::cout << "Moving " << electron->Type() << " " << electron->id() << 
+        //        " from node " <<  node_from->id << 
+        //        " to node "   <<  node_to->id << std::endl;
  
         // update the parent VSSM group
         Event* parent = GetParent();
@@ -98,14 +99,12 @@ private:
         //if (status) { std::cout << "To be enabled: " ;
         //} else      { std::cout << "To be disabled: "; }
             
-        for (BNode::iterator node_to = node->begin() ; node_to != node->end(); ++node_to) {
+        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
                 //New event - electron transfer
                 Event* _et =  Events().Create( "electron_transfer" );
                 _et->SetParent( GetParent() );
                 ElectronTransfer* et = dynamic_cast<ElectronTransfer*>(_et);
-                // TO FIX
-                Edge* edge = NULL;
-                et->Initialize( electron, edge );
+                et->Initialize( electron, *it_edge );
                 if ( status ) {
                     et->Enable();
                     //std::cout << node->id << "-" << (*node_to)->id << " ";

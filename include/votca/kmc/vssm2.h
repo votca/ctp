@@ -21,6 +21,7 @@
 #include <votca/ctp/logger.h>
 #include <votca/kmc/algorithm.h>
 #include "events/carrier_escape.h"
+#include <time.h>
 
 //* Two-level VSSM algorithm with carriers at the top level and transfer reactions at the bottom level
 //          head
@@ -54,15 +55,14 @@ void Initialize ( std::vector<Event*> events, State* _state, Graph* graph ) {
         BNode* node_from = (*carrier)->GetNode();
 
         // initialize move events - hole, electron, exciton transfer
-        for (BNode::iterator node_to = node_from->begin(); node_to != node_from->end(); ++node_to) {
+        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
 
             //New event - electron transfer
             Event* event_move = Events().Create("electron_transfer");
             ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
             Electron* electron = dynamic_cast<Electron*> ((*carrier));
             
-            //// rewrite as a loop over links
-            ////electron_transfer->Initialize(electron, node_from, (*node_to), 1.0);
+            electron_transfer->Initialize(electron, *it_edge);
             
             // add a subordinate event
             carrier_escape->AddSubordinate( event_move );
@@ -81,25 +81,33 @@ void Run( double runtime ) {
 
     votca::tools::Random2 RandomVariable;
 
-    std::cout << "I am running" << std::endl;
+    std::cout << "Starting the KMC loop" << std::endl;
+    
+    clock_t begin = clock();
 
     // Initialise random number generator
     int _seed = 0;
     srand(_seed);
     RandomVariable.init(rand(), rand(), rand(), rand());
 
-    runtime = 1000.0;
+    runtime = 1E-8;
+    double maxstep = 1000000;
     double time = 0.0;
+    int step = 0;
     // execute the head VSSM event and update time
-    while ( time <= runtime ) {
+    while ( ( time <= runtime ) && ( step <= 1000000 ) ) {
         head_event.OnExecute(state, &RandomVariable ); 
         double elapsed_time = 1./head_event.CumulativeRate();
         state->AdvanceClock(elapsed_time);
-        state->Print();
+        //state->Print();
         time += elapsed_time;
-        std::cout << "Time: " << time << std::endl;
+        step++;
+        //std::cout << "Time: " << time << std::endl;
     }
-    
+
+    clock_t end = clock();    
+    printf("Elapsed: %f seconds\n", (double)(end - begin) / CLOCKS_PER_SEC);
+        
 }
 
 private:

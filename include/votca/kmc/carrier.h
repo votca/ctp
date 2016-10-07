@@ -71,6 +71,8 @@ public:
         node = edge->NodeTo();
   }
    
+   votca::tools::vec Distance(){ return distance; };
+   
 private:
     
     int ID;

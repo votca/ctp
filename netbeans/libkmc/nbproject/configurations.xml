@@ -22,7 +22,6 @@
         <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Events" projectFiles="true">
-        <itemPath>../../src/libkmc/Events/carrier_escape.h</itemPath>
         <itemPath>../../src/libkmc/Events/electron_transfer.h</itemPath>
         <itemPath>../../include/votca/kmc/event.h</itemPath>
         <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
@@ -33,13 +32,13 @@
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
+      <itemPath>../../include/votca/kmc/edge.h</itemPath>
       <itemPath>../../include/votca/kmc/events.h</itemPath>
       <itemPath>../../include/votca/kmc/globaleventinfo.h</itemPath>
       <itemPath>../../include/votca/kmc/graph.h</itemPath>
       <itemPath>../../include/votca/kmc/kmcapplication.h</itemPath>
       <itemPath>../../include/votca/kmc/kmccalculator.h</itemPath>
       <itemPath>../../include/votca/kmc/kmccalculatorfactory.h</itemPath>
-      <itemPath>../../include/votca/kmc/link.h</itemPath>
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
       <itemPath>../../include/votca/kmc/property.h</itemPath>
@@ -97,8 +96,44 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>../../../include</Elem>
+    <Elem>../../src/libkmc</Elem>
+    <Elem>../../../include</Elem>
+    <Elem>../../src/libkmc</Elem>
+    <Elem>../../../include</Elem>
+    <Elem>../../src/libkmc</Elem>
     <Elem>../../../include</Elem>
     <Elem>../../src/libkmc</Elem>
     <Elem>../../../include</Elem>
@@ -147,6 +182,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/edge.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/eventfactory.h"
@@ -177,8 +214,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/link.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/longrange.h"
             ex="false"
@@ -334,6 +369,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/edge.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/eventfactory.h"
@@ -364,8 +401,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/link.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/longrange.h"
             ex="false"
