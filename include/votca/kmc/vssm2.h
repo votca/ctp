@@ -90,7 +90,7 @@ void Run( double runtime ) {
     srand(_seed);
     RandomVariable.init(rand(), rand(), rand(), rand());
 
-    runtime = 1E-8;
+    runtime = 1E-4;
     double maxstep = 1000000;
     double time = 0.0;
     int step = 0;
@@ -105,6 +105,7 @@ void Run( double runtime ) {
         //std::cout << "Time: " << time << std::endl;
     }
 
+    state->Print();
     clock_t end = clock();    
     printf("Elapsed: %f seconds\n", (double)(end - begin) / CLOCKS_PER_SEC);
         

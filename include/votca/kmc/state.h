@@ -138,6 +138,7 @@ inline Carrier* State::AddCarrier( std::string type ) {
 
 inline void State::Print(){
     //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
+    std::cout << "Time: " << time << std::endl;
     Carrier* carrier;
     for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
         carrier = *it_carrier;
