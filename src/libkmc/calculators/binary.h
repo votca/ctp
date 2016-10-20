@@ -131,11 +131,10 @@ void Binary::RunKMC() {
 //    Events().AddEvent( event );
         
    
-    std::vector< Event* > events;
     std::cout << "----" << std::endl;
     std::cout << "----" << std::endl;
     VSSM2 vssm2;
-    vssm2.Initialize( events, &state, &graph );
+    vssm2.Initialize( &state, &graph );
     vssm2.Run(0);
     std::cout << "----" << std::endl;
     std::cout << "----" << std::endl;

@@ -37,7 +37,7 @@ class VSSM2 : public Algorithm {
     
 public:
 
-void Initialize ( std::vector<Event*> events, State* _state, Graph* graph ) {
+void Initialize ( State* _state, Graph* graph ) {
     
     state = _state;
     

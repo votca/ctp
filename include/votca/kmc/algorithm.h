@@ -27,7 +27,7 @@ public:
     
     Algorithm(){};
     
-    virtual void Initialize(std::vector<Event*> events, State* _state, Graph* _graph) = 0;
+    virtual void Initialize( State* _state, Graph* _graph) = 0;
  
     double Time(){ return time; }
     
