@@ -25,6 +25,14 @@ namespace votca { namespace kmc {
 class Graph {
 public:
     
+    // iterator over carriers
+    typedef std::vector< BNode* >::iterator iterator;
+    typedef const std::vector< BNode* >::iterator const_iterator;
+    
+    iterator nodes_begin() { return nodes.begin(); }
+    iterator nodes_end() { return nodes.end(); } 
+    
+    
     void Load(std::string filename);    
     void Print();
     
