@@ -15,63 +15,67 @@
  *
  */
 
-#ifndef __VOTCA_KMC_VSSM2_H_
-#define __VOTCA_KMC_VSSM2_H_
+#ifndef __VOTCA_KMC_VSSM2_NODES_H_
+#define __VOTCA_KMC_VSSM2__NODES_H_
 
-#include <votca/ctp/logger.h>
 #include <votca/kmc/algorithm.h>
 #include "Events/carrier_escape.h"
 #include <time.h>
+#include <votca/kmc/bnode.h>
 
-//* Two-level VSSM algorithm with carriers at the top level and transfer reactions at the bottom level
+//* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
 //          head
 //        /  |  \
-//  escape_1      escape_n (one per carrier)
+//  node_1      node_n 
 //  /  |  \
 // move_1  move_k
 //*
 
 namespace votca { namespace kmc {
   
-class VSSM2 : public Algorithm {
+class VSSM2_NODES : public Algorithm {
     
 public:
 
-void Initialize ( std::vector<Event*> events, State* _state, Graph* graph ) {
+void Initialize ( std::vector<Event*> events, std::vector<BNode*> nodes, Graph* graph, State* _state) {
     
-    state = _state;
+     state = _state;
     
-    // first level VSSM events (escape event for each carrier))
-    for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
-        std::cout << "Adding escape event for carrier " << (*carrier)->Type() << ", id " << (*carrier)->id() << std::endl;
-
-        // create the carrier escape event (leaving the node)
+    // first level VSSM - list of nodes (escape events from the node)
+    for (Graph::iterator node = Graph->nodes_begin(); node != Graph->nodes_end(); ++node) {
+        std::cout << "Node id: " << Graph->GetNode()->id << std::endl;
+        
+        //Initialise carriers - which can sit on the node?
+        //Node -> Carrier -> escape event -> move event
+        
+        //Initialise the escape events - leaving the node
         Event* event_escape = Events().Create("carrier_escape");
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
         carrier_escape->Initialize((*carrier));
         head_event.AddSubordinate( event_escape );
         std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
+        
+        
+        BNode* node_from = node;
 
-        BNode* node_from = (*carrier)->GetNode();
-
-        // initialize move events - hole, electron, exciton transfer
-        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+            //initialise move events - hole, electron, exciton transfer 
+            for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
 
             //New event - electron transfer
             Event* event_move = Events().Create("electron_transfer");
             ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
-            Electron* electron = dynamic_cast<Electron*> ((*carrier));
+            Electron* electron = dynamic_cast<Electron*> (Carrier*);
             
             electron_transfer->Initialize(electron, *it_edge);
             
             // add a subordinate event
-            carrier_escape->AddSubordinate( event_move );
+            event_escape->AddSubordinate( event_move );
             
-        }
+            }
         
         // evaluate the escape rate (sum of all enabled subordinate events)
-        carrier_escape->CumulativeRate(); 
-        std::cout << "Total escape rate " <<  carrier_escape->CumulativeRate() << std::endl;
+        event_escape->CumulativeRate(); 
+        std::cout << "Total escape rate " <<  event_escape->CumulativeRate() << std::endl;
 
     }
 

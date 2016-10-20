@@ -21,8 +21,19 @@
 #include <votca/kmc/event.h>
 #include <votca/kmc/eventfactory.h>
 
+//* Events update tree, with reactions as the leaf nodes and cumulative rate sums as parent nodes
+//
+//           root
+//          /    \
+//     level 1 
+//     /   \
+//   level 2 
+//    /   \
+//  leaf 
+//
+//*
+
 namespace votca { namespace kmc {
-        
     
 class Event_update_tree {
 
@@ -82,9 +93,9 @@ public:
     void newRightchild(tree_node* _rightchild) { rightchild = _rightchild; }
     
     //Flag the tree nodes that need to be newly enabled or disabled 
-    void ToBeEnabled() { return FlagEnabled = true; }
+    void ToBeEnabled() { FlagEnabled = true; }
     bool FlagEnabled();
-    void ToBeDisabled() { return FlagDisabled = true; }
+    void ToBeDisabled() { FlagDisabled = true; }
     bool FlagDisabled();
     
         

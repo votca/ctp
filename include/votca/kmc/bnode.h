@@ -29,7 +29,7 @@ namespace votca { namespace kmc {
 class BNode {
     
 public:
-
+  
     typedef std::vector< Edge* >::iterator EdgeIterator;
     typedef const std::vector< Edge* >::const_iterator const_EdgeIterator;
     

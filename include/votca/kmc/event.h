@@ -36,9 +36,9 @@ public:
    void Expire() { expired = true; parent->has_expired_subordinates = true; }  
    bool Expired(){ return expired; };
    
-   // Disables the event (its rate is removed from the Cimulative Rate of the parent)
+   // Disables the event (its rate is removed from the Cumulative Rate of the parent)
    void Disable(){ enabled = false; };
-   // Enables the event (its rate is added to the Cimulative Rate of the parent)
+   // Enables the event (its rate is added to the Cumulative Rate of the parent)
    void Enable(){  enabled = true;  };
    bool Enabled(){ return enabled; };
   

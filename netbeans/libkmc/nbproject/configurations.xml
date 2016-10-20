@@ -22,7 +22,9 @@
         <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Events" projectFiles="true">
+        <itemPath>../../src/libkmc/Events/carrier_escape.h</itemPath>
         <itemPath>../../src/libkmc/Events/electron_transfer.h</itemPath>
+        <itemPath>../../src/libkmc/Events/electron_transfer_dynamic.h</itemPath>
         <itemPath>../../include/votca/kmc/event.h</itemPath>
         <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
         <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
@@ -44,6 +46,8 @@
       <itemPath>../../include/votca/kmc/property.h</itemPath>
       <itemPath>../../include/votca/kmc/state.h</itemPath>
       <itemPath>../../include/votca/kmc/version.h</itemPath>
+      <itemPath>../../include/votca/kmc/vssm2.h</itemPath>
+      <itemPath>../../include/votca/kmc/vssm2_nodes.h</itemPath>
       <itemPath>../../include/votca/kmc/vssmgroup.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -226,6 +230,13 @@
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/vssm2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/vssm2_nodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/vssmgroup.h"
             ex="false"
             tool="3"
@@ -249,6 +260,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/Events/electron_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/Events/electron_transfer_dynamic.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -413,6 +429,13 @@
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/vssm2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/vssm2_nodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/vssmgroup.h"
             ex="false"
             tool="3"
@@ -436,6 +459,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/Events/electron_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/Events/electron_transfer_dynamic.h"
             ex="false"
             tool="3"
             flavor2="0">
