@@ -20,7 +20,8 @@
 
 #include <votca/ctp/logger.h>
 #include <votca/kmc/algorithm.h>
-#include "Events/carrier_escape.h"
+#include "events/carrier_escape.h"
+#include "events/electron_transfer.h"
 #include <time.h>
 
 //* Two-level VSSM algorithm with carriers at the top level and transfer reactions at the bottom level

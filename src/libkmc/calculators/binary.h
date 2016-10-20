@@ -25,9 +25,6 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-
-#include "Events/electron_transfer.h" 
-
 #include <votca/kmc/vssm2.h>
 
 using namespace std;
