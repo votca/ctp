@@ -36,7 +36,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o \
-	${OBJECTDIR}/_ext/4edd36c3/electron.o \
 	${OBJECTDIR}/_ext/1ce05ac7/eventfactory.o \
 	${OBJECTDIR}/_ext/1ce05ac7/kmcapplication.o \
 	${OBJECTDIR}/_ext/1ce05ac7/kmccalculatorfactory.o \
@@ -74,11 +73,6 @@ ${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o: nbproject/Makefile-${CND_CONF}.mk .
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I../../../include -I../../include -I../../include/votca/kmc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o ../../src/libkmc/carrierfactory.cc
-
-${OBJECTDIR}/_ext/4edd36c3/electron.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/carriers/electron.cc 
-	${MKDIR} -p ${OBJECTDIR}/_ext/4edd36c3
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../../include -I../../include -I../../include/votca/kmc -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/4edd36c3/electron.o ../../src/libkmc/carriers/electron.cc
 
 ${OBJECTDIR}/_ext/1ce05ac7/eventfactory.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/eventfactory.cc 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7

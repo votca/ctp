@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_BINARY_H
-#define	__VOTCA_KMC_BINARY_H
+#ifndef __VOTCA_KMC_DYNAMIC_H
+#define	__VOTCA_KMC_DYNAMIC_H
 
 #include <votca/kmc/state.h>
 #include <votca/kmc/event.h>
@@ -25,20 +25,20 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-#include <votca/kmc/vssm2.h>
+#include "../algorithms/vssm2_carriers.h"
 
 using namespace std;
 
 namespace votca { namespace kmc {
    
-class Binary : public KMCCalculator 
+class Dynamic : public KMCCalculator 
 {
 public:
     
-    Binary() {};
-   ~Binary() {};
+    Dynamic() {};
+   ~Dynamic() {};
 
-    string  Identify() {return "binary"; };
+    string  Identify() {return "dynamic"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
@@ -60,7 +60,7 @@ private:
     std::string _trajectoryfile;
 };
 
-void Binary::Initialize(Property *options) {
+void Dynamic::Initialize(Property *options) {
     
     std::cout << endl << "Initializing KMC binary" << endl;
 
@@ -81,13 +81,13 @@ void Binary::Initialize(Property *options) {
 
 }
 
-bool Binary::EvaluateFrame() {
+bool Dynamic::EvaluateFrame() {
         
     RunKMC();
     return true;
 }
 
-void Binary::RunKMC() {
+void Dynamic::RunKMC() {
 
     std::cout << "Running KMC binary" << endl;
 

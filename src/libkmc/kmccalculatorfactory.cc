@@ -18,7 +18,8 @@
 #include <votca/kmc/kmccalculatorfactory.h>
 #include "calculators/kmcmultiple.h"
 #include "calculators/kmcparallel.h"
-#include "calculators/binary.h"
+#include "calculators/dynamic.h"
+#include "calculators/static.h"
 
 namespace votca { namespace kmc {
 
@@ -26,7 +27,8 @@ void KMCCalculatorFactory::RegisterAll(void)
 {
     Calculators().Register<KMCMultiple>("kmcmultiple"); // multiple charge carriers
     Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
-    Calculators().Register<Binary>("binary"); // multiple charge types in 2D PBC
+    Calculators().Register<Dynamic>("dynamic"); // dynamic creation of events after a move (slow))
+    Calculators().Register<Static>("static"); // precomputed rates
 }
 
 }}

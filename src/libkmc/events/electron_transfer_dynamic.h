@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ELECTRONTRANSFER_H
-#define __VOTCA_KMC_ELECTRONTRANSFER_H
+#ifndef __VOTCA_KMC_ELECTRONTRANSFER_DYNAMIC_H
+#define __VOTCA_KMC_ELECTRONTRANSFER__DYNAMIC_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
@@ -53,6 +53,10 @@ public:
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
     
+        //std::cout << "Moving " << electron->Type() << " " << electron->id() << 
+        //        " from node " <<  node_from->id << 
+        //        " to node "   <<  node_to->id << std::endl;
+ 
         // update the parent VSSM group
         Event* parent = GetParent();
         //std::cout << "  parent of " << Type() << " is " << parent->Type() << std::endl;
@@ -60,6 +64,8 @@ public:
         // Mark all current subordinate events as expired 
         // They will be deleted after OnExecute 
         parent->ExpireSubordinates();
+        
+        CreateEvents( &enabled_events, node_to, electron, true );
         
         for ( std::vector<ElectronTransfer*>::iterator it = enabled_events.begin(); it != enabled_events.end(); ++it ) {
             parent->AddSubordinate( (*it) );
@@ -83,6 +89,35 @@ private:
     Edge* edge;
     votca::tools::vec distance_pbc;
 
+    
+    // creates a vector of electron transfer events for a specific node and electron
+    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {
+        
+        //std::cout << "Creating events for charge " << electron->id() << ", node " << node->id << std::endl;
+        //node->PrintNode();
+        
+        //if (status) { std::cout << "To be enabled: " ;
+        //} else      { std::cout << "To be disabled: "; }
+            
+        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
+                //New event - electron transfer
+                Event* _et =  Events().Create( "electron_transfer" );
+                _et->SetParent( GetParent() );
+                ElectronTransfer* et = dynamic_cast<ElectronTransfer*>(_et);
+                et->Initialize( electron, *it_edge );
+                if ( status ) {
+                    et->Enable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                } else {
+                    et->Disable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                }
+                events->push_back(et);
+        }
+        //std::cout << std::endl;
+
+    }
+ 
 };
 
 }}
