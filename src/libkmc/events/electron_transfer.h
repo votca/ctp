@@ -58,14 +58,13 @@ public:
         Event* parent = GetParent();
         //std::cout << "  parent of " << Type() << " is " << parent->Type() << std::endl;
         
-        // Mark all current subordinate events as expired 
-        // They will be deleted after OnExecute 
-        parent->ExpireSubordinates();
+        // Mark all current subordinate events disabled
+        //parent->DisableSubordinates();
         
-        for ( std::vector<ElectronTransfer*>::iterator it = enabled_events.begin(); it != enabled_events.end(); ++it ) {
-            parent->AddSubordinate( (*it) );
-            (*it)->Initialize( electron, (*it)->edge);
-        }
+        // Disable the head event
+        
+        // Enable new list of events
+        
          // move an electron from node_from to node_to
         electron->Move( edge );        
     };

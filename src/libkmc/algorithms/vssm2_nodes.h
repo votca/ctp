@@ -70,6 +70,7 @@ void Initialize ( State* _state, Graph* graph ) {
                 electron = dynamic_cast<Electron*> (carrier);
                 std::cout << "Found a carrier" << std::endl;
                 event_escape->Enable();
+                head_event.Enable();
             }
             
             electron_transfer->Initialize(electron, *it_edge);
