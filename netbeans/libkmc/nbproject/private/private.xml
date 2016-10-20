@@ -14,6 +14,17 @@
             <file>file:/people/thnfs/homes/andrienk/votca/src/kmc/include/votca/kmc/bnode.h</file>
             <file>file:/people/thnfs/homes/andrienk/votca/src/kmc/src/libkmc/carrierfactory.cc</file>
             <file>file:/people/thnfs/homes/andrienk/votca/src/kmc/src/libkmc/calculators/kmcmultiple.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/vssm2_nodes.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/carrier.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/carriers/electron.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/bnode.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/event.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/state.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/Events_update_tree.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/graph.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/eventfactory.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/calculators/binary.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/vssm2.h</file>
         </group>
     </open-files>
 </project-private>
