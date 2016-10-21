@@ -24,7 +24,7 @@
 
 namespace votca { namespace kmc {
     
-class ElectronTransfer : public Event {
+class ElectronTransferDynamic : public Event {
     
 public:
 
@@ -67,7 +67,7 @@ public:
         
         CreateEvents( &enabled_events, node_to, electron, true );
         
-        for ( std::vector<ElectronTransfer*>::iterator it = enabled_events.begin(); it != enabled_events.end(); ++it ) {
+        for ( std::vector<ElectronTransferDynamic*>::iterator it = enabled_events.begin(); it != enabled_events.end(); ++it ) {
             parent->AddSubordinate( (*it) );
             (*it)->Initialize( electron, (*it)->edge);
         }
@@ -77,8 +77,8 @@ public:
     
 private:
 
-    std::vector<ElectronTransfer*> disabled_events;
-    std::vector<ElectronTransfer*> enabled_events;
+    std::vector<ElectronTransferDynamic*> disabled_events;
+    std::vector<ElectronTransferDynamic*> enabled_events;
 
     // electron to move
     Electron* electron;
@@ -91,7 +91,7 @@ private:
 
     
     // creates a vector of electron transfer events for a specific node and electron
-    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {
+    void CreateEvents( std::vector< ElectronTransferDynamic* >* events, BNode* node, Electron* electron, bool status ) {
         
         //std::cout << "Creating events for charge " << electron->id() << ", node " << node->id << std::endl;
         //node->PrintNode();
@@ -103,7 +103,7 @@ private:
                 //New event - electron transfer
                 Event* _et =  Events().Create( "electron_transfer" );
                 _et->SetParent( GetParent() );
-                ElectronTransfer* et = dynamic_cast<ElectronTransfer*>(_et);
+                ElectronTransferDynamic* et = dynamic_cast<ElectronTransferDynamic*>(_et);
                 et->Initialize( electron, *it_edge );
                 if ( status ) {
                     et->Enable();

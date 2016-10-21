@@ -59,14 +59,19 @@ public:
         //std::cout << "  parent of " << Type() << " is " << parent->Type() << std::endl;
         
         // Mark all current subordinate events disabled
-        //parent->DisableSubordinates();
+        parent->Disable();
         
         // Disable the head event
         
+        
         // Enable new list of events
+        //electron->SetNode( node_to );
+        //parent->Enable();
+        
         
          // move an electron from node_from to node_to
-        electron->Move( edge );        
+        electron->Move( edge ); 
+        
     };
     
 private:

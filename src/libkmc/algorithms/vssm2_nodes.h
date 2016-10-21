@@ -22,6 +22,7 @@
 #include "events/carrier_escape.h"
 #include <time.h>
 #include <votca/kmc/bnode.h>
+#include "events/electron_transfer.h"
 
 //* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
 //          head
@@ -102,12 +103,13 @@ void Run( double runtime ) {
     double maxstep = 1000000;
     double time = 0.0;
     int step = 0;
+    
     // execute the head VSSM event and update time
     while ( ( time <= runtime ) && ( step <= 1000000 ) ) {
         head_event.OnExecute(state, &RandomVariable ); 
         double elapsed_time = 1./head_event.CumulativeRate();
 
-        std::cout << elapsed_time;
+        //std::cout << elapsed_time;
         
         state->AdvanceClock(elapsed_time);
         state->Print();

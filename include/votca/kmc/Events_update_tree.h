@@ -42,9 +42,8 @@ public:
     ~Event_update_tree() {};
     Event_update_tree() { Root = NULL; }; //initial empty tree   
     
-    void initialise(int leaf_size);
-    double GetRates(Event* rate);
-    void insert_rate(tree_node*, double new_rate);
+    void initialise();
+    void insert_rate(tree_node* newLeaf, double new_rate);
     void cumulative_sum(tree_node*, double rate_sum);
     void check_tree();
     
@@ -58,7 +57,7 @@ public:
 private:
     
     tree_node* Root;
-    
+
     //total number of nodes
     int tree_size;
     //height of the tree - for path to nodes
@@ -109,7 +108,7 @@ private:
       
 };
 
-void Event_update_tree::initialise(int leaf_size){
+void Event_update_tree::initialise(){
     
     leaf_size = sizeof(EventFactory->StoredEvents());
  
@@ -123,22 +122,12 @@ void Event_update_tree::initialise(int leaf_size){
     //tree_node* nodes = new tree_node(NULL);
 }
 
-void Event_update_tree::GetRates(Event* rate){
-    
-    //Function to read all of the rates for the events
-    Event->Rate();
-    //For each rate set as new_rate and move to insert
-}
 
 //Inserting a new node
 void Event_update_tree::insert_rate(tree_node* newLeaf, double new_rate){
     
     tree_node* newLeaf = new tree_node();
     newLeaf->rate()=new_rate;
-    
-    //To set the newLeaf at the new left or right child
-    //tree_node* _leftchild = (new_rate);
-    //tree_node* _rightchild = (new_rate); 
     
     newLeaf->leftchild()=NULL;
     newLeaf->rightchild()=NULL;
@@ -186,7 +175,8 @@ void Event_update_tree::FindLeaf(tree_node* current, tree_node* choosen_leaf, do
     //If the chosen random number rand1 is < = root -> move left, else move right
     //continue down the levels of the tree until reaching leaf node
    
-    for (current->leftchild()==NULL && current->rightchild()==NULL){
+    for (current->leftchild()==NULL && current->rightchild()==NULL)
+    {
         if (choosen_rate = rate)
         {
             current = choosen_leaf;

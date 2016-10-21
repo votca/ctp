@@ -46,7 +46,6 @@
       <itemPath>../../include/votca/kmc/kmccalculatorfactory.h</itemPath>
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
-      <itemPath>../../../../include/votca/tools/property.h</itemPath>
       <itemPath>../../include/votca/kmc/state.h</itemPath>
       <itemPath>../../include/votca/kmc/version.h</itemPath>
       <itemPath>../../include/votca/kmc/vssmgroup.h</itemPath>
@@ -166,11 +165,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../../../../include/votca/tools/property.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/Events_update_tree.h"
             ex="false"
             tool="3"
@@ -366,11 +360,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../../../../include/votca/tools/property.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/Events_update_tree.h"
             ex="false"
             tool="3"

@@ -59,7 +59,7 @@ void Initialize ( State* _state, Graph* graph ) {
 
             //New event - electron transfer
             Event* event_move = Events().Create("electron_transfer");
-            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
+            ElectronTransferDynamic* electron_transfer = dynamic_cast<ElectronTransferDynamic*> (event_move);
             Electron* electron = dynamic_cast<Electron*> ((*carrier));
             
             electron_transfer->Initialize(electron, *it_edge);
