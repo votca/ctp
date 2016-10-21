@@ -45,9 +45,6 @@ void Initialize ( State* _state, Graph* graph ) {
     for (Graph::iterator it_node = graph->nodes_begin(); it_node != graph->nodes_end(); ++it_node) {
         std::cout << "Node id: " << (*it_node)->id << " ";
         
-        //Initialise carriers - which can sit on the node?
-        //Node -> Carrier -> escape event -> move event
-        
         //Initialise the escape events - leaving the node
         Event* event_escape = Events().Create("carrier_escape");
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);

@@ -62,7 +62,7 @@ private:
 
 void Static::Initialize(Property *options) {
     
-    std::cout << endl << "Initializing KMC binary" << endl;
+    std::cout << endl << "Initialising KMC static" << endl;
 
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options );
@@ -89,7 +89,7 @@ bool Static::EvaluateFrame() {
 
 void Static::RunKMC() {
 
-    std::cout << "Running KMC binary" << endl;
+    std::cout << "Running KMC static" << endl;
 
     Graph graph;
     State state;
@@ -126,4 +126,4 @@ void Static::RunKMC() {
 }}
 
 
-#endif	/* __VOTCA_KMC_BINARY_H */
+#endif	/* __VOTCA_KMC_STATIC_H */

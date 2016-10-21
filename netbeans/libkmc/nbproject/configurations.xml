@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f3"
-                   displayName="Algorithms"
-                   projectFiles="true"
-                   kind="ROOT">
+    <logicalFolder name="f4" displayName="Algorithms" projectFiles="true">
       <itemPath>../../src/libkmc/algorithms/vssm2_carriers.h</itemPath>
       <itemPath>../../src/libkmc/algorithms/vssm2_nodes.h</itemPath>
     </logicalFolder>
@@ -12,23 +9,20 @@
       <itemPath>../../src/libkmc/calculators/diffusion.h</itemPath>
       <itemPath>../../src/libkmc/calculators/diode.h</itemPath>
       <itemPath>../../src/libkmc/calculators/dynamic.h</itemPath>
-      <itemPath>../../src/libkmc/kmccalculatorfactory.cc</itemPath>
-      <itemPath>../../include/votca/kmc/kmccalculatorfactory.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmclight.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcmultiple.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcparallel.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcsingle.h</itemPath>
       <itemPath>../../src/libkmc/calculators/static.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f4" displayName="Carriers" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f2" displayName="Carriers" projectFiles="true">
       <itemPath>../../include/votca/kmc/carrier.h</itemPath>
       <itemPath>../../src/libkmc/carrierfactory.cc</itemPath>
       <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
       <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
       <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Events" projectFiles="true" kind="ROOT">
-      <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
+    <logicalFolder name="f3" displayName="events" projectFiles="true">
       <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
@@ -39,17 +33,20 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
+      <itemPath>../../include/votca/kmc/edge.h</itemPath>
       <itemPath>../../include/votca/kmc/events.h</itemPath>
       <itemPath>../../include/votca/kmc/globaleventinfo.h</itemPath>
       <itemPath>../../include/votca/kmc/graph.h</itemPath>
       <itemPath>../../include/votca/kmc/kmcapplication.h</itemPath>
       <itemPath>../../include/votca/kmc/kmccalculator.h</itemPath>
+      <itemPath>../../include/votca/kmc/kmccalculatorfactory.h</itemPath>
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
-      <itemPath>../../include/votca/kmc/property.h</itemPath>
+      <itemPath>../../../../include/votca/tools/property.h</itemPath>
       <itemPath>../../include/votca/kmc/state.h</itemPath>
       <itemPath>../../include/votca/kmc/version.h</itemPath>
       <itemPath>../../include/votca/kmc/vssmgroup.h</itemPath>
@@ -62,6 +59,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>../../src/libkmc/kmcapplication.cc</itemPath>
+      <itemPath>../../src/libkmc/kmccalculatorfactory.cc</itemPath>
       <itemPath>../../src/libkmc/version.cc</itemPath>
       <itemPath>../../src/libkmc/version_nb.cc</itemPath>
     </logicalFolder>
@@ -103,8 +101,44 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>../../../include</Elem>
+    <Elem>../../src/libkmc</Elem>
+    <Elem>../../../include</Elem>
+    <Elem>../../src/libkmc</Elem>
+    <Elem>../../../include</Elem>
+    <Elem>../../src/libkmc</Elem>
     <Elem>../../../include</Elem>
     <Elem>../../src/libkmc</Elem>
     <Elem>../../../include</Elem>
@@ -132,6 +166,11 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="../../../../include/votca/tools/property.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/Events_update_tree.h"
             ex="false"
             tool="3"
@@ -152,6 +191,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/edge.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -188,8 +229,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -327,6 +366,11 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="../../../../include/votca/tools/property.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/Events_update_tree.h"
             ex="false"
             tool="3"
@@ -347,6 +391,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/edge.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -383,8 +429,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
