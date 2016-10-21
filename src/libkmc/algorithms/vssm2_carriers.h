@@ -18,7 +18,6 @@
 #ifndef __VOTCA_KMC_VSSM2_H_
 #define __VOTCA_KMC_VSSM2_H_
 
-#include <votca/ctp/logger.h>
 #include <votca/kmc/algorithm.h>
 #include "events/carrier_escape.h"
 #include "events/electron_transfer_dynamic.h"
