@@ -74,6 +74,29 @@ public:
         
     };
     
+
+    // creates a vector of electron transfer events for a specific node and electron
+    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {
+            
+        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
+                //New event - electron transfer
+                Event* _et =  Events().Create( "electron_transfer" );
+                _et->SetParent( GetParent() );
+                ElectronTransfer* et = dynamic_cast<ElectronTransfer*>(_et);
+                et->Initialize( electron, *it_edge );
+                if ( status ) {
+                    et->Enable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                } else {
+                    et->Disable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                }
+                events->push_back(et);
+        }
+        //std::cout << std::endl;
+
+    }    
+    
 private:
 
     std::vector<ElectronTransfer*> disabled_events;
@@ -89,6 +112,7 @@ private:
     votca::tools::vec distance_pbc;
 
 };
+
 
 }}
 #endif 
