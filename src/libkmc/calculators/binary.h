@@ -112,33 +112,13 @@ void Binary::RunKMC() {
     Electron* electron = dynamic_cast<Electron*>(carrier);
     
     // place the electron on the first node
-    BNode* node_from = graph.GetNode(1);
-    carrier->SetNode( node_from );
+    BNode* node_from = graph.GetNode(2181);
     node_from->PrintNode();
-
-    
-    // creates events for a specific node_to and electron and enables them
-    //for (BNode::iterator node_to = node_from->begin() ; node_to != node_from->end(); ++node_to) {
-        
-        //New event - electron transfer
-
-//    BNode* node_to = *node_from->begin();
-//    Event* event =  Events().Create( "electron_transfer" );
-//    ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*>(event);
-//    electron_transfer->Initialize( electron, node_from, node_to, 0.0);
-//    electron_transfer->OnExecute( &state );
-//    
-//    Events().AddEvent( event );
-        
+    carrier->SetNode( node_from );
    
-    std::vector< Event* > events;
-    std::cout << "----" << std::endl;
-    std::cout << "----" << std::endl;
     VSSM2 vssm2;
-    vssm2.Initialize( events, &state, &graph );
-    vssm2.Run(0);
-    std::cout << "----" << std::endl;
-    std::cout << "----" << std::endl;
+    vssm2.Initialize( &state, &graph );
+    vssm2.Run(_runtime);
     
 }
 

@@ -40,13 +40,14 @@ public:
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
         
+        double cumulative_rate = CumulativeRate();
         double u = 1.0 - RandomVariable->rand_uniform();
-        
+        //std::cout << "[" << u  << "]" << std::endl;
         // find a subordinate event to execute
         Event* subordinate;
         for( Event::iterator it_subordinate = begin(); it_subordinate != end() ; ++it_subordinate ) {
             subordinate = (*it_subordinate);
-            u -= subordinate->CumulativeRate()/CumulativeRate();
+            u -= subordinate->CumulativeRate()/cumulative_rate;
             if(u <= 0) break;
         }
 

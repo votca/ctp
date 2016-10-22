@@ -21,6 +21,7 @@
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
 #include "carriers/electron.h"
+#include "votca/tools/globals.h"
 
 namespace votca { namespace kmc {
     
@@ -52,10 +53,12 @@ public:
    
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
-    
-        //std::cout << "Moving " << electron->Type() << " " << electron->id() << 
-        //        " from node " <<  node_from->id << 
-        //        " to node "   <<  node_to->id << std::endl;
+        
+        if(votca::tools::globals::verbose) {
+                std::cout << "Moving " << electron->Type() << " " << electron->id() << 
+                " from node " <<  node_from->id << 
+                " to node "   <<  node_to->id << std::endl;
+        }
  
         // update the parent VSSM group
         Event* parent = GetParent();

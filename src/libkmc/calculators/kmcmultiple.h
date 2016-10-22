@@ -1121,7 +1121,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
 
 
                 do_newnode = NULL;
-                u = 1 - RandomVariable->rand_uniform();
+                u = 1 - RandomVariable->rand_uniform(); 
+                if(votca::tools::globals::verbose) { cout << "[" << u << "]"; }
                 for(unsigned int j=0; j<do_oldnode->event.size(); j++)
                 {
                     if(votca::tools::globals::verbose) { cout << " " << do_oldnode->event[j].destination+1 ; }

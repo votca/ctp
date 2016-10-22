@@ -57,6 +57,8 @@ namespace votca { namespace kmc {
 class State {
 public:
     
+    State(){ time = 0; }
+    
     // iterator over carriers
     typedef std::vector< Carrier* >::iterator iterator;
     typedef const std::vector< Carrier* >::iterator const_iterator;
