@@ -18,9 +18,10 @@
 #ifndef __VOTCA_KMC_VSSM2_H_
 #define __VOTCA_KMC_VSSM2_H_
 
+#include <unordered_map>
 #include <votca/kmc/algorithm.h>
 #include "events/carrier_escape.h"
-#include "events/electron_transfer_dynamic.h"
+#include "events/electron_transfer.h"
 #include <time.h>
 
 //* Two-level VSSM algorithm with carriers at the top level and transfer reactions at the bottom level
@@ -39,11 +40,54 @@ public:
 
 void Initialize ( State* _state, Graph* _graph ) {
     
-    state = _state;
-    graph = _graph;
+    // Map of charge transfer events associated with a particular node
+    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
     
+    // Vector of all charge transfer events
+    std::vector<ElectronTransfer*> ct_events;
+
+    // Create all possible transfer events and associate them with the nodes
+    for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+        
+        BNode* node_from = *it_node;
+        
+        // create a new key with an empty vector
+        charge_transfer_map.emplace(node_from, vector<Event*>() );
+        
+        // Loop over all neighbors (edges) of the node 
+        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+
+            // For every edge create an event of type transfer
+            Event* event_move = Events().Create("electron_transfer");            
+            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
+            electron_transfer->Initialize(NULL, *it_edge);
+            
+            // Add a list of charge transfer events to the map, indexed by a node pointer
+            charge_transfer_map.at(node_from).push_back(event_move);
+            
+            // Add an event to the charge transfer events
+            ct_events.push_back(electron_transfer);
+        }
+    }
+  
+    // for every event, add a list of "events-to-enable" after OnExecute
+    // and a list of "events-to-disable" after OnExecute
+    for (auto& event: ct_events ) {
+        BNode* node_from = event->NodeFrom();
+        BNode* node_to = event->NodeTo();
+
+        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
+
+        event->AddDisableOnExecute(&events_to_disable);
+        event->AddEnableOnExecute(&events_to_enable);
+    }
+
+    //for (auto& event: ct_events ) event->Print();
+    
+    // organize events in a tree;
     // first level VSSM events (escape event for each carrier))
-    for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
+    for (State::iterator carrier = _state->begin(); carrier != _state->end(); ++carrier) {
         std::cout << "Adding escape event for carrier " << (*carrier)->Type() << ", id " << (*carrier)->id() << std::endl;
 
         // create the carrier escape event (leaving the node)
@@ -55,26 +99,28 @@ void Initialize ( State* _state, Graph* _graph ) {
 
         BNode* node_from = (*carrier)->GetNode();
 
-        // initialize move events - hole, electron, exciton transfer
-        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+        std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
+                
+        // Add move events from the map 
+        for (std::vector<Event*>::iterator it_event = ct_events.begin(); it_event != ct_events.end(); ++it_event) {
 
             //New event - electron transfer
-            Event* event_move = Events().Create("electron_transfer");
-            ElectronTransferDynamic* electron_transfer = dynamic_cast<ElectronTransferDynamic*> (event_move);
+            Event* event_move = *it_event;
+            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
             Electron* electron = dynamic_cast<Electron*> ((*carrier));
             
-            electron_transfer->Initialize(electron, *it_edge);
+            electron_transfer->SetElectron( electron );
+            electron_transfer->Enable();
             
             // add a subordinate event
             carrier_escape->AddSubordinate( event_move );
             
         }
         
-        // evaluate the escape rate (sum of all enabled subordinate events)
-        carrier_escape->CumulativeRate(); 
-        std::cout << "Total escape rate " <<  carrier_escape->CumulativeRate() << std::endl;
-
     }
+
+    head_event.Enable();
+    head_event.Print();
 
 }
     
@@ -95,17 +141,18 @@ void Run( double runtime ) {
     int step = 0;
     // execute the head VSSM event and update time
     while ( time <= runtime ) {
+        //head_event.Print();
         head_event.OnExecute(state, &RandomVariable ); 
         double u = 1.0 - RandomVariable.rand_uniform();
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
-        state->AdvanceClock(elapsed_time);
+        //state->AdvanceClock(elapsed_time);
         //state->Print();
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
     }
 
-    state->Print();
+    //state->Print();
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
         

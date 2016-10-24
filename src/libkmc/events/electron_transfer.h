@@ -47,6 +47,9 @@ public:
         Disable();
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
     }
+
+    BNode* NodeFrom(){ return node_from; };
+    BNode* NodeTo(){ return node_to; };
     
     // this has to go away eventually
     void SetElectron( Electron* _electron ){ electron = _electron; };
@@ -54,24 +57,40 @@ public:
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
     
+        /*
+        std::cout << Type() << " of electron " << electron->id() << 
+                " from node " << NodeFrom()->id << 
+                " to " << NodeTo()->id << std::endl;
+        */
+        
+        // disable old events
+        //std::cout << "  Disabling old events" << std::endl;
+        for (auto& event: disabled_events ) {
+            event->Disable();
+            //event->Print("  -- ");
+        }
+ 
         // update the parent VSSM group
         Event* parent = GetParent();
-        //std::cout << "  parent of " << Type() << " is " << parent->Type() << std::endl;
+        parent->ClearSubordinate();
         
-        // Mark all current subordinate events disabled
-        parent->Disable();
+        // enable new events
+        //std::cout << "  Enabling new events" << std::endl;
+        for (auto& event: enabled_events ) {
+            if ( event == NULL)  { std::cout << "NULL event!" << std::endl; }
+            else {
+                parent->AddSubordinate( event );
+                event->SetElectron(electron);
+                event->Enable();
+                //event->Print("  ++ ");
+                if ( event->GetParent() == NULL ) { std::cout << "No Parent event!" << std::endl; }
+            }
+        }
         
-        // Disable the head event
-        
-        
-        // Enable new list of events
-        //electron->SetNode( node_to );
-        //parent->Enable();
-        
-        
-         // move an electron from node_from to node_to
-        electron->Move( edge ); 
-        
+        // move an electron from node_from to node_to
+        //std::cout << "Moving an electron " << electron->id() << std::endl;
+        electron->Move( edge );   
+
     };
     
 
@@ -95,7 +114,31 @@ public:
         }
         //std::cout << std::endl;
 
-    }    
+    }  
+    
+    void AddEnableOnExecute( std::vector< Event* >* events ) {
+        for (auto& event: *events ) {
+            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
+            enabled_events.push_back(ct_transfer);
+        }
+    }
+
+    void AddDisableOnExecute( std::vector< Event* >* events ) {
+        for (auto& event: *events ) {
+            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
+            disabled_events.push_back(ct_transfer);
+        }
+    }
+
+    virtual void Print(std::string offset="") {
+        std::cout << offset << Type();
+        if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " carrier id "  << electron->id(); }
+        std::cout 
+            << " Node "  << node_from->id << "->" << node_to->id  
+            << " disabled: " << disabled_events.size() 
+            << " enabled: " << enabled_events.size() 
+            << " cumulative rate: " << CumulativeRate() <<  std::endl;
+    }
     
 private:
 

@@ -100,6 +100,18 @@ public:
         }
         return rate;
     }        
+    
+    virtual void Print(std::string offset="") {
+        std::cout << offset << Type(); 
+                if (enabled) { std::cout << " enabled"; } else { std::cout << " disabled"; };
+                std::cout << " subordinates: " << subordinate.size() 
+                << " rate: " << rate 
+                << " cumulative rate: " << CumulativeRate() <<  std::endl;
+        offset += "-- "; 
+        for(auto& event:  subordinate ) {
+            event->Print(offset);
+        }
+    }
 
     
 private:

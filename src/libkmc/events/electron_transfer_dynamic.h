@@ -78,6 +78,9 @@ public:
         electron->Move( edge );        
     };
     
+    BNode* NodeFrom(){ return node_from; };
+    BNode* NodeTo(){ return node_to; };
+    
 private:
 
     std::vector<ElectronTransferDynamic*> disabled_events;
