@@ -132,12 +132,14 @@ public:
 
     virtual void Print(std::string offset="") {
         std::cout << offset << Type();
-        if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " carrier id "  << electron->id(); }
+        if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
+        if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << electron->id(); }
         std::cout 
             << " Node "  << node_from->id << "->" << node_to->id  
-            << " disabled: " << disabled_events.size() 
-            << " enabled: " << enabled_events.size() 
-            << " cumulative rate: " << CumulativeRate() <<  std::endl;
+            << " Disabled: " << disabled_events.size() 
+            << " Enabled: " << enabled_events.size() 
+            << " Rate: " << Rate() 
+            << " Cumulative rate: " << CumulativeRate() <<  std::endl;
     }
     
 private:

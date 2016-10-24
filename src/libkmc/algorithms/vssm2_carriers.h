@@ -40,6 +40,9 @@ public:
 
 void Initialize ( State* _state, Graph* _graph ) {
     
+    state = _state;
+    graph = _graph;
+    
     // Map of charge transfer events associated with a particular node
     std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
     
@@ -139,20 +142,22 @@ void Run( double runtime ) {
 
     double time = 0.0;
     int step = 0;
+    int nsteps = 1000000;
     // execute the head VSSM event and update time
-    while ( time <= runtime ) {
+    //while ( time <= runtime ) {
+    while ( step < nsteps ) {
         //head_event.Print();
         head_event.OnExecute(state, &RandomVariable ); 
         double u = 1.0 - RandomVariable.rand_uniform();
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
-        //state->AdvanceClock(elapsed_time);
+        state->AdvanceClock(elapsed_time);
         //state->Print();
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
     }
 
-    //state->Print();
+    state->Print();
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
         
