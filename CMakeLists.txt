@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(votca-kmc)
 
-set(PROJECT_VERSION "1.3-dev")
+set(PROJECT_VERSION "1.4-dev")
 set(PROJECT_CONTACT "bugs@votca.org")
 
 # Cmake modules/macros are in a subdirectory to keep this file cleaner
@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 
 
 enable_language(CXX)
+set (CMAKE_CXX_STANDARD 11)
 
 ######################################################################
 # compiler tests

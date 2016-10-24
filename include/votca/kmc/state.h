@@ -76,6 +76,16 @@ public:
     
     void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
     
+    Carrier* NodeOccupation( BNode* node ) {
+        for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+            Carrier* carrier = *it_carrier;
+            if ( carrier->GetNode() == node ) { 
+                return carrier;
+            }
+        } 
+        return NULL;
+    }
+    
 private:
     // Allow serialization to access non-public data members
     friend class boost::serialization::access;

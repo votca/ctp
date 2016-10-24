@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f4" displayName="Algorithms" projectFiles="true">
+      <itemPath>../../include/votca/kmc/algorithm.h</itemPath>
+      <itemPath>../../src/libkmc/algorithms/vssm2_carriers.h</itemPath>
+      <itemPath>../../src/libkmc/algorithms/vssm2_nodes.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="calculators" displayName="Calculators" projectFiles="true">
-      <itemPath>../../src/libkmc/calculators/binary.h</itemPath>
       <itemPath>../../src/libkmc/calculators/diffusion.h</itemPath>
       <itemPath>../../src/libkmc/calculators/diode.h</itemPath>
+      <itemPath>../../src/libkmc/calculators/dynamic.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmclight.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcmultiple.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcparallel.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcsingle.h</itemPath>
+      <itemPath>../../src/libkmc/calculators/static.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="Carriers" projectFiles="true">
+      <itemPath>../../include/votca/kmc/carrier.h</itemPath>
+      <itemPath>../../src/libkmc/carrierfactory.cc</itemPath>
+      <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
+      <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
+      <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f3" displayName="Events" projectFiles="true">
+      <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
+      <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
+      <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
+      <itemPath>../../include/votca/kmc/event.h</itemPath>
+      <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
+      <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="Carriers" projectFiles="true">
-        <itemPath>../../include/votca/kmc/carrier.h</itemPath>
-        <itemPath>../../src/libkmc/carrierfactory.cc</itemPath>
-        <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
-        <itemPath>../../src/libkmc/carriers/electron.cc</itemPath>
-        <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
-        <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="Events" projectFiles="true">
-        <itemPath>../../src/libkmc/Events/electron_transfer.h</itemPath>
-        <itemPath>../../include/votca/kmc/event.h</itemPath>
-        <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
-        <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
-        <itemPath>../../src/libkmc/Events/hole_transfer.h</itemPath>
-      </logicalFolder>
       <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
@@ -41,7 +47,6 @@
       <itemPath>../../include/votca/kmc/kmccalculatorfactory.h</itemPath>
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
-      <itemPath>../../include/votca/kmc/property.h</itemPath>
       <itemPath>../../include/votca/kmc/state.h</itemPath>
       <itemPath>../../include/votca/kmc/version.h</itemPath>
       <itemPath>../../include/votca/kmc/vssmgroup.h</itemPath>
@@ -171,6 +176,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/algorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/bnode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/bsumtree.h" ex="false" tool="3" flavor2="0">
@@ -220,8 +230,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
@@ -243,22 +251,12 @@
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events/carrier_escape.h"
+      <item path="../../src/libkmc/algorithms/vssm2_carriers.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events/electron_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/Events/hole_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/binary.h"
+      <item path="../../src/libkmc/algorithms/vssm2_nodes.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -269,6 +267,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/diode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/dynamic.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -293,12 +296,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libkmc/carriers/electron.cc"
+      <item path="../../src/libkmc/calculators/static.h"
             ex="false"
-            tool="1"
+            tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/carriers/electron.h"
             ex="false"
@@ -308,6 +311,21 @@
       <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/carrier_escape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/electron_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/electron_transfer_dynamic.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -358,6 +376,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/kmc/algorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/kmc/bnode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/bsumtree.h" ex="false" tool="3" flavor2="0">
@@ -407,8 +430,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/property.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
@@ -430,22 +451,12 @@
       </item>
       <item path="../../share/xml/kmcsingle.xml" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events/carrier_escape.h"
+      <item path="../../src/libkmc/algorithms/vssm2_carriers.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/Events/electron_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/Events/hole_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/binary.h"
+      <item path="../../src/libkmc/algorithms/vssm2_nodes.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -456,6 +467,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/diode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/dynamic.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -480,12 +496,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libkmc/carriers/electron.cc"
+      <item path="../../src/libkmc/calculators/static.h"
             ex="false"
-            tool="1"
+            tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/carriers/electron.h"
             ex="false"
@@ -495,6 +511,21 @@
       <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/carrier_escape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/electron_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/electron_transfer_dynamic.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/libkmc/kmcapplication.cc" ex="false" tool="1" flavor2="0">
       </item>

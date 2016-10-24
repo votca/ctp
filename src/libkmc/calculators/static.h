@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_BINARY_H
-#define	__VOTCA_KMC_BINARY_H
+#ifndef __VOTCA_KMC_STATIC_H
+#define	__VOTCA_KMC_STATIC_H
 
 #include <votca/kmc/state.h>
 #include <votca/kmc/event.h>
@@ -25,23 +25,20 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-
-#include "Events/electron_transfer.h" 
-
-#include <votca/kmc/vssm2.h>
+#include "../algorithms/vssm2_nodes.h"
 
 using namespace std;
 
 namespace votca { namespace kmc {
    
-class Binary : public KMCCalculator 
+class Static : public KMCCalculator 
 {
 public:
     
-    Binary() {};
-   ~Binary() {};
+    Static() {};
+   ~Static() {};
 
-    string  Identify() {return "binary"; };
+    string  Identify() {return "static"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
@@ -63,9 +60,9 @@ private:
     std::string _trajectoryfile;
 };
 
-void Binary::Initialize(Property *options) {
+void Static::Initialize(Property *options) {
     
-    std::cout << endl << "Initializing KMC binary" << endl;
+    std::cout << endl << "Initialising KMC static" << endl;
 
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options );
@@ -84,15 +81,15 @@ void Binary::Initialize(Property *options) {
 
 }
 
-bool Binary::EvaluateFrame() {
+bool Static::EvaluateFrame() {
         
     RunKMC();
     return true;
 }
 
-void Binary::RunKMC() {
+void Static::RunKMC() {
 
-    std::cout << "Running KMC binary" << endl;
+    std::cout << "Running KMC static" << endl;
 
     Graph graph;
     State state;
@@ -112,11 +109,11 @@ void Binary::RunKMC() {
     Electron* electron = dynamic_cast<Electron*>(carrier);
     
     // place the electron on the first node
-    BNode* node_from = graph.GetNode(2181);
-    node_from->PrintNode();
+    BNode* node_from = graph.GetNode(1);
     carrier->SetNode( node_from );
+    node_from->PrintNode();
    
-    VSSM2 vssm2;
+    VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     vssm2.Run(_runtime);
     
@@ -125,4 +122,4 @@ void Binary::RunKMC() {
 }}
 
 
-#endif	/* __VOTCA_KMC_BINARY_H */
+#endif	/* __VOTCA_KMC_STATIC_H */

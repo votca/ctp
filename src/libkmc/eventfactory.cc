@@ -16,7 +16,7 @@
  */
 
 #include <votca/kmc/eventfactory.h>
-#include "Events/electron_transfer.h"
+#include "events/electron_transfer.h"
 #include "events/carrier_escape.h"
 
 namespace votca { namespace kmc {

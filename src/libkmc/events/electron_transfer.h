@@ -15,23 +15,107 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ElectronTransfer_H_
-#define __VOTCA_KMC_ElectronTransfer_H_
+#ifndef __VOTCA_KMC_ELECTRONTRANSFER_H
+#define __VOTCA_KMC_ELECTRONTRANSFER_H
 
 #include <votca/kmc/event.h>
+#include <votca/kmc/edge.h>
+#include "carriers/electron.h"
 
 namespace votca { namespace kmc {
     
 class ElectronTransfer : public Event {
-public:
     
-    void onExecute() { 
-        cout << "Electron transfer executed" << endl; 
+public:
+
+    // constructor needs two nodes and a pointer to the electron carrier
+    // ElectronTransfer( Electron* _electron = NULL, BNode* _node_from = NULL, BNode* _node_to = NULL, double _rate = 0)
+    //        : electron(NULL), node_from(NULL), node_to(NULL), rate(0.0)
+    //        { electron = _electron; node_from = _node_from; _node_to = node_to; rate = _rate; };
+            
+    std::string Type(){ return "electron transfer"; } ;
+        
+    void Initialize( Electron* _electron, Edge* _edge ) {
+        // assign electron, nodes, and rate
+        electron = _electron;
+        edge = _edge;
+        node_from = _edge->NodeFrom();
+        node_to = _edge->NodeTo();
+        distance_pbc = _edge->DistancePBC();
+        SetRate( _edge->Rate() );
+        // enable this event
+        Disable();
+        if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
     }
-    // TODO updating the state
+    
+    // this has to go away eventually
+    void SetElectron( Electron* _electron ){ electron = _electron; };
    
+    // changes to be made after this event occurs
+    virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
+    
+        // update the parent VSSM group
+        Event* parent = GetParent();
+        //std::cout << "  parent of " << Type() << " is " << parent->Type() << std::endl;
+        
+        // Mark all current subordinate events disabled
+        parent->Disable();
+        
+        // Disable the head event
+        
+        
+        // Enable new list of events
+        //electron->SetNode( node_to );
+        //parent->Enable();
+        
+        
+         // move an electron from node_from to node_to
+        electron->Move( edge ); 
+        
+    };
+    
+
+    // creates a vector of electron transfer events for a specific node and electron
+    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {
+            
+        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
+                //New event - electron transfer
+                Event* _et =  Events().Create( "electron_transfer" );
+                _et->SetParent( GetParent() );
+                ElectronTransfer* et = dynamic_cast<ElectronTransfer*>(_et);
+                et->Initialize( electron, *it_edge );
+                if ( status ) {
+                    et->Enable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                } else {
+                    et->Disable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                }
+                events->push_back(et);
+        }
+        //std::cout << std::endl;
+
+    }    
+    
+private:
+
+    std::vector<ElectronTransfer*> disabled_events;
+    std::vector<ElectronTransfer*> enabled_events;
+
+    // electron to move
+    Electron* electron;
+    // Move from this node
+    BNode* node_from;
+    // Move to this node
+    BNode* node_to;
+    Edge* edge;
+    votca::tools::vec distance_pbc;
+
 };
 
-}}
 
-#endif
+}}
+#endif 
+
+
+

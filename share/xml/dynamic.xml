@@ -1,6 +1,6 @@
 <options>
 
-<binary help="Kinetic Monte Carlo simulations using binary tree" label="calc:binary" section="sec:kmc">
+<dynamic help="Kinetic Monte Carlo simulations using binary tree" label="calc:binary" section="sec:kmc">
 
 	<runtime help="Simulated time" unit="seconds" default="0">1E-4</runtime>
 	<outtime help="Time difference between outputs into the trajectory file." unit="seconds" default="1E-8">1E-8</outtime>
@@ -11,6 +11,6 @@
 	<fieldX help="x component of the external electric field" unit="V/m" default="0">0</fieldX>
 	<fieldY help="y component of the external electric field" unit="V/m" default="0">0</fieldY>
 	<fieldZ help="z component of the external electric field" unit="V/m" default="1E6">1E6</fieldZ>
-</binary>
+</dynamic>
 
 </options>
