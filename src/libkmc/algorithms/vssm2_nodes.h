@@ -40,9 +40,10 @@ class VSSM2_NODES : public Algorithm {
 public:
 
 void Initialize ( State* _state, Graph* _graph ) {
-    
-    std::unordered_map< BNode*, vector<Event*> > mymap;
-    
+
+        // Map of charge transfer events associated with a particular node
+        std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
+     
     // For every node create an escape event and attach it to the head event)
     for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
@@ -56,6 +57,10 @@ void Initialize ( State* _state, Graph* _graph ) {
         // Add new event to the head event
         head_event.AddSubordinate( event_escape );
         
+        std::vector<Event*> charge_transfer_node_events;
+        
+        
+        
         // Loop over all neighbours (edges) of the node 
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
 
@@ -66,10 +71,12 @@ void Initialize ( State* _state, Graph* _graph ) {
             
             // add a subordinate event
             event_escape->AddSubordinate( event_move );
+            charge_transfer_node_events.push_back( event_move ); 
+
+            // Add a list of charge transfer events to the map, indexed by a node pointer
+                charge_transfer_map.at(node_from).push_back(event_move);
             
         }
-        
-        
         
         // evaluate the escape rate (sum of all enabled subordinate events)
         event_escape->CumulativeRate(); 
