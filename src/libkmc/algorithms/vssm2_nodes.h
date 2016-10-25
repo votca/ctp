@@ -41,25 +41,22 @@ public:
 
 void Initialize ( State* _state, Graph* _graph ) {
 
-        // Map of charge transfer events associated with a particular node
-        std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
+    state = _state;
+    graph = _graph;
+    
+    // Map of charge transfer events associated with a particular node
+    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
      
-    // For every node create an escape event and attach it to the head event)
+    // Vector of all charge transfer events
+    std::vector<ElectronTransfer*> ct_events;
+    
+    // For every node create an escape event and attach it to the head event
     for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
-        std::cout << "Node id: " << node_from->id << " ";
         
-        // Create the escape events - leaving the node
-        Event* event_escape = Events().Create("carrier_escape");
-        CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
-
-        // Add new event to the head event
-        head_event.AddSubordinate( event_escape );
-        
-        std::vector<Event*> charge_transfer_node_events;
-        
-        
+        // create a new key with an empty vector
+        charge_transfer_map.emplace(node_from, vector<Event*>() );
         
         // Loop over all neighbours (edges) of the node 
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
@@ -69,13 +66,57 @@ void Initialize ( State* _state, Graph* _graph ) {
             ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
             electron_transfer->Initialize(NULL, *it_edge);
             
+            // Add a list of charge transfer events to the map, indexed by a node pointer
+            charge_transfer_map.at(node_from).push_back(event_move);
+            
+            // Add an event to the charge transfer events
+            ct_events.push_back(electron_transfer);
+        }
+    }
+    
+    for (auto& event: ct_events ) {
+        BNode* node_from = event->NodeFrom();
+        BNode* node_to = event->NodeTo();
+
+        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
+
+        event->AddDisableOnExecute(&events_to_disable);
+        event->AddEnableOnExecute(&events_to_enable);   
+    }
+
+    //VSSM first level - escape event for each node
+    for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+        
+        BNode* node_from = *it_node;
+        
+        std::cout << "Adding escape event for node " << node_from->id << std::endl;
+        
+        // create the carrier escape event (leaving the node)
+        Event* event_escape = Events().Create("carrier_escape");
+        CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
+        
+        // Add new event to the head event
+        head_event.AddSubordinate( event_escape );
+        std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
+        
+        std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
+        std::vector<Event*> charge_transfer_node_events;
+        
+        
+        // Add move events from the map 
+        for (std::vector<Event*>::iterator it_event = ct_events.begin(); it_event != ct_events.end(); ++it_event) {
+
+            // For every edge create an event of type transfer
+            Event* event_move = *it_event;           
+            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
+             
+            electron_transfer->Enable();
+            
             // add a subordinate event
             event_escape->AddSubordinate( event_move );
-            charge_transfer_node_events.push_back( event_move ); 
-
-            // Add a list of charge transfer events to the map, indexed by a node pointer
-                charge_transfer_map.at(node_from).push_back(event_move);
-            
+            charge_transfer_node_events.push_back( event_move );
+                         
         }
         
         // evaluate the escape rate (sum of all enabled subordinate events)
@@ -84,6 +125,10 @@ void Initialize ( State* _state, Graph* _graph ) {
 
     }
     
+    // for every event, add a list of "events-to-enable" after OnExecute
+    // and a list of "events-to-disable" after OnExecute
+    
+     
         //        Carrier* carrier = state->NodeOccupation( node_from );
         //    Electron* electron = NULL;
         //    if ( carrier != NULL ) { 
@@ -92,9 +137,9 @@ void Initialize ( State* _state, Graph* _graph ) {
         //        event_escape->Enable();
         //        head_event.Enable();
         //    }
-
+        
 }
-    
+
 void Run( double runtime ) {
 
     votca::tools::Random2 RandomVariable;
