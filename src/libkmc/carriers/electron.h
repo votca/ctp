@@ -19,6 +19,7 @@
 #define __VOTCA_KMC_Electron_H_
 
 #include <votca/kmc/carrier.h>
+#include <votca/kmc/bnode.h>
 
 namespace votca { namespace kmc {
     
@@ -27,13 +28,36 @@ public:
     
     std::string Type(){ return "electron"; } ;
     
+    virtual bool Move( Edge* edge ) {
+        std::vector<BNode*>::iterator it = NodeOccupation ( edge->NodeTo() ) ;
+        
+        //  move the electron if the node is free
+        if ( it == OccupiedNodes.end() ) {
+            distance += edge->DistancePBC();
+            SetNode( edge->NodeTo() );
+            /// to do
+            /// substitute the existing node pointer with the new one
+            // to do
+            return true;
+        // reject the move if it is occupied
+        } else {
+            return false;
+        }
+        
+        
+        
+    }
  
 private:
     
-    votca::tools::vec distance;
-    votca::tools::vec position;
-    BNode* node;
-  
+    /// shared between all nodes information about occupied nodes
+    static std::vector<BNode*> OccupiedNodes;
+    
+    /// returns an iterator to a node [if the node is in the occupied nodes] or the end iterator
+    std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
+        return std::find(OccupiedNodes.begin(), OccupiedNodes.end(), node);
+    };
+    
     friend class boost::serialization::access;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

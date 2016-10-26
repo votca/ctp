@@ -66,18 +66,19 @@ public:
    
    votca::tools::vec Position() { return node->position; }; 
    
-   void Move( Edge* edge ) {
-        distance += edge->DistancePBC();
-        node = edge->NodeTo();
-  }
-   
+   // move the electron if possible
+   virtual bool Move( Edge* edge ) = 0;
+    
    votca::tools::vec Distance(){ return distance; };
+
+protected:
+    // distance travelled
+    votca::tools::vec distance;    
    
 private:
     
     int ID;
-    // distance travelled
-    votca::tools::vec distance;
+
     // position
     votca::tools::vec position;
     // node on which it resides
