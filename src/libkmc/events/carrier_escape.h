@@ -52,7 +52,6 @@ public:
         }
 
         subordinate->OnExecute( state, RandomVariable );
-        subordinate->RemoveExpired();
              
     };
     

@@ -40,8 +40,6 @@ public:
         // assign electron, nodes, and rate
         electron = _electron;
         edge = _edge;
-        node_from = _edge->NodeFrom();
-        node_to = _edge->NodeTo();
         distance_pbc = _edge->DistancePBC();
         SetRate( _edge->Rate() );
         // enable this event
@@ -88,10 +86,6 @@ private:
 
     // electron to move
     Electron* electron;
-    // Move from this node
-    BNode* node_from;
-    // Move to this node
-    BNode* node_to;
     Edge* edge;
     votca::tools::vec distance_pbc;
 

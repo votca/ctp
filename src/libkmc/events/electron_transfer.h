@@ -28,28 +28,20 @@ class ElectronTransfer : public Event {
     
 public:
 
-    // constructor needs two nodes and a pointer to the electron carrier
-    // ElectronTransfer( Electron* _electron = NULL, BNode* _node_from = NULL, BNode* _node_to = NULL, double _rate = 0)
-    //        : electron(NULL), node_from(NULL), node_to(NULL), rate(0.0)
-    //        { electron = _electron; node_from = _node_from; _node_to = node_to; rate = _rate; };
-            
     std::string Type(){ return "electron transfer"; } ;
         
     void Initialize( Electron* _electron, Edge* _edge ) {
-        // assign electron, nodes, and rate
         electron = _electron;
         edge = _edge;
-        node_from = _edge->NodeFrom();
-        node_to = _edge->NodeTo();
         distance_pbc = _edge->DistancePBC();
         SetRate( _edge->Rate() );
-        // enable this event
+        // enable this event if a carrier is provided
         Disable();
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
     }
 
-    BNode* NodeFrom(){ return node_from; };
-    BNode* NodeTo(){ return node_to; };
+    BNode* NodeFrom(){ return edge->NodeFrom(); };
+    BNode* NodeTo(){ return edge->NodeTo(); };
     
     // this has to go away eventually
     void SetElectron( Electron* _electron ){ electron = _electron; };
@@ -64,31 +56,27 @@ public:
         */
         
         // disable old events
-        //std::cout << "  Disabling old events" << std::endl;
-        for (auto& event: disabled_events ) {
-            event->Disable();
-            //event->Print("  -- ");
-        }
+        //for (auto& event: disabled_events ) {
+        //    event->Disable();
+        //    //event->Print("  -- ");
+        //}
  
         // update the parent VSSM group
         Event* parent = GetParent();
         parent->ClearSubordinate();
         
         // enable new events
-        //std::cout << "  Enabling new events" << std::endl;
         for (auto& event: enabled_events ) {
-            if ( event == NULL)  { std::cout << "NULL event!" << std::endl; }
-            else {
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
                 //event->Print("  ++ ");
-                if ( event->GetParent() == NULL ) { std::cout << "No Parent event!" << std::endl; }
-            }
         }
         
+        // if move allowed (NodeTo not occupied) move
+        // otherwise disable this event event->Disable()
+        
         // move an electron from node_from to node_to
-        //std::cout << "Moving an electron " << electron->id() << std::endl;
         electron->Move( edge );   
 
     };
@@ -135,7 +123,7 @@ public:
         if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
         if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << electron->id(); }
         std::cout 
-            << " Node "  << node_from->id << "->" << node_to->id  
+            << " Node "  << edge->NodeFrom()->id << "->" << edge->NodeTo()->id  
             << " Disabled: " << disabled_events.size() 
             << " Enabled: " << enabled_events.size() 
             << " Rate: " << Rate() 
@@ -149,10 +137,6 @@ private:
 
     // electron to move
     Electron* electron;
-    // Move from this node
-    BNode* node_from;
-    // Move to this node
-    BNode* node_to;
     Edge* edge;
     votca::tools::vec distance_pbc;
 
