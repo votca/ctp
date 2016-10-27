@@ -45,13 +45,18 @@ public:
         //std::cout << "[" << u  << "]" << std::endl;
         // find a subordinate event to execute
         Event* subordinate;
+        Event* last_enabled;
+        
         for( Event::iterator it_subordinate = begin(); it_subordinate != end() ; ++it_subordinate ) {
             subordinate = (*it_subordinate);
-            u -= subordinate->CumulativeRate()/cumulative_rate;
+            if ( subordinate->Enabled() ) { 
+                u -= subordinate->CumulativeRate()/cumulative_rate;
+                last_enabled = subordinate;
+            }
             if(u <= 0) break;
         }
 
-        subordinate->OnExecute( state, RandomVariable );
+        last_enabled->OnExecute( state, RandomVariable );
              
     };
     

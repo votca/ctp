@@ -27,24 +27,39 @@ class Electron : public Carrier {
 public:
     
     std::string Type(){ return "electron"; } ;
+
+    void AddNode( BNode* _node ) { 
+        node = _node; 
+        OccupiedNodes.push_back( node );
+        std::cout << "Added node " <<  node->id << std::endl;
+    };  
     
     virtual bool Move( Edge* edge ) {
-        std::vector<BNode*>::iterator it = NodeOccupation ( edge->NodeTo() ) ;
+        /*
+        std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id 
+                      << " Occupied: " ;
+                      for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
+                      std::cout << " Total: " << OccupiedNodes.size();
+        */
         
-        //  move the electron if the node is free
-        if ( it == OccupiedNodes.end() ) {
+        std::vector<BNode*>::iterator it_from = NodeOccupation ( edge->NodeFrom() ) ;
+        std::vector<BNode*>::iterator it_to   = NodeOccupation ( edge->NodeTo() ) ;
+        
+        if ( it_to == OccupiedNodes.end() ) { //  move the electron if the node is free
+
+            //std::cout << " MOVING. " << std::endl;
+            
             distance += edge->DistancePBC();
-            SetNode( edge->NodeTo() );
-            /// to do
-            /// substitute the existing node pointer with the new one
-            // to do
+            node = edge->NodeTo();
+            *it_from = node;
+            
             return true;
-        // reject the move if it is occupied
-        } else {
+            
+        } else { // reject the move if the node is occupied
+            //std::cout << " DISABLING. " << std::endl;
+
             return false;
-        }
-        
-        
+        }   
         
     }
  

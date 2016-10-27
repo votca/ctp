@@ -22,8 +22,6 @@
 #include "carriers/electron.h"
 //BOOST_CLASS_EXPORT( votca::kmc::Electron )
 
-//#include "carriers/hole.h"
-
 namespace votca { namespace kmc {
 
 void CarrierFactory::RegisterAll(void)
@@ -31,5 +29,7 @@ void CarrierFactory::RegisterAll(void)
     Carriers().Register<Electron>("electron");
     //Carriers().Register<Hole>("hole");
 }
+
+std::vector<BNode*> Electron::OccupiedNodes = {};
 
 }}

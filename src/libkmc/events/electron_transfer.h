@@ -56,10 +56,10 @@ public:
         */
         
         // disable old events
-        //for (auto& event: disabled_events ) {
-        //    event->Disable();
+        for (auto& event: disabled_events ) {
+            event->Disable();
         //    //event->Print("  -- ");
-        //}
+        }
  
         // update the parent VSSM group
         Event* parent = GetParent();
@@ -75,9 +75,7 @@ public:
         
         // if move allowed (NodeTo not occupied) move
         // otherwise disable this event event->Disable()
-        
-        // move an electron from node_from to node_to
-        electron->Move( edge );   
+        if ( !electron->Move( edge ) ) { Disable(); };   
 
     };
     

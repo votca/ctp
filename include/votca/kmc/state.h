@@ -143,6 +143,7 @@ inline Carrier* State::AddCarrier( std::string type ) {
 
     cout << "Adding carrier " << type << endl;
     Carrier *carrier = Carriers().Create( type );
+    carrier->SetID(carriers.size()+1);
     carriers.push_back( carrier );
     return carrier;
 }

@@ -60,7 +60,8 @@ public:
    virtual std::string Type() = 0;
    
    int id(){ return ID; };
-    
+   void SetID( int _id ) { ID = _id; }
+   
    void SetNode( BNode* _node ) { node = _node; };
    BNode* GetNode() { return node; };
    
@@ -74,6 +75,8 @@ public:
 protected:
     // distance travelled
     votca::tools::vec distance;    
+    // node on which it resides
+    BNode* node;
    
 private:
     
@@ -81,8 +84,6 @@ private:
 
     // position
     votca::tools::vec position;
-    // node on which it resides
-    BNode* node;
  
     friend class boost::serialization::access;
    
