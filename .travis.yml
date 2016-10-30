@@ -10,11 +10,14 @@ addons:
   apt:
     sources:
       - boost-latest 
+      - george-edison55-precise-backports
       - ubuntu-toolchain-r-test
     packages:
       - ccache
       - gcc-4.8
       - g++-4.8
+      - cmake
+      - cmake-data
       - libfftw3-dev
       - libgsl0-dev
       - txt2tags
