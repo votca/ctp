@@ -8,8 +8,9 @@ sudo: false
 
 addons:
   apt:
-    sources: boost-latest 
-    ubuntu-toolchain-r-test
+    sources:
+      - boost-latest 
+      - ubuntu-toolchain-r-test
     packages:
       - ccache
       - gcc-4.8
