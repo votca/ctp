@@ -9,8 +9,11 @@ sudo: false
 addons:
   apt:
     sources: boost-latest 
+    ubuntu-toolchain-r-test
     packages:
       - ccache
+      - gcc-4.8
+      - g++-4.8
       - libfftw3-dev
       - libgsl0-dev
       - txt2tags
@@ -21,6 +24,7 @@ addons:
       - pgf
       - texlive-fonts-recommended
       - texlive-latex-extra
+      - texlive-latex-recommended
       - doxygen
       - graphviz
       - python-numpy
