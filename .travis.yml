@@ -54,6 +54,7 @@ before_script:
 # download newer cmake for gmx
   - wget --no-check-certificate -qO- http://www.cmake.org/files/v${CMAKE_VERSION:0:3}/cmake-${CMAKE_VERSION}.tar.gz | tar -xz
   - ln -vs $PWD/cmake-${CMAKE_VERSION}/bin/cmake "$HOME/bin/cmake"
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 script:
   - PATH="$HOME/bin:/usr/lib/ccache:$PATH" ./build.sh -Wu --dev --prefix "$HOME/votca" ${MAN:+--devdoc}
