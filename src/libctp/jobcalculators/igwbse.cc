@@ -471,7 +471,7 @@ void IGWBSE::WriteJobFile(Topology *top) {
 
     cout << endl << "... ... Writing job file " << flush;
     std::ofstream ofs;
-    ofs.open(_jobfile.c_str(), ofstream::out);
+    ofs.open(_jobfile.c_str(), std::ofstream::out);
     if (!ofs.is_open()) throw runtime_error("\nERROR: bad file handle: " + _jobfile);
 
  
