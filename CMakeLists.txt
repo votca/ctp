@@ -107,7 +107,7 @@ if (WITH_LINALG)
   set(MKL FALSE)
   set(GSL FALSE)
 
-  #find_package(GSL)
+  find_package(GSL)
   find_package(MKL)
 
 
