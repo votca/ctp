@@ -137,7 +137,10 @@ void Initialize ( State* _state, Graph* _graph ) {
         //        event_escape->Enable();
         //        head_event.Enable();
         //    }
-        
+      
+    head_event.Enable();
+    head_event.Print();
+  
 }
 
 void Run( double runtime ) {
@@ -149,24 +152,23 @@ void Run( double runtime ) {
     clock_t begin = clock();
 
     // Initialise random number generator
-    int _seed = 0;
+    int _seed = 123456;
     srand(_seed);
     RandomVariable.init(rand(), rand(), rand(), rand());
 
-    runtime = 1E-4;
-    double maxstep = 1000000;
+
     double time = 0.0;
     int step = 0;
-    
+    int nsteps = 1000000;
     // execute the head VSSM event and update time
-    while ( ( time <= runtime ) && ( step <= 1000000 ) ) {
+    //while ( time <= runtime ) {
+    while ( step < nsteps ) {
+        //head_event.Print();
         head_event.OnExecute(state, &RandomVariable ); 
-        double elapsed_time = 1./head_event.CumulativeRate();
-
-        //std::cout << elapsed_time;
-        
+        double u = 1.0 - RandomVariable.rand_uniform();
+        double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
-        state->Print();
+        //state->Print();
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
@@ -174,7 +176,7 @@ void Run( double runtime ) {
 
     state->Print();
     clock_t end = clock();    
-    printf("Elapsed: %f seconds\n", (double)(end - begin) / CLOCKS_PER_SEC);
+    printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
         
 }
 
@@ -184,9 +186,6 @@ private:
     CarrierEscape head_event;
     // logger : move logger.h to tools
     // Logger log;
-    
-    // not nice to have it here
-    State* state;
 
 };
     

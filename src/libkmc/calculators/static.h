@@ -104,16 +104,19 @@ void Static::RunKMC() {
     // register all event types
     EventFactory::RegisterAll();
     
-    //Create a new electron
-    Carrier* carrier =  state.AddCarrier( "electron" );
-    Electron* electron = dynamic_cast<Electron*>(carrier);
-    
-    // place the electron on the first node
-    BNode* node_from = graph.GetNode(1);
-    carrier->SetNode( node_from );
-    node_from->PrintNode();
-   
-    VSSM2_NODES vssm2;
+    int electrons = 20;
+    for ( int electron = 1; electron <= electrons; ++electron ) {
+        
+        // Create electrons
+        Carrier* carrier =  state.AddCarrier( "electron" );
+        Electron* ecarrier = dynamic_cast<Electron*>(carrier);
+                
+        // place the electron on the node
+        BNode* node_from = graph.GetNode(2180 + electron);
+        ecarrier->AddNode( node_from );
+        
+    }
+    VSSM2 vssm2;
     vssm2.Initialize( &state, &graph );
     vssm2.Run(_runtime);
     
