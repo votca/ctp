@@ -1,14 +1,34 @@
+/* 
+ *            Copyright 2009-2016 The VOTCA Development Team
+ *                       (http://www.votca.org)
+ *
+ *      Licensed under the Apache License, Version 2.0 (the "License")
+ *
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *              http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 #ifndef VOTCA_CTP_EWDSPACE_H
 #define VOTCA_CTP_EWDSPACE_H
 
 #include <cmath>
 #include <votca/tools/vec.h>
 #include <boost/format.hpp>
+#include <votca/tools/constants.h>
 
 namespace votca {
 namespace ctp {
 namespace EWD {
 
+    using namespace votca::tools::conv;
 // DEFINES THE FOLLOWING
 // o *cmplx* structure
 // o *triple* (templated on contained type)
@@ -20,10 +40,7 @@ namespace EWD {
 // o Conversion constants to blend well with EwdInteractor
     
     
-// "static" not really required here
-static const double int2eV = 1/(4*M_PI*8.854187817e-12) * 1.602176487e-19 / 1.000e-9;
-static const double int2V_m = 1/(4*M_PI*8.854187817e-12) * 1.602176487e-19 / 1.000e-18;
-static const double rSqrtPi = 0.564189583547756279280349644977832;
+
 
 struct cmplx
 {
