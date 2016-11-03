@@ -18,10 +18,14 @@
 #ifndef __VOTCA_KMC_EVENTS_UPDATE_TREE_H_
 #define __VOTCA_KMC_EVENTS_UPDATE_TREE_H_
 
+#include <votca/kmc/bnode.h>
+#include <votca/kmc/state.h>
 #include <votca/kmc/event.h>
-#include <votca/kmc/eventfactory.h>
+#include "events/carrier_escape.h"
+#include "events/electron_transfer.h"
+#include "algorithms/vssm2_nodes.h"
 
-//* Events update tree, with reactions as the leaf nodes and cumulative rate sums as parent nodes
+//* Events update tree, with reactions as the leaf nodes
 //
 //           root
 //          /    \
@@ -30,11 +34,13 @@
 //   level 2 
 //    /   \
 //  leaf 
+// (event)
 //
 //*
 
 namespace votca { namespace kmc {
-    
+ 
+//Class for the tree - functions that act on the whole tree (e.g. updating the tree)    
 class Event_update_tree {
 
 public:
@@ -42,54 +48,67 @@ public:
     ~Event_update_tree() {};
     Event_update_tree() { Root = NULL; }; //initial empty tree   
     
-    void initialise();
-    void insert_rate(tree_node* newLeaf, double new_rate);
-    void cumulative_sum(tree_node*, double rate_sum);
-    void check_tree();
-    
+    void initialise(State* _state, Graph* _graph);
+        
     tree_node* root() { return Root; }
+    void SetRoot(tree_node* _root) { root = _root; }
    
     void FindLeaf ( tree_node*, double rate );
     void path_from_leaf_to_root( tree_node* ); 
     bool dirtyflag () { return dirtyflag; }
     void update_tree();
+    double cumulative_sum();
    
 private:
-    
-    tree_node* Root;
 
-    //total number of nodes
-    int tree_size;
-    //height of the tree - for path to nodes
-    double tree_height;
-    //Should also have the number of leaf nodes = number of events
-    int leaf_size;
-    
-    //after enabling or disabling a node - while traversing the hierarchy have to flag all tree nodes that now need updating
-    //Tree is "dirty" - contains modifications which have not been committed to the current branch
+    tree_node* Root;
     bool dirtyflag;
     
 };
 
+//Class for the nodes - functions that act only on one node at a time (e.g. adding a new child node)
 class tree_node {
     
-public:    
-
-    tree_node() {Parent = NULL; left = NULL; right = NULL; };
+public:
+    
     ~tree_node() {};
-   
-    double rate() { return rate; }
-    void new_rate(double _rate) { rate = _rate; }
-    double rate_sum();
+    tree_node() {Parent = NULL; child = NULL; }
+    
+    double Rate() { return rate; }
+    void SetRate( double _rate ) { rate = _rate; }
     
     tree_node* parent() { return parent; }
-    void newParent(tree_node* _parent) { parent = _parent; }
+    void SetParent(tree_node* _parent) { parent = _parent; }
     
-    tree_node* leftchild() { return leftchild; }
-    void newLeftchild(tree_node* _leftchild) { leftchild = _leftchild; }
+    tree_node* leaf() {return leaf;}
+    void SetLeaf(tree_node* _leaf) {leaf = _leaf; }
     
-    tree_node* rightchild() { return rightchild; }
-    void newRightchild(tree_node* _rightchild) { rightchild = _rightchild; }
+    void AddLeaf( tree_node* _leaf ) { 
+       _leaf->SetParent( this );
+       leaf.push_back( _leaf ); 
+   };
+   
+    // iterator over child events
+    typedef std::vector< tree_node* >::iterator iterator;
+    typedef const std::vector< tree_node* >::iterator const_iterator;
+    
+    iterator begin() { return leaf.begin(); }
+    iterator end() { return leaf.end(); }  
+   
+   //vector of leaf events
+   void leaf_events(){
+       
+       for ( std::vector< tree_node* >::iterator it_leaf = leaf.begin(); it_leaf != leaf.end(); ++it_leaf ) {
+
+       }
+       
+   }
+   
+    //tree_node* leftchild() { return leftchild; }
+    //void SetLeftchild(tree_node* _leftchild) { leftchild = _leftchild; }
+    
+    //tree_node* rightchild() { return rightchild; }
+    //void SetRightchild(tree_node* _rightchild) { rightchild = _rightchild; }
     
     //Flag the tree nodes that need to be newly enabled or disabled 
     void ToBeEnabled() { FlagEnabled = true; }
@@ -100,118 +119,60 @@ public:
         
 private:
     
-    double rate; //Should be read from GetRate function
     tree_node* Parent;
-    tree_node* leftchild;
-    tree_node* rightchild;
+    std::vector < tree_node* > leaf;
     
+    double rate;
       
 };
 
-void Event_update_tree::initialise(){
+void Event_update_tree::initialise(State* _state, Graph* _graph){
     
-    leaf_size = sizeof(EventFactory->StoredEvents());
- 
-    //An initial tree size, to begin with, many tree nodes may be empty - can be filled with new events - must be full and complete
-    //Assuming a perfect (full and balanced) tree - with l leaves, number of nodes n = 2l-1
-    tree_size = (2*leaf_size)-1;
-    //tree_height = (log2(tree_size+1));
-    tree_height = ((log2(leaf_size))+1);
+    State = _state;
+    Graph = _graph;
     
-    //Create an empty tree, with tree_size number of nodes
-    //tree_node* nodes = new tree_node(NULL);
-}
-
-
-//Inserting a new node
-void Event_update_tree::insert_rate(tree_node* newLeaf, double new_rate){
+    // Map of charge transfer events associated with a particular node
+    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
     
-    tree_node* newLeaf = new tree_node();
-    newLeaf->rate()=new_rate;
-    
-    newLeaf->leftchild()=NULL;
-    newLeaf->rightchild()=NULL;
-}
-
-void Event_update_tree::cumulative_sum(tree_node* leftchild, tree_node* rightchild, double rate_sum, double new_rate){
-    
-    //Creating a new parent as the sum of two leaf nodes
-    if (tree_node->leftchild == NULL && tree_node->rightchild == NULL){
-        
-        tree_node* newParent = new tree_node();
-        rate_sum = leftchild()+rightchild();
-        newParent->rate()=rate_sum;
-    }
-    //Create a new parent until reaching the root node
-    while ()
-    {
-        
-    }
-    
-    //root node = left subtree + right subtree 
-}
-
-void Event_update_tree::check_tree( tree_node* ) {
-    
-    bool full_tree;
-    //Check the tree is full and complete to continue, if not add empty nodes to balance
-    if (((leaf_size)pow(1/tree_height))==2){
-        std::cout >> "Full and complete tree" << std::endl; 
-        full_tree = true;
-        return;
-    }
-    else
-    {
-         //insert rates = 0 until "if" statement is true
-        Event_update_tree->insert_rate(NULL);
-        
-    }  
-    
-}
-
-void Event_update_tree::FindLeaf(tree_node* current, tree_node* choosen_leaf, double rate, double choosen_rate){
-    
-    //Start at root
-    //If the chosen random number rand1 is < = root -> move left, else move right
-    //continue down the levels of the tree until reaching leaf node
+    //vector of electron transfer events
+    std::vector<ElectronTransfer*> et_events;
    
-    for (current->leftchild()==NULL && current->rightchild()==NULL)
-    {
-        if (choosen_rate = rate)
-        {
-            current = choosen_leaf;
-            
-            if (choosen_leaf->ToBeDisabled()){
-                tree_node->FlagDisabled=true;
-            }
-            else if (choosen_leaf->ToBeEnabled()){
-               tree_node->FlagEnabled=true; 
-            }
-            
-        }
-    //Once found flag as an enabled leaf or a disabled leaf with FlagEnabled() or FlagDisabled()
+    //Each node has a escape event
+    for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+        
+        BNode* node_from = *it_node;
+        
+        
+        // each escape event has an event move - looping over all edges
+        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
 
+ 
+        }
     }
+   
+    for (auto& event: et_events ) {
+        BNode* node_from = event->NodeFrom();
+        BNode* node_to = event->NodeTo();
+
+        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
+
+        event->AddDisableOnExecute(&events_to_disable);
+        event->AddEnableOnExecute(&events_to_enable);   
+    }
+    
+    
+    //tree_node->SetParent()
+    
+}
+
+void Event_update_tree::FindLeaf(){
+    
     
 }
 
 //Print the path from the root to the leaf node
-void Event_update_tree::path_from_leaf_to_root(tree_node* current){
-    
-    //while it is a leaf node
-    while (current->leftchild()==NULL && current->rightchild()==NULL){
-        current = current->parent();
-        return current;
-    }
-    if (current->parent() != NULL)  
-      {
-          current = current->parent(); //Keep moving up, until reaching the root - (with no parent node)  
-      }
-    else 
-      {
-        current = root;
-        return root;
-      }
+void Event_update_tree::path_from_leaf_to_root(){
     
     
 }
@@ -223,10 +184,13 @@ bool Event_update_tree::dirtyflag(){
     
     if (tree_node->FlagDisabled=true &| tree_node->FlagEnabled=true)
     {
-        Event_update_tree->path_from_leaf_to_root();
-        dirtyflag=true;
+        for (Event_update_tree->path_from_leaf_to_root()) {dirtyflag=true;}
     }  
     
+}
+
+double Event_update_tree::cumulative_sum(){
+
 }
 
 void Event_update_tree::update_tree(){

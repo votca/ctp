@@ -37,7 +37,7 @@ public:
     virtual bool Move( Edge* edge ) {
         
         std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id 
-                      << " Occupied: " ;
+                      << " Occupied Nodes: " ;
                       for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
                       std::cout << " Total: " << OccupiedNodes.size();
         
@@ -46,7 +46,7 @@ public:
         
         if ( it_to == OccupiedNodes.end() ) { //  move the electron if the node is free
 
-            std::cout << " MOVING. " << std::endl;
+            std::cout << " --- MOVING. " << std::endl;
             
             distance += edge->DistancePBC();
             node = edge->NodeTo();
@@ -58,7 +58,7 @@ public:
             return true;
             
         } else { // reject the move if the node is occupied
-            std::cout << " DISABLING. " << std::endl;
+            std::cout << " --- DISABLING. " << std::endl;
 
             return false;
         }   

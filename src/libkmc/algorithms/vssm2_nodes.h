@@ -98,7 +98,7 @@ void Initialize ( State* _state, Graph* _graph ) {
         
         // Add new event to the head event
         head_event.AddSubordinate( event_escape );
-        std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
+        //std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
         
         std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
         std::vector<Event*> charge_transfer_node_events;
@@ -126,17 +126,15 @@ void Initialize ( State* _state, Graph* _graph ) {
     }
     
     // for every event, add a list of "events-to-enable" after OnExecute
-    // and a list of "events-to-disable" after OnExecute
-    
-     
-        //        Carrier* carrier = state->NodeOccupation( node_from );
-        //    Electron* electron = NULL;
-        //    if ( carrier != NULL ) { 
-        //        electron = dynamic_cast<Electron*> (carrier);
-        //        std::cout << "Found a carrier" << std::endl;
-        //        event_escape->Enable();
-        //        head_event.Enable();
-        //    }
+    // and a list of "events-to-disable" after OnExecute   
+    //    Carrier* carrier = state->NodeOccupation( node_from );
+    //    Electron* electron = NULL;
+    //    if ( carrier != NULL ) { 
+    //        electron = dynamic_cast<Electron*> (carrier);
+    //        std::cout << "Found a carrier" << std::endl;
+    //        event_escape->Enable();
+    //        head_event.Enable();
+    //    }
       
     head_event.Enable();
     head_event.Print();
