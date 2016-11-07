@@ -114,9 +114,10 @@ void Static::RunKMC() {
         // place the electron on the node
         BNode* node_from = graph.GetNode(2180 + electron);
         ecarrier->AddNode( node_from );
-        
+        node_from->PrintNode();  
     }
-    VSSM2 vssm2;
+    
+    VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     vssm2.Run(_runtime);
     

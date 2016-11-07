@@ -31,7 +31,7 @@ public:
     void AddNode( BNode* _node ) { 
         node = _node; 
         OccupiedNodes.push_back( node );
-        std::cout << "Added node " <<  node->id << std::endl;
+        std::cout << "Added on node " <<  node->id << std::endl;
     };  
     
     virtual bool Move( Edge* edge ) {

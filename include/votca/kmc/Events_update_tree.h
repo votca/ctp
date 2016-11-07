@@ -72,23 +72,23 @@ class tree_node {
 public:
     
     ~tree_node() {};
-    tree_node() {Parent = NULL; child = NULL; }
+    tree_node() {parent = NULL; leaf = NULL; }
     
     double Rate() { return rate; }
     void SetRate( double _rate ) { rate = _rate; }
     
     tree_node* parent() { return parent; }
-    void SetParent(tree_node* _parent) { parent = _parent; }
+    void SetParent(tree_node* _parent) { parent = _parent; } 
+    //void AddParent( tree_node* _parent ) { parent.push_back( _parent ); }
     
     tree_node* leaf() {return leaf;}
     void SetLeaf(tree_node* _leaf) {leaf = _leaf; }
-    
     void AddLeaf( tree_node* _leaf ) { 
        _leaf->SetParent( this );
        leaf.push_back( _leaf ); 
    };
    
-    // iterator over child events
+    // iterator over leaf events - e.g. electron transfer 
     typedef std::vector< tree_node* >::iterator iterator;
     typedef const std::vector< tree_node* >::iterator const_iterator;
     
@@ -119,7 +119,8 @@ public:
         
 private:
     
-    tree_node* Parent;
+    tree_node* parent;
+    //std::vector < tree_node* > parent;
     std::vector < tree_node* > leaf;
     
     double rate;
@@ -137,44 +138,42 @@ void Event_update_tree::initialise(State* _state, Graph* _graph){
     //vector of electron transfer events
     std::vector<ElectronTransfer*> et_events;
    
-    //Each node has a escape event
-    for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+    //Get node_from and loop over all neighbours
+    BNode* node_from;
+    //Event_update_tree->SetRoot(node_from);
         
-        BNode* node_from = *it_node;
+    //each neighbour of node from is a possible move event - leaf
+    for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+    
+        tree_node->SetParent(it_edge);
         
-        
-        // each escape event has an event move - looping over all edges
-        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+        // Add move events from the map 
+        for (std::vector<Event*>::iterator it_event = et_events.begin(); it_event != et_events.end(); ++it_event) {
 
- 
+            // For every edge create an event of type transfer
+            Event* event_move = *it_event;           
+            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
+                    
+            tree_node->SetLeaf(it_event);
         }
+        
     }
    
-    for (auto& event: et_events ) {
-        BNode* node_from = event->NodeFrom();
-        BNode* node_to = event->NodeTo();
 
-        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
-        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
-
-        event->AddDisableOnExecute(&events_to_disable);
-        event->AddEnableOnExecute(&events_to_enable);   
-    }
     
     
-    //tree_node->SetParent()
+    
     
 }
 
 void Event_update_tree::FindLeaf(){
-    
-    
+       
 }
 
 //Print the path from the root to the leaf node
 void Event_update_tree::path_from_leaf_to_root(){
     
-    
+       
 }
 
 bool Event_update_tree::dirtyflag(){
