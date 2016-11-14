@@ -17,10 +17,10 @@
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/algorithms/vssm2_carriers.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/algorithms/vssm2_nodes.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/events/electron_transfer.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/calculators/kmcmultiple.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/state.h</file>
-            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/Events_update_tree.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/graph.h</file>
-            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/algorithm.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/events/carrier_escape.h</file>
             <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/events/electron_transfer_dynamic.h</file>
         </group>
     </open-files>

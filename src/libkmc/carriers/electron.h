@@ -20,6 +20,7 @@
 
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
+#include <votca/kmc/event.h>
 
 namespace votca { namespace kmc {
     
@@ -36,7 +37,8 @@ public:
     
     virtual bool Move( Edge* edge ) {
         
-        std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id 
+        std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
+                      << " Node_to position: " << edge->NodeTo()->position 
                       << " Occupied Nodes: " ;
                       for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
                       std::cout << " Total: " << OccupiedNodes.size();
@@ -59,7 +61,6 @@ public:
             
         } else { // reject the move if the node is occupied
             std::cout << " --- DISABLING. " << std::endl;
-
             return false;
         }   
         

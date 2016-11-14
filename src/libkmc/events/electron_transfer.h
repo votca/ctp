@@ -75,7 +75,9 @@ public:
         
         // if move allowed (NodeTo not occupied) move
         // otherwise disable this event event->Disable()
-        if ( !electron->Move( edge ) ) { Disable(); };   
+        //if ( !electron->Move( edge ) ) { Disable() }; <-- Bug was possibly here
+        if (electron->Move(edge)) { Enable();}
+        else { Disable();}
 
     };
     
