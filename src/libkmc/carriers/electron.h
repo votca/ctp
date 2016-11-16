@@ -34,7 +34,7 @@ public:
         OccupiedNodes.push_back( node );
         std::cout << "Added on node " <<  node->id << std::endl;
     };  
-    
+       
     virtual bool Move( Edge* edge ) {
         
         std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
@@ -42,7 +42,6 @@ public:
                       << " Occupied Nodes: " ;
                       for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
                       std::cout << " Total: " << OccupiedNodes.size();
-        
         
         std::vector<BNode*>::iterator it_to   = NodeOccupation ( edge->NodeTo() ) ;
         
@@ -52,18 +51,24 @@ public:
             
             distance += edge->DistancePBC();
             node = edge->NodeTo();
-            
-            // update the list of the occupied (by electrons) nodes
+                        
             std::vector<BNode*>::iterator it_from = NodeOccupation ( edge->NodeFrom() ) ;
-            *it_from = node;
+            *it_from =node;
             
             return true;
             
-        } else { // reject the move if the node is occupied
-            std::cout << " --- DISABLING. " << std::endl;
+        } 
+        
+        else { // reject the move if the node is occupied
+            std::cout << " --- REJECTED. ";
+            //Need to keep the node from as the node 
+            //Bug here where the node becomes the node to
+            node = edge->NodeFrom();
+            std::cout << "Staying on node: " << node->id << std::endl;
+            
             return false;
         }   
-        
+       
     }
  
 private:
@@ -72,7 +77,7 @@ private:
     static std::vector<BNode*> OccupiedNodes;
     
     /// returns an iterator to a node [if the node is in the occupied nodes] or the end iterator
-    std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
+        std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
         return std::find(OccupiedNodes.begin(), OccupiedNodes.end(), node);
     };
     

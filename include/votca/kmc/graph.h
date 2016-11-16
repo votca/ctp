@@ -31,8 +31,8 @@ public:
     
     iterator nodes_begin() { return nodes.begin(); }
     iterator nodes_end() { return nodes.end(); } 
-    
-    
+    int nodes_size() {return nodes.size(); }
+  
     void Load(std::string filename);    
     void Print();
     

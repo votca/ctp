@@ -55,30 +55,34 @@ public:
                 " to " << NodeTo()->id << std::endl;
         */
         
-        // disable old events
-        for (auto& event: disabled_events ) {
-            event->Disable();
-        //    //event->Print("  -- ");
-        }
- 
-        // update the parent VSSM group
-        Event* parent = GetParent();
-        parent->ClearSubordinate();
+        // if the move is allowed (NodeTo not occupied) then move
+        //if (electron->Move(edge)) { Enable();}  
+        if ( electron->Move(edge) ) {
         
-        // enable new events
-        for (auto& event: enabled_events ) {
+            // disable old events
+            for (auto& event: disabled_events ) {
+                event->Disable();
+            //    //event->Print("  -- ");
+            }
+ 
+            // update the parent VSSM group
+            Event* parent = GetParent();
+            parent->ClearSubordinate();
+        
+            // enable new events
+            for (auto& event: enabled_events ) {
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
                 //event->Print("  ++ ");
+            }
+            
         }
         
-        // if move allowed (NodeTo not occupied) move
         // otherwise disable this event event->Disable()
-        //if ( !electron->Move( edge ) ) { Disable() }; <-- Bug was possibly here
-        if (electron->Move(edge)) { Enable();}
         else { Disable();}
 
+        //if ( !electron->Move( edge ) ) { Disable() }; <-- Bug was possibly here     
     };
     
 

@@ -90,6 +90,12 @@ bool Static::EvaluateFrame() {
 void Static::RunKMC() {
 
     std::cout << "Running KMC static" << endl;
+    
+    //votca::tools::Random2 RandomVariable;
+     
+    //int _seed = 123456;
+    //srand(_seed);
+    //RandomVariable.init(rand(), rand(), rand(), rand());
 
     Graph graph;
     State state;
@@ -104,19 +110,24 @@ void Static::RunKMC() {
     // register all event types
     EventFactory::RegisterAll();
     
+    cout << "Number of Nodes: " << graph.nodes_size() << endl;
     cout << "number of electrons: " << _nelectrons << endl;
-    for ( int nelectron = 1; nelectron <= _nelectrons; ++nelectron ) {
+    
+    for ( int electron = 1; electron <= _nelectrons; ++electron ) {
         
         // Create electrons
         Carrier* carrier =  state.AddCarrier( "electron" );
         Electron* ecarrier = dynamic_cast<Electron*>(carrier);
                 
-        // place the electron on the node
-        BNode* node_from = graph.GetNode(2180 + nelectron);
+        // randomly place the electron on the node
+        //int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+        //BNode* node_from = graph.GetNode(node_id + 1);
+        
+        BNode* node_from = graph.GetNode(2180 + electron);
         ecarrier->AddNode( node_from );
         node_from->PrintNode();  
-    }
-       
+
+    }     
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     vssm2.Run(_runtime);

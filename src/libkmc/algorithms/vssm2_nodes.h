@@ -74,7 +74,7 @@ void Initialize ( State* _state, Graph* _graph ) {
         // create a new key with an empty vector
         charge_transfer_map.emplace(node_from, vector<Event*>() );
         
-        Carrier* carrier = state->NodeOccupation( node_from );
+        Carrier* carrier = state->Node_Occupation( node_from );
         Electron* electron = NULL;
         
         if ( ( carrier != NULL ) && ( carrier->Type() == "electron"  ) ) { 
