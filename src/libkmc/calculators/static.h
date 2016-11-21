@@ -143,6 +143,7 @@ void Static::RunKMC() {
     }     
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
+    //vssm2.AddObserver( ObserverName, nsteps );
     vssm2.Run(_runtime);
     
 }

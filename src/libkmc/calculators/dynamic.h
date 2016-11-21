@@ -104,8 +104,7 @@ void Dynamic::RunKMC() {
     // register all event types
     EventFactory::RegisterAll();
     
-    int electrons = 20;
-    for ( int electron = 1; electron <= electrons; ++electron ) {
+    for ( int electron = 1; electron <= _nelectrons; ++electron ) {
         
         // Create electrons
         Carrier* carrier =  state.AddCarrier( "electron" );
