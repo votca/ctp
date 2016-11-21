@@ -26,6 +26,7 @@
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
 #include "../algorithms/vssm2_nodes.h"
+#include <fstream>
 
 using namespace std;
 
@@ -91,8 +92,8 @@ void Static::RunKMC() {
 
     std::cout << "Running KMC static" << endl;
     
-    //votca::tools::Random2 RandomVariable;
-     
+    //Include this for random injection of the carriers
+    //votca::tools::Random2 RandomVariable;    
     //int _seed = 123456;
     //srand(_seed);
     //RandomVariable.init(rand(), rand(), rand(), rand());
@@ -111,7 +112,19 @@ void Static::RunKMC() {
     EventFactory::RegisterAll();
     
     cout << "Number of Nodes: " << graph.nodes_size() << endl;
-    cout << "number of electrons: " << _nelectrons << endl;
+    cout << "Number of electrons: " << _nelectrons << endl;
+    
+    std::ofstream _trajectoryfile;
+    _trajectoryfile.open ("trajectory.csv");
+    _trajectoryfile << "time[s] \t";
+    for ( int electron = 1; electron <= _nelectrons; ++electron )
+    {
+        _trajectoryfile << "'carrier" << +electron << "_x'\t";    
+        _trajectoryfile << "'carrier" << +electron << "_y'\t";    
+        _trajectoryfile << "'carrier" << +electron << "_z'\t";    
+ 
+    }
+    _trajectoryfile.close();
     
     for ( int electron = 1; electron <= _nelectrons; ++electron ) {
         
@@ -119,7 +132,7 @@ void Static::RunKMC() {
         Carrier* carrier =  state.AddCarrier( "electron" );
         Electron* ecarrier = dynamic_cast<Electron*>(carrier);
                 
-        // randomly place the electron on the node
+        // randomly place the carrier on the node
         //int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
         //BNode* node_from = graph.GetNode(node_id + 1);
         

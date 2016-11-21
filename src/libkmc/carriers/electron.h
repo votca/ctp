@@ -32,7 +32,7 @@ public:
     void AddNode( BNode* _node ) { 
         node = _node; 
         OccupiedNodes.push_back( node );
-        std::cout << "Added on node " <<  node->id << std::endl;
+        std::cout << "Added on node: " <<  node->id << std::endl;
     };  
        
     virtual bool Move( Edge* edge ) {
@@ -60,9 +60,7 @@ public:
         } 
         
         else { // reject the move if the node is occupied
-            std::cout << " --- REJECTED. ";
-            //Need to keep the node from as the node 
-            //Bug here where the node becomes the node to
+            std::cout << " --- REJECTED  ";
             node = edge->NodeFrom();
             std::cout << "Staying on node: " << node->id << std::endl;
             

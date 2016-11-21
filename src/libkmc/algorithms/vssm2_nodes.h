@@ -63,39 +63,37 @@ void Initialize ( State* _state, Graph* _graph ) {
         Event* event_escape = Events().Create("carrier_escape");
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
         
-        // Add new event to the head event
-        head_event.AddSubordinate( event_escape );
-        
-        //std::vector<Event*> charge_transfer_node_events;
-        //std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
-        
-        //std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
-
-        // create a new key with an empty vector
-        charge_transfer_map.emplace(node_from, vector<Event*>() );
-        
         Carrier* carrier = state->Node_Occupation( node_from );
         Electron* electron = NULL;
         
+        //Only if there is a carrier on the node - (eg. electron here) - then enable those corresponding subordinate events 
         if ( ( carrier != NULL ) && ( carrier->Type() == "electron"  ) ) { 
             electron = dynamic_cast<Electron*> (carrier);
             std::cout << "Found an electron" << std::endl;
             event_escape->Enable();
             head_event.Enable();
+            
+            // Add new event to the head event
+            head_event.AddSubordinate( event_escape );
         }
+        else { event_escape->Disable();}
         
+        
+        //std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
+        
+        // create a new key with an empty vector
+        charge_transfer_map.emplace(node_from, vector<Event*>() );
         
         // Loop over all neighbours (edges) of the node 
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
-
+   
             // For every edge create an event of type transfer
             Event* event_move = Events().Create("electron_transfer");            
             ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
             electron_transfer->Initialize(electron, *it_edge);
-            
+                
             // add a subordinate event
             event_escape->AddSubordinate( event_move );
-            //charge_transfer_node_events.push_back( event_move );
             
             // Add a list of charge transfer events to the map, indexed by a node pointer
             charge_transfer_map.at(node_from).push_back(event_move);
@@ -125,7 +123,7 @@ void Initialize ( State* _state, Graph* _graph ) {
     }
        
     head_event.Enable();
-    //head_event.Print();
+    head_event.Print();
   
 }
 
@@ -157,7 +155,7 @@ void Run( double runtime ) {
         //state->Print();
         time += elapsed_time;
         step++;
-        std::cout << "Time: " << time << std::endl;
+        //std::cout << "Time: " << time << std::endl;
     }
 
     state->Print();

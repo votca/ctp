@@ -19,11 +19,12 @@
 #define __VOTCA_KMC_EVENTS_UPDATE_TREE_H_
 
 #include <votca/kmc/bnode.h>
-#include <votca/kmc/state.h>
-#include <votca/kmc/event.h>
 #include "events/carrier_escape.h"
 #include "events/electron_transfer.h"
 #include "algorithms/vssm2_nodes.h"
+#include <unordered_map>
+
+
 
 //* Events update tree, with reactions as the leaf nodes
 //
@@ -42,170 +43,38 @@ namespace votca { namespace kmc {
  
 //Class for the tree - functions that act on the whole tree (e.g. updating the tree)    
 class Event_update_tree {
-
-public:
-     
-    ~Event_update_tree() {};
-    Event_update_tree() { Root = NULL; }; //initial empty tree   
-    
-    void initialise(State* _state, Graph* _graph);
-        
-    tree_node* root() { return Root; }
-    void SetRoot(tree_node* _root) { root = _root; }
-   
-    void FindLeaf ( tree_node*, double rate );
-    void path_from_leaf_to_root( tree_node* ); 
-    bool dirtyflag () { return dirtyflag; }
-    void update_tree();
-    double cumulative_sum();
-   
-private:
-
-    tree_node* Root;
-    bool dirtyflag;
-    
-};
-
-//Class for the nodes - functions that act only on one node at a time (e.g. adding a new child node)
-class tree_node {
     
 public:
-    
-    ~tree_node() {};
-    tree_node() {parent = NULL; leaf = NULL; }
-    
-    double Rate() { return rate; }
-    void SetRate( double _rate ) { rate = _rate; }
-    
-    tree_node* parent() { return parent; }
-    void SetParent(tree_node* _parent) { parent = _parent; } 
-    //void AddParent( tree_node* _parent ) { parent.push_back( _parent ); }
-    
-    tree_node* leaf() {return leaf;}
-    void SetLeaf(tree_node* _leaf) {leaf = _leaf; }
-    void AddLeaf( tree_node* _leaf ) { 
-       _leaf->SetParent( this );
-       leaf.push_back( _leaf ); 
-   };
    
-    // iterator over leaf events - e.g. electron transfer 
-    typedef std::vector< tree_node* >::iterator iterator;
-    typedef const std::vector< tree_node* >::iterator const_iterator;
-    
-    iterator begin() { return leaf.begin(); }
-    iterator end() { return leaf.end(); }  
    
-   //vector of leaf events
-   void leaf_events(){
-       
-       for ( std::vector< tree_node* >::iterator it_leaf = leaf.begin(); it_leaf != leaf.end(); ++it_leaf ) {
+void Initialize ( State* _state, Graph* _graph ){
+    
+    VSSM2_NODES->Initialize(_state, _graph);
+    
+    head_event.AddSubordinate( event_escape );
+    
+    // iterator over subordinate events
+    typedef std::vector< Event* >::iterator iterator;
+    typedef const std::vector< Event* >::iterator const_iterator;
+    
+    iterator begin() { return subordinate.begin(); }
+    iterator end() { return subordinate.end(); }    
 
-       }
-       
-   }
-   
-    //tree_node* leftchild() { return leftchild; }
-    //void SetLeftchild(tree_node* _leftchild) { leftchild = _leftchild; }
-    
-    //tree_node* rightchild() { return rightchild; }
-    //void SetRightchild(tree_node* _rightchild) { rightchild = _rightchild; }
-    
-    //Flag the tree nodes that need to be newly enabled or disabled 
-    void ToBeEnabled() { FlagEnabled = true; }
-    bool FlagEnabled();
-    void ToBeDisabled() { FlagDisabled = true; }
-    bool FlagDisabled();
-    
-        
-private:
-    
-    tree_node* parent;
-    //std::vector < tree_node* > parent;
-    std::vector < tree_node* > leaf;
-    
-    double rate;
-      
-};
-
-void Event_update_tree::initialise(State* _state, Graph* _graph){
-    
-    State = _state;
-    Graph = _graph;
-    
-    // Map of charge transfer events associated with a particular node
-    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
-    
-    //vector of electron transfer events
-    std::vector<ElectronTransfer*> et_events;
-   
-    //Get node_from and loop over all neighbours
-    BNode* node_from;
-    //Event_update_tree->SetRoot(node_from);
-        
-    //each neighbour of node from is a possible move event - leaf
-    for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
-    
-        tree_node->SetParent(it_edge);
-        
-        // Add move events from the map 
-        for (std::vector<Event*>::iterator it_event = et_events.begin(); it_event != et_events.end(); ++it_event) {
-
-            // For every edge create an event of type transfer
-            Event* event_move = *it_event;           
-            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
-                    
-            tree_node->SetLeaf(it_event);
+    for ( Event::iterator event = begin(); event != end(); ++event  ) {
+           
         }
-        
-    }
-   
-
-    
-    
-    
-    
+     
 }
-
-void Event_update_tree::FindLeaf(){
-       
-}
-
-//Print the path from the root to the leaf node
-void Event_update_tree::path_from_leaf_to_root(){
     
-       
-}
 
-bool Event_update_tree::dirtyflag(){
-    
-    // If FlagEnabled() = true or FlagDisabled() = true
-    //Use path_from_leaf_to_root to flag all of the affected nodes
-    
-    if (tree_node->FlagDisabled=true &| tree_node->FlagEnabled=true)
-    {
-        for (Event_update_tree->path_from_leaf_to_root()) {dirtyflag=true;}
-    }  
-    
-}
+private:
 
-double Event_update_tree::cumulative_sum(){
-
-}
-
-void Event_update_tree::update_tree(){
     
-    //Every part of the tree with the dirty flag, has to be updated
-    if (dirtyflag=true){
-        
-        //search for all nodes with dirty flag, move along the path to the root and update
-        Event_update_tree->path_from_leaf_to_root();
-        Event_update_tree->cumulative_sum();
-    }
+    CarrierEscape head_event;
+
+};
+
     
     
-}
-
-}} 
-
-
+    
 #endif
