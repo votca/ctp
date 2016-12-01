@@ -127,7 +127,7 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 }
     
-void Run( double runtime ) {
+void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime) {
 
     votca::tools::Random2 RandomVariable;
 
@@ -136,13 +136,12 @@ void Run( double runtime ) {
     clock_t begin = clock();
 
     // Initialise random number generator
-    int _seed = 123456;
-    srand(_seed);
+    srand(seed);
     RandomVariable.init(rand(), rand(), rand(), rand());
 
     double time = 0.0;
     int step = 0;
-    int nsteps = 1000000;
+    //int nsteps = 1000000;
     // execute the head VSSM event and update time
     //while ( time <= runtime ) {
     while ( step < nsteps ) {

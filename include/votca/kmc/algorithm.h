@@ -31,7 +31,7 @@ public:
  
     double Time(){ return time; }
     
-    virtual void Run( double total_time ) = 0;
+    virtual void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime) = 0;
        
 protected:
    

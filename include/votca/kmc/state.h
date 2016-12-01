@@ -76,7 +76,7 @@ public:
     
     void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
     
-    Carrier* Node_Occupation( BNode* node ) {
+    /*Carrier* Node_Occupation( BNode* node ) {
         for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
             Carrier* carrier = *it_carrier;
             if ( carrier->GetNode() == node ) { 
@@ -85,6 +85,9 @@ public:
         } 
         return NULL;
     }
+    */
+    void Trajectory_create( std::string trajectoryfile );
+    void Trajectory_write( double time, std::string trajectoryfile);
     
 private:
     // Allow serialization to access non-public data members
@@ -93,7 +96,7 @@ private:
     std::vector< Carrier* > carriers;
     
     double time;
-
+    
      // serialization itself (template implementation stays in the header)
     template<typename Archive> 
     void serialize(Archive& ar, const unsigned int version) {
@@ -150,16 +153,83 @@ inline Carrier* State::AddCarrier( std::string type ) {
 
 
 inline void State::Print(){
+    
+    votca::tools::vec velocity;
+    
     //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
     std::cout << "Time: " << time << std::endl;
     Carrier* carrier;
     for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
         carrier = *it_carrier;
+        
         std::cout << "Carrier " << carrier->id() << " of type " << carrier->Type() 
-                  << " at node " << carrier->GetNode()->id << " Distance " 
-                  << carrier->Distance() << std::endl;
+                  << " at node " << carrier->GetNode()->id 
+                  << " Distance " << carrier->Distance() << std::endl;
+    }
+
+    std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
+    
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        Carrier* carrier = *it_carrier;
+        velocity = (carrier->Distance()*1E-9/time);
+        std::cout << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
     } 
+     
+    /*std::cout << std::endl << "   Carrier Mobility (m^2/Vs): " << std::endl;
+
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        Carrier* carrier = *it_carrier;
+        velocity = (carrier->Distance()*1E-9/time);
+        mobility = velocity* (0, 0, 1E6);
+        std::cout << "       " << carrier->Type() << " " << carrier->id() << " "  << mobility << std::endl;
+    } 
+    */  
 }
+
+inline void State::Trajectory_create(std::string trajectoryfile){
+    
+    fstream trajectory;
+    char trajfile[100];
+    strcpy(trajfile, trajectoryfile.c_str());
+    cout << "Writing trajectory to " << trajfile << "." << endl; 
+    trajectory.open (trajfile, fstream::out);
+    
+    //ofstream trajectory;
+    //trajectory.open( trajectoryfile.c_str(), ios::out | ios::app );
+ 
+    trajectory << "'time[s]'\t";
+    
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        Carrier* carrier = *it_carrier;
+        trajectory << "'" << carrier->Type() << carrier->id()  <<"_x'\t";    
+        trajectory << "'" << carrier->Type() << carrier->id() << "_y'\t";    
+        trajectory << "'" << carrier->Type() << carrier->id() << "_z'\t";      
+    }
+    
+    trajectory << endl;
+    trajectory.close();
+    
+}
+
+inline void State::Trajectory_write(double time, std::string trajectoryfile){
+    
+    fstream trajectory;
+    char trajfile[100];
+    strcpy(trajfile, trajectoryfile.c_str());
+    //cout << "Writing trajectory to " << trajfile << "." << endl; 
+    trajectory.open (trajfile, fstream::out | fstream::app); 
+    
+    // write to trajectory file
+    trajectory << time << "\t";            
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        Carrier* carrier = *it_carrier;
+        trajectory << carrier->GetNode()->position.getX() <<  "\t";
+        trajectory << carrier->GetNode()->position.getY() <<  "\t";
+        trajectory << carrier->GetNode()->position.getZ() <<  "\t";
+    }
+    trajectory << endl;
+}
+
 }} 
 
 BOOST_CLASS_VERSION(votca::kmc::State, 0)

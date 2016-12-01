@@ -92,14 +92,17 @@ public:
     // sum of all rates of enabled subordinate events
     double CumulativeRate() {
 
-        if ( subordinate.empty() ) return rate;
+        if ( subordinate.empty() ) {return rate;}
         
-        double rate = 0.0;
-        for ( Event::iterator event = begin(); event != end(); ++event  ) {
-            if ( (*event)->Enabled() ) { rate += (*event)->CumulativeRate(); }
-        }
-        return rate;
-    }        
+        else
+        {
+            double rate = 0.0;
+            for ( Event::iterator event = begin(); event != end(); ++event  ) {
+                if ( (*event)->Enabled() ) { rate += (*event)->CumulativeRate(); }
+            }
+            return rate;
+            }        
+    }
     
     virtual void Print(std::string offset="") {
         std::cout << offset << Type(); 

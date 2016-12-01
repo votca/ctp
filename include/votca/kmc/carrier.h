@@ -71,7 +71,7 @@ public:
    virtual bool Move( Edge* edge ) = 0;
     
    votca::tools::vec Distance(){ return distance; };
-
+   
 protected:
     // distance travelled
     votca::tools::vec distance;    

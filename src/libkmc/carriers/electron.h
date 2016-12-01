@@ -42,7 +42,7 @@ public:
                       << " Node_to position: " << edge->NodeTo()->position 
                       << " Occupied Nodes: " ;
                       for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
-                      std::cout << " Total: " << OccupiedNodes.size();
+                      std::cout << " Total: " << OccupiedNodes.size() << std::endl;
         */
         
         std::vector<BNode*>::iterator it_to   = NodeOccupation ( edge->NodeTo() ) ;

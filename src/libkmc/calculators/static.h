@@ -50,6 +50,7 @@ protected:
 private:
     
     double _runtime;
+    int _nsteps;
     int _seed;
     int _nelectrons;
     std::string _injection_name;
@@ -70,6 +71,7 @@ void Static::Initialize(Property *options) {
     string key = "options." + Identify();
     
     _runtime = options->get(key + ".runtime").as<double>();
+    _nsteps = options->get(key + ".nsteps").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
@@ -92,19 +94,18 @@ void Static::RunKMC() {
 
     std::cout << "Running KMC static" << endl;
     
-    //Include this for random injection of the carriers
-    //votca::tools::Random2 RandomVariable;    
-    //int _seed = 123456;
-    //srand(_seed);
-    //RandomVariable.init(rand(), rand(), rand(), rand());
-
+    //For the random injection of electrons
+    votca::tools::Random2 RandomVariable;
+    srand(_seed);
+    RandomVariable.init(rand(), rand(), rand(), rand());
+    
     Graph graph;
     State state;
-
+ 
     std::string filename( "state.sql" );
     graph.Load( filename );
     //graph.Print();
-
+ 
     // register all carrier types
     CarrierFactory::RegisterAll();
 
@@ -114,18 +115,6 @@ void Static::RunKMC() {
     cout << "Number of Nodes: " << graph.nodes_size() << endl;
     cout << "Number of electrons: " << _nelectrons << endl;
     
-    std::ofstream _trajectoryfile;
-    _trajectoryfile.open ("trajectory.csv");
-    _trajectoryfile << "time[s] \t";
-    for ( int electron = 1; electron <= _nelectrons; ++electron )
-    {
-        _trajectoryfile << "'carrier" << +electron << "_x'\t";    
-        _trajectoryfile << "'carrier" << +electron << "_y'\t";    
-        _trajectoryfile << "'carrier" << +electron << "_z'\t";    
- 
-    }
-    _trajectoryfile.close();
-    
     for ( int electron = 1; electron <= _nelectrons; ++electron ) {
         
         // Create electrons
@@ -133,18 +122,22 @@ void Static::RunKMC() {
         Electron* ecarrier = dynamic_cast<Electron*>(carrier);
                 
         // randomly place the carrier on the node
-        //int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
-        //BNode* node_from = graph.GetNode(node_id + 1);
+        //if (_injection_name == "random"){
+        //Include this for random injection of the carriers  
+        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+        BNode* node_from = graph.GetNode(node_id + 1);
+        //}
         
-        BNode* node_from = graph.GetNode(2180 + electron);
+        //BNode* node_from = graph.GetNode(2180 + electron);
         ecarrier->AddNode( node_from );
         node_from->PrintNode();  
 
-    }     
+    }  
+  
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
-    //vssm2.AddObserver( ObserverName, nsteps );
-    vssm2.Run(_runtime);
+    //vssm2.AttachObserver(Observer, _nsteps );
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime);
     
 }
 
