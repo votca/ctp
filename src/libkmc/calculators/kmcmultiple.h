@@ -35,12 +35,11 @@
 #include <votca/tools/tokenizer.h>
 #include <votca/tools/globals.h>
 #include <votca/tools/random2.h>
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <cmath> // needed for abs(double)
 #include "node.h"
 
 using namespace std;
-using namespace std::tr1;
 
 namespace votca { namespace kmc {
 
