@@ -127,7 +127,7 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime) {
+void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
     votca::tools::Random2 RandomVariable;
 
@@ -152,7 +152,6 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         double u = 1.0 - RandomVariable.rand_uniform();
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
-        //state->Print();
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
@@ -163,8 +162,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         }
    
     }
-
-    state->Print();
+    state->Print_properties(fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
      

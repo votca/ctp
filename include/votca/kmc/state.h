@@ -70,32 +70,19 @@ public:
     bool Save(std::string filename);
     bool Load(std::string filename);
     
-    Carrier* AddCarrier( std::string type );
-    
-    void Print();
-    
+    Carrier* AddCarrier( std::string type );  
     void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
-    
-    /*Carrier* Node_Occupation( BNode* node ) {
-        for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
-            Carrier* carrier = *it_carrier;
-            if ( carrier->GetNode() == node ) { 
-                return carrier;
-            }
-        } 
-        return NULL;
-    }
-    */
+
     void Trajectory_create( std::string trajectoryfile );
     void Trajectory_write( double time, std::string trajectoryfile);
-    
+    void Print_properties(double fieldX, double fieldY, double fieldZ); 
+   
 private:
     // Allow serialization to access non-public data members
-    friend class boost::serialization::access;
-    
-    std::vector< Carrier* > carriers;
-    
+    friend class boost::serialization::access;   
+    std::vector< Carrier* > carriers; 
     double time;
+    //myvec field;
     
      // serialization itself (template implementation stays in the header)
     template<typename Archive> 
@@ -151,51 +138,13 @@ inline Carrier* State::AddCarrier( std::string type ) {
     return carrier;
 }
 
-
-inline void State::Print(){
-    
-    votca::tools::vec velocity;
-    
-    //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
-    std::cout << "Time: " << time << std::endl;
-    Carrier* carrier;
-    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
-        carrier = *it_carrier;
-        
-        std::cout << "Carrier " << carrier->id() << " of type " << carrier->Type() 
-                  << " at node " << carrier->GetNode()->id 
-                  << " Distance " << carrier->Distance() << std::endl;
-    }
-
-    std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
-    
-    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
-        Carrier* carrier = *it_carrier;
-        velocity = (carrier->Distance()*1E-9/time);
-        std::cout << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
-    } 
-     
-    /*std::cout << std::endl << "   Carrier Mobility (m^2/Vs): " << std::endl;
-
-    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
-        Carrier* carrier = *it_carrier;
-        velocity = (carrier->Distance()*1E-9/time);
-        mobility = velocity* (0, 0, 1E6);
-        std::cout << "       " << carrier->Type() << " " << carrier->id() << " "  << mobility << std::endl;
-    } 
-    */  
-}
-
 inline void State::Trajectory_create(std::string trajectoryfile){
     
     fstream trajectory;
     char trajfile[100];
-    strcpy(trajfile, trajectoryfile.c_str());
+    std::strcpy(trajfile, trajectoryfile.c_str());
     cout << "Writing trajectory to " << trajfile << "." << endl; 
     trajectory.open (trajfile, fstream::out);
-    
-    //ofstream trajectory;
-    //trajectory.open( trajectoryfile.c_str(), ios::out | ios::app );
  
     trajectory << "'time[s]'\t";
     
@@ -207,8 +156,7 @@ inline void State::Trajectory_create(std::string trajectoryfile){
     }
     
     trajectory << endl;
-    trajectory.close();
-    
+    trajectory.close();   
 }
 
 inline void State::Trajectory_write(double time, std::string trajectoryfile){
@@ -216,7 +164,6 @@ inline void State::Trajectory_write(double time, std::string trajectoryfile){
     fstream trajectory;
     char trajfile[100];
     strcpy(trajfile, trajectoryfile.c_str());
-    //cout << "Writing trajectory to " << trajfile << "." << endl; 
     trajectory.open (trajfile, fstream::out | fstream::app); 
     
     // write to trajectory file
@@ -227,8 +174,82 @@ inline void State::Trajectory_write(double time, std::string trajectoryfile){
         trajectory << carrier->GetNode()->position.getY() <<  "\t";
         trajectory << carrier->GetNode()->position.getZ() <<  "\t";
     }
-    trajectory << endl;
+    trajectory << endl;  
+    trajectory.close();
 }
+
+inline void State::Print_properties(double fieldX, double fieldY, double fieldZ){
+    
+    //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
+    
+    std::cout << "Time: " << time << " seconds" << std::endl;
+    Carrier* carrier;
+    votca::tools::vec average_distance;
+    
+    std:: cout << std::endl << "   Carrier Distance Travelled (m): " << std::endl;
+    
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        carrier = *it_carrier;
+        
+        std::cout << "       " << carrier->Type() << " " << carrier->id() 
+                << " on node: " << carrier->GetNode()->id  
+                << "  " << carrier->Distance()*1E-9 << std::endl;
+        
+        average_distance += (carrier->Distance()*1E-9);
+    }
+    average_distance /= carriers.size();
+    std::cout << "  Average distance travelled by the electrons (m): " << average_distance << std::endl;
+   
+    votca::tools::vec velocity;
+    votca::tools::vec average_velocity;
+    
+    std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        Carrier* carrier = *it_carrier;
+        velocity = (carrier->Distance()*1E-9/time);
+        std::cout << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
+    }
+    average_velocity = average_distance/time;
+    std::cout << "  Average velocity of the electrons (m/s): " << average_velocity << std::endl;
+    
+    
+    double mobility_x, mobility_y, mobility_z;
+    double absolute_field = sqrt(fieldX*fieldX + fieldY*fieldY + fieldZ*fieldZ);
+    string direction = "";
+    double field = 0;
+    double average_mobility = 0;
+    double average_mobility_x, average_mobility_y, average_mobility_z;
+    
+    std::cout << std::endl << "   Carrier Mobility (m^2/Vs): " << std::endl;
+    for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
+        Carrier* carrier = *it_carrier;
+        velocity = (carrier->Distance()*1E-9/time);
+        
+        //components of the mobility tensor
+        mobility_x = (velocity.getX()/absolute_field);
+        mobility_y = (velocity.getY()/absolute_field);
+        mobility_z = (velocity.getZ()/absolute_field);
+        
+        std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
+        
+        average_mobility_x += (velocity.getX()/absolute_field);
+        average_mobility_y += (velocity.getY()/absolute_field);
+        average_mobility_z += (velocity.getZ()/absolute_field);
+    }
+    
+    average_mobility_x /= carriers.size();
+    average_mobility_y /= carriers.size();
+    average_mobility_z /= carriers.size();
+    
+    if(fieldX != 0 && fieldY==0 && fieldZ==0) {direction = "X"; field = fieldX; average_mobility = average_mobility_x;}
+    else if(fieldY != 0 && fieldX==0 && fieldZ==0) {direction = "Y"; field = fieldY; average_mobility = average_mobility_y;}
+    else if(fieldZ != 0 && fieldX==0 && fieldY==0) {direction = "Z"; field = fieldZ; average_mobility = average_mobility_z;}
+
+    std::cout << "  The external electric field is in the " << direction << " direction " << endl;   
+    cout << std::scientific << "  Average electron mobility in the direction of the field (m^2/Vs): " << average_mobility << std::endl << std::endl;
+    
+}
+
 
 }} 
 

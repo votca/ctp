@@ -119,7 +119,7 @@ void Dynamic::RunKMC() {
     }
     VSSM2 vssm2;
     vssm2.Initialize( &state, &graph );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime);
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

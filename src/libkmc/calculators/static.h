@@ -137,7 +137,7 @@ void Static::RunKMC() {
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime);
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 
