@@ -155,7 +155,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         //std::cout << "Time: " << time << std::endl;
     }
 
-    state->Print_properties(fieldX, fieldY, fieldZ);
+    state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
         

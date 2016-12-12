@@ -91,14 +91,14 @@ void Initialize ( State* _state, Graph* _graph ) {
     // organise events in a tree;
     // first level VSSM events (escape event for each carrier))
     for (State::iterator carrier = _state->begin(); carrier != _state->end(); ++carrier) {
-        std::cout << "Adding escape event for carrier " << (*carrier)->Type() << ", id " << (*carrier)->id() << std::endl;
+        //std::cout << "Adding escape event for carrier " << (*carrier)->Type() << ", id " << (*carrier)->id() << std::endl;
 
         // create the carrier escape event (leaving the node)
         Event* event_escape = Events().Create("carrier_escape");
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
         carrier_escape->Initialize((*carrier));
         head_event.AddSubordinate( event_escape );
-        std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
+        //std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
 
         BNode* node_from = (*carrier)->GetNode();
 
@@ -116,14 +116,14 @@ void Initialize ( State* _state, Graph* _graph ) {
             electron_transfer->Enable();
             
             // add a subordinate event
-            carrier_escape->AddSubordinate( event_move );
+            carrier_escape->AddSubordinate( event_move );            
             
-        }
+        }     
         
     }
 
     head_event.Enable();
-    head_event.Print();
+    //head_event.Print();
 
 }
 
@@ -139,14 +139,28 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     srand(seed);
     RandomVariable.init(rand(), rand(), rand(), rand());
     
-    state->Trajectory_create(trajectoryfile);
     double time = 0.0;
     int step = 0;
     double trajout = outtime;
+    
     // execute the head VSSM event and update time
-    //while ( time < runtime ) {
-    while ( step < nsteps ){
-        
+    if ( runtime != 0 && nsteps == 0 ){ 
+        runtime = runtime;
+        std::cout << "Specified runtime (s): " << runtime << std::endl; 
+    }
+    else if ( nsteps != 0 && runtime == 0 ){ 
+        nsteps = nsteps; 
+        std::cout << "Specified number of simulation steps: " << nsteps << std::endl;
+    }
+    else if ( runtime !=0 && nsteps !=0 ){ 
+        nsteps = nsteps; runtime = 0.0; 
+        std::cout << "Specified both the number of simulation steps and the runtime -> number of steps will be used. " << std::endl; 
+        std::cout << "Specified number of simulation steps: " << nsteps << std::endl;
+    }
+    
+    state->Trajectory_create(trajectoryfile);
+    
+    while ( step < nsteps || time < runtime ){  
         //head_event.Print();   
         head_event.OnExecute(state, &RandomVariable ); 
         double u = 1.0 - RandomVariable.rand_uniform();
@@ -155,14 +169,14 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
-        while (trajout < time )
+        
+        if (outtime != 0 && trajout < time )
         { 
-            state->Trajectory_write(time, trajectoryfile);
+            state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
-   
     }
-    state->Print_properties(fieldX, fieldY, fieldZ);
+    state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
      

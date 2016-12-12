@@ -86,10 +86,10 @@ private:
     votca::tools::vec position;
  
     friend class boost::serialization::access;
-   
+     
     
     template<typename Archive> 
-    void serialize(Archive& ar, const unsigned int version) {
+    void serialize(Archive& ar, const unsigned int version) {        
         
         //version-specific serialization
         if(version == 0)  
@@ -98,7 +98,7 @@ private:
             ar & node->id;
 
         }
-    }
+    }   
     
 };
 

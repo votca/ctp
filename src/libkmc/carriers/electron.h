@@ -29,10 +29,18 @@ public:
     
     std::string Type(){ return "electron"; } ;
 
-    void AddNode( BNode* _node ) { 
-        node = _node; 
-        OccupiedNodes.push_back( node );
-        std::cout << "Added on node: " <<  node->id << std::endl;
+    virtual bool AddNode( BNode* _node ) { 
+        node = _node;
+        std::vector<BNode*>::iterator it_node  = NodeOccupation ( node ) ;
+        if (it_node == e_occupiedNodes.end()){
+            e_occupiedNodes.push_back( node );
+            std::cout << " on node: " <<  node->id << std::endl;
+            return true;
+        }
+        else {
+            //std::cout << " occupied node " << std::endl;
+            return false; 
+        } 
     };  
        
     virtual bool Move( Edge* edge ) {
@@ -42,12 +50,12 @@ public:
                       << " Node_to position: " << edge->NodeTo()->position 
                       << " Occupied Nodes: " ;
                       for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
-                      std::cout << " Total: " << OccupiedNodes.size() << std::endl;
+                      std::cout << " Total: " << e_occupiedNodes.size() << std::endl;
         */
         
         std::vector<BNode*>::iterator it_to   = NodeOccupation ( edge->NodeTo() ) ;
         
-        if ( it_to == OccupiedNodes.end() ) { //  move the electron if the node is free
+        if ( it_to == e_occupiedNodes.end() ) { //  move the electron if the node is free
 
             //std::cout << " --- MOVING. " << std::endl;
             
@@ -70,15 +78,15 @@ public:
         }   
        
     }
- 
+    
 private:
     
-    /// shared between all nodes information about occupied nodes
-    static std::vector<BNode*> OccupiedNodes;
+    /// shared between all nodes information about occupied (by an electron) nodes
+    static std::vector<BNode*> e_occupiedNodes;
     
-    /// returns an iterator to a node [if the node is in the occupied nodes] or the end iterator
-        std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
-        return std::find(OccupiedNodes.begin(), OccupiedNodes.end(), node);
+    /// returns an iterator to a node [if the node is in the occupied (by an electron) nodes] or the end iterator
+    std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
+        return std::find(e_occupiedNodes.begin(), e_occupiedNodes.end(), node);
     };
     
     friend class boost::serialization::access;

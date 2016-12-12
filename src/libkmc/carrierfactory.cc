@@ -30,6 +30,6 @@ void CarrierFactory::RegisterAll(void)
     //Carriers().Register<Hole>("hole");
 }
 
-std::vector<BNode*> Electron::OccupiedNodes = {};
+std::vector<BNode*> Electron::e_occupiedNodes = {};
 
 }}

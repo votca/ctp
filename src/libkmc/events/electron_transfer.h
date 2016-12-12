@@ -53,41 +53,31 @@ public:
         std::cout << Type() << " of electron " << electron->id() << 
                 " from node " << NodeFrom()->id << 
                 " to " << NodeTo()->id << std::endl;
-        */
-        
+        */  
         // if the move is allowed (NodeTo not occupied) then move
-        //if (electron->Move(edge)) { Enable();}  
         if ( electron->Move(edge) ) {
-        
             // disable old events
             for (auto& event: disabled_events ) {
                 event->Disable();
             //    //event->Print("  -- ");
             }
- 
             // update the parent VSSM group
             Event* parent = GetParent();
             parent->ClearSubordinate();
-        
+            
             // enable new events
             for (auto& event: enabled_events ) {
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
                 //event->Print("  ++ ");
-            }
-            
-        }
-        
-        // otherwise disable this event event->Disable()
-        else { Disable();}
-
-        //if ( !electron->Move( edge ) ) { Disable() }; <-- Bug was possibly here     
+            }                  
+        }        
+        else { Disable();}    
     };
-    
 
     // creates a vector of electron transfer events for a specific node and electron
-    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {
+    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {           
             
         for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
                 //New event - electron transfer

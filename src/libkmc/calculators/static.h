@@ -53,7 +53,9 @@ private:
     int _nsteps;
     int _seed;
     int _nelectrons;
+    int _nholes;
     std::string _injection_name;
+    std::string _injection_method;
     double _fieldX;
     double _fieldY;
     double _fieldZ;
@@ -74,7 +76,9 @@ void Static::Initialize(Property *options) {
     _nsteps = options->get(key + ".nsteps").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
+    //_nholes = options->get(key + ".nholes").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
+    _injection_method = options->get(key + ".injectionmethod").as<string>();
     _fieldX = options->get(key + ".fieldX").as<double>();
     _fieldY = options->get(key + ".fieldY").as<double>();
     _fieldZ = options->get(key + ".fieldZ").as<double>();
@@ -104,36 +108,50 @@ void Static::RunKMC() {
  
     std::string filename( "state.sql" );
     graph.Load( filename );
-    //graph.Print();
  
-    // register all carrier types
     CarrierFactory::RegisterAll();
 
-    // register all event types
     EventFactory::RegisterAll();
     
-    cout << "Number of Nodes: " << graph.nodes_size() << endl;
-    cout << "Number of electrons: " << _nelectrons << endl;
+    std::cout << "Number of Nodes: " << graph.nodes_size() << std::endl;
+    std::cout << "Number of electrons: " << _nelectrons << std::endl;
+    //std::cout << "Number of holes: " << _nholes << std::endl;
+    std::cout << "Method of carrier injection: " << _injection_method << std::endl << std::endl;
     
-    for ( int electron = 1; electron <= _nelectrons; ++electron ) {
-        
-        // Create electrons
-        Carrier* carrier =  state.AddCarrier( "electron" );
-        Electron* ecarrier = dynamic_cast<Electron*>(carrier);
+    if(_nelectrons>graph.nodes_size()){
+        std::cout << "The number of electrons exceeds the number of available nodes!" << std::endl;
+        return;
+    }
+    
+    if(_nelectrons != 0){
+        for ( int electron = 1; electron <= _nelectrons; ++electron ) {
+            
+            // Create electrons
+            Carrier* carrier =  state.AddCarrier( "electron" );
+            Electron* ecarrier = dynamic_cast<Electron*>(carrier);
                 
-        // randomly place the carrier on the node
-        //if (_injection_name == "random"){
-        //Include this for random injection of the carriers  
-        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
-        BNode* node_from = graph.GetNode(node_id + 1);
-        //}
-        
-        //BNode* node_from = graph.GetNode(2180 + electron);
-        ecarrier->AddNode( node_from );
-        node_from->PrintNode();  
-
-    }  
-  
+            // randomly place the carrier on the node
+            //BUG HERE - carrier being placed on occupied node
+            //Have to check if the node is already occupied
+            
+            if (_injection_method == "random"){ 
+                int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                BNode* node_from = graph.GetNode(node_id + 1);
+                while (ecarrier->AddNode(node_from)==false){
+                        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                        node_from = graph.GetNode(node_id + 1);
+                    } 
+                if (ecarrier->AddNode(node_from)){ ecarrier->AddNode( node_from );}
+            }               
+                //node_from->PrintNode();  
+            else if (_injection_method == "uniform") {
+                BNode* node_from = graph.GetNode(2180 + electron);
+                ecarrier->AddNode( node_from );
+                //node_from->PrintNode();  
+            }
+        }
+    }
+       
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
