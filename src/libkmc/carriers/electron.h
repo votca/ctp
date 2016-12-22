@@ -38,7 +38,7 @@ public:
             return true;
         }
         else {
-            //std::cout << " occupied node " << std::endl;
+            //std::cout << " Not added - node already occupied " << std::endl;
             return false; 
         } 
     };  

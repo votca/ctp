@@ -102,7 +102,7 @@ void Graph::Load(std::string filename) {
         double dz_pbc = stmt->Column<double>(4);
         double rate12e = stmt->Column<double>(5); // 1 -> 2
         double rate21e = stmt->Column<double>(6); // 2 -> 1
-        
+       
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
         Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e); 
         Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);

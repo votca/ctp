@@ -51,6 +51,7 @@ private:
     
     double _runtime;
     int _nsteps;
+    int _seedelectron;
     int _seed;
     int _nelectrons;
     int _nholes;
@@ -74,9 +75,10 @@ void Static::Initialize(Property *options) {
     
     _runtime = options->get(key + ".runtime").as<double>();
     _nsteps = options->get(key + ".nsteps").as<int>();
+    _seedelectron = options->get(key + ".seedelectron").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
-    //_nholes = options->get(key + ".nholes").as<int>();
+    _nholes = options->get(key + ".nholes").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
     _injection_method = options->get(key + ".injectionmethod").as<string>();
     _fieldX = options->get(key + ".fieldX").as<double>();
@@ -96,27 +98,33 @@ bool Static::EvaluateFrame() {
 
 void Static::RunKMC() {
 
-    std::cout << "Running KMC static" << endl;
-    
-    //For the random injection of electrons
     votca::tools::Random2 RandomVariable;
-    srand(_seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
     
+    std::cout << "Running KMC static" << endl;
+   
     Graph graph;
     State state;
  
     std::string filename( "state.sql" );
     graph.Load( filename );
  
+    //graph.Print();
     CarrierFactory::RegisterAll();
 
     EventFactory::RegisterAll();
     
     std::cout << "Number of Nodes: " << graph.nodes_size() << std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
-    //std::cout << "Number of holes: " << _nholes << std::endl;
-    std::cout << "Method of carrier injection: " << _injection_method << std::endl << std::endl;
+    std::cout << "Number of holes: " << _nholes << std::endl;
+    std::cout << "Method of carrier injection: " << _injection_method << std::endl;
+    
+    if (_injection_method == "random"){
+        //For the random injection of electrons - independent from random events    
+        srand(_seedelectron);
+        RandomVariable.init(rand(), rand(), rand(), rand());
+    }
+    
+    std::cout << std::endl;
     
     if(_nelectrons>graph.nodes_size()){
         std::cout << "The number of electrons exceeds the number of available nodes!" << std::endl;
@@ -129,10 +137,6 @@ void Static::RunKMC() {
             // Create electrons
             Carrier* carrier =  state.AddCarrier( "electron" );
             Electron* ecarrier = dynamic_cast<Electron*>(carrier);
-                
-            // randomly place the carrier on the node
-            //BUG HERE - carrier being placed on occupied node
-            //Have to check if the node is already occupied
             
             if (_injection_method == "random"){ 
                 int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
@@ -142,8 +146,8 @@ void Static::RunKMC() {
                         node_from = graph.GetNode(node_id + 1);
                     } 
                 if (ecarrier->AddNode(node_from)){ ecarrier->AddNode( node_from );}
-            }               
-                //node_from->PrintNode();  
+            }
+            
             else if (_injection_method == "uniform") {
                 BNode* node_from = graph.GetNode(2180 + electron);
                 ecarrier->AddNode( node_from );
@@ -151,7 +155,7 @@ void Static::RunKMC() {
             }
         }
     }
-       
+      
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );

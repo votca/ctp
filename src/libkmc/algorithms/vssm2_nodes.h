@@ -118,12 +118,9 @@ void Initialize ( State* _state, Graph* _graph ) {
             // add a subordinate event
             carrier_escape->AddSubordinate( event_move );            
             
-        }     
-        
+        }           
     }
-
     head_event.Enable();
-    //head_event.Print();
 
 }
 
@@ -131,7 +128,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
 
     votca::tools::Random2 RandomVariable;
 
-    std::cout << "Starting the KMC loop" << std::endl;
+    std::cout << std::endl << "Starting the KMC loop" << std::endl;
     
     clock_t begin = clock();
 
@@ -143,7 +140,6 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     int step = 0;
     double trajout = outtime;
     
-    // execute the head VSSM event and update time
     if ( runtime != 0 && nsteps == 0 ){ 
         runtime = runtime;
         std::cout << "Specified runtime (s): " << runtime << std::endl; 
@@ -161,9 +157,12 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     state->Trajectory_create(trajectoryfile);
     
     while ( step < nsteps || time < runtime ){  
-        //head_event.Print();   
+        
+        //head_event.Print();
+        
         head_event.OnExecute(state, &RandomVariable ); 
         double u = 1.0 - RandomVariable.rand_uniform();
+        while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
@@ -175,6 +174,9 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
+        
+        //OnExecute after time update in KMCMultiple
+        //head_event.OnExecute(state, &RandomVariable );
     }
     state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
     clock_t end = clock();    

@@ -33,7 +33,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
@@ -165,11 +164,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../../include/votca/kmc/Events_update_tree.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/ImagePotential.h"
             ex="false"
             tool="3"
@@ -363,11 +357,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../../include/votca/kmc/Events_update_tree.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/ImagePotential.h"
             ex="false"
             tool="3"

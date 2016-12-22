@@ -224,7 +224,13 @@ inline void State::Print_properties(int nelectrons, double fieldX, double fieldY
     string field_direction = "";
     double field = 0;
     
-    std::cout << std::endl << "   Carrier Mobility (m^2/Vs): " << std::endl;
+    if(fieldX != 0 && fieldY==0 && fieldZ==0) {field_direction = "X"; field = fieldX;}
+    else if(fieldY != 0 && fieldX==0 && fieldZ==0) {field_direction = "Y"; field = fieldY;}
+    else if(fieldZ != 0 && fieldX==0 && fieldY==0) {field_direction = "Z"; field = fieldZ;}
+        
+    std::cout << std::endl << "   The external electric field is in the " << field_direction << " direction " << std::endl; 
+    
+    std::cout << "   Components of the carrier mobility tensor in the " << field_direction << " direction (m^2/Vs): "<<std::endl;
     for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
         Carrier* carrier = *it_carrier;
         velocity = (carrier->Distance()*1E-9/time);
@@ -234,40 +240,30 @@ inline void State::Print_properties(int nelectrons, double fieldX, double fieldY
         mobility_z = (velocity.getZ()/absolute_field);
         
         std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
-        
-        /*if (carrier->Type()=="electron"){
-            average_e_mobility_x += (velocity.getX()/absolute_field);
-            average_e_mobility_y += (velocity.getY()/absolute_field);
-            average_e_mobility_z += (velocity.getZ()/absolute_field);
-        }*/
+
     }
-    
+
     double average_e_mobility = 0;
     double average_e_mobility_x, average_e_mobility_y, average_e_mobility_z;
     
     if (carrier->Type()=="electron"){
 
-        if(fieldX != 0 && fieldY==0 && fieldZ==0) {field_direction = "X"; field = fieldX;}
-        else if(fieldY != 0 && fieldX==0 && fieldZ==0) {field_direction = "Y"; field = fieldY;}
-        else if(fieldZ != 0 && fieldX==0 && fieldY==0) {field_direction = "Z"; field = fieldZ;}
-        
-        std::cout << "  The external electric field is in the " << field_direction << " direction " << std::endl;   
-    
         average_e_mobility_x = average_e_velocity.getX()/field;
         average_e_mobility_y = average_e_velocity.getY()/field;
         average_e_mobility_z = average_e_velocity.getZ()/field;
     
-        if(fieldX != 0 && fieldY==0 && fieldZ==0) {average_e_mobility = average_e_mobility_x;}
-        else if(fieldY != 0 && fieldX==0 && fieldZ==0) {average_e_mobility = average_e_mobility_y;}
-        else if(fieldZ != 0 && fieldX==0 && fieldY==0) {average_e_mobility = average_e_mobility_z;}
+        if(field = fieldX) {average_e_mobility = average_e_mobility_x;}
+        else if(field = fieldY) {average_e_mobility = average_e_mobility_y;}
+        else if(field = fieldZ) {average_e_mobility = average_e_mobility_z;}
          
-        std::cout << "  Average electron mobility in the " << field_direction << " direction: " 
+        std::cout << "   Average electron mobility in the " << field_direction << " direction: " 
                   << average_e_mobility  << " (m^2/Vs)   ( = " << std::scientific << (average_e_mobility*1E4) << " cm^2/Vs )" << std::endl;  
-        std::cout << "  Components of the average electron mobility tensor in the " << field_direction << " direction (m^2/Vs):" << std::endl;
-        std::cout << "       electron_Mobility_X" << field_direction << " = " << average_e_mobility_x << std::endl;
-        std::cout << "       electron_Mobility_Y" << field_direction << " = " << average_e_mobility_y << std::endl;
-        std::cout << "       electron_Mobility_Z" << field_direction << " = " << average_e_mobility_z << std::endl;      
+        std::cout << "   Components of the average electron mobility tensor in the " << field_direction << " direction: " << std::endl;
+        std::cout << "       Electron_Mobility_X" << field_direction << " = " << average_e_mobility_x << " (m^2/Vs) " << std::endl;
+        std::cout << "       Electron_Mobility_Y" << field_direction << " = " << average_e_mobility_y << " (m^2/Vs) " << std::endl;
+        std::cout << "       Electron_Mobility_Z" << field_direction << " = " << average_e_mobility_z << " (m^2/Vs) " << std::endl;      
     }
+    
     std::cout << std::endl;  
 
 }
