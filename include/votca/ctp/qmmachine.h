@@ -94,7 +94,7 @@ public:
    void GenerateQMAtomsFromPolarSegs(PolarTop *ptop, Orbitals &orb, bool split_dpl, double dpl_spacing);   
 
    void setdRdQ(double dR_RMS, double dQ_RMS, double dQ_SUM);
-   void setQMSF(double energy_QM, double energy_SF, double energy_GWBSE);
+   void setQMSF(double energy_QM, double energy_SF);
    void setE_FM(double ef00, double ef01, double ef02, 
                   double ef11, double ef12, double em0,
                   double em1,  double em2, double efm);
@@ -106,7 +106,6 @@ public:
    double getSFEnergy() { assert(_hasQM); return _e_SF; }
    double getFMEnergy() { assert(_hasMM); return _e_fm_; }
    double getQMEnergy() { assert(_hasQM); return _e_QM; }
-   double getGWBSEEnergy() { assert(_hasGWBSE); return _e_GWBSE; }
    double getMMEnergy();
    double getQMMMEnergy();
 

@@ -23,8 +23,6 @@
 #include <stdio.h>
 #include <votca/ctp/logger.h>
 #include <votca/ctp/qmpackagefactory.h>
-#include<votca/ctp/aobasis.h>
-#include<votca/ctp/aomatrix.h>
 #include<boost/numeric/ublas/matrix.hpp>
 
 namespace votca { namespace ctp {
@@ -124,30 +122,8 @@ bool QMSandbox::Evaluate() {
     //_qmpackage->setOrbitalsFileName( _orbfile );
     //int _parse_orbitals_status = _qmpackage->ParseOrbitalsFile( &_orbitals );
 
-                std::vector<QMAtom*> _atoms = _orbitals.QMAtoms();
-            
-            // load DFT basis set (element-wise information) from xml file
-            BasisSet dftbs;
-            dftbs.LoadBasisSet("ubecppol");
-            _orbitals.setDFTbasis( "ubecppol" );
-            LOG(logDEBUG, _log) << TimeStamp() << " Loaded DFT Basis Set "  << flush;
-
-            // fill DFT AO basis by going through all atoms 
-            AOBasis dftbasis;
-            dftbasis.AOBasisFill(&dftbs, _atoms);
-            LOG(logDEBUG, _log) << TimeStamp() << " Filled DFT Basis of size " << dftbasis._AOBasisSize << flush;
-
-            // fill auxiliary DFT AO basis by going through all atoms
-            AOOverlap _dftoverlap;
-            // initialize overlap matrix
-            _dftoverlap.Initialize(dftbasis._AOBasisSize);
-            // Fill overlap
-            _dftoverlap.Fill(&dftbasis);
-            LOG(logDEBUG, _log) << TimeStamp() << " Filled AO Overlap matrix of dimension: " << _dftoverlap._aomatrix.size1() << flush;
-            _dftoverlap.Print("Denis does not like this ");    
     
     
-            boost::numeric::ublas::matrix<AOBasis*> n;
     // LOG(logDEBUG, _log) << "Written text data to " << _output_file << flush;
     
     
