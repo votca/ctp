@@ -28,16 +28,6 @@ endif()
 # User input options                                                   #
 ########################################################################
 
-
-find_package(LIBXC)
-if (LIBXC_FOUND)
-        include_directories(${LIBXC_INCLUDE_DIRS})
-        set (LIBXC TRUE )
-else()
-        set(LIBXC_LIBRARIES)
-endif()
-
-
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
 if (NOT DEFINED LIB)
   set(LIB "lib")
