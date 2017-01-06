@@ -6,11 +6,8 @@
 
 #include <votca/ctp/xjob.h>
 #include <votca/ctp/xinductor.h>
-// add gwbse header for excited state support
-#include <votca/ctp/gwbse.h>
 #include <votca/ctp/qmpackagefactory.h>
 #include <votca/ctp/orbitals.h>
-#include <votca/ctp/espfit.h>
 
 
 
@@ -177,16 +174,7 @@ private:
     bool _isConverged;
     int _maxIter;
 
-    // GWBSE object
-    GWBSE _gwbse;
-    Property _gwbse_options;
-    int      _state;
-    string   _type;
-    bool     _has_osc_filter;
-    double   _osc_threshold;
-    bool     _has_dQ_filter;
-    double   _dQ_threshold;   
-    
+   
     double _crit_dR;
     double _crit_dQ;
     double _crit_dE_QM;
