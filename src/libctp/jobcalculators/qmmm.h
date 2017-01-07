@@ -25,7 +25,7 @@
 #include <votca/ctp/xinductor.h>
 #include <votca/ctp/xinteractor.h>
 // add gwbse header of excited state support
-#include <votca/ctp/gwbse.h>
+// #include <votca/ctp/gwbse.h>
 // --------
 #include <votca/ctp/qmmachine.h>
 #include <boost/format.hpp>

@@ -22,8 +22,8 @@
 // Overload of uBLAS prod function with MKL/GSL implementations
 #include <votca/ctp/votca_ctp_config.h>
 
-#include <votca/ctp/basisset.h>
-#include <votca/ctp/aobasis.h>
+// #include <votca/ctp/basisset.h>
+// #include <votca/ctp/aobasis.h>
 #include <votca/ctp/qmatom.h>
 
 #include <boost/numeric/ublas/matrix.hpp>
@@ -105,8 +105,8 @@ public:
 
     // access to QM package name, new, tested
     bool hasQMpackage() { return (!_qm_package.empty()); }
-    string getQMpackage() { return _qm_package; }
-    void setQMpakckage( string qmpackage ) { _qm_package = qmpackage;}
+    std::string getQMpackage() { return _qm_package; }
+    void setQMpakckage( std::string qmpackage ) { _qm_package = qmpackage;}
 
     // access to DFT AO overlap matrix, new, tested
     bool           hasAOOverlap() { return ( _overlap.size1() > 0 ) ? true : false ;}
@@ -158,14 +158,14 @@ public:
     void setQMEnergy( double qmenergy) { _qm_energy = qmenergy;}
     
     // access to DFT basis set name
-    bool hasDFTbasis() { return ( !_dftbasis.empty() ) ? true : false; }
-    void setDFTbasis( const string basis ) { _dftbasis = basis ;}
-    const string getDFTbasis() const { return _dftbasis; }
+ /*   bool hasDFTbasis() { return ( !_dftbasis.empty() ) ? true : false; }
+    void setDFTbasis( const std::string basis ) { _dftbasis = basis ;}
+    const std::string getDFTbasis() const { return _dftbasis; }
     
-    
+ */   
     /*
      *  ======= GW-BSE related functions =======
-     */
+     
 
     // access to exchange-correlation AO matrix, new, tested
     bool           hasAOVxc() { return ( _vxc.size1() > 0 ) ? true : false;}
@@ -304,12 +304,12 @@ public:
     double &FragmentBChargesGS()  { return _GSq_fragB; }
     void FragmentNuclearCharges( int _frag , double& _nucCrgA, double& _nucCrgB );
     int ElementToCharge( string element );
-    
+    */
     
     /* ===
      *    OLD ACCESS FUNCTIONS
      */    
-    std::vector<double>* getQPdiagEnergies() {return  &_QPdiag_energies ;} 
+/*     std::vector<double>* getQPdiagEnergies() {return  &_QPdiag_energies ;} 
     ub::matrix<double>* getQPdiagCoefficients() {return  &_QPdiag_coefficients ;}
 
 
@@ -319,7 +319,7 @@ public:
     std::vector<float>* getBSETripletEnergies() {return &_BSE_triplet_energies;}
     ub::matrix<float>* getBSETripletCoefficients() {return &_BSE_triplet_coefficients; }   
     
-   
+   */
 
     
     // returns indeces of a re-sorted in a descending order vector of energies
@@ -354,7 +354,7 @@ public:
      * Returns true if successful and does not throw an exception.
      * If exception is required, please use the << overload.
      */
-    bool Load(string file_name);    
+    bool Load(std::string file_name);    
     
 private:
     
@@ -372,7 +372,7 @@ private:
     ub::matrix<double>                      _mo_coefficients;
 
     ub::symmetric_matrix<double>            _overlap;
-    ub::symmetric_matrix<double>            _vxc;
+    //ub::symmetric_matrix<double>            _vxc;
     
     std::vector< QMAtom* >                  _atoms;   
 
@@ -382,10 +382,13 @@ private:
     ub::matrix<double>                      _mo_couplings;
    
     bool                                    _has_basis_set;
-    BasisSet                                _basis_set;
+     
+    std::string                                  _qm_package;
+    // BasisSet                                _basis_set;
     
     // new variables for GW-BSE storage
-    int                                     _rpamin;
+    /* 
+     * int                                     _rpamin;
     int                                     _rpamax;
     
     unsigned int                            _qpmin;
@@ -405,8 +408,7 @@ private:
     
     string                                  _dftbasis;
     string                                  _gwbasis;
-    
-    string                                  _qm_package;
+   
 
     // perturbative quasiparticle energies
     ub::matrix<double>                      _QPpert_energies;
@@ -439,7 +441,8 @@ private:
     std::vector<double>                    _Dq_fragB;
     double                                 _GSq_fragA; // ground state effective fragment charges
     double                                 _GSq_fragB;
-
+*/
+    
 private:
 
     /**
@@ -494,7 +497,7 @@ private:
      ar & _mo_couplings;
 
      // GW-BSE storage
-     if(version > 0)  {
+   /*  if(version > 0)  {
 
         ar & _dftbasis;
         ar & _gwbasis;
@@ -551,7 +554,8 @@ private:
             
            
            
-       } // end version 1: GW-BSE storage
+       } /
+    */ //end version 1: GW-BSE storage
     }// end of serialization
 };
 
