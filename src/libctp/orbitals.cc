@@ -58,15 +58,15 @@ Orbitals::Orbitals() {
     _number_of_electrons = 0;
     _self_energy = 0.0;
     _qm_energy = 0.0;
-    _couplingsA = 0;
-    _couplingsB = 0;
+   // _couplingsA = 0;
+    //_couplingsB = 0;
     
 
     //_has_atoms = false;
 
     
     // GW-BSE
-    _qpmin = 0;
+  /*  _qpmin = 0;
     _qpmax = 0;
     _qptotal = 0;
     
@@ -83,7 +83,7 @@ Orbitals::Orbitals() {
     _bse_ctotal = 0;
     _bse_size = 0;
     _bse_nmax = 0;
-  
+  */
 };   
 
 Orbitals::~Orbitals() { 
@@ -347,7 +347,7 @@ bool Orbitals::Load(string file_name) {
     return true;
 }
 
-
+/*
  // Determine ground state density matrix
  ub::matrix<double>& Orbitals::DensityMatrixGroundState( ub::matrix<double>& _MOs ) {
      
@@ -370,13 +370,13 @@ bool Orbitals::Load(string file_name) {
      
      
      
- }
+ } */
  
  
  
  
  // Excited state density matrix
- std::vector<ub::matrix<double> >& Orbitals::DensityMatrixExcitedState(ub::matrix<double>& _MOs, ub::matrix<float>& _BSECoefs, int state ){
+/* std::vector<ub::matrix<double> >& Orbitals::DensityMatrixExcitedState(ub::matrix<double>& _MOs, ub::matrix<float>& _BSECoefs, int state ){
      
      
      /****** 
@@ -400,7 +400,7 @@ bool Orbitals::Load(string file_name) {
       *      D_ab = \sum{v} \sum{v'} mo_a(v)mo_b(v') [ \sum{c} A_{vc}A_{v'c} ]
       *           = \sum{v} \sum{v'} mo_a(v)mo_b(v') A_{vv'} 
       *  
-      */
+      *
              
      _dmatEX.resize(2);
      _dmatEX[0] = ub::zero_matrix<double>(_basis_set_size, _basis_set_size);
@@ -510,9 +510,9 @@ bool Orbitals::Load(string file_name) {
      return _dmatEX;
              
      
- }
+ } */
  
- 
+ /*
  void Orbitals::MullikenPopulation( const ub::matrix<double>& _densitymatrix, const ub::matrix<double>& _overlapmatrix, int _frag, double& _PopA, double& _PopB  ) {
      
      
@@ -529,10 +529,10 @@ bool Orbitals::Load(string file_name) {
      }
            
      
- }
+ } */
 
 
- void Orbitals::FragmentNuclearCharges(int _frag, double& _nucCrgA, double& _nucCrgB){
+ /* void Orbitals::FragmentNuclearCharges(int _frag, double& _nucCrgA, double& _nucCrgB){
      
      // go through atoms and count
     vector < QMAtom* > :: iterator atom;
@@ -564,12 +564,12 @@ bool Orbitals::Load(string file_name) {
      
      
      
- }
+ } */
  
  
  
  
- int Orbitals::ElementToCharge(string element){
+ /* int Orbitals::ElementToCharge(string element){
      
      if      ( element == "H"  ) { return 1; }
      else if ( element == "C"  ) { return 4; }
@@ -579,6 +579,6 @@ bool Orbitals::Load(string file_name) {
      else if ( element == "O"  ) { return 6; }
      else { return 0; }
      
- }
+ } */
  
 }}
