@@ -1,5 +1,5 @@
 /* 
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2016 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -59,18 +59,18 @@ class APolarSite
 
 public:
 
-    APolarSite(int id, string name)
+    APolarSite(int id, std::string name)
             : _id(id),              _name(name),         _isVirtual(false), 
               _locX(vec(1,0,0)),    _locY(vec(0,1,0)),   _locZ(vec(0,0,1)), 
               _top(0),              _seg(0),             _frag(0),
-              _resolution(atomistic)
+              _resolution(atomistic),PhiP(0.0),          PhiU(0.0)
             { _Qs.resize(3); _Ps.resize(3); this->Depolarize();
               for (int s = -1; s < 2; ++s) _Ps[s+1].ZeroMatrix(); }
     APolarSite()
             : _id(-1),              _name(""),          _isVirtual(false),  
               _locX(vec(1,0,0)),    _locY(vec(0,1,0)),  _locZ(vec(0,0,1)),  
               _top(0),              _seg(0),            _frag(0),
-              _resolution(atomistic)
+              _resolution(atomistic),PhiP(0.0),          PhiU(0.0)
             { _Qs.resize(3); _Ps.resize(3); this->Depolarize();
               for (int s = -1; s < 2; ++s) _Ps[s+1].ZeroMatrix(); }
     APolarSite(APolarSite *templ, bool do_depolarize);
@@ -83,7 +83,7 @@ public:
     
     // GET & SET & IMPORT FUNCTIONS
     int            &getId() { return _id; }
-    string         &getName() { return _name; }
+    std::string         &getName() { return _name; }
     vec            &getPos() { return _pos; }
     int            &getRank() { return _rank; }
     Topology       *getTopology() { return _top; }
@@ -92,7 +92,7 @@ public:
     bool            getIsVirtual() { return _isVirtual; }
     bool            getIsActive(bool estatics_only);
 
-    void            ImportFrom(APolarSite *templ, string tag = "basic");
+    void            ImportFrom(APolarSite *templ, std::string tag = "basic");
     void            setIsVirtual(bool isVirtual) { _isVirtual = isVirtual; }
     void            setPos(vec &pos) { _pos = pos; }
     void            setRank(int rank) { _rank = rank; } // rank; } // OVERRIDE
@@ -128,6 +128,7 @@ public:
     double          getPhiP() { return PhiP; }
     double          getPhiU() { return PhiU; }
     double          getPhi() { return PhiP+PhiU; }
+    void          setPhi(double _PhiU, double _PhiP) {PhiU=_PhiU;PhiP=_PhiP;}
     void            ResetPhi(bool p, bool u) { if (p) PhiP = 0.0; if (u) PhiU = 0.0; }
     // CHARGE -1 0 +1 & DELTA
     void            Charge(int state);
@@ -147,10 +148,10 @@ public:
     // PRINT FUNCTS & OUTPUT TO FORMAT
     void            PrintInfo(std::ostream &out);
     void            PrintTensorPDB(FILE *out, int state);
-    void            WriteChkLine(FILE *, vec &, bool, string, double);
-    void            WriteXyzLine(FILE *, vec &, string);
-    void            WritePdbLine(FILE *out, const string &tag = "");
-    void            WriteMpsLine(std::ostream &out, string unit);
+    void            WriteChkLine(FILE *, vec &, bool, std::string, double);
+    void            WriteXyzLine(FILE *, vec &, std::string);
+    void            WritePdbLine(FILE *out, const std::string &tag = "");
+    void            WriteMpsLine(std::ostream &out, std::string unit);
     void            WriteXmlLine(std::ostream &out);
     
     template<class Archive>
@@ -203,7 +204,7 @@ public:
 private:
 
     int     _id;
-    string  _name;
+    std::string  _name;
     bool    _isVirtual;
     vec     _pos;
     vec     _locX;
@@ -213,7 +214,7 @@ private:
     Topology *_top;
     Segment  *_seg;
     Fragment *_frag;
-    res_t   _resolution;
+    
 
     vector < vector<double> > _Qs;
     int     _rank;
@@ -242,7 +243,7 @@ private:
     double FPx, FPy, FPz;                   // Electric field (due to permanent)
     double FUx, FUy, FUz;                   // Electric field (due to induced)
     vector< vec > U1_Hist;                  // Ind. u history
-    
+    res_t   _resolution;
     double PhiP;                            // Electric potential (due to perm.)
     double PhiU;                            // Electric potential (due to indu.)
     
@@ -258,8 +259,8 @@ private:
 
 
 
-vector<APolarSite*> APS_FROM_MPS(string filename, int state, QMThread *thread = NULL);
-std::map<string,double> POLAR_TABLE();
+vector<APolarSite*> APS_FROM_MPS(std::string filename, int state, QMThread *thread = NULL);
+std::map<std::string,double> POLAR_TABLE();
 
 
 class BasicInteractor
