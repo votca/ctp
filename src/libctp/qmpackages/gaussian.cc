@@ -263,7 +263,7 @@ bool Gaussian::WriteShellScript() {
         _shell_file << "setenv DoPrtXC YES" << endl;
         _shell_file << _executable << " " << _input_vxc_file_name << " >& /dev/null " << endl; 
         _shell_file << "setenv DoPrtXC NO" << endl;    
-        _shell_file << "rm $GAUSS_SCRDIR/*" << endl;
+        _shell_file << "rm $GAUSS_SCRDIR" << endl;
     } */
     _shell_file.close();
     
@@ -545,7 +545,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
     int _unoccupied_levels = 0;
     int _number_of_electrons = 0;
     int _basis_set_size = 0;
-    int _cart_basis_set_size = 0;
+    int _cart_basis_set_size;
     
     LOG(logDEBUG,*_pLog) << "GAUSSIAN: parsing " << _log_file_name << flush;
     
