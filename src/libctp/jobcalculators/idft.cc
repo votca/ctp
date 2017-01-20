@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2016 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -21,7 +21,6 @@
 #include "idft.h"
 
 #include <boost/format.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 
@@ -50,13 +49,14 @@ void IDFT::Initialize(votca::tools::Property* options ) {
     _do_parse = false;
     _do_project = false;
     _do_trim = false;
+    _do_extract = false;
     
     _store_orbitals = false;
     _store_overlap = false;
     _store_integrals = false;
     
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options );
+    UpdateWithDefaults( options, "ctp" );
     ParseOptionsXML( options  );
     
     // register all QM packages (Gaussian, turbomole, etc))
@@ -64,32 +64,42 @@ void IDFT::Initialize(votca::tools::Property* options ) {
 
 }
 
-void IDFT::ParseOptionsXML( votca::tools::Property *opt ) {
+void IDFT::ParseOptionsXML( votca::tools::Property *options ) {
    
     // Orbitals are in fort.7 file; number of electrons in .log file
     
     string key = "options." + Identify();
-    _energy_difference = opt->get( key + ".degeneracy" ).as< double > ();
+    _energy_difference = options->get( key + ".degeneracy" ).as< double > ();
     
-    string _tasks_string = opt->get(key+".tasks").as<string> ();
+    
+    string _tasks_string = options->get(key+".tasks").as<string> ();
     if (_tasks_string.find("input") != std::string::npos) _do_input = true;
     if (_tasks_string.find("run") != std::string::npos) _do_run = true;
     if (_tasks_string.find("parse") != std::string::npos) _do_parse = true;
     if (_tasks_string.find("project") != std::string::npos) _do_project = true;
     if (_tasks_string.find("trim") != std::string::npos) _do_trim = true;
+    if (_tasks_string.find("extract") != std::string::npos) _do_extract = true;
 
-    string _store_string = opt->get(key+".store").as<string> ();
+    string _store_string = options->get(key+".store").as<string> ();
     if (_store_string.find("orbitals") != std::string::npos) _store_orbitals = true;
     if (_store_string.find("overlap") != std::string::npos) _store_overlap = true;
     if (_store_string.find("integrals") != std::string::npos) _store_integrals = true;
     
-    _max_occupied_levels = opt->get(key+".levels").as<int> ();
+    _max_occupied_levels = options->get(key+".levels").as<int> ();
     _max_unoccupied_levels = _max_occupied_levels;
-
-    _trim_factor = opt->get(key+".trim").as<int> ();
-    if ( _trim_factor == -1 ) _do_trim = true;
     
-    string _package_xml = opt->get(key+".package").as<string> ();
+    if ( options->exists(key+".trim")){
+        _trim_factor  = options->get(key + ".trim").as< int > ();
+     }
+    else{
+        _trim_factor=-1;
+        if(!_do_trim){
+         cout << "WARNING: Are you sure you do not want to trim your orbitals, enable trimming by adding ""trim"" to tasks, default for trimming is -1 e.g. trimming to HOMO/LUMO respectively "  << endl;; 
+        }
+    }
+    
+    
+    string _package_xml = options->get(key+".dftpackage").as<string> ();
     //cout << endl << "... ... Parsing " << _package_xml << endl ;
 
     load_property_from_xml( _package_options, _package_xml.c_str() );    
@@ -97,20 +107,27 @@ void IDFT::ParseOptionsXML( votca::tools::Property *opt ) {
      key = "package";
     _package = _package_options.get(key+".name").as<string> ();
     
-    key = "options." + Identify() +".job";
-    _jobfile = opt->get(key + ".file").as<string>();    
+    key = "options."+Identify();
+
+        if ( options->exists(key+".job_file")) {
+            _jobfile = options->get(key+".job_file").as<string>();
+        }
+        else {
+            throw std::runtime_error("Job-file not set. Abort.");
+        }
+    
 
 }
 
 void IDFT::LoadOrbitals(string file_name, Orbitals* orbitals, Logger *log ) {
 
-    LOG_SAVE(logDEBUG, *log) << "Loading " << file_name << flush; 
+    LOG(logDEBUG, *log) << "Loading " << file_name << flush; 
     std::ifstream ifs( file_name.c_str() );
     boost::archive::binary_iarchive ia( ifs );
     try {
         ia >> *orbitals;
     } catch(std::exception &err) {
-        LOG_SAVE(logDEBUG, *log) << "Could not load orbitals from " << file_name << flush; 
+        LOG(logDEBUG, *log) << "Could not load orbitals from " << file_name << flush; 
         std::cerr << "An error occurred:\n" << err.what() << endl;
     } 
     ifs.close();
@@ -129,6 +146,16 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
     bool _calculate_integrals = false;
     stringstream sout;
     string output;
+    
+    int HOMO_A;
+    int HOMO_B;
+    int LUMO_A;
+    int LUMO_B;
+    Orbitals _orbitalsA, _orbitalsB;
+    Overlap _overlap; 
+
+
+
     
      // report back to the progress observer
     Job::JobResult jres = Job::JobResult();
@@ -277,10 +304,11 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
     string _pair_file = ( format("%1%%2%%3%%4%%5%") % "pair_" % ID_A % "_" % ID_B % ".orb" ).str();
    ub::matrix<double> _JAB;
 
+   
    Property _job_summary;
-   
-   
-   
+
+   // Orbitals _orbitalsA, _orbitalsB;
+
     int _degAH = 1;
     int _degAL = 1;
     int _degBH = 1;
@@ -290,7 +318,6 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
        // orbitals must be loaded from a file
        if ( !_do_parse ) LoadOrbitals( orbFileAB, &_orbitalsAB, pLog );
        
-       Orbitals _orbitalsA, _orbitalsB;
        
        // failed to load; wrap-up and finish current job
        if ( !_orbitalsA.Load( orbFileA ) ) {
@@ -313,6 +340,8 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
                return jres;
         }
  
+       
+
         if (_trim_factor == -1 ) { 
                            
                 // find degeneracy of HOMOs and LUMOs
@@ -350,10 +379,9 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
                     << _orbitalsB.getNumberOfElectrons()*(_trim_factor-1) << flush;              
             _orbitalsB.Trim(_trim_factor);
 
-            }
         }
+        } // _do_trim
      
-        Overlap _overlap; 
         _overlap.setLogger(pLog);
          
         // 10 seconds for a small system
@@ -370,12 +398,11 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
                 return jres;
         } 
     
-        int HOMO_A = _orbitalsA.getNumberOfElectrons() ;
-        int HOMO_B = _orbitalsB.getNumberOfElectrons() ;
-    
-        int LUMO_A = HOMO_A + 1;
-        int LUMO_B = HOMO_B + 1;
-    
+        HOMO_A = _orbitalsA.getNumberOfElectrons() ;
+        HOMO_B = _orbitalsB.getNumberOfElectrons() ;
+        LUMO_A = HOMO_A + 1;
+        LUMO_B = HOMO_B + 1;
+        
         double J_h;
         double J_e;
         
@@ -386,7 +413,6 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
             J_h = _overlap.getCouplingElement( HOMO_A , HOMO_B, &_orbitalsA, &_orbitalsB, &_JAB, _energy_difference );
             J_e = _overlap.getCouplingElement( LUMO_A , LUMO_B, &_orbitalsA, &_orbitalsB, &_JAB, _energy_difference );          
         }
-    
         LOG(logINFO,*pLog) << "Couplings h/e " << ID_A << ":" << ID_B << " " << J_h  << ":" << J_e  << flush; 
        
         // Output the thread run summary and clean the Logger
@@ -429,6 +455,43 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
      * </pair>
      */
 
+   } // end of the projection loop
+   
+   
+   if ( _do_extract ) {
+       LoadOrbitals( orbFileAB, &_orbitalsAB, pLog );
+       LoadOrbitals( orbFileA, &_orbitalsA, pLog );
+       LoadOrbitals( orbFileB, &_orbitalsB, pLog );
+       if (_trim_factor == -1 ) { 
+                           
+            // find degeneracy of HOMOs and LUMOs
+            std::vector<int> list_levelsAH  = (*_orbitalsA.getDegeneracy( _orbitalsA.getNumberOfElectrons()-1, _energy_difference ));
+            _degAH = list_levelsAH.size();
+            std::vector<int> list_levelsAL  = (*_orbitalsA.getDegeneracy( _orbitalsA.getNumberOfElectrons(), _energy_difference ));
+            _degAL = list_levelsAL.size();  
+        
+            std::vector<int> list_levelsBH  = (*_orbitalsB.getDegeneracy( _orbitalsB.getNumberOfElectrons()-1, _energy_difference ));
+            _degBH = list_levelsBH.size();
+            std::vector<int> list_levelsBL  = (*_orbitalsB.getDegeneracy( _orbitalsB.getNumberOfElectrons(), _energy_difference ));
+            _degBL = list_levelsBL.size();  
+    
+            _orbitalsA.Trim(_degAH,_degAL);
+            _orbitalsB.Trim(_degBH,_degBL);
+       
+       } else {
+           _orbitalsA.Trim(_trim_factor);
+           _orbitalsB.Trim(_trim_factor);
+       }
+       _JAB = _orbitalsAB.MOCouplings();
+       HOMO_A = _orbitalsA.getNumberOfElectrons() ;
+       HOMO_B = _orbitalsB.getNumberOfElectrons() ;
+       LUMO_A = HOMO_A + 1;
+       LUMO_B = HOMO_B + 1;
+       
+       
+   }
+   
+   if ( _do_project || _do_extract ) {
         Property *_job_output = &_job_summary.add("output","");
         Property *_pair_summary = &_job_output->add("pair","");
          string nameA = seg_A->getName();
@@ -440,7 +503,7 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
         _pair_summary->setAttribute("typeA", nameA);
         _pair_summary->setAttribute("typeB", nameB);
         
-          if ( _trim_factor == -1 ) {
+         if ( _trim_factor == -1 ) {
 
                 // HOMO-HOMO coupling
                 double JAB = _overlap.getCouplingElement(_degAH, _degBH , &_orbitalsA, &_orbitalsB, &_JAB, _energy_difference);
@@ -465,6 +528,8 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
                 _overlap_summary->setAttribute("eB", energyB);                
 
     } else {
+        
+        
         for (int levelA = HOMO_A - _max_occupied_levels +1; levelA <= LUMO_A + _max_unoccupied_levels - 1; ++levelA ) {
                 for (int levelB = HOMO_B - _max_occupied_levels + 1; levelB <= LUMO_B + _max_unoccupied_levels -1 ; ++levelB ) {        
                         Property *_overlap_summary = &_pair_summary->add("overlap",""); 
@@ -478,10 +543,12 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
                         _overlap_summary->setAttribute("eB", energyB);
                 }
         }
-        }
+    }
+        
         votca::tools::PropertyIOManipulator iomXML(votca::tools::PropertyIOManipulator::XML, 1, "");
         sout <<  iomXML << _job_summary;
-   } // end of the projection loop
+   } 
+   
 
    // cleanup whatever is not needed
    _qmpackage->CleanUp();
@@ -497,7 +564,7 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
 void IDFT::PrepareGuess( Orbitals* _orbitalsA, Orbitals* _orbitalsB, Orbitals* _orbitalsAB, Logger *log ) 
 {
     
-    LOG_SAVE(logDEBUG,*log)  << "Constructing the guess for dimer orbitals" << flush;   
+    LOG(logDEBUG,*log)  << "Constructing the guess for dimer orbitals" << flush;   
    
     // constructing the direct product orbA x orbB
     int _basisA = _orbitalsA->getBasisSetSize();
@@ -733,7 +800,8 @@ void IDFT::ReadJobFile(Topology *top) {
                 records[qmp->getId()] = & ((*it)->get("output.pair"));
             }
         } else {
-            throw runtime_error("\nERROR: Job file incomplete.\n Check your job file for FAIL, AVAILABLE, or ASSIGNED. Exiting\n");
+            Property thebadone = (*it)->get("id");
+            throw runtime_error("\nERROR: Job file incomplete.\n Job with id "+thebadone.as<string>()+" is not finished. Check your job file for FAIL, AVAILABLE, or ASSIGNED. Exiting\n");
         }
     } // finished loading from the file
 
@@ -746,10 +814,11 @@ void IDFT::ReadJobFile(Topology *top) {
         Segment* segmentA = pair->Seg1();
         Segment* segmentB = pair->Seg2();
         
-        double Jeff2_homo = 0;
-        double Jeff2_lumo = 0;
+        double Jhop2_homo = 0;
+        double Jeff_homo = 0;
+        double Jeff_lumo = 0;
         
-        cout << "Processing pair " << segmentA->getId() << ":" << segmentB->getId() << flush;
+        cout << "\nProcessing pair " << segmentA->getId() << ":" << segmentB->getId() << flush;
         
         QMPair::PairType _ptype = pair->getType();
         Property* pair_property = records[ pair->getId() ];
@@ -767,14 +836,16 @@ void IDFT::ReadJobFile(Topology *top) {
                 double overlapAB = (*itOverlap)->getAttribute<double>("jAB");
                 int orbA = (*itOverlap)->getAttribute<double>("orbA");
                 int orbB = (*itOverlap)->getAttribute<double>("orbB");
-                cout << " orbA:orbB " << orbA << ":" << orbB << flush;
+                // cout << " orbA:orbB " << orbA << ":" << orbB << flush;
                 if ( orbA == homoA && orbB == homoB ) {
-                    Jeff2_homo += overlapAB*overlapAB;
+                    Jeff_homo += overlapAB;
+                    Jhop2_homo += overlapAB*overlapAB;
                 }
 
                 if ( orbA == homoA+1 && orbB == homoB+1 ) {
-                    Jeff2_lumo += overlapAB*overlapAB;
+                    Jeff_lumo += overlapAB;
                 }
+                
             }    
             
         }
@@ -783,26 +854,26 @@ void IDFT::ReadJobFile(Topology *top) {
         if ( _ptype == QMPair::SuperExchange  ||  _ptype == QMPair::SuperExchangeAndHopping ) {
             cout << ":superexchange" << endl;
             list<Property*> pOverlap = pair_property->Select("overlap");
-            
+            /*
             // this is to select HOMO_A and HOMO_B 
-            //double overlapAB;
-            int orbA;
-            int orbB;
-            //double energyA;
-            //double energyB;
+            double overlapAB=0.0;
+            int orbA=0;
+            int orbB=0;
+            double energyA=0.0;
+            double energyB=0.0;
             
             for (list<Property*> ::iterator itOverlap = pOverlap.begin(); itOverlap != pOverlap.end(); ++itOverlap) {
                orbA = (*itOverlap)->getAttribute<int>("orbA");
                orbB = (*itOverlap)->getAttribute<int>("orbB");
                if ( orbA == homoA && orbB == homoB ) {  
-                    //overlapAB = (*itOverlap)->getAttribute<double>("jAB");
-                    //energyA = (*itOverlap)->getAttribute<double>("eA");
-                    //energyB = (*itOverlap)->getAttribute<double>("eB");
+                    overlapAB = (*itOverlap)->getAttribute<double>("jAB");
+                    energyA = (*itOverlap)->getAttribute<double>("eA");
+                    energyB = (*itOverlap)->getAttribute<double>("eB");
                     break;
                 }
             }
-            
-            cout << " homoA:homoB, orbA:orbB " << homoA << ":" << homoB << "," << orbA << ":" << orbB;
+            */
+            // cout << " homoA:homoB, orbA:orbB " << homoA << ":" << homoB << "," << orbA << ":" << orbB;
 
             /*QMNBList::iterator nit;
             for (nit = nblist.begin(); nit != nblist.end(); ++nit) {
@@ -821,7 +892,7 @@ void IDFT::ReadJobFile(Topology *top) {
                 Segment* Bridge = *itBridge;
                 int IDBridge = Bridge->getId();
                 
-                cout << " BridgeID:" << IDBridge;
+                cout << " bridging molecule:" << IDBridge << "\n    bridge constructed via the pairs" << endl;
 
                 // pairs from the bridge to the donor and acceptor
                 QMPair* Bridge_A = nblist.FindPair( segmentA, Bridge );
@@ -831,7 +902,7 @@ void IDFT::ReadJobFile(Topology *top) {
                 if( Bridge_B == NULL ) cout << "Bridge-SegmentB pair not found " << segmentB->getId() << ":" << Bridge->getId()<< std::endl;
                 
 
-                cout << " IDBA:IDBB " << Bridge_A->getId() << ":" << Bridge_B->getId();
+                // cout << " IDBA:IDBB " << Bridge_A->getId() << ":" << Bridge_B->getId() << endl;
 
                 
                 Property* pBridge_A = records[ Bridge_A->getId() ];
@@ -848,31 +919,34 @@ void IDFT::ReadJobFile(Topology *top) {
                                 
                 // IDs stored in the file
                 int id1A = pBridge_A->getAttribute<int>("idA");
-                //int id2A = pBridge_A->getAttribute<int>("idB");
+                int id2A = pBridge_A->getAttribute<int>("idB");
 
                 int id1B = pBridge_B->getAttribute<int>("idA");
-                //int id2B = pBridge_B->getAttribute<int>("idB");
-
+                int id2B = pBridge_B->getAttribute<int>("idB");
+                
+                cout << "    " << id1A << ":" << id2A << " (id:" <<   Bridge_A->getId() << ") " << "  |  "  << id1B << ":" << id2B << " (id:" <<   Bridge_B->getId() << ") " << endl;
+                        
                 // suffix for the donor and acceptor 
                 string suffixA = ( id1A == IDBridge ) ? "B" : "A"; // use "A" as a bridge 
                 string suffixB = ( id1B == IDBridge ) ? "B" : "A"; // use "A" as a bridge 
                 string suffixBridgeA = ( id1A == IDBridge ) ? "A" : "B";
                 string suffixBridgeB = ( id1B == IDBridge ) ? "A" : "B";
                 
-                cout << " id1A:id1B " << id1A << ":" << id1B;
+                // cout << " id1A:id1B " << id1A << ":" << id1B << endl;
                 
                 //cout << *pBridge_A << endl;
                 //cout << *pBridge_B << endl;
                
                 //double check if the records are correct
                 int homoBridgeA = pBridge_A->getAttribute<int>("homo" + suffixBridgeA );
-                int homoBridgeB = pBridge_B->getAttribute<int>("homo" + suffixBridgeB );
-                if ( homoBridgeA != homoBridgeB ) assert( homoBridgeA == homoBridgeB );
+                //int homoBridgeB = pBridge_B->getAttribute<int>("homo" + suffixBridgeB );
+                assert( homoBridgeA == pBridge_B->getAttribute<int>("homo" + suffixBridgeB ) );
                 int homoBridge = homoBridgeA;
-               
-                //exit(0);
                 
                 // double loop over all levels of A and B
+                int levelcount = 0;
+
+                cout << "LEVEL " << ", ENERGY " << ", ENERGYDIFF " << " , JEFFSINGLE " <<  ", JEFF " << ", J_DB " << ", J_BA " << endl;
                 for (list<Property*> ::iterator itOverlapA = pOverlapA.begin(); itOverlapA != pOverlapA.end(); ++itOverlapA) {
                 for (list<Property*> ::iterator itOverlapB = pOverlapB.begin(); itOverlapB != pOverlapB.end(); ++itOverlapB) {
                     
@@ -893,31 +967,32 @@ void IDFT::ReadJobFile(Topology *top) {
                         
                         //assert( eBridgeA - eBridgeB < 1e-50 );
                      
-                        cout << homoA << " " << homoB << " " << (*itOverlapA)->getAttribute<int>( "orb" + suffixBridgeA )
-                             << " JDB " << jDB 
-                             << " JBA " << jBA << endl;
+                        // cout << "    bridge level: " << (*itOverlapA)->getAttribute<int>( "orb" + suffixBridgeA ) << " (hole transfer)";
+                        // cout <<  " (HOMO: " << homoBridge << ")" << endl;
+                        // cout << "      J_DB = " << jDB << "  |  J_BA = " << jBA << endl;
+                        // cout << "      E_D = " << eA << ", E_B = " <<  eBridgeA << ", E_A = " << eB << endl;
                         
                         // This in principle violates detailed balance. Any ideas?
-                        double Jeff = 0.5 * (jDB*jBA / (eA - eBridgeA) + jDB*jBA / (eB - eBridgeB));
-                        Jeff2_homo += Jeff*Jeff;
+                        Jeff_homo += 0.5 * (jDB*jBA / (eA - eBridgeA) + jDB*jBA / (eB - eBridgeB));
                         
+                        cout << orbBridgeA << ", " << eBridgeA << ", " << eA-eBridgeA << " , " <<   0.5 * (jDB*jBA / (eA - eBridgeA) + jDB*jBA / (eB - eBridgeB)) << ", " << Jeff_homo << ", " << jDB << ", " << jBA << endl;
+                        levelcount += 1;
                                 
                     }
 
                     if (  orbDonor == homoA+1 && orbAcceptor == homoB+1 && orbBridgeA == orbBridgeB && orbBridgeA > homoBridge) {
                         
-                        double jDB = (*itOverlapA)->getAttribute<double>( "jAB" );
-                        double jBA = (*itOverlapB)->getAttribute<double>( "jAB" );
-                        double eA  = (*itOverlapA)->getAttribute<double>( "e" + suffixA );
-                        double eB  = (*itOverlapB)->getAttribute<double>( "e" + suffixB );
+                        // cout << " electron transfer" << endl;
+                        //double jDB = (*itOverlapA)->getAttribute<double>( "jAB" );
+                        //double jBA = (*itOverlapB)->getAttribute<double>( "jAB" );
+                        //double eA  = (*itOverlapA)->getAttribute<double>( "e" + suffixA );
+                        //double eB  = (*itOverlapB)->getAttribute<double>( "e" + suffixB );
                         
-                        double eBridgeA  = (*itOverlapA)->getAttribute<double>( "e" + suffixBridgeA );
-                        double eBridgeB  = (*itOverlapB)->getAttribute<double>( "e" + suffixBridgeB );
+                        //double eBridgeA  = (*itOverlapA)->getAttribute<double>( "e" + suffixBridgeA );
+                        //double eBridgeB  = (*itOverlapB)->getAttribute<double>( "e" + suffixBridgeB );
                         
                          // This in principle violates detailed balance. Any ideas?
-                        double Jeff = 0.5 * (jDB*jBA / (eA - eBridgeA) + jDB*jBA / (eB - eBridgeB));
-                        Jeff2_lumo += Jeff*Jeff;
-                        //jDB*jBA / (eB - eBridgeB);
+                        //double Jeff_lumo = 0.5 * (jDB*jBA / (eA - eBridgeA) + jDB*jBA / (eB - eBridgeB));
                                 
                     }
                     
@@ -926,6 +1001,14 @@ void IDFT::ReadJobFile(Topology *top) {
             } // end over bridges 
           
         } // end of if superexchange
+        
+        double Jeff2_homo = Jeff_homo*Jeff_homo;
+        double Jeff2_lumo = Jeff_lumo*Jeff_lumo;
+        
+
+        cout << " Jhop2_HOMO: " << Jhop2_homo << endl;
+        cout << " Jeff2_HOMO: " << Jeff2_homo << " (+" << (Jeff2_homo-Jhop2_homo)/Jhop2_homo*100 << " %)" << endl;
+        // cout << " Jeff2_LUMO: " << Jeff2_lumo << endl;
         
         cout << endl;
                     
@@ -940,5 +1023,7 @@ void IDFT::ReadJobFile(Topology *top) {
     LOG_SAVE(logINFO, _log) << "Pairs [total:updated] " <<  _number_of_pairs << ":" << _current_pairs << " Incomplete jobs: " << _incomplete_jobs << flush; 
     cout << _log;
 }
+
+
 
 }};

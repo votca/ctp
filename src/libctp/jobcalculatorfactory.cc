@@ -19,8 +19,6 @@
 
 
 #include <votca/ctp/jobcalculatorfactory.h>
-#include "votca_config.h"
-
 
 #include "jobcalculators/idft.h"
 #include "jobcalculators/edft.h"

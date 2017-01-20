@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2016 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -17,11 +17,8 @@
  *
  */
 
-#define NDEBUG
-#define OVERLAP_DEBUG
-
 // Overload of uBLAS prod function with MKL/GSL implementations
-#include <votca/ctp/votca_ctp_config.h>
+#include <votca/tools/linalg.h>
 
 #include <votca/ctp/overlap.h>
 #include <votca/tools/linalg.h>
@@ -31,7 +28,8 @@
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
-
+#include <votca/tools/constants.h>
+#include <boost/format.hpp>
 #include <boost/progress.hpp>
 
 namespace votca { namespace ctp {
@@ -39,6 +37,7 @@ namespace votca { namespace ctp {
 namespace ub = boost::numeric::ublas;
 
 double inv_sqrt(double x) { return 1./sqrt(x); }
+using boost::format;
 
 /*
  * Calculates S^{-1/2}
@@ -76,10 +75,8 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
 double Overlap::getCouplingElement( int levelA, int levelB,  Orbitals* _orbitalsA,
     Orbitals* _orbitalsB, ub::matrix<double>* _JAB, double  _energy_difference ) {
 
-    const double _conv_Hrt_eV = 27.21138386;   
-
-            int _levelsA = _orbitalsA->getNumberOfLevels();
-    //int _levelsB = _orbitalsB->getNumberOfLevels();    
+    
+    int _levelsA = _orbitalsA->getNumberOfLevels();
     
     if ( _energy_difference != 0 ) {
         std::vector<int> list_levelsA = *_orbitalsA->getDegeneracy( levelA, _energy_difference );
@@ -95,10 +92,12 @@ double Overlap::getCouplingElement( int levelA, int levelB,  Orbitals* _orbitals
                 }
         }
         
-        return sqrt(_JAB_sq / ( list_levelsA.size() * list_levelsB.size() ) ) * _conv_Hrt_eV ;
+        return sqrt(_JAB_sq / ( list_levelsA.size() * list_levelsB.size() ) ) * tools::conv::hrt2ev ;
         
     } else {
-        return _JAB->at_element( levelA - 1  , levelB -1 + _levelsA ) * _conv_Hrt_eV;
+        
+        return _JAB->at_element( levelA - 1  , levelB -1 + _levelsA ) * tools::conv::hrt2ev;
+        
     }
     // the  matrix should be symmetric, could also return this element
     // _JAB.at_element( _levelsA + levelB - 1  , levelA - 1 );
@@ -119,6 +118,36 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     Orbitals* _orbitalsAB, ub::matrix<double>* _JAB) {
 
     LOG(logDEBUG,*_pLog) << "Calculating electronic couplings" << std::flush;
+    
+    const std::vector<QMAtom*> atomsA=_orbitalsA->QMAtoms();
+    const std::vector<QMAtom*> atomsB=_orbitalsB->QMAtoms();
+    const std::vector<QMAtom*> atomsAB=_orbitalsAB->QMAtoms();
+        
+  for (unsigned i=0;i<atomsAB.size();i++){
+        QMAtom* dimer=atomsAB[i];
+        QMAtom* monomer=NULL;
+        if (i<atomsA.size()){
+            monomer=atomsA[i];
+        }
+        else if (i<atomsB.size()+atomsA.size() ){
+            monomer=atomsB[i-atomsA.size()];
+        }
+        else{
+	  throw std::runtime_error((format("Number of Atoms in dimer %3i and the two monomers A:%3i B:%3i does not agree") %atomsAB.size() %atomsA.size() %atomsB.size()).str());
+        }
+        
+        if(monomer->type != dimer->type){
+	  throw std::runtime_error("\nERROR: Atom types do not agree in dimer and monomers\n");
+        }
+        if(std::abs(monomer->x-dimer->x)>0.001 || std::abs(monomer->y-dimer->y)>0.001 || std::abs(monomer->z-dimer->z)>0.001){
+            LOG(logERROR,*_pLog) << "======WARNING=======\n Coordinates of monomers and dimer atoms do not agree, do you know what you are doing?\n " << std::flush;
+            break;
+        }
+        
+    }
+    
+    
+    
         
     // constructing the direct product orbA x orbB
     int _basisA = _orbitalsA->getBasisSetSize();
@@ -132,8 +161,8 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     int _levelsA = _orbitalsA->getNumberOfLevels();
     int _levelsB = _orbitalsB->getNumberOfLevels();
     
-    boost::timer t; // start timing
-    double _st = t.elapsed();
+    //boost::timer t; // start timing
+    //double _st = t.elapsed();
     
     LOG(logDEBUG,*_pLog) << "Levels:Basis A[" << _levelsA << ":" << _basisA << "]"
                                      << " B[" << _levelsB << ":" << _basisB << "]" << std::flush;
@@ -150,94 +179,65 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     ub::matrix<double> _psi_AxB ( _levelsA + _levelsB, _basisA + _basisB  );
     
 
-     LOG(logDEBUG,*_pLog) << "Constructing direct product AxB [" 
+    LOG(logDEBUG,*_pLog) << "Constructing direct product AxB [" 
             << _psi_AxB.size1() << "x" 
-            << _psi_AxB.size2() << "]" ;    
+            << _psi_AxB.size2() << "]" << std::flush;    
     
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( _basisA, _basisA +_basisB ) ) = zeroB;
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( 0, _basisA ) ) = zeroA;    
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( 0, _basisA ) ) = *_orbitalsA->getOrbitals();
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( _basisA, _basisA + _basisB ) ) = *_orbitalsB->getOrbitals(); 
 
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();
-
-    
     // psi_AxB * S_AB * psi_AB
-    LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals"; 
+    LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals" << std::flush; 
     ub::matrix<double> _orbitalsAB_Transposed = ub::trans( *_orbitalsAB->getOrbitals() );  
     if ( (*_orbitalsAB->getOverlap()).size1() == 0 ) {
             LOG(logERROR,*_pLog) << "Overlap matrix is not stored"; 
             return false;
     }
-    #ifdef OVERLAP_DEBUG 
-        std::cout << "\n\t\tprod1 [" 
-             << (*_orbitalsAB->getOverlap()).size1() << "x" << (*_orbitalsAB->getOverlap()).size2() << "] ["
-             << _orbitalsAB_Transposed.size1()  << "x" << _orbitalsAB_Transposed.size2() << "] ";  
-    #endif    
+     
     ub::matrix<double> _psi_AB = ub::prod( *_orbitalsAB->getOverlap(), _orbitalsAB_Transposed );  
-    #ifdef OVERLAP_DEBUG 
-        std::cout << "\t\tprod2 [" 
-             << _psi_AxB.size1() << "x" << _psi_AxB.size2() << "] ["
-             << _psi_AB.size1()  << "x" << _psi_AB.size2() << "] ";  
-    #endif     
     ub::matrix<double> _psi_AxB_dimer_basis = ub::prod( _psi_AxB, _psi_AB );  
     _psi_AB.clear();
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();    
-
+    
+    //check to see if projection quality is sufficient
+    for (unsigned i=0;i<_psi_AxB_dimer_basis.size1();i++){
+        double mag=0.0;
+        for (unsigned j=0;j<_psi_AxB_dimer_basis.size2();j++){
+            mag+=_psi_AxB_dimer_basis(i,j)*_psi_AxB_dimer_basis(i,j);
+            
+    }
+        if (mag<0.95){
+	  throw std::runtime_error("\nERROR: Projection of monomer orbitals on dimer is insufficient, maybe the orbital order is screwed up, otherwise increase dimer basis.\n");
+        }
+    }
+ 
      
     // J = psi_AxB_dimer_basis * FAB * psi_AxB_dimer_basis^T
-    LOG(logDEBUG,*_pLog) << "Projecting the Fock matrix onto the dimer basis";   
+    LOG(logDEBUG,*_pLog) << "Projecting the Fock matrix onto the dimer basis" << std::flush;   
     ub::diagonal_matrix<double> _fock_AB( _orbitalsAB->getNumberOfLevels(), (*_orbitalsAB->getEnergies()).data() ); 
-    #ifdef OVERLAP_DEBUG 
-        std::cout << "\n\t\tprod3 [" 
-             << _fock_AB.size1() << "x" << _fock_AB.size2() << "] T["
-             << _psi_AxB_dimer_basis.size1()  << "x" << _psi_AxB_dimer_basis.size2() << "] ";  
-    #endif
     ub::matrix<double> _temp = ub::prod( _fock_AB, ub::trans( _psi_AxB_dimer_basis ) ) ; 
-    #ifdef OVERLAP_DEBUG 
-        std::cout << "\t\tprod4 [" 
-             << _psi_AxB_dimer_basis.size1() << "x" << _psi_AxB_dimer_basis.size2() << "] ["
-             << _temp.size1()  << "x" << _temp.size2() << "] ";  
-    #endif   
     ub::matrix<double> JAB_dimer = ub::prod( _psi_AxB_dimer_basis, _temp);  
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();    
-
+ 
     // S = psi_AxB_dimer_basis * psi_AxB_dimer_basis^T
-    LOG(logDEBUG,*_pLog) << "Constructing Overlap matrix";    
-    #ifdef OVERLAP_DEBUG 
-        std::cout << "\n\t\tprod5 [" 
-             << _psi_AxB_dimer_basis.size1() << "x" << _psi_AxB_dimer_basis.size2() << "] T["
-             << _psi_AxB_dimer_basis.size1()  << "x" << _psi_AxB_dimer_basis.size2() << "] ";  
-    #endif
+    LOG(logDEBUG,*_pLog) << "Constructing Overlap matrix" << std::flush;    
     ub::symmetric_matrix<double> _S_AxB = ub::prod( _psi_AxB_dimer_basis, ub::trans( _psi_AxB_dimer_basis ));  
     ub::matrix<double> _S_AxB_2(_S_AxB.size1(), _S_AxB.size1() );
     ub::trans( _S_AxB );
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();    
-
+  
     // Square root of the overlap matrix
-    LOG(logDEBUG,*_pLog) << "Calculating square root of the overlap matrix";    
+    LOG(logDEBUG,*_pLog) << "Calculating square root of the overlap matrix" << std::flush;    
     SQRTOverlap( _S_AxB , _S_AxB_2 );
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();    
-
+ 
      
-    LOG(logDEBUG,*_pLog) << "Calculating the effective overlap JAB [" 
+   LOG(logDEBUG,*_pLog) << "Calculating the effective overlap JAB [" 
               << JAB_dimer.size1() << "x" 
-              << JAB_dimer.size2() << "]";  
+              << JAB_dimer.size2() << "]" << std::flush;  
        
     ub::matrix<double> JAB_temp( _levelsA + _levelsB, _levelsA + _levelsB ); 
-    #ifdef OVERLAP_DEBUG 
-        std::cout << "\n\t\tprod6 [" 
-             << JAB_dimer.size1() << "x" << JAB_dimer.size2() << "] T["
-             << _S_AxB_2.size1()  << "x" << _S_AxB_2.size2() << "] ";  
-    #endif
     ub::noalias(JAB_temp) = ub::prod( JAB_dimer, _S_AxB_2 );  
-    #ifdef OVERLAP_DEBUG
-        std::cout << "\t\tprod7 [" 
-             << _S_AxB_2.size1() << "x" << _S_AxB_2.size2() << "] T["
-             << JAB_temp.size1()  << "x" << JAB_temp.size2() << "] ";  
-    #endif
     (*_JAB) = ub::prod( _S_AxB_2, JAB_temp );    
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed(); 
+    
     
     LOG(logDEBUG,*_pLog) << "Done with electronic couplings" << std::flush;
     return true;   
