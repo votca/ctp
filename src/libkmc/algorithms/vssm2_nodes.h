@@ -160,7 +160,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         
         //head_event.Print();
         
-        head_event.OnExecute(state, &RandomVariable ); 
+        head_event.OnExecute(state, &RandomVariable );         
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);

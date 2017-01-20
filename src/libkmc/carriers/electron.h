@@ -21,6 +21,7 @@
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/event.h>
+#include <votca/tools/globals.h>
 
 namespace votca { namespace kmc {
     
@@ -45,19 +46,19 @@ public:
        
     virtual bool Move( Edge* edge ) {
         
-        /*
+        if(votca::tools::globals::verbose){
         std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
                       << " Node_to position: " << edge->NodeTo()->position 
                       << " Occupied Nodes: " ;
-                      for(auto& node : OccupiedNodes) { std::cout << node->id << " "; }
-                      std::cout << " Total: " << e_occupiedNodes.size() << std::endl;
-        */
+                      for(auto& node : e_occupiedNodes) { std::cout << node->id << " "; }
+                      std::cout << " Total: " << e_occupiedNodes.size();
+        }
         
         std::vector<BNode*>::iterator it_to   = NodeOccupation ( edge->NodeTo() ) ;
         
         if ( it_to == e_occupiedNodes.end() ) { //  move the electron if the node is free
 
-            //std::cout << " --- MOVING. " << std::endl;
+            if(votca::tools::globals::verbose){std::cout << " --- MOVING. " << std::endl;}
             
             distance += edge->DistancePBC();
             node = edge->NodeTo();
@@ -70,9 +71,9 @@ public:
         } 
         
         else { // reject the move if the node is occupied
-            //std::cout << " --- REJECTED  ";
+            if(votca::tools::globals::verbose){std::cout << " --- REJECTED  ";}
             node = edge->NodeFrom();
-            //std::cout << "Staying on node: " << node->id << std::endl;
+            if(votca::tools::globals::verbose){std::cout << "Staying on node: " << node->id << std::endl;}
             
             return false;
         }   

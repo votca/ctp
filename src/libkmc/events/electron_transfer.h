@@ -73,7 +73,20 @@ public:
                 //event->Print("  ++ ");
             }                  
         }        
-        else { Disable();}    
+        else 
+        { 
+            //Event move is forbidden 
+            Disable();
+            
+            //Include this next part to use the same carrier but find a new event move
+            //Not updating the whole VSSM group, just moving up one level 
+            Event* parent = GetParent();
+            if(parent->CumulativeRate()!=0){
+            parent->OnExecute(state, RandomVariable);
+            }
+            else{ return;}
+            
+        }    
     };
 
     // creates a vector of electron transfer events for a specific node and electron
