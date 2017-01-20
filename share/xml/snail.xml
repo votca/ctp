@@ -1,0 +1,16 @@
+<options>
+
+<snail help="Kinetic Monte Carlo simulations using binary tree" label="calc:binary" section="sec:kmc">
+
+	<runtime help="Simulated time" unit="seconds" default="0">1E-4</runtime>
+	<outtime help="Time difference between outputs into the trajectory file." unit="seconds" default="1E-8">1E-8</outtime>
+	<trajectoryfile help="Name of the trajectory file" default="trajectory.csv">trajectory.csv</trajectoryfile>
+	<seed help="Integer to initialise the random number generator" unit="integer" default="123">123</seed>
+	<injection help="Name pattern that specifies on which sites to inject." default="*">*</injection>
+	<nelectrons help="Number of electrons in the simulation box" unit="integer" default="1">1</nelectrons>
+	<fieldX help="x component of the external electric field" unit="V/m" default="0">0</fieldX>
+	<fieldY help="y component of the external electric field" unit="V/m" default="0">0</fieldY>
+	<fieldZ help="z component of the external electric field" unit="V/m" default="1E6">1E6</fieldZ>
+</snail>
+
+</options>

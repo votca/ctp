@@ -16,7 +16,7 @@
  */
 
 #ifndef __VOTCA_KMC_VSSM2_NODES_H_
-#define __VOTCA_KMC_VSSM2__NODES_H_
+#define __VOTCA_KMC_VSSM2_NODES_H_
 
 #include <unordered_map>
 #include <time.h>

@@ -20,6 +20,7 @@
 #include "calculators/kmcparallel.h"
 #include "calculators/dynamic.h"
 #include "calculators/static.h"
+#include "calculators/snail.h"
 
 namespace votca { namespace kmc {
 
@@ -29,6 +30,7 @@ void KMCCalculatorFactory::RegisterAll(void)
     Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
     Calculators().Register<Dynamic>("dynamic"); // dynamic creation of events after a move (slow))
     Calculators().Register<Static>("static"); // precomputed rates
+    Calculators().Register<Snail>("snail"); // precomputed rates
 }
 
 }}

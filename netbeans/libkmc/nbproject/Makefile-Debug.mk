@@ -69,32 +69,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a: ${OBJECTFILES}
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a
 
-${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/carrierfactory.cc 
+${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o: ../../src/libkmc/carrierfactory.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o ../../src/libkmc/carrierfactory.cc
 
-${OBJECTDIR}/_ext/1ce05ac7/eventfactory.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/eventfactory.cc 
+${OBJECTDIR}/_ext/1ce05ac7/eventfactory.o: ../../src/libkmc/eventfactory.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/eventfactory.o ../../src/libkmc/eventfactory.cc
 
-${OBJECTDIR}/_ext/1ce05ac7/kmcapplication.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/kmcapplication.cc 
+${OBJECTDIR}/_ext/1ce05ac7/kmcapplication.o: ../../src/libkmc/kmcapplication.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/kmcapplication.o ../../src/libkmc/kmcapplication.cc
 
-${OBJECTDIR}/_ext/1ce05ac7/kmccalculatorfactory.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/kmccalculatorfactory.cc 
+${OBJECTDIR}/_ext/1ce05ac7/kmccalculatorfactory.o: ../../src/libkmc/kmccalculatorfactory.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/kmccalculatorfactory.o ../../src/libkmc/kmccalculatorfactory.cc
 
-${OBJECTDIR}/_ext/1ce05ac7/version.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/version.cc 
+${OBJECTDIR}/_ext/1ce05ac7/version.o: ../../src/libkmc/version.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/version.o ../../src/libkmc/version.cc
 
-${OBJECTDIR}/_ext/1ce05ac7/version_nb.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libkmc/version_nb.cc 
+${OBJECTDIR}/_ext/1ce05ac7/version_nb.o: ../../src/libkmc/version_nb.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce05ac7/version_nb.o ../../src/libkmc/version_nb.cc
@@ -105,7 +105,6 @@ ${OBJECTDIR}/_ext/1ce05ac7/version_nb.o: nbproject/Makefile-${CND_CONF}.mk ../..
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a
 
 # Subprojects
 .clean-subprojects:
