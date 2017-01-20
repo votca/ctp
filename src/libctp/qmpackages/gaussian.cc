@@ -545,7 +545,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
     int _unoccupied_levels = 0;
     int _number_of_electrons = 0;
     int _basis_set_size = 0;
-    int _cart_basis_set_size;
+    //int _cart_basis_set_size;
     
     LOG(logDEBUG,*_pLog) << "GAUSSIAN: parsing " << _log_file_name << flush;
     
@@ -611,7 +611,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
             _basis_set_size = boost::lexical_cast<int>(results.front());
             _orbitals->setBasisSetSize( _basis_set_size );
             // _orbitals->_has_basis_set_size = true;
-            _cart_basis_set_size = boost::lexical_cast<int>(results[6] );
+            // _cart_basis_set_size = boost::lexical_cast<int>(results[6] );
             LOG(logDEBUG,*_pLog) << "Basis functions: " << _basis_set_size << flush;
             /*if ( _read_vxc ) {
                 LOG(logDEBUG,*_pLog) << "Cartesian functions: " << _cart_basis_set_size << flush;
