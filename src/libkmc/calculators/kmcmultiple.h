@@ -730,7 +730,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << "number of charges: " << numberofcharges << endl;
     cout << "number of nodes: " << node.size() << endl;
     string stopcondition;
-    unsigned long maxsteps;
+    unsigned long maxsteps = 0;
     if(runtime > 100)
     {
         stopcondition = "steps";
@@ -780,7 +780,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << endl << "injection method: " << _injectionmethod << endl;
     double deltaE = 0;
     double energypercarrier;
-    double totalenergy;
+    double totalenergy = 0;
     if(_injectionmethod == "equilibrated")
     {
         vector< double > energy;

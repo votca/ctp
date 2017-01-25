@@ -554,9 +554,9 @@ myvec Graph::Determine_sim_box_size(vector<Node*> nodes) {
     bool bndcrosspairYfound = false;
     bool bndcrosspairZfound = false;
     
-    double sim_box_sizeX;
-    double sim_box_sizeY;
-    double sim_box_sizeZ;
+    double sim_box_sizeX = 0.0;
+    double sim_box_sizeY = 0.0;
+    double sim_box_sizeZ = 0.0;
     
     double maxX = nodes[0]->node_position.x(); //initial values
     double maxY = nodes[0]->node_position.y();
