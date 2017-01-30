@@ -25,7 +25,7 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-#include "../algorithms/vssm2_nodes.h"
+#include "../algorithms/vssm2_snail.h"
 #include <fstream>
 
 using namespace std;
@@ -156,7 +156,7 @@ void Snail::RunKMC() {
         }
     }
       
-    VSSM2_NODES vssm2;
+    VSSM2_SNAIL vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
     vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);

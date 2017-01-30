@@ -69,7 +69,9 @@ public:
    
    // move the electron if possible
    virtual bool Move( Edge* edge ) = 0;
-    
+   
+   //virtual void AvailableEdges (BNode* node )= 0;
+   
    votca::tools::vec Distance(){ return distance; };
    
 protected:

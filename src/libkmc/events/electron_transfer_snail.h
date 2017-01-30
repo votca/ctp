@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ELECTRONTRANSFER_H
-#define __VOTCA_KMC_ELECTRONTRANSFER_H
+#ifndef __VOTCA_KMC_ELECTRONTRANSFERSNAIL_H
+#define __VOTCA_KMC_ELECTRONTRANSFERSNAIL_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
@@ -24,11 +24,11 @@
 
 namespace votca { namespace kmc {
     
-class ElectronTransfer : public Event {
+class ElectronTransferSnail : public Event {
     
 public:
 
-    std::string Type(){ return "electron transfer"; } ;
+    std::string Type(){ return "electron transfer snail"; } ;
         
     void Initialize( Electron* _electron, Edge* _edge ) {
         electron = _electron;
@@ -45,7 +45,8 @@ public:
     
     // this has to go away eventually
     void SetElectron( Electron* _electron ){ electron = _electron; };
-      
+    
+   
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
     
@@ -77,6 +78,8 @@ public:
         { 
             //Event move is forbidden 
             Disable();
+
+            
             //Include this next part to use the same carrier but find a new event move
             //Not updating the whole VSSM group, just moving up one level 
             //Event* parent = GetParent();
@@ -89,13 +92,13 @@ public:
     };
 
     // creates a vector of electron transfer events for a specific node and electron
-    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {           
+    void CreateEvents( std::vector< ElectronTransferSnail* >* events, BNode* node, Electron* electron, bool status ) {           
             
         for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
                 //New event - electron transfer
-                Event* _et =  Events().Create( "electron_transfer" );
+                Event* _et =  Events().Create( "electron_transfer_snail" );
                 _et->SetParent( GetParent() );
-                ElectronTransfer* et = dynamic_cast<ElectronTransfer*>(_et);
+                ElectronTransferSnail* et = dynamic_cast<ElectronTransferSnail*>(_et);
                 et->Initialize( electron, *it_edge );
                 if ( status ) {
                     et->Enable();
@@ -107,18 +110,19 @@ public:
                 events->push_back(et);
         }
         //std::cout << std::endl;
+
     }  
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
+            ElectronTransferSnail* ct_transfer = dynamic_cast<ElectronTransferSnail*>(event);
             enabled_events.push_back(ct_transfer);
         }
     }
 
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
+            ElectronTransferSnail* ct_transfer = dynamic_cast<ElectronTransferSnail*>(event);
             disabled_events.push_back(ct_transfer);
         }
     }
@@ -137,14 +141,14 @@ public:
     
 private:
 
-    std::vector<ElectronTransfer*> disabled_events;
-    std::vector<ElectronTransfer*> enabled_events;
+    std::vector<ElectronTransferSnail*> disabled_events;
+    std::vector<ElectronTransferSnail*> enabled_events;
 
     // electron to move
     Electron* electron;
     Edge* edge;
     votca::tools::vec distance_pbc;
-    
+
 };
 
 

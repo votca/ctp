@@ -79,7 +79,7 @@ public:
         }   
        
     }
-    
+      
 private:
     
     /// shared between all nodes information about occupied (by an electron) nodes
@@ -98,7 +98,7 @@ private:
         ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Carrier);
         
     }
- 
+    
 };
 
 }}

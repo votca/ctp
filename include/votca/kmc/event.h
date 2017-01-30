@@ -52,7 +52,7 @@ public:
        _event->SetParent( this );
        subordinate.push_back( _event ); 
    };
-   
+      
    // marks all subordinate events as expired
    void ExpireSubordinates(){
        for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ++it ) {
@@ -78,6 +78,11 @@ public:
           //std::cout << "Removing expired events: " << count << " deleted" << std::endl;
            has_expired_subordinates = false;
        }
+   }
+   
+   void RemoveSubordinate(Event* _event){
+       //_event->SetParent( this );
+       delete _event;
    }
    
    void ClearSubordinate() { subordinate.clear(); };

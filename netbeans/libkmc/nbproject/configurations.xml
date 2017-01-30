@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="100">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f4" displayName="Algorithms" projectFiles="true">
       <itemPath>../../include/votca/kmc/algorithm.h</itemPath>
       <itemPath>../../src/libkmc/algorithms/vssm2_carriers.h</itemPath>
       <itemPath>../../src/libkmc/algorithms/vssm2_nodes.h</itemPath>
+      <itemPath>../../src/libkmc/algorithms/vssm2_snail.h</itemPath>
     </logicalFolder>
     <logicalFolder name="calculators" displayName="Calculators" projectFiles="true">
       <itemPath>../../src/libkmc/calculators/diffusion.h</itemPath>
@@ -22,12 +23,12 @@
       <itemPath>../../src/libkmc/carrierfactory.cc</itemPath>
       <itemPath>../../include/votca/kmc/carrierfactory.h</itemPath>
       <itemPath>../../src/libkmc/carriers/electron.h</itemPath>
-      <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Events" projectFiles="true">
       <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
+      <itemPath>../../src/libkmc/events/electron_transfer_snail.h</itemPath>
       <itemPath>../../include/votca/kmc/event.h</itemPath>
       <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
       <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
@@ -35,7 +36,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../../include/votca/kmc/Events_update_tree.h</itemPath>
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
       <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
@@ -167,11 +167,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../../include/votca/kmc/Events_update_tree.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/ImagePotential.h"
             ex="false"
             tool="3"
@@ -262,6 +257,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/libkmc/algorithms/vssm2_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/libkmc/calculators/diffusion.h"
             ex="false"
             tool="3"
@@ -314,8 +314,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/events/carrier_escape.h"
@@ -329,6 +327,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer_dynamic.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/electron_transfer_snail.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -372,11 +375,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="../../include/votca/kmc/Events_update_tree.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/ImagePotential.h"
             ex="false"
             tool="3"
@@ -467,6 +465,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/libkmc/algorithms/vssm2_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/libkmc/calculators/diffusion.h"
             ex="false"
             tool="3"
@@ -519,8 +522,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/carriers/hole.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/events/carrier_escape.h"
@@ -534,6 +535,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer_dynamic.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/electron_transfer_snail.h"
             ex="false"
             tool="3"
             flavor2="0">
