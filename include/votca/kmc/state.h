@@ -209,7 +209,7 @@ inline void State::Print_properties(int nelectrons, double fieldX, double fieldY
     
     std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
     for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
-        Carrier* carrier = *it_carrier;
+        carrier = *it_carrier;
         velocity = (carrier->Distance()*1E-9/time);
         std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
     }
@@ -232,7 +232,7 @@ inline void State::Print_properties(int nelectrons, double fieldX, double fieldY
     
     std::cout << "   Components of the carrier mobility tensor in the " << field_direction << " direction (m^2/Vs): "<<std::endl;
     for ( State::iterator it_carrier = carriers.begin(); it_carrier != carriers.end(); ++it_carrier ) {
-        Carrier* carrier = *it_carrier;
+        carrier = *it_carrier;
         velocity = (carrier->Distance()*1E-9/time);
         
         mobility_x = (velocity.getX()/absolute_field);

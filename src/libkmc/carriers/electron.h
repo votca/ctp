@@ -64,7 +64,7 @@ public:
             node = edge->NodeTo();
                         
             std::vector<BNode*>::iterator it_from = NodeOccupation ( edge->NodeFrom() ) ;
-            *it_from =node;
+            *it_from =node; 
             
             return true;
             
@@ -79,9 +79,8 @@ public:
         }   
        
     }
-      
-private:
-    
+     
+
     /// shared between all nodes information about occupied (by an electron) nodes
     static std::vector<BNode*> e_occupiedNodes;
     
@@ -89,6 +88,8 @@ private:
     std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
         return std::find(e_occupiedNodes.begin(), e_occupiedNodes.end(), node);
     };
+         
+private:   
     
     friend class boost::serialization::access;
     template<class Archive>
@@ -98,7 +99,7 @@ private:
         ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Carrier);
         
     }
-    
+   
 };
 
 }}

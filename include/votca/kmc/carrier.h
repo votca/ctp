@@ -66,12 +66,10 @@ public:
    BNode* GetNode() { return node; };
    
    votca::tools::vec Position() { return node->position; }; 
-   
+  
    // move the electron if possible
    virtual bool Move( Edge* edge ) = 0;
-   
-   //virtual void AvailableEdges (BNode* node )= 0;
-   
+      
    votca::tools::vec Distance(){ return distance; };
    
 protected:

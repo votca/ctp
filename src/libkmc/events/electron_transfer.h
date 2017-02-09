@@ -49,17 +49,10 @@ public:
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
     
-        /*
-        std::cout << Type() << " of electron " << electron->id() << 
-                " from node " << NodeFrom()->id << 
-                " to " << NodeTo()->id << std::endl;
-        */  
-        // if the move is allowed (NodeTo not occupied) then move
         if ( electron->Move(edge) ) {
             // disable old events
             for (auto& event: disabled_events ) {
                 event->Disable();
-            //    //event->Print("  -- ");
             }
             // update the parent VSSM group
             Event* parent = GetParent();
@@ -70,15 +63,15 @@ public:
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
-                //event->Print("  ++ ");
             }                  
         }        
         else 
         { 
             //Event move is forbidden 
             Disable();
+            
             //Include this next part to use the same carrier but find a new event move
-            //Not updating the whole VSSM group, just moving up one level 
+            //Not updating the whole VSSM group, just moving up one level
             //Event* parent = GetParent();
             //if(parent->CumulativeRate()!=0){
             //parent->OnExecute(state, RandomVariable);

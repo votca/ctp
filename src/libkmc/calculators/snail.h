@@ -39,7 +39,7 @@ public:
     Snail() {};
    ~Snail() {};
 
-    string  Identify() {return "static"; };
+    string  Identify() {return "snail"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
@@ -67,7 +67,7 @@ private:
 
 void Snail::Initialize(Property *options) {
     
-    std::cout << endl << "Initialising KMC static" << endl;
+    std::cout << endl << "Initialising KMC snail" << endl;
 
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options );
@@ -100,7 +100,7 @@ void Snail::RunKMC() {
 
     votca::tools::Random2 RandomVariable;
     
-    std::cout << "Running KMC static" << endl;
+    std::cout << "Running KMC snail" << endl;
    
     Graph graph;
     State state;

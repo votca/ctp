@@ -87,7 +87,7 @@ public:
    
    void ClearSubordinate() { subordinate.clear(); };
    
-      // iterator over subordinate events
+    // iterator over subordinate events
     typedef std::vector< Event* >::iterator iterator;
     typedef const std::vector< Event* >::iterator const_iterator;
     
@@ -108,7 +108,7 @@ public:
             return rate;
             }        
     }
-    
+   
     virtual void Print(std::string offset="") {
         std::cout << offset << Type(); 
                 if (enabled) { std::cout << " enabled"; } else { std::cout << " disabled"; };

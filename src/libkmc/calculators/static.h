@@ -145,7 +145,7 @@ void Static::RunKMC() {
                         int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
                         node_from = graph.GetNode(node_id + 1);
                     } 
-                if (ecarrier->AddNode(node_from)){ ecarrier->AddNode( node_from );}
+                if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
             }
             
             else if (_injection_method == "uniform") {

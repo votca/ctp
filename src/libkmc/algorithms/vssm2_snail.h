@@ -44,12 +44,6 @@ void Initialize ( State* _state, Graph* _graph ) {
     
     state = _state;
     graph = _graph;
-  
-    // Map of charge transfer events associated with a particular node
-    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
-    
-    // Vector of all charge transfer events
-    std::vector<ElectronTransferSnail*> ct_events;
  
     for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
@@ -57,36 +51,23 @@ void Initialize ( State* _state, Graph* _graph ) {
         
         // create a new key with an empty vector
         charge_transfer_map.emplace(node_from, vector<Event*>() );
-  
+        
         // Loop over all neighbours (edges) of the node 
-        for (std::vector< Edge* >::iterator it_edge = node_from->EdgesBegin() ; it_edge != node_from->EdgesEnd(); ++it_edge) {
-            
+        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+
             // For every edge create an event of type transfer
             Event* event_move = Events().Create("electron_transfer_snail");            
             ElectronTransferSnail* electron_transfer_snail = dynamic_cast<ElectronTransferSnail*> (event_move);
             electron_transfer_snail->Initialize(NULL, *it_edge);
-
-            BNode* node_to = electron_transfer_snail->NodeTo();
             
-            std::vector<BNode*>::iterator it_node  = NodeOccupation ( node_to ) ;
+            // Add a list of charge transfer events to the map, indexed by a node pointer
+            charge_transfer_map.at(node_from).push_back(event_move);
             
-            //if the event_move is unavailable remove it from the list of ct events
-            if (it_node == occupied_nodes.end()){
-                
-                // Add a list of charge transfer events to the map, indexed by a node pointer
-                charge_transfer_map.at(node_from).push_back(event_move);
-
-                // Add an event to the charge transfer events
-                ct_events.push_back(electron_transfer_snail);
-                
-            }
-            else { 
-                delete electron_transfer_snail;
-            }
-            
+            // Add an event to the charge transfer events
+            ct_events.push_back(electron_transfer_snail);
         }
     }
-    
+  
     // for every event, add a list of "events-to-enable" after OnExecute
     // and a list of "events-to-disable" after OnExecute
     for (auto& event: ct_events ) {
@@ -99,21 +80,18 @@ void Initialize ( State* _state, Graph* _graph ) {
         event->AddDisableOnExecute(&events_to_disable);
         event->AddEnableOnExecute(&events_to_enable);
     }
- 
-    //for (auto& event: ct_events ) event->Print();
+
     
     // organise events in a tree;
     // first level VSSM events (escape event for each carrier))
     for (State::iterator carrier = _state->begin(); carrier != _state->end(); ++carrier) {
-        //std::cout << "Adding escape event for carrier " << (*carrier)->Type() << ", id " << (*carrier)->id() << std::endl;
 
         // create the carrier escape event (leaving the node)
         Event* event_escape = Events().Create("carrier_escape");
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
         carrier_escape->Initialize((*carrier));
         head_event.AddSubordinate( event_escape );
-        //std::cout << "  parent of " << carrier_escape->Type() << " is " << carrier_escape->GetParent()->Type() << std::endl;
-   
+
         BNode* node_from = (*carrier)->GetNode();
         std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
                 
@@ -127,27 +105,14 @@ void Initialize ( State* _state, Graph* _graph ) {
             
             electron_transfer_snail->SetElectron( electron );
             electron_transfer_snail->Enable();
-            // add a subordinate event
+            carrier_escape->AddSubordinate( event_move );            
             
-            BNode* node_to = electron_transfer_snail->NodeTo();
-            
-            //only create electron transfer events for available neighbours 
-            
-            std::vector<BNode*>::iterator it_node  = NodeOccupation ( node_to ) ;
-            if (it_node == occupied_nodes.end()){
-                carrier_escape->AddSubordinate( event_move ); 
-            }  
-            else { 
-                delete event_move;
-            }    
-        }
-                   
+        }           
     }
-    
     head_event.Enable();
 
 }
-
+        
 void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
     votca::tools::Random2 RandomVariable;
@@ -179,16 +144,42 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     }
     
     state->Trajectory_create(trajectoryfile);
-    
-    for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier){
-        BNode* node_from = (*carrier)->GetNode();
-        occupied_nodes.push_back(node_from);
-        std::cout << "Number of occupied nodes: " << occupied_nodes.size() << std::endl;
-    }
-    
-    while ( step < nsteps || time < runtime ){   
-        //head_event.Print(); 
-    
+ 
+       
+    while ( step < nsteps || time < runtime ){                
+        
+        //head_event.Print();
+  
+        for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
+            
+            //std::cout << "Carrier " << (*carrier)->id() << " on node " << (*carrier)->GetNode()->id << std::endl;
+            BNode* node_from = (*carrier)->GetNode();
+            std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
+            
+            for (std::vector<Event*>::iterator it_event = ct_events.begin(); it_event != ct_events.end(); ++it_event) {
+                
+                Event* event_move = *it_event;
+                ElectronTransferSnail* electron_transfer_snail = dynamic_cast<ElectronTransferSnail*> (event_move);
+            
+                BNode* node_to = electron_transfer_snail->NodeTo();
+                //std::cout << "Carrier " << (*carrier)->id() << " on node " << node_from->id <<  "->" << node_to->id << std::endl;
+                
+                Electron* electron;             
+               
+                std::vector<BNode*>::iterator it_node  = electron->NodeOccupation ( node_to ) ;
+                //for(auto& node : electron->e_occupiedNodes){ std::cout << "Electron Occupied Nodes: " << node->id << " " << std::endl;}
+                if (it_node == electron->e_occupiedNodes.end()){
+                    electron_transfer_snail->Enable();
+                    //std::cout << "---EVENT ENABLED --- " << std::endl;
+                }
+                else {
+                    //std::cout << "---EVENT DISABLED --- " << std::endl;
+                    electron_transfer_snail->Disable();
+                }
+            }
+        }
+        
+        
         head_event.OnExecute(state, &RandomVariable );         
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
@@ -203,9 +194,6 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
-        
-        //OnExecute after time update in KMCMultiple
-        //head_event.OnExecute(state, &RandomVariable );
      
     }
     state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
@@ -220,12 +208,8 @@ private:
     CarrierEscape head_event;
     // logger : move logger.h to tools
     // Logger log;
-    std::vector<BNode*> occupied_nodes;
-
-    /// returns an iterator to a node [if the node is in the occupied (by an electron) nodes] or the end iterator
-    std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
-    return std::find(occupied_nodes.begin(), occupied_nodes.end(), node);
-    }
+    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
+    std::vector<ElectronTransferSnail*> ct_events;
     
 };
     
