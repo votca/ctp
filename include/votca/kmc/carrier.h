@@ -98,8 +98,8 @@ private:
             ar & node->id;
 
         }
-    }   
-    
+    }  
+        
 };
 
 }} 

@@ -149,12 +149,15 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     while ( step < nsteps || time < runtime ){                
         
         //head_event.Print();
-  
+    
+        for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
+            BNode* node_from = (*carrier)->GetNode();
+            all_occupied_nodes.push_back(node_from);
+        }
+        
         for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
             
-            //std::cout << "Carrier " << (*carrier)->id() << " on node " << (*carrier)->GetNode()->id << std::endl;
-            BNode* node_from = (*carrier)->GetNode();
-            std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
+            std::vector<Event*> ct_events = charge_transfer_map.at((*carrier)->GetNode());
             
             for (std::vector<Event*>::iterator it_event = ct_events.begin(); it_event != ct_events.end(); ++it_event) {
                 
@@ -162,13 +165,10 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
                 ElectronTransferSnail* electron_transfer_snail = dynamic_cast<ElectronTransferSnail*> (event_move);
             
                 BNode* node_to = electron_transfer_snail->NodeTo();
-                //std::cout << "Carrier " << (*carrier)->id() << " on node " << node_from->id <<  "->" << node_to->id << std::endl;
-                
-                Electron* electron;             
+                //std::cout << "Carrier " << (*carrier)->id() << " on node " << node_from->id <<  "->" << node_to->id << std::endl;          
                
-                std::vector<BNode*>::iterator it_node  = electron->NodeOccupation ( node_to ) ;
-                //for(auto& node : electron->e_occupiedNodes){ std::cout << "Electron Occupied Nodes: " << node->id << " " << std::endl;}
-                if (it_node == electron->e_occupiedNodes.end()){
+                std::vector<BNode*>::iterator it_node  = Node_Occupation ( node_to ) ;
+                if (it_node == all_occupied_nodes.end()){
                     electron_transfer_snail->Enable();
                     //std::cout << "---EVENT ENABLED --- " << std::endl;
                 }
@@ -176,9 +176,8 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
                     //std::cout << "---EVENT DISABLED --- " << std::endl;
                     electron_transfer_snail->Disable();
                 }
-            }
+            }        
         }
-        
         
         head_event.OnExecute(state, &RandomVariable );         
         double u = 1.0 - RandomVariable.rand_uniform();
@@ -194,6 +193,8 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
+        
+        all_occupied_nodes.clear();
      
     }
     state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
@@ -210,6 +211,12 @@ private:
     // Logger log;
     std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
     std::vector<ElectronTransferSnail*> ct_events;
+    
+    std::vector<BNode*> all_occupied_nodes;
+    std::vector<BNode*>::iterator Node_Occupation( BNode* node ){  
+        return std::find(all_occupied_nodes.begin(), all_occupied_nodes.end(), node);
+    };
+         
     
 };
     

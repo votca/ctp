@@ -64,7 +64,7 @@ void Initialize ( State* _state, Graph* _graph ) {
             Event* event_move = Events().Create("electron_transfer");            
             ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
             electron_transfer->Initialize(NULL, *it_edge);
-            
+                        
             // Add a list of charge transfer events to the map, indexed by a node pointer
             charge_transfer_map.at(node_from).push_back(event_move);
             
@@ -78,15 +78,29 @@ void Initialize ( State* _state, Graph* _graph ) {
     for (auto& event: ct_events ) {
         BNode* node_from = event->NodeFrom();
         BNode* node_to = event->NodeTo();
-
+        
         std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
         std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
-
+        
         event->AddDisableOnExecute(&events_to_disable);
         event->AddEnableOnExecute(&events_to_enable);
     }
 
-    //for (auto& event: ct_events ) event->Print();
+    for (auto& event: ct_events ) {
+        
+        BNode* node_from = event->NodeFrom();
+        std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
+        
+        for (std::vector<Event*>::iterator it_event = ct_events.begin(); it_event != ct_events.end(); ++it_event) {
+            
+            Event* event_move = *it_event;
+            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move);
+            
+            BNode* node_to = electron_transfer->NodeTo();
+            std::vector<Event*> events_to_check = charge_transfer_map.at(node_to);
+            event->checkEventsOnExecute(&events_to_check);
+        }
+    }
     
     // organise events in a tree;
     // first level VSSM events (escape event for each carrier))
@@ -158,7 +172,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     while ( step < nsteps || time < runtime ){  
         
         //head_event.Print();
-        
+             
         head_event.OnExecute(state, &RandomVariable );         
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
@@ -173,9 +187,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
-        
-        //OnExecute after time update in KMCMultiple
-        //head_event.OnExecute(state, &RandomVariable );
+
     }
     state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
@@ -184,11 +196,11 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
 }
 
 private:
-
+    
     // head event, contains all escape events
     CarrierEscape head_event;
     // logger : move logger.h to tools
-    // Logger log;
+    // Logger log;   
 };
     
 }}

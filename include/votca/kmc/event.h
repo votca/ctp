@@ -41,7 +41,10 @@ public:
    // Enables the event (its rate is added to the Cumulative Rate of the parent)
    void Enable(){  enabled = true;  };
    bool Enabled(){ return enabled; };
-  
+    
+   void Unavailable() { unavailable = true; enabled = false;};
+   bool UnivailableEvent() { return unavailable;};
+
    double Rate() { return rate; };
    void SetRate( double _rate ) { rate = _rate; };
    
@@ -52,7 +55,7 @@ public:
        _event->SetParent( this );
        subordinate.push_back( _event ); 
    };
-      
+    
    // marks all subordinate events as expired
    void ExpireSubordinates(){
        for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ++it ) {
@@ -79,12 +82,7 @@ public:
            has_expired_subordinates = false;
        }
    }
-   
-   void RemoveSubordinate(Event* _event){
-       //_event->SetParent( this );
-       delete _event;
-   }
-   
+        
    void ClearSubordinate() { subordinate.clear(); };
    
     // iterator over subordinate events
@@ -127,6 +125,8 @@ private:
     bool enabled;
     // if true, OnExecute of the parent node will remove this event after calling its OnExecute
     bool expired;
+    //If true, the node to is already occupied - only for event move events
+    bool unavailable;
     // if the event has expired subordinates
     bool has_expired_subordinates;
     // Fixed rate in case the event does not have subordinate events
@@ -136,7 +136,7 @@ private:
     Event* parent;
     
     // subordinate events
-    std::vector< Event* > subordinate;    
+    std::vector< Event* > subordinate;
 };
 
 }} 

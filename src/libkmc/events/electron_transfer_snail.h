@@ -49,11 +49,6 @@ public:
 
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
-        
-        //BNode* node_to = edge->NodeTo();
-        //std::vector<BNode*>::iterator it_node  = electron->NodeOccupation ( node_to ) ;
-        //for(auto& node : electron->e_occupiedNodes){ std::cout << "Electron Occupied Nodes: " << node->id << " " << std::endl;}
-        //if (it_node == electron->e_occupiedNodes.end()){
    
         electron->Move(edge);
                 
@@ -76,7 +71,7 @@ public:
     };
 
     // creates a vector of electron transfer events for a specific node and electron
-    void CreateEvents( std::vector< ElectronTransferSnail* >* events, BNode* node, Electron* electron, bool status ) {           
+    /*void CreateEvents( std::vector< ElectronTransferSnail* >* events, BNode* node, Electron* electron, bool status ) {           
             
         for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
                 //New event - electron transfer
@@ -96,7 +91,8 @@ public:
         //std::cout << std::endl;
 
     }  
-       
+    */
+    
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
             ElectronTransferSnail* ct_transfer = dynamic_cast<ElectronTransferSnail*>(event);

@@ -38,6 +38,7 @@ public:
         // enable this event if a carrier is provided
         Disable();
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
+        
     }
 
     BNode* NodeFrom(){ return edge->NodeFrom(); };
@@ -48,12 +49,26 @@ public:
       
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
-    
-        if ( electron->Move(edge) ) {
+        
+        if ( electron->Move(edge) == true ) {
             // disable old events
-            for (auto& event: disabled_events ) {
-                event->Disable();
+            for (auto& event: disabled_events ) {   
+                event->Disable();     
             }
+
+            for (auto& event: events_to_check) {
+
+                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+                if (event->UnivailableEvent()==true){
+                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+
+                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == electron->e_occupiedNodes.end() ) {
+                        event->Enable();
+                    }
+                } 
+            }
+            
             // update the parent VSSM group
             Event* parent = GetParent();
             parent->ClearSubordinate();
@@ -63,13 +78,13 @@ public:
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
-            }                  
+            }            
         }        
         else 
         { 
-            //Event move is forbidden 
+            //Event move is unavailable           
+            Unavailable();
             Disable();
-            
             //Include this next part to use the same carrier but find a new event move
             //Not updating the whole VSSM group, just moving up one level
             //Event* parent = GetParent();
@@ -78,11 +93,11 @@ public:
             //}
             //else{ return;}
             
-        }    
+        }         
     };
 
     // creates a vector of electron transfer events for a specific node and electron
-    void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {           
+    /*void CreateEvents( std::vector< ElectronTransfer* >* events, BNode* node, Electron* electron, bool status ) {           
             
         for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
                 //New event - electron transfer
@@ -101,6 +116,7 @@ public:
         }
         //std::cout << std::endl;
     }  
+    */
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
@@ -115,7 +131,14 @@ public:
             disabled_events.push_back(ct_transfer);
         }
     }
-
+     
+    void checkEventsOnExecute( std::vector<Event*>* events){
+        for (auto& event: *events){
+            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
+            events_to_check.push_back(ct_transfer);
+        }  
+    }
+    
     virtual void Print(std::string offset="") {
         std::cout << offset << Type();
         if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
@@ -127,12 +150,13 @@ public:
             << " Rate: " << Rate() 
             << " Cumulative rate: " << CumulativeRate() <<  std::endl;
     }
-    
+        
 private:
 
     std::vector<ElectronTransfer*> disabled_events;
     std::vector<ElectronTransfer*> enabled_events;
-
+    std::vector<ElectronTransfer*> events_to_check;
+    
     // electron to move
     Electron* electron;
     Edge* edge;

@@ -88,7 +88,7 @@ public:
     std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
         return std::find(e_occupiedNodes.begin(), e_occupiedNodes.end(), node);
     };
-         
+    
 private:   
     
     friend class boost::serialization::access;
@@ -101,7 +101,7 @@ private:
     }
    
 };
-
+    
 }}
 
 BOOST_CLASS_VERSION(votca::kmc::Electron, 0)
