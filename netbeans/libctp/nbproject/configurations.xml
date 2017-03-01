@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f1" displayName="Calculators" projectFiles="true">
       <logicalFolder name="f2" displayName="Calculators" projectFiles="true">
@@ -59,7 +59,6 @@
         <itemPath>../../src/libctp/tools/pdb2map.h</itemPath>
         <itemPath>../../src/libctp/tools/qmanalyze.h</itemPath>
         <itemPath>../../src/libctp/tools/qmsandbox.h</itemPath>
-        <itemPath>../../src/libctp/tools/spectrum.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
@@ -69,7 +68,7 @@
       <itemPath>../../include/votca/ctp/atom.h</itemPath>
       <itemPath>../../include/votca/ctp/calculatorfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/ctpapplication.h</itemPath>
-      <itemPath>../../include/votca/ctp/elements.h</itemPath>
+      <itemPath>../../include/votca/ctp/dmaspace.h</itemPath>
       <itemPath>../../include/votca/ctp/ewald2d.h</itemPath>
       <itemPath>../../include/votca/ctp/ewald3d.h</itemPath>
       <itemPath>../../include/votca/ctp/ewaldactor.h</itemPath>
@@ -77,14 +76,14 @@
       <itemPath>../../include/votca/ctp/ewdspace.h</itemPath>
       <itemPath>../../include/votca/ctp/extractorfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/fragment.h</itemPath>
-      <itemPath>../../include/votca/ctp/grid.h</itemPath>
-      <itemPath>../../include/votca/ctp/gsl_boost_ublas_matrix_prod.h</itemPath>
+      <itemPath>../../include/votca/ctp/grid_containers.h</itemPath>
       <itemPath>../../include/votca/ctp/job.h</itemPath>
       <itemPath>../../include/votca/ctp/jobapplication.h</itemPath>
       <itemPath>../../include/votca/ctp/jobcalculator.h</itemPath>
+      <itemPath>../../include/votca/ctp/jobcalculatorfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/logger.h</itemPath>
-      <itemPath>../../include/votca/ctp/mkl_boost_ublas_matrix_prod.h</itemPath>
       <itemPath>../../include/votca/ctp/molecule.h</itemPath>
+      <itemPath>../../include/votca/ctp/molpolengine.h</itemPath>
       <itemPath>../../include/votca/ctp/orbitals.h</itemPath>
       <itemPath>../../include/votca/ctp/overlap.h</itemPath>
       <itemPath>../../include/votca/ctp/paircalculator.h</itemPath>
@@ -94,10 +93,12 @@
       <itemPath>../../include/votca/ctp/pewald3d.h</itemPath>
       <itemPath>../../include/votca/ctp/poissongrid.h</itemPath>
       <itemPath>../../include/votca/ctp/polarbackground.h</itemPath>
+      <itemPath>../../include/votca/ctp/polarfrag.h</itemPath>
       <itemPath>../../include/votca/ctp/polarseg.h</itemPath>
       <itemPath>../../include/votca/ctp/polarsite.h</itemPath>
       <itemPath>../../include/votca/ctp/polartop.h</itemPath>
       <itemPath>../../include/votca/ctp/progressobserver.h</itemPath>
+      <itemPath>../../include/votca/ctp/qmatom.h</itemPath>
       <itemPath>../../include/votca/ctp/qmcalculator.h</itemPath>
       <itemPath>../../include/votca/ctp/qmdatabase.h</itemPath>
       <itemPath>../../include/votca/ctp/qmmachine.h</itemPath>
@@ -111,9 +112,12 @@
       <itemPath>../../include/votca/ctp/segmenttype.h</itemPath>
       <itemPath>../../include/votca/ctp/sqlapplication.h</itemPath>
       <itemPath>../../include/votca/ctp/statesaversqlite.h</itemPath>
+      <itemPath>../../include/votca/ctp/threadforce.h</itemPath>
+      <itemPath>../../include/votca/ctp/toolfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/topology.h</itemPath>
       <itemPath>../../include/votca/ctp/version.h</itemPath>
       <itemPath>../../include/votca/ctp/votca_ctp_config.h</itemPath>
+      <itemPath>../../include/votca/ctp/votca_ctp_config.h.in</itemPath>
       <itemPath>../../include/votca/ctp/xinductor.h</itemPath>
       <itemPath>../../include/votca/ctp/xinteractor.h</itemPath>
       <itemPath>../../include/votca/ctp/xjob.h</itemPath>
@@ -240,7 +244,7 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/elements.h" ex="false" tool="3" flavor2="0">
+      <item path="../../include/votca/ctp/dmaspace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/ewdspace.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -251,9 +255,7 @@
       </item>
       <item path="../../include/votca/ctp/fragment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/grid.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/gsl_boost_ublas_matrix_prod.h"
+      <item path="../../include/votca/ctp/grid_containers.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -270,14 +272,19 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/logger.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/mkl_boost_ublas_matrix_prod.h"
+      <item path="../../include/votca/ctp/jobcalculatorfactory.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/logger.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/molecule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/molpolengine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../include/votca/ctp/orbitals.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -313,6 +320,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/polarfrag.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/polarseg.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/polarsite.h"
@@ -324,6 +336,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/qmatom.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/qmcalculator.h"
             ex="false"
@@ -370,11 +384,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/threadforce.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/toolfactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/topology.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/version.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/votca_ctp_config.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/votca_ctp_config.h.in"
             ex="false"
             tool="3"
             flavor2="0">
@@ -745,8 +774,6 @@
       </item>
       <item path="../../src/libctp/tools/qmsandbox.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../src/libctp/tools/spectrum.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../src/libctp/topology.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/version.cc" ex="false" tool="1" flavor2="0">
@@ -802,7 +829,7 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/elements.h" ex="false" tool="3" flavor2="0">
+      <item path="../../include/votca/ctp/dmaspace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/ewdspace.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -813,9 +840,7 @@
       </item>
       <item path="../../include/votca/ctp/fragment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/grid.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/gsl_boost_ublas_matrix_prod.h"
+      <item path="../../include/votca/ctp/grid_containers.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -832,14 +857,19 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/logger.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/mkl_boost_ublas_matrix_prod.h"
+      <item path="../../include/votca/ctp/jobcalculatorfactory.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/logger.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/molecule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/molpolengine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../include/votca/ctp/orbitals.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -875,6 +905,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/polarfrag.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/polarseg.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/polarsite.h"
@@ -886,6 +921,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/qmatom.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/qmcalculator.h"
             ex="false"
@@ -932,11 +969,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/threadforce.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/toolfactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/topology.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/version.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/votca_ctp_config.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/votca_ctp_config.h.in"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1306,8 +1358,6 @@
       <item path="../../src/libctp/tools/qmanalyze.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/tools/qmsandbox.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../src/libctp/tools/spectrum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/topology.cc" ex="false" tool="1" flavor2="0">
       </item>

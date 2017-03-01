@@ -369,8 +369,7 @@ void Rates::EvaluatePair(Topology *top, QMPair *qmpair) {
 
     pair_has_e = qmpair->isPathCarrier(-1);
     pair_has_h = qmpair->isPathCarrier(+1);
-    pair_has_s = qmpair->isPathCarrier(+2);
-    pair_has_t = qmpair->isPathCarrier(+3);
+   
 
 //    try {
 //        pair_has_e = _seg_has_e.at(segName1) && _seg_has_e.at(segName2);
@@ -390,12 +389,7 @@ void Rates::EvaluatePair(Topology *top, QMPair *qmpair) {
     if (pair_has_h) {
         this->CalculateRate(top, qmpair, +1);
     }
-    if (pair_has_s) {
-        this->CalculateRate(top, qmpair, +2);
-    }
-    if (pair_has_t) {
-        this->CalculateRate(top, qmpair, +3);
-    }
+  
 }
 
 
@@ -430,17 +424,7 @@ void Rates::CalculateRate(Topology *top, QMPair *qmpair, int state) {
                         - seg1->getEMpoles(state);
         dG_Field = - state * _F * qmpair->R() * NM2M;
     }
-    else if (state>=2){
-        reorg12  = seg1->getU_nX_nN(state)                 // 1->2
-                        + seg2->getU_xN_xX(state);
-        reorg21  = seg1->getU_xN_xX(state)                 // 2->1
-                        + seg2->getU_nX_nN(state);
-        dG_Site  = seg2->getU_xX_nN(state)                 // 1->2 == - 2->1
-                        + seg2->getEMpoles(state)
-                        - seg1->getU_xX_nN(state)
-                        - seg1->getEMpoles(state);       
-    }
-    
+   
     
     
     
