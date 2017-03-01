@@ -6,22 +6,9 @@
    #include <omp.h>
 #endif
 
-/* LIBXC */
-#cmakedefine LIBXC
-#if defined(LIBXC)
-   #define LIBXC
-#endif
-
-/* Linear algebra packages */
-#cmakedefine EIGEN
-#cmakedefine MKL
-#cmakedefine GSL
 
 
-#if defined(GSL)
-    #include <votca/ctp/gsl_boost_ublas_matrix_prod.h>
-#elif defined(MKL)
-    #include <votca/ctp/mkl_boost_ublas_matrix_prod.h>
-#endif
+#include <votca/tools/linalg.h>
+
 
 #endif // _VOTCA_CTP_CONFIG_H
