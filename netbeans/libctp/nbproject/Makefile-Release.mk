@@ -43,7 +43,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/484457893/ewaldactor.o \
 	${OBJECTDIR}/_ext/484457893/extractorfactory.o \
 	${OBJECTDIR}/_ext/484457893/fragment.o \
-	${OBJECTDIR}/_ext/484457893/gsl_boost_ublas_matrix_prod.o \
 	${OBJECTDIR}/_ext/484457893/job.o \
 	${OBJECTDIR}/_ext/484457893/jobapplication.o \
 	${OBJECTDIR}/_ext/484457893/jobcalculatorfactory.o \
@@ -150,11 +149,6 @@ ${OBJECTDIR}/_ext/484457893/fragment.o: nbproject/Makefile-${CND_CONF}.mk ../../
 	${MKDIR} -p ${OBJECTDIR}/_ext/484457893
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484457893/fragment.o ../../src/libctp/fragment.cc
-
-${OBJECTDIR}/_ext/484457893/gsl_boost_ublas_matrix_prod.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libctp/gsl_boost_ublas_matrix_prod.cc 
-	${MKDIR} -p ${OBJECTDIR}/_ext/484457893
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484457893/gsl_boost_ublas_matrix_prod.o ../../src/libctp/gsl_boost_ublas_matrix_prod.cc
 
 ${OBJECTDIR}/_ext/484457893/job.o: nbproject/Makefile-${CND_CONF}.mk ../../src/libctp/job.cc 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484457893
