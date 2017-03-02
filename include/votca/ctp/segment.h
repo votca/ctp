@@ -53,10 +53,10 @@ public:
     void             setHasState(bool yesno, int state);
     bool             hasState(int state);
 
-    double           getOcc(int e_h_s_t);
-    void             setOcc(double occ, int e_h_s_t);
+    double           getOcc(int e_h);
+    void             setOcc(double occ, int e_h);
 
-    // state: -1 electron +1 hole +2 singlet +3 triplet
+    // state: -1 electron +1 hole
     
     void             setU_cC_nN(double dU, int state);
     void             setU_nC_nN(double dU, int state);
@@ -67,9 +67,6 @@ public:
     const double    &getU_cC_nN(int state);
     const double    &getU_nC_nN(int state);
     const double    &getU_cN_cC(int state);
-    const double    &getU_xX_nN(int state);
-    const double    &getU_nX_nN(int state);
-    const double    &getU_xN_xX(int state);
     double           getSiteEnergy(int state);
 
     double           getEMpoles(int state);
@@ -133,34 +130,12 @@ private:
     bool   _has_e;       // from ::EInternal     input     DEFAULT 0
     bool   _has_h;
     
-    
-    bool   _occ_s;      //state 3 = triplet
-    bool   _occ_t;      // t:triplet s:singlet
-    bool   _has_s;      // state 2 =. singlet
-    
-    
-    bool   _has_t;      //Exciton Properties               DEFAULT 0
-   
-   
-    
-    double _U_xX_nN_s;
-    double _U_xX_nN_t;
-    
-    double _U_nX_nN_s;   
-    double _U_nX_nN_t;
-
-    double _U_xN_xX_s;   
-    double _U_xN_xX_t;
-    
-    //double _ePolar_s;
-    //double _ePolar_t;
+ 
 
 
     std::vector< double > _eMpoles;
     //   +1(=> h)   e.static + pol. energy E(+1) - E(0)
     //   -1(=> e)   e.static + pol. energy E(-1) - E(0)
-    //   +2(=> s)   e.static + pol. energy E(+2) - E(0)
-    //   +3(=> t)   e.static + pol. energy E(+3) - E(0)
     std::vector<bool> _hasChrgState;
 
     std::map<int, vec> _intCoords;
