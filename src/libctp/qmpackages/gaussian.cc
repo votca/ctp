@@ -987,37 +987,6 @@ string Gaussian::FortranFormat( const double &number ) {
 }
 
         
-int Gaussian::NumbfGW( string shell_type ) {
-
-    if      ( shell_type == "S" )    { return 1;  }
-    else if ( shell_type == "P" )    { return 4;  } 
-    else if ( shell_type == "D" )    { return 10; }
-    else if ( shell_type == "SP" )   { return 4;  }
-    else if ( shell_type == "SPD" )  { return 10; }
-    else { return 0; }
-}
-
-
-int Gaussian::NumbfQC( string shell_type ) {
-
-    if      ( shell_type == "S" )   { return 1; }
-    else if ( shell_type == "P" )   { return 3; }
-    else if ( shell_type == "D" )   { return 5; }
-    else if ( shell_type == "SP" )  { return 4; }
-    else if ( shell_type == "SPD" ) { return 9; }
-    else { return 0; }
-}
-
-
-int Gaussian::NumbfQC_cart( string shell_type ) {
-
-    if      ( shell_type == "S" )   { return 1;  }
-    else if ( shell_type == "P" )   { return 3;  }
-    else if ( shell_type == "D" )   { return 6;  }
-    else if ( shell_type == "SP" )  { return 4;  }
-    else if ( shell_type == "SPD" ) { return 10; }
-    else { return 0; }
-}
 
 
 

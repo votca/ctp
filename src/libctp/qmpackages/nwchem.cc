@@ -890,14 +890,6 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
 
 
 
-/**
- * Converts the NWChem data stored in the Orbitals object to GW input format
- */
-bool NWChem::ConvertToGW( Orbitals* _orbitals ) {
-    cerr << "Tried to convert to GW from NWChem package. ";
-    throw std::runtime_error( "Conversion not implemented yet!");
-}
-
 
 string NWChem::FortranFormat( const double &number ) {
     stringstream _ssnumber;
