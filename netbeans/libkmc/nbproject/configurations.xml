@@ -3,9 +3,11 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f4" displayName="Algorithms" projectFiles="true">
       <itemPath>../../include/votca/kmc/algorithm.h</itemPath>
+      <itemPath>../../include/votca/kmc/terminal_algorithm.h</itemPath>
       <itemPath>../../src/libkmc/algorithms/vssm2_carriers.h</itemPath>
       <itemPath>../../src/libkmc/algorithms/vssm2_nodes.h</itemPath>
       <itemPath>../../src/libkmc/algorithms/vssm2_snail.h</itemPath>
+      <itemPath>../../src/libkmc/algorithms/vssm2_terminal.h</itemPath>
     </logicalFolder>
     <logicalFolder name="calculators" displayName="Calculators" projectFiles="true">
       <itemPath>../../src/libkmc/calculators/diffusion.h</itemPath>
@@ -17,6 +19,7 @@
       <itemPath>../../src/libkmc/calculators/kmcsingle.h</itemPath>
       <itemPath>../../src/libkmc/calculators/snail.h</itemPath>
       <itemPath>../../src/libkmc/calculators/static.h</itemPath>
+      <itemPath>../../src/libkmc/calculators/terminal.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Carriers" projectFiles="true">
       <itemPath>../../include/votca/kmc/carrier.h</itemPath>
@@ -38,10 +41,7 @@
                    projectFiles="true">
       <itemPath>../../include/votca/kmc/ImagePotential.h</itemPath>
       <itemPath>../../include/votca/kmc/bnode.h</itemPath>
-      <itemPath>../../include/votca/kmc/bsumtree.h</itemPath>
       <itemPath>../../include/votca/kmc/edge.h</itemPath>
-      <itemPath>../../include/votca/kmc/events.h</itemPath>
-      <itemPath>../../include/votca/kmc/globaleventinfo.h</itemPath>
       <itemPath>../../include/votca/kmc/graph.h</itemPath>
       <itemPath>../../include/votca/kmc/kmcapplication.h</itemPath>
       <itemPath>../../include/votca/kmc/kmccalculator.h</itemPath>
@@ -49,6 +49,7 @@
       <itemPath>../../include/votca/kmc/longrange.h</itemPath>
       <itemPath>../../include/votca/kmc/node.h</itemPath>
       <itemPath>../../include/votca/kmc/state.h</itemPath>
+      <itemPath>../../include/votca/kmc/terminalgraph.h</itemPath>
       <itemPath>../../include/votca/kmc/version.h</itemPath>
       <itemPath>../../include/votca/kmc/vssmgroup.h</itemPath>
     </logicalFolder>
@@ -179,8 +180,6 @@
       </item>
       <item path="../../include/votca/kmc/bnode.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/bsumtree.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/carrier.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/carrierfactory.h"
@@ -193,13 +192,6 @@
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/eventfactory.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/events.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/globaleventinfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -227,6 +219,16 @@
             flavor2="0">
       </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/terminal_algorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/terminalgraph.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -258,6 +260,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/algorithms/vssm2_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/algorithms/vssm2_terminal.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -303,6 +310,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/static.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/terminal.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -387,8 +399,6 @@
       </item>
       <item path="../../include/votca/kmc/bnode.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../include/votca/kmc/bsumtree.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../include/votca/kmc/carrier.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/carrierfactory.h"
@@ -401,13 +411,6 @@
       <item path="../../include/votca/kmc/event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/kmc/eventfactory.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/events.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/kmc/globaleventinfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -435,6 +438,16 @@
             flavor2="0">
       </item>
       <item path="../../include/votca/kmc/state.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/terminal_algorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../include/votca/kmc/terminalgraph.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../include/votca/kmc/version.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -466,6 +479,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/algorithms/vssm2_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/algorithms/vssm2_terminal.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -511,6 +529,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/static.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/terminal.h"
             ex="false"
             tool="3"
             flavor2="0">

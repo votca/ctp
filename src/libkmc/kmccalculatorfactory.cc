@@ -21,6 +21,7 @@
 #include "calculators/dynamic.h"
 #include "calculators/static.h"
 #include "calculators/snail.h"
+#include "calculators/terminal.h"
 
 namespace votca { namespace kmc {
 
@@ -31,6 +32,7 @@ void KMCCalculatorFactory::RegisterAll(void)
     Calculators().Register<Dynamic>("dynamic"); // dynamic creation of events after a move (slow))
     Calculators().Register<Static>("static"); // precomputed rates
     Calculators().Register<Snail>("snail"); // precomputed rates
+    Calculators().Register<Terminal>("terminal"); // source and drain (injection and collection) of carriers
 }
 
 }}

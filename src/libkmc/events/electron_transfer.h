@@ -35,7 +35,7 @@ public:
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
         SetRate( _edge->Rate() );
-        // enable this event if a carrier is provided
+        //only enable this event if a carrier is provided
         Disable();
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
@@ -51,17 +51,20 @@ public:
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
         
         if ( electron->Move(edge) == true ) {
+            
             // disable old events
             for (auto& event: disabled_events ) {   
                 event->Disable();     
             }
 
+            //check all the events connected to the previous node (node_from)
             for (auto& event: events_to_check) {
 
                 //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
                 if (event->UnivailableEvent()==true){
                     //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
 
+                    //if a previous unavailable event is now available (no longer occupied) - Enable it
                     std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
                     if ( it_to == electron->e_occupiedNodes.end() ) {
                         event->Enable();
@@ -82,17 +85,10 @@ public:
         }        
         else 
         { 
-            //Event move is unavailable           
+            //Event move is unavailable - already occupied           
             Unavailable();
-            Disable();
-            //Include this next part to use the same carrier but find a new event move
-            //Not updating the whole VSSM group, just moving up one level
-            //Event* parent = GetParent();
-            //if(parent->CumulativeRate()!=0){
-            //parent->OnExecute(state, RandomVariable);
-            //}
-            //else{ return;}
-            
+            //Disable this event
+            Disable();            
         }         
     };
 
@@ -132,7 +128,7 @@ public:
         }
     }
      
-    void checkEventsOnExecute( std::vector<Event*>* events){
+    void CheckEventsOnExecute( std::vector<Event*>* events){
         for (auto& event: *events){
             ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
             events_to_check.push_back(ct_transfer);

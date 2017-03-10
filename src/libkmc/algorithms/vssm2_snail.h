@@ -127,7 +127,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     
     double time = 0.0;
     int step = 0;
-    double trajout = outtime;
+    double trajout = 0.0;
     
     if ( runtime != 0 && nsteps == 0 ){ 
         runtime = runtime;
@@ -144,8 +144,9 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
     }
     
     state->Trajectory_create(trajectoryfile);
- 
+    state->Trajectory_write(trajout, trajectoryfile);
        
+    trajout = outtime;
     while ( step < nsteps || time < runtime ){                
         
         //head_event.Print();

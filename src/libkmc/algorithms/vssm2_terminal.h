@@ -15,12 +15,12 @@
  *
  */
 
-#ifndef __VOTCA_KMC_VSSM2_NODES_H_
-#define __VOTCA_KMC_VSSM2_NODES_H_
+#ifndef __VOTCA_KMC_VSSM2_TERMINAL_H_
+#define __VOTCA_KMC_VSSM2_TERMINAL_H_
 
 #include <unordered_map>
 #include <time.h>
-#include <votca/kmc/algorithm.h>
+#include <votca/kmc/terminal_algorithm.h>
 #include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
 #include "events/electron_transfer.h"
@@ -35,14 +35,14 @@
 
 namespace votca { namespace kmc {
   
-class VSSM2_NODES : public Algorithm {
+class VSSM2_TERMINAL : public TerminalAlgorithm {
     
 public:
     
-void Initialize ( State* _state, Graph* _graph ) { 
+void Initialize ( State* _state, TerminalGraph* _graph ) { 
     
     state = _state;
-    graph = _graph;
+    terminalgraph = _graph;
     
     // Map of charge transfer events associated with a particular node
     std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
@@ -50,7 +50,7 @@ void Initialize ( State* _state, Graph* _graph ) {
     // Vector of all charge transfer events
     std::vector<ElectronTransfer*> ct_events;
  
-    for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+    for (TerminalGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
         
@@ -141,13 +141,13 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
-    votca::tools::Random2 RandomVariable;
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
    
     clock_t begin = clock();
 
     // Initialise random number generator
+    votca::tools::Random2 RandomVariable;
     srand(seed);
     RandomVariable.init(rand(), rand(), rand(), rand());
     
@@ -169,15 +169,14 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         std::cout << "Specified number of simulation steps: " << nsteps << std::endl;
     }
     
-    state->Trajectory_create(trajectoryfile);
+    state->Trajectory_create(trajectoryfile); 
     state->Trajectory_write(trajout, trajectoryfile);
     
     trajout = outtime;
     
     while ( step < nsteps || time < runtime ){  
-        
+     
         //head_event.Print();
-             
         head_event.OnExecute(state, &RandomVariable );         
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
@@ -192,6 +191,25 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
+        
+        //Run over all carriers to check which to collect - using the terminal graph collection nodes
+        /*for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
+            
+            BNode* node = (*carrier)->GetNode();
+            
+            for (TerminalGraph::iterator node_to_collect = terminalgraph->collection_nodes_begin(); node_to_collect != terminalgraph->collection_nodes_end(); ++node_to_collect){
+
+                if (node == (*node_to_collect)){
+                    
+                    std::cout << "carrier " << (*carrier)->id() << " on node " << (*carrier)->GetNode()->id << " collected " << std::endl;
+                    
+                    //BNode* new_node = terminalgraph->GetInjectionNode(1 + (*carrier)->id());
+                    //(*carrier)->SetNode( new_node );
+                    //std::cout << "new node id: " << (*carrier)->GetNode()->id << std::endl;
+                    
+                }
+            }
+        }*/
 
     }
     state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
@@ -206,6 +224,7 @@ private:
     CarrierEscape head_event;
     // logger : move logger.h to tools
     // Logger log;   
+    
 };
     
 }}

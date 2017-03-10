@@ -15,14 +15,14 @@
  *
  */
 
-#ifndef __VOTCA_KMC_GRAPH_H_
-#define __VOTCA_KMC_GRAPH_H_
+#ifndef __VOTCA_KMC_TERMINALGRAPH_H_
+#define __VOTCA_KMC_TERMINALGRAPH_H_
 
 #include <votca/kmc/bnode.h>
 
 namespace votca { namespace kmc {
   
-class Graph {
+class TerminalGraph {
 public:
     
     // iterator over carriers
@@ -32,7 +32,15 @@ public:
     iterator nodes_begin() { return nodes.begin(); }
     iterator nodes_end() { return nodes.end(); } 
     int nodes_size() {return nodes.size(); }
-  
+    
+    iterator injectable_nodes_begin() { return injectable_nodes.begin(); }
+    iterator injectable_nodes_end() { return injectable_nodes.end(); } 
+    int injectable_nodes_size() {return injectable_nodes.size();}
+    
+    iterator collection_nodes_begin() { return collection_nodes.begin(); }
+    iterator collection_nodes_end() { return collection_nodes.end(); } 
+    int collection_nodes_size() {return collection_nodes.size();}
+    
     void Load(std::string filename);    
     void Print();
     
@@ -42,22 +50,32 @@ public:
         nodes.push_back( node );
         return node;
     };
-    
+  
     BNode* GetNode( int id ) {
         std::vector< BNode* >::iterator node = nodes.begin() ;
         while ( (*node)->id != id ) node++ ;
         return *node;
     };
-     
+    
+    // node selection from the injectable nodes
+    BNode* GetInjectionNode( int id ) {
+        std::vector< BNode* >::iterator node = injectable_nodes.begin() ;
+        while ( (*node)->id != id ) node++ ;
+        return *node;
+    };
+  
 private:
 
     std::vector< BNode* > nodes;
+    std::vector < BNode* > injectable_nodes;
+    std::vector < BNode* > collection_nodes;
     std::vector< Edge* > edges;
+
     
 };
 
 
-void Graph::Load(std::string filename) {
+void TerminalGraph::Load(std::string filename) {
     
     std::cout << "Loading the graph from " << filename << std::endl;
     
@@ -76,10 +94,20 @@ void Graph::Load(std::string filename) {
         // position in nm
         double x = stmt->Column<double>(1);
         double y = stmt->Column<double>(2);
-        double z = stmt->Column<double>(3);
-        
+        double z = stmt->Column<double>(3);       
+   
         myvec position = myvec(x, y, z); 
         node->position = position;
+        
+        //Only add an injectable node from the source face of the lattice        
+        if (node->id >= 1 && node->id <=100){
+            injectable_nodes.push_back( node );
+        }
+        
+        //List of collection nodes, from the drain face of the lattice
+        if (node->id >=1901 && node->id <=2000){
+            collection_nodes.push_back( node );
+        }
         
         //node->PrintNode();   
     }
@@ -100,8 +128,8 @@ void Graph::Load(std::string filename) {
         double dx_pbc = stmt->Column<double>(2);
         double dy_pbc = stmt->Column<double>(3);
         double dz_pbc = stmt->Column<double>(4);
-        double rate12e = stmt->Column<double>(5); // 1 -> 2
-        double rate21e = stmt->Column<double>(6); // 2 -> 1
+        double rate12e = 10E11; // 1 -> 2
+        double rate21e = 10E11; // 2 -> 1
        
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
         Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e); 
@@ -120,7 +148,7 @@ void Graph::Load(std::string filename) {
 
 }
 
-    void Graph::Print(){
+    void TerminalGraph::Print(){
     
         for (std::vector< BNode* >::iterator node = nodes.begin() ; node != nodes.end(); ++node) {
             (*node)->PrintNode();
