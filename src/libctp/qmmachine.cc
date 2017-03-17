@@ -6,7 +6,6 @@
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 #include <votca/ctp/logger.h>
-#include <votca/ctp/elements.h>
 #include <votca/tools/linalg.h>
 
 using boost::format;
