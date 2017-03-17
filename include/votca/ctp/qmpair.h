@@ -40,7 +40,7 @@ public:
         Hopping,
         SuperExchange,
         SuperExchangeAndHopping,
-       
+        Excitoncl,
         
     };
 
@@ -59,6 +59,16 @@ public:
                 _lambdaO_h(0),
                 _Jeff2_e(0),
                 _Jeff2_h(0),
+                _rate12_s(0),
+                _rate21_s(0),
+                _rate12_t(0),
+                _rate21_t(0),
+                _has_s(false),
+                _has_t(false),
+                _lambdaO_s(0),
+                _lambdaO_t(0),   
+                _Jeff2_s(0),
+                _Jeff2_t(0),
                 _pair_type(Hopping) { };
     QMPair(int id, Segment *seg1, Segment *seg2);
    ~QMPair();
@@ -81,7 +91,8 @@ public:
    double   getReorg12(int state) { return first->getU_nC_nN(state) + second->getU_cN_cC(state); } // 1->2
    double   getReorg21(int state) { return first->getU_cN_cC(state) + second->getU_nC_nN(state); } // 2->1
   
-  
+   double   getReorg12_x(int state) { return first->getU_nX_nN(state) + second->getU_xN_xX(state); } // 1->2
+   double   getReorg21_x(int state) { return first->getU_xN_xX(state) + second->getU_nX_nN(state); } // 1->2
 
    void     setRate12(double rate, int state);
    void     setRate21(double rate, int state);
@@ -136,7 +147,21 @@ protected:
     
     double          _Jeff2_e;
     double          _Jeff2_h;
-   
+    //excition part s:singlet t:triplet
+    // state +2: singlet
+    //state +3:triplet
+    
+    
+    double _rate12_s;   
+    double _rate21_s; 
+    double _rate12_t;
+    double _rate21_t;
+    bool _has_s;       
+    bool _has_t;
+    double _lambdaO_s;   
+    double _lambdaO_t; 
+    double          _Jeff2_s;
+    double          _Jeff2_t;
 
     PairType _pair_type;
     std::vector<Segment*> _bridging_segments;
