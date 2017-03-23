@@ -32,7 +32,7 @@ public:
 
    virtual std::string Type() = 0;
    virtual void OnExecute( State* state, votca::tools::Random2 *RandomVariable ) = 0;
-          
+   
    void Expire() { expired = true; parent->has_expired_subordinates = true; }  
    bool Expired(){ return expired; };
    

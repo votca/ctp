@@ -48,7 +48,7 @@ public:
         
         if(votca::tools::globals::verbose){
         std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
-                      << " Node_to position: " << edge->NodeTo()->position 
+                      << " Node_to position: " << edge->NodeTo()->position
                       << " Occupied Nodes: " ;
                       for(auto& node : e_occupiedNodes) { std::cout << node->id << " "; }
                       std::cout << " Total: " << e_occupiedNodes.size();

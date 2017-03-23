@@ -141,7 +141,6 @@ void Terminal::RunKMC() {
             if (_injection_method == "random"){
                 
                 int node_id = RandomVariable.rand_uniform_int(terminalgraph.injectable_nodes_size());
-                //node_id + 1 in case the random variable is 0
                 BNode* node_from = terminalgraph.GetInjectionNode(node_id+1);
                 while (ecarrier->AddNode(node_from)==false){
                     int node_id = RandomVariable.rand_uniform_int(terminalgraph.injectable_nodes_size());

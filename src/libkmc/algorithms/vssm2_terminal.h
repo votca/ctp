@@ -192,25 +192,6 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
             trajout = time + outtime;
         }
         
-        //Run over all carriers to check which to collect - using the terminal graph collection nodes
-        /*for (State::iterator carrier = state->begin(); carrier != state->end(); ++carrier) {
-            
-            BNode* node = (*carrier)->GetNode();
-            
-            for (TerminalGraph::iterator node_to_collect = terminalgraph->collection_nodes_begin(); node_to_collect != terminalgraph->collection_nodes_end(); ++node_to_collect){
-
-                if (node == (*node_to_collect)){
-                    
-                    std::cout << "carrier " << (*carrier)->id() << " on node " << (*carrier)->GetNode()->id << " collected " << std::endl;
-                    
-                    //BNode* new_node = terminalgraph->GetInjectionNode(1 + (*carrier)->id());
-                    //(*carrier)->SetNode( new_node );
-                    //std::cout << "new node id: " << (*carrier)->GetNode()->id << std::endl;
-                    
-                }
-            }
-        }*/
-
     }
     state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
     clock_t end = clock();    

@@ -70,7 +70,7 @@ public:
     bool Save(std::string filename);
     bool Load(std::string filename);
     
-    Carrier* AddCarrier( std::string type );  
+    Carrier* AddCarrier( std::string type );
     void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
 
     void Trajectory_create( std::string trajectoryfile );
