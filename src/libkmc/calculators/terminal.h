@@ -114,15 +114,10 @@ void Terminal::RunKMC() {
     EventFactory::RegisterAll();
     
     std::cout << "Number of Nodes: " << terminalgraph.nodes_size() << std::endl;
-    std::cout << "Number of injectable nodes: " << terminalgraph.injectable_nodes_size() << std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
     std::cout << "Number of holes: " << _nholes << std::endl;
     std::cout << "Method of carrier injection: " << _injection_method << std::endl;
     
-    if(_nelectrons>terminalgraph.injectable_nodes_size()){
-        std::cout << "The number of electrons exceeds the number of injectable nodes!" << std::endl;
-        return;
-    }
     
     if (_injection_method == "random"){
         //For the random injection of electrons - independent from random events    
@@ -137,23 +132,11 @@ void Terminal::RunKMC() {
             // Create electrons
             Carrier* carrier =  state.AddCarrier( "electron" );
             Electron* ecarrier = dynamic_cast<Electron*>(carrier);
-            
-            if (_injection_method == "random"){
-                
-                int node_id = RandomVariable.rand_uniform_int(terminalgraph.injectable_nodes_size());
-                BNode* node_from = terminalgraph.GetInjectionNode(node_id+1);
-                while (ecarrier->AddNode(node_from)==false){
-                    int node_id = RandomVariable.rand_uniform_int(terminalgraph.injectable_nodes_size());
-                    node_from = terminalgraph.GetInjectionNode(node_id+1);
-                } 
-                if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
-            }
-            
-            else if (_injection_method == "uniform") {
-                BNode* node_from = terminalgraph.GetInjectionNode(1 + electron);
+
+                BNode* node_from = terminalgraph.GetNode(0);
                 ecarrier->AddNode( node_from );
                 //node_from->PrintNode();  
-            }
+            
         }
     }
     

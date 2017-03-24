@@ -30,8 +30,6 @@ public:
 
     std::string Type(){ return "electron injection"; } ;
     
-    Carrier* carrier;
-    
     void Initialize( Electron* _electron, Edge* _edge ) {
         electron = _electron;
         edge = _edge;
@@ -42,22 +40,6 @@ public:
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
     }
-    
-   
-    void Inject( State* state, votca::tools::Random2 *RandomVariable) {
-
-        Electron* ecarrier = dynamic_cast<Electron*>(carrier);
-        
-        int node_id = RandomVariable->rand_uniform_int(100);
-        BNode* node_from;
-        node_from->id = (node_id);
-        while (ecarrier->AddNode(node_from)==false){
-            int node_id = RandomVariable->rand_uniform_int(100);
-            node_from->id = (node_id);
-        } 
-        if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
-                
-    };
     
     BNode* NodeFrom(){ return edge->NodeFrom(); };
     BNode* NodeTo(){ return edge->NodeTo(); };
@@ -70,24 +52,11 @@ public:
         
         if ( electron->Move(edge) == true ) {
             
+            
+            
             // disable old events
             for (auto& event: disabled_events ) {   
                 event->Disable();     
-            }
-
-            //check all the events connected to the previous node (node_from)
-            for (auto& event: events_to_check) {
-
-                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-                if (event->UnivailableEvent()==true){
-                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-
-                    //if a previous unavailable event is now available (no longer occupied) - Enable it
-                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
-                    if ( it_to == electron->e_occupiedNodes.end() ) {
-                        event->Enable();
-                    }
-                } 
             }
             
             // update the parent VSSM group
@@ -112,23 +81,16 @@ public:
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
-            enabled_events.push_back(ct_transfer);
+            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*>(event);
+            enabled_events.push_back(electron_transfer);
         }
     }
 
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
-            disabled_events.push_back(ct_transfer);
+            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*>(event);
+            disabled_events.push_back(electron_injection);
         }
-    }
-     
-    void CheckEventsOnExecute( std::vector<Event*>* events){
-        for (auto& event: *events){
-            ElectronTransfer* ct_transfer = dynamic_cast<ElectronTransfer*>(event);
-            events_to_check.push_back(ct_transfer);
-        }  
     }
     
     virtual void Print(std::string offset="") {
@@ -145,11 +107,10 @@ public:
         
 private:
 
-    std::vector<ElectronTransfer*> disabled_events;
+    std::vector<ElectronInjection*> disabled_events;
     std::vector<ElectronTransfer*> enabled_events;
-    std::vector<ElectronTransfer*> events_to_check;
     
-    // electron to move
+    // electron to inject
     Electron* electron;
     Edge* edge;
     votca::tools::vec distance_pbc;

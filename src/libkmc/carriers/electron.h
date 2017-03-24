@@ -33,10 +33,10 @@ public:
     virtual bool AddNode( BNode* _node ) { 
         node = _node;
         std::vector<BNode*>::iterator it_node  = NodeOccupation ( node ) ;
-        if (it_node == e_occupiedNodes.end()){
-            e_occupiedNodes.push_back( node );
+        if (it_node == e_occupiedNodes.end() || node->id == 0){    
             std::cout << " on node: " <<  node->id << std::endl;
-            return true;
+            e_occupiedNodes.push_back( node );
+            return true;                
         }
         else {
             //std::cout << " Not added - node already occupied " << std::endl;
@@ -62,10 +62,10 @@ public:
             
             distance += edge->DistancePBC();
             node = edge->NodeTo();
-                        
+    
             std::vector<BNode*>::iterator it_from = NodeOccupation ( edge->NodeFrom() ) ;
             *it_from =node; 
-            
+                       
             return true;
             
         } 

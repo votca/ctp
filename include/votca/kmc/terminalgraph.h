@@ -89,6 +89,14 @@ void TerminalGraph::Load(std::string filename) {
         
     votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ FROM segments;");
 
+    BNode *node = AddNode();
+    node->id = 0;
+    double x = 0.0;
+    double y = 5.0;
+    double z = 5.0;  
+    myvec position = myvec(x, y, z); 
+    node->position = position;
+    
     while (stmt->Step() != SQLITE_DONE)
     {
         BNode *node = AddNode();
@@ -103,14 +111,14 @@ void TerminalGraph::Load(std::string filename) {
         myvec position = myvec(x, y, z); 
         node->position = position;
         
-        //Only add an injectable node from the source face of the lattice        
+        //Only add an injectable node from the source facing side of the lattice        
         //if (node->id >= 1 && node->id <=100){
         double injection_face = 0.5;
         if ( x == injection_face ){
             injectable_nodes.push_back( node );
         }
         
-        //List of collection nodes, from the drain face of the lattice
+        //List of collection nodes, from the drain facing side of the lattice
         double collection_face = 19.5;
         //if (node->id >=1901 && node->id <=2000){
         if ( x == collection_face ){
@@ -122,6 +130,23 @@ void TerminalGraph::Load(std::string filename) {
     
     delete stmt;
     
+    BNode* injecting_node = GetNode( 0 );
+    
+    for (std::vector< BNode* >::iterator injection_edge = injectable_nodes.begin() ; injection_edge != injectable_nodes.end(); ++injection_edge){
+
+                double dx_inj = 0.0;
+                double dy_inj = 0.0;
+                double dz_inj = 0.0;
+                double rate_inj_e = 10E5; // injecting_node -> injection face
+                
+                votca::tools::vec distance(dx_inj, dy_inj, dz_inj);
+                
+                Edge* edge_injection = new Edge(injecting_node, (*injection_edge), distance, rate_inj_e);
+                edges.push_back( edge_injection );
+                injecting_node->AddEdge( edge_injection );
+                
+    }
+    
     //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table) 
     //List of rates for electron transfer from seg 1 to seg 2 and vice versa
     stmt = db.Prepare("SELECT seg1, seg2, drX, drY, drZ, rate12e, rate21e FROM pairs;");
@@ -132,78 +157,26 @@ void TerminalGraph::Load(std::string filename) {
         
         BNode* node1 = GetNode( seg1 );
         BNode* node2 = GetNode( seg2 );
-        
-        std::vector<BNode*>::iterator it_node1  = Collection_nodes ( node1 ) ;
-        std::vector<BNode*>::iterator it_node2  = Collection_nodes ( node2 ) ;
-        
-        //Only add a full list of edges for nodes not within the collection nodes
-        //If a carrier reaches the collection nodes, it can not travel back into the lattice, but must be moved to the injection face
-        //first check seg1
-        if (it_node1 == collection_nodes.end()){
-            
-            double dx_pbc = stmt->Column<double>(2);
-            double dy_pbc = stmt->Column<double>(3);
-            double dz_pbc = stmt->Column<double>(4);
-            double rate12e = 10E11; // 1 -> 2
-            double rate21e = 10E11; // 2 -> 1
+
+        double dx_pbc = stmt->Column<double>(2);
+        double dy_pbc = stmt->Column<double>(3);
+        double dz_pbc = stmt->Column<double>(4);
+        double rate12e = 10E11; // 1 -> 2
+        double rate21e = 10E11; // 2 -> 1
        
-            votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
+        votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
 
-            Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
-            edges.push_back( edge12 );
-            node1->AddEdge( edge12 );
-            
-            //second check seg2 
-            if (it_node2 == collection_nodes.end()){
-                
-                Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
-                edges.push_back( edge21 );
-                node2->AddEdge( edge21 );
-            }
-            
-            //if seg2 is within the collection nodes, only add edges 2->1 where 1 is an injection node
-            else{
-                
-                for (std::vector< BNode* >::iterator injection_edge = injectable_nodes.begin() ; injection_edge != injectable_nodes.end(); ++injection_edge){
-
-                    //double dx_inj_pbc = 1.0;
-                    //double dy_inj_pbc = ((*injection_edge)->position.getY())-(node1->position.getY());
-                    //double dz_inj_pbc = ((*injection_edge)->position.getZ())-(node1->position.getZ());
-                    
-                    double dx_inj = 0.0;
-                    double dy_inj = 0.0;
-                    double dz_inj = 0.0;
-                    
-                    double rate_inj_e = 10E11; // 2 -> 1
-                
-                    votca::tools::vec distance_inj(dx_inj, dy_inj, dz_inj);
-                
-                    Edge* edge_injection = new Edge(node2, (*injection_edge), distance_inj, rate_inj_e);
-                    edges.push_back( edge_injection );
-                    node2->AddEdge( edge_injection );
-                }   
-            }
-        }
+        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
+        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
         
-        //if seg1 is within the collection nodes, only add edges 1->2 where 2 is an injection node
-        else{
-            
-            for (std::vector< BNode* >::iterator injection_edge = injectable_nodes.begin() ; injection_edge != injectable_nodes.end(); ++injection_edge){
-
-                double dx_inj_pbc = 0.0;
-                double dy_inj_pbc = 0.0;
-                double dz_inj_pbc = 0.0;
-                double rate_inj_e = 10E11; // 1 -> 2
-                
-                votca::tools::vec distance_pbc(dx_inj_pbc, dy_inj_pbc, dz_inj_pbc);
-                
-                Edge* edge_injection = new Edge(node1, (*injection_edge), distance_pbc, rate_inj_e);
-                edges.push_back( edge_injection );
-                node1->AddEdge( edge_injection );
-            }
-        }
-
+        edges.push_back( edge12 );
+        edges.push_back( edge21 );
+        
+        node1->AddEdge( edge12 );
+        node2->AddEdge( edge21 );   
+   
     }
+    
     delete stmt;
 
 }
