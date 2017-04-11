@@ -33,7 +33,7 @@ public:
     virtual bool AddNode( BNode* _node ) { 
         node = _node;
         std::vector<BNode*>::iterator it_node  = NodeOccupation ( node ) ;
-        if (it_node == e_occupiedNodes.end() || node->id == 0){    
+        if (it_node == e_occupiedNodes.end()){    
             std::cout << " on node: " <<  node->id << std::endl;
             e_occupiedNodes.push_back( node );
             return true;                
@@ -65,10 +65,11 @@ public:
     
             std::vector<BNode*>::iterator it_from = NodeOccupation ( edge->NodeFrom() ) ;
             *it_from =node; 
-                       
+
             return true;
             
-        } 
+        }
+
         
         else { // reject the move if the node is occupied
             if(votca::tools::globals::verbose){std::cout << " --- REJECTED  ";}

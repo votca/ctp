@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ElectronInjection_H
-#define __VOTCA_KMC_ElectronInjection_H
+#ifndef __VOTCA_KMC_ELECTRONTRANSFERTERMINAL_H
+#define __VOTCA_KMC_ELECTRONTRANSFERTERMINAL_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
@@ -24,12 +24,12 @@
 
 namespace votca { namespace kmc {
     
-class ElectronInjection : public Event {
+class ElectronTransferTerminal : public Event {
     
 public:
 
-    std::string Type(){ return "electron injection"; } ;
-    
+    std::string Type(){ return "electron transfer terminal"; } ;
+        
     void Initialize( Electron* _electron, Edge* _edge ) {
         electron = _electron;
         edge = _edge;
@@ -40,7 +40,7 @@ public:
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
     }
-    
+
     BNode* NodeFrom(){ return edge->NodeFrom(); };
     BNode* NodeTo(){ return edge->NodeTo(); };
     
@@ -49,12 +49,26 @@ public:
       
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
-        
+
         if ( electron->Move(edge) == true ) {
-            
+
             // disable old events
             for (auto& event: disabled_events ) {   
                 event->Disable();     
+            }
+            //check all the events connected to the previous node (node_from)
+            for (auto& event: events_to_check) {
+
+                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+                if (event->UnivailableEvent()==true){
+                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+
+                    //if a previous unavailable event is now available (no longer occupied) - Enable it
+                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == electron->e_occupiedNodes.end() ) {
+                        event->Enable();
+                    }
+                } 
             }
             
             // update the parent VSSM group
@@ -66,9 +80,8 @@ public:
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
-            }
-
-            std::cout << "Electron Injected" << std::endl;            
+            }   
+            
         }        
         else 
         { 
@@ -78,19 +91,55 @@ public:
             Disable();            
         }         
     };
+
+    // creates a vector of electron transfer events for a specific node and electron
+    /*void CreateEvents( std::vector< ElectronTransferTerminal* >* events, BNode* node, Electron* electron, bool status ) {           
+            
+        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
+                //New event - electron transfer
+                Event* _et =  Events().Create( "electron_transfer" );
+                _et->SetParent( GetParent() );
+                ElectronTransferTerminal* et = dynamic_cast<ElectronTransferTerminal*>(_et);
+                et->Initialize( electron, *it_edge );
+                if ( status ) {
+                    et->Enable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                } else {
+                    et->Disable();
+                    //std::cout << node->id << "-" << (*node_to)->id << " ";
+                }
+                events->push_back(et);
+        }
+        //std::cout << std::endl;
+    }  
+    */
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
-            enabled_events.push_back(electron_transfer);
+            ElectronTransferTerminal* ct_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
+            enabled_events.push_back(ct_transfer);
         }
     }
 
+    /*void AddCollectEnableOnExecute( std::vector< Event* >* events ) {
+        for (auto& event: *events ) {
+            ElectronCollection* electron_collection  = dynamic_cast<ElectronCollection*>(event);
+            collect_events_to_enable.push_back(electron_collection);
+        }
+    }*/
+        
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*>(event);
-            disabled_events.push_back(electron_injection);
+            ElectronTransferTerminal* ct_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
+            disabled_events.push_back(ct_transfer);
         }
+    }
+     
+    void CheckEventsOnExecute( std::vector<Event*>* events){
+        for (auto& event: *events){
+            ElectronTransferTerminal* ct_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
+            events_to_check.push_back(ct_transfer);
+        }  
     }
     
     virtual void Print(std::string offset="") {
@@ -107,10 +156,12 @@ public:
         
 private:
 
-    std::vector<ElectronInjection*> disabled_events;
+    std::vector<ElectronTransferTerminal*> disabled_events;
     std::vector<ElectronTransferTerminal*> enabled_events;
+    std::vector<ElectronTransferTerminal*> events_to_check;
+    //std::vector<ElectronCollection*> collect_events_to_enable;
     
-    // electron to inject
+    // electron to move
     Electron* electron;
     Edge* edge;
     votca::tools::vec distance_pbc;
@@ -120,3 +171,6 @@ private:
 
 }}
 #endif 
+
+
+

@@ -81,7 +81,7 @@ public:
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
-            }            
+            }       
         }        
         else 
         { 

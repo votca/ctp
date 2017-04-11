@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ElectronInjection_H
-#define __VOTCA_KMC_ElectronInjection_H
+#ifndef __VOTCA_KMC_ElectronCollection_H
+#define __VOTCA_KMC_ElectronCollection_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
@@ -24,11 +24,11 @@
 
 namespace votca { namespace kmc {
     
-class ElectronInjection : public Event {
+class ElectronCollection : public Event {
     
 public:
 
-    std::string Type(){ return "electron injection"; } ;
+    std::string Type(){ return "electron collection"; } ;
     
     void Initialize( Electron* _electron, Edge* _edge ) {
         electron = _electron;
@@ -49,27 +49,30 @@ public:
       
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
-        
+
         if ( electron->Move(edge) == true ) {
             
+            std::cout << "TEST" << std::endl;
+            
+            std::cout << "Electron collected" << std::endl;       
+        
             // disable old events
             for (auto& event: disabled_events ) {   
                 event->Disable();     
-            }
+            }  
             
             // update the parent VSSM group
             Event* parent = GetParent();
             parent->ClearSubordinate();
-            
+
             // enable new events
             for (auto& event: enabled_events ) {
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
-            }
-
-            std::cout << "Electron Injected" << std::endl;            
-        }        
+            }            
+        }  
+        
         else 
         { 
             //Event move is unavailable - already occupied           
@@ -77,19 +80,20 @@ public:
             //Disable this event
             Disable();            
         }         
+      
     };
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
-            enabled_events.push_back(electron_transfer);
+            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*>(event);
+            enabled_events.push_back(electron_injection);
         }
     }
 
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*>(event);
-            disabled_events.push_back(electron_injection);
+            ElectronCollection* electron_collection = dynamic_cast<ElectronCollection*>(event);
+            disabled_events.push_back(electron_collection);
         }
     }
     
@@ -107,8 +111,8 @@ public:
         
 private:
 
-    std::vector<ElectronInjection*> disabled_events;
-    std::vector<ElectronTransferTerminal*> enabled_events;
+    std::vector<ElectronCollection*> disabled_events;
+    std::vector<ElectronInjection*> enabled_events;
     
     // electron to inject
     Electron* electron;

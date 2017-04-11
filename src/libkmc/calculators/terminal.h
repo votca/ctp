@@ -104,16 +104,19 @@ void Terminal::RunKMC() {
    
     TerminalGraph terminalgraph;
     State state;
- 
+     
     std::string filename( "state.sql" );
+    terminalgraph.Create_electrodes( _nelectrons );
     terminalgraph.Load( filename );
  
-    //graph.Print();
+    //terminalgraph.Print();
     CarrierFactory::RegisterAll();
 
     EventFactory::RegisterAll();
     
-    std::cout << "Number of Nodes: " << terminalgraph.nodes_size() << std::endl;
+    std::cout << "Number of lattice nodes: " << terminalgraph.lattice_nodes_size() << std::endl;
+    std::cout << "Number of injection nodes (source): " << terminalgraph.inject_nodes_size() <<  std::endl;
+    std::cout << "Number of collection nodes (drain): " << terminalgraph.collect_nodes_size() <<  std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
     std::cout << "Number of holes: " << _nholes << std::endl;
     std::cout << "Method of carrier injection: " << _injection_method << std::endl;
@@ -133,9 +136,10 @@ void Terminal::RunKMC() {
             Carrier* carrier =  state.AddCarrier( "electron" );
             Electron* ecarrier = dynamic_cast<Electron*>(carrier);
 
-                BNode* node_from = terminalgraph.GetNode(0);
-                ecarrier->AddNode( node_from );
-                //node_from->PrintNode();  
+            //int node_id = RandomVariable.rand_uniform_int(terminalgraph.inject_nodes_size());
+            BNode* node_from = terminalgraph.GetNode(electron);
+            ecarrier->AddNode( node_from );
+            //node_from->PrintNode();  
             
         }
     }
