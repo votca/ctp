@@ -209,9 +209,7 @@ void TerminalGraph::Load(std::string filename) {
             
             double E_Fermi_inj = 0.0; //Fermi level of the injecting electrode
             
-            // rate: injecting_node -> injection face
-            //Fermi Dirac distribution - probability of occupation 
-            //double rate_inj_e = (1/(1+exp(((*injection_edge)->eCation - E_Fermi_inj) / (kB * 300)))); 
+            // rate: injecting_node -> injection face 
             double rate_inj_e = 10E5;
             
             votca::tools::vec distance(dx_inj, dy_inj, dz_inj);
@@ -236,8 +234,7 @@ void TerminalGraph::Load(std::string filename) {
             
             double E_Fermi_col = -1.0; //Fermi level of the collecting electrode
             
-            // rate : collection face -> collecting node
-            //double rate_col_e = (1/(1+exp((((*collection_edge)->eCation) - E_Fermi_col) / (kB * 300)))); 
+            // rate : collection face -> collecting node 
             double rate_col_e = 10E5;
             
             votca::tools::vec distance(dx_col, dy_col, dz_col);
@@ -281,42 +278,18 @@ void TerminalGraph::Load(std::string filename) {
         double dx_pbc = stmt->Column<double>(2);
         double dy_pbc = stmt->Column<double>(3);
         double dz_pbc = stmt->Column<double>(4);
-        
-
-        double distance12 = sqrt (( dx_pbc*dx_pbc) + (dy_pbc*dy_pbc) + (dz_pbc*dz_pbc));
-        
+        double rate12e = stmt->Column<double>(5); // 1 -> 2
+        double rate21e = stmt->Column<double>(6); // 2 -> 1
+   
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
-        
-                
-        double rate12e = 10E3;
-        double rate21e = 10E3; 
-        
-        //Calculate hopping rates via the Miller-Abrahams equation 
-        //Estimating max hopping rate (attempt to escape frequency))
-        //if (node2->eCation > node1->eCation){
-            //double rate12e = 0.05*exp(-2*1*distance12)*exp(-(node2->eCation - node1->eCation)/(kB*300)); // 1 -> 2
-            Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
-            edges.push_back( edge12 );
-            node1->AddEdge(edge12);
-        //}
-        /*else {
-            double rate12e = 1.0;
-            Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
-            edges.push_back( edge12 );
-            node1->AddEdge(edge12);
-        }*/
-        //if (node1->eCation > node2->eCation){
-            //double rate21e = 0.05*exp(-2*1*distance12)*exp(-(node1->eCation - node2->eCation)/(kB*300)); // 2 -> 1
-            Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
-            edges.push_back( edge21 );
-            node2->AddEdge( edge21 ); 
-        //}
-        /*else {
-            double rate21e = 1.0;
-             Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
-             edges.push_back( edge21 );
-             node2->AddEdge( edge21 ); 
-        }*/ 
+ 
+        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
+        edges.push_back( edge12 );
+        node1->AddEdge(edge12);
+
+        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
+        edges.push_back( edge21 );
+        node2->AddEdge( edge21 ); 
                   
     }
     
