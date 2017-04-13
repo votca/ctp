@@ -152,7 +152,6 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
             
             // Add an event to the charge transfer events
             ct_events.push_back(electron_transfer);
-            //std::cout << "Electron transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
         }             
     }
     

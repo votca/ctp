@@ -23,10 +23,10 @@
 #include "state.h"
 
 namespace votca { namespace kmc {
-  
+   
 class TerminalGraph {
 public:
-    
+
     // iterator over carriers
     typedef std::vector< BNode* >::iterator iterator;
     typedef const std::vector< BNode* >::iterator const_iterator;
@@ -59,7 +59,7 @@ public:
     void Load(std::string filename);    
     void Print();
     
-    // add a node to the vector of Nodes
+    // add a node to the vector of lattice nodes
     BNode* AddLatticeNode() {
         BNode *node = new BNode(); 
         nodes.push_back( node );
@@ -93,7 +93,7 @@ public:
         return *node;
     };
     
-    // node selection from the injectable nodes
+    // node selection from the inject nodes
     BNode* GetInjectNode( int id ) {
         std::vector< BNode* >::iterator node = inject_nodes.begin() ;
         while ( (*node)->id != id ) node++ ;
@@ -141,7 +141,7 @@ void TerminalGraph::Create_electrodes (int nelectrons){
         double y_collect = 5.0;
         double z_collect = 5.0; 
         myvec collect_position = myvec(x_collect, y_collect, z_collect);
-        collect_node->position = collect_position;   
+        collect_node->position = collect_position; 
     }
        
 }
@@ -149,13 +149,15 @@ void TerminalGraph::Create_electrodes (int nelectrons){
 void TerminalGraph::Load(std::string filename) {
     
     State* state;
+    double kB   = 8.617332478E-5; // eV/K
+    
     std::cout << "Loading the graph from " << filename << std::endl;
     
     // initialising the database file
     votca::tools::Database db;
     db.Open( filename );
         
-    votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ FROM segments;");
+    votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ, eCation FROM segments;");
 
     while (stmt->Step() != SQLITE_DONE)
     {
@@ -170,6 +172,10 @@ void TerminalGraph::Load(std::string filename) {
    
         myvec position = myvec(x, y, z); 
         node->position = position;
+        
+        
+        double eCation = stmt->Column<double>(4);
+        node->eCation = eCation;
         
         //Only add an injectable node from the source facing side of the lattice        
         //if (node->id >= 1 && node->id <=100){
@@ -200,8 +206,14 @@ void TerminalGraph::Load(std::string filename) {
             double dx_inj = 0.0;
             double dy_inj = 0.0;
             double dz_inj = 0.0;
-            double rate_inj_e = 10E5; // rate: injecting_node -> injection face
-                
+            
+            double E_Fermi_inj = 0.0; //Fermi level of the injecting electrode
+            
+            // rate: injecting_node -> injection face
+            //Fermi Dirac distribution - probability of occupation 
+            //double rate_inj_e = (1/(1+exp(((*injection_edge)->eCation - E_Fermi_inj) / (kB * 300)))); 
+            double rate_inj_e = 10E5;
+            
             votca::tools::vec distance(dx_inj, dy_inj, dz_inj);
                 
             Edge* edge_injection = new Edge(injecting_node, (*injection_edge), distance, rate_inj_e);
@@ -221,8 +233,13 @@ void TerminalGraph::Load(std::string filename) {
             double dx_col = 0.0;
             double dy_col = 0.0;
             double dz_col = 0.0;
-            double rate_col_e = 10E11; // rate : collection face -> collecting node
-                
+            
+            double E_Fermi_col = -1.0; //Fermi level of the collecting electrode
+            
+            // rate : collection face -> collecting node
+            //double rate_col_e = (1/(1+exp((((*collection_edge)->eCation) - E_Fermi_col) / (kB * 300)))); 
+            double rate_col_e = 10E5;
+            
             votca::tools::vec distance(dx_col, dy_col, dz_col);
  
             Edge* edge_collection = new Edge( (*collection_edge), collecting_node, distance, rate_col_e);
@@ -238,7 +255,8 @@ void TerminalGraph::Load(std::string filename) {
             double dx_col_inj = 0.0;
             double dy_col_inj = 0.0;
             double dz_col_inj = 0.0;
-            double rate_col_inj_e = 10E5; // rate : collecting node -> injecting node
+            
+            double rate_col_inj_e = 10E10; // rate : collecting node -> injecting node (outer circuit motion considered instantaneous)
                 
             votca::tools::vec distance(dx_col_inj, dy_col_inj, dz_col_inj);
     
@@ -263,19 +281,43 @@ void TerminalGraph::Load(std::string filename) {
         double dx_pbc = stmt->Column<double>(2);
         double dy_pbc = stmt->Column<double>(3);
         double dz_pbc = stmt->Column<double>(4);
-        double rate12e = 10E11; // 1 -> 2
-        double rate21e = 10E11; // 2 -> 1
-       
-        votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
+        
 
-        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
-        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
+        double distance12 = sqrt (( dx_pbc*dx_pbc) + (dy_pbc*dy_pbc) + (dz_pbc*dz_pbc));
         
-        edges.push_back( edge12 );
-        edges.push_back( edge21 );
+        votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
         
-        node1->AddEdge( edge12 );
-        node2->AddEdge( edge21 );           
+                
+        double rate12e = 10E3;
+        double rate21e = 10E3; 
+        
+        //Calculate hopping rates via the Miller-Abrahams equation 
+        //Estimating max hopping rate (attempt to escape frequency))
+        //if (node2->eCation > node1->eCation){
+            //double rate12e = 0.05*exp(-2*1*distance12)*exp(-(node2->eCation - node1->eCation)/(kB*300)); // 1 -> 2
+            Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
+            edges.push_back( edge12 );
+            node1->AddEdge(edge12);
+        //}
+        /*else {
+            double rate12e = 1.0;
+            Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
+            edges.push_back( edge12 );
+            node1->AddEdge(edge12);
+        }*/
+        //if (node1->eCation > node2->eCation){
+            //double rate21e = 0.05*exp(-2*1*distance12)*exp(-(node1->eCation - node2->eCation)/(kB*300)); // 2 -> 1
+            Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
+            edges.push_back( edge21 );
+            node2->AddEdge( edge21 ); 
+        //}
+        /*else {
+            double rate21e = 1.0;
+             Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
+             edges.push_back( edge21 );
+             node2->AddEdge( edge21 ); 
+        }*/ 
+                  
     }
     
     delete stmt;
