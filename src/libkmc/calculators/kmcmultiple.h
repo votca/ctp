@@ -1127,22 +1127,86 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     
     // calculate mobilities
     //double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
-    double average_mobilityZ = 0;
+    double average_mobilityX = 0.0;
+    double average_mobilityY = 0.0;
+    double average_mobilityZ = 0.0;
+    if (_fieldX != 0 || _fieldY != 0 || _fieldZ != 0){
+        cout << endl << "Mobilities (cm^2/Vs): " << endl;
+    }
+    for(unsigned int i=0; i<numberofcharges; i++)
+    {
+        double mobilityX = 0.0;
+        double mobilityY = 0.0;
+        double mobilityZ = 0.0;
+        myvec velocity = carrier[i]->dr_travelled/simtime;
+        if (_fieldX != 0 || _fieldY != 0 || _fieldZ != 0){
+            cout << std::scientific << "    charge " << i+1 << ": ";
+        }
+        if (_fieldX != 0)
+        {
+            mobilityX = velocity.x()/_fieldX*1E4;
+            average_mobilityX += mobilityX;
+            cout << std::scientific << "muX=" << mobilityX << "   ";
+            if (mobilityX>0.0)
+                cout << " ";
+        }
+        if (_fieldY != 0)
+        {
+            mobilityY = velocity.y()/_fieldY*1E4;
+            average_mobilityY += mobilityY;
+            cout << std::scientific << "muY=" << mobilityY << "   ";
+            if (mobilityY>0.0)
+                cout << " ";
+        }
+        if (_fieldZ != 0)
+        {
+            mobilityZ = velocity.z()/_fieldZ*1E4;
+            average_mobilityZ += mobilityZ;
+            cout << std::scientific << "muZ=" << mobilityZ << "   ";
+            if (mobilityZ>0.0)
+                cout << " ";
+        }
+        if (_fieldX != 0 || _fieldY != 0 || _fieldZ != 0){
+            cout << endl;
+        }
+    }
+    if (_fieldX != 0 || _fieldY != 0 || _fieldZ != 0){
+        cout << std::scientific << "  Overall average mobilities ";
+    }
+    if (_fieldX != 0)
+    {
+        average_mobilityX /= numberofcharges;
+        cout << std::scientific << "<muX>=" << average_mobilityX << "  ";
+    }
+    if (_fieldY != 0)
+    {
+        average_mobilityY /= numberofcharges;
+        cout << std::scientific << "<muY>=" << average_mobilityY << "  ";
+    }
     if (_fieldZ != 0)
     {
-        cout << endl << "Mobilities (cm^2/Vs): " << endl;
-        for(unsigned int i=0; i<numberofcharges; i++)
-        {
-            //myvec velocity = carrier[i]->dr_travelled/simtime*1e-9;
-            myvec velocity = carrier[i]->dr_travelled/simtime;
-            //double absolute_velocity = sqrt(velocity.x()*velocity.x() + velocity.y()*velocity.y() + velocity.z()*velocity.z());
-            //cout << std::scientific << "    charge " << i+1 << ": mu=" << absolute_velocity/absolute_field*1E4 << endl;
-            cout << std::scientific << "    charge " << i+1 << ": muZ=" << velocity.z()/_fieldZ*1E4 << endl;
-            average_mobilityZ += velocity.z()/_fieldZ*1E4;
-        }
         average_mobilityZ /= numberofcharges;
-        cout << std::scientific << "  Overall average z-mobility <muZ>=" << average_mobilityZ << endl;
-      }
+        cout << std::scientific << "<muZ>=" << average_mobilityZ << "  ";
+    }
+    if (_fieldX != 0 || _fieldY != 0 || _fieldZ != 0){
+        cout << endl;
+    }
+    //double average_mobilityZ = 0;
+    //if (_fieldZ != 0)
+    //{
+    //    cout << endl << "Mobilities (cm^2/Vs): " << endl;
+    //    for(unsigned int i=0; i<numberofcharges; i++)
+    //    {
+    //        //myvec velocity = carrier[i]->dr_travelled/simtime*1e-9;
+    //        myvec velocity = carrier[i]->dr_travelled/simtime;
+    //        //double absolute_velocity = sqrt(velocity.x()*velocity.x() + velocity.y()*velocity.y() + velocity.z()*velocity.z());
+    //        //cout << std::scientific << "    charge " << i+1 << ": mu=" << absolute_velocity/absolute_field*1E4 << endl;
+    //        cout << std::scientific << "    charge " << i+1 << ": muZ=" << velocity.z()/_fieldZ*1E4 << endl;
+    //        average_mobilityZ += velocity.z()/_fieldZ*1E4;
+    //    }
+    //    average_mobilityZ /= numberofcharges;
+    //    cout << std::scientific << "  Overall average z-mobility <muZ>=" << average_mobilityZ << endl;
+    //  }
     cout << endl;
 
     
