@@ -35,8 +35,12 @@ class QMAtom
 {
 public:
     
-   QMAtom (std::string _type, double _x, double _y, double _z, double _charge, bool _from_environment)
-            : type( _type ), x(_x), y(_y), z(_z), charge(_charge), from_environment( _from_environment )
+   QMAtom (std::string _element, double _x, double _y, double _z, double _charge, bool _from_environment)
+            : type( _element ), x(_x), y(_y), z(_z), charge(_charge), from_environment( _from_environment )
+            {};
+            
+   QMAtom (std::string _element, vec pos, double _charge, bool _from_environment)
+            : type( _element ), x(pos.getX()), y(pos.getY()), z(pos.getZ()), charge(_charge), from_environment( _from_environment )
             {};
             
     QMAtom ()
