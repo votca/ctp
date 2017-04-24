@@ -23,7 +23,7 @@
 // Binary archive 
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
-    
+#include <votca/tools/vec.h> 
 namespace votca { namespace ctp {
     
 /**
@@ -39,7 +39,7 @@ public:
             : type( _element ), x(_x), y(_y), z(_z), charge(_charge), from_environment( _from_environment )
             {};
             
-   QMAtom (std::string _element, vec pos, double _charge, bool _from_environment)
+   QMAtom (std::string _element, tools::vec pos, double _charge, bool _from_environment)
             : type( _element ), x(pos.getX()), y(pos.getY()), z(pos.getZ()), charge(_charge), from_environment( _from_environment )
             {};
             
