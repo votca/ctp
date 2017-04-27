@@ -53,8 +53,6 @@ public:
 
     int id;
     
-    double eCation;
-    
 private:
     
     std::vector< Edge* > edges;

@@ -75,7 +75,6 @@ void Terminal::Initialize(Property *options) {
     
     _runtime = options->get(key + ".runtime").as<double>();
     _nsteps = options->get(key + ".nsteps").as<int>();
-    _seedelectron = options->get(key + ".seedelectron").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>(); //Might not be necessary - but allows to keep same carrier positions and try new events
     _nholes = options->get(key + ".nholes").as<int>();
@@ -137,7 +136,7 @@ void Terminal::RunKMC() {
             Electron* ecarrier = dynamic_cast<Electron*>(carrier);
 
             //int node_id = RandomVariable.rand_uniform_int(terminalgraph.inject_nodes_size());
-            BNode* node_from = terminalgraph.GetNode(electron);
+            BNode* node_from = terminalgraph.GetInjectNode(electron);
             ecarrier->AddNode( node_from );
             //node_from->PrintNode();  
             

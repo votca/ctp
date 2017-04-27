@@ -91,28 +91,6 @@ public:
             Disable();            
         }         
     };
-
-    // creates a vector of electron transfer events for a specific node and electron
-    /*void CreateEvents( std::vector< ElectronTransferTerminal* >* events, BNode* node, Electron* electron, bool status ) {           
-            
-        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
-                //New event - electron transfer
-                Event* _et =  Events().Create( "electron_transfer" );
-                _et->SetParent( GetParent() );
-                ElectronTransferTerminal* et = dynamic_cast<ElectronTransferTerminal*>(_et);
-                et->Initialize( electron, *it_edge );
-                if ( status ) {
-                    et->Enable();
-                    //std::cout << node->id << "-" << (*node_to)->id << " ";
-                } else {
-                    et->Disable();
-                    //std::cout << node->id << "-" << (*node_to)->id << " ";
-                }
-                events->push_back(et);
-        }
-        //std::cout << std::endl;
-    }  
-    */
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
@@ -120,13 +98,6 @@ public:
             enabled_events.push_back(ct_transfer);
         }
     }
-
-    /*void AddCollectEnableOnExecute( std::vector< Event* >* events ) {
-        for (auto& event: *events ) {
-            ElectronCollection* electron_collection  = dynamic_cast<ElectronCollection*>(event);
-            collect_events_to_enable.push_back(electron_collection);
-        }
-    }*/
         
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
@@ -159,7 +130,6 @@ private:
     std::vector<ElectronTransferTerminal*> disabled_events;
     std::vector<ElectronTransferTerminal*> enabled_events;
     std::vector<ElectronTransferTerminal*> events_to_check;
-    //std::vector<ElectronCollection*> collect_events_to_enable;
     
     // electron to move
     Electron* electron;

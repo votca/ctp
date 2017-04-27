@@ -51,9 +51,7 @@ public:
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
 
         if ( electron->Move(edge) == true ) {
-            
-            std::cout << "TEST" << std::endl;
-            
+                       
             std::cout << "Electron collected" << std::endl;       
         
             // disable old events
