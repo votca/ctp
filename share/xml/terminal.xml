@@ -9,6 +9,7 @@
 	<seed help="Integer to initialise the random number generator" unit="integer" default="123">123</seed>
 	<injection help="Name pattern that specifies on which sites to inject." default="*">*</injection>
 	<nelectrons help="Number of electrons in the simulation box" unit="integer" default="1">1</nelectrons>
+	<nholes help="Number of holes in the simulation box" unit="integer" default="0">0</nholes>
 	<fieldX help="x component of the external electric field" unit="V/m" default="0">0</fieldX>
 	<fieldY help="y component of the external electric field" unit="V/m" default="0">0</fieldY>
 	<fieldZ help="z component of the external electric field" unit="V/m" default="1E6">1E6</fieldZ>

@@ -52,6 +52,7 @@ private:
     int _nsteps;
     int _seed;
     int _nelectrons;
+    int _nholes;
     std::string _injection_name;
     double _fieldX;
     double _fieldY;
@@ -73,6 +74,7 @@ void Dynamic::Initialize(Property *options) {
     _nsteps = options->get(key + ".nsteps").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
+    _nholes = options->get(key + ".nholes").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
     _fieldX = options->get(key + ".fieldX").as<double>();
     _fieldY = options->get(key + ".fieldY").as<double>();
@@ -119,7 +121,7 @@ void Dynamic::RunKMC() {
     }
     VSSM2 vssm2;
     vssm2.Initialize( &state, &graph );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

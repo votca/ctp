@@ -76,7 +76,7 @@ void Terminal::Initialize(Property *options) {
     _runtime = options->get(key + ".runtime").as<double>();
     _nsteps = options->get(key + ".nsteps").as<int>();
     _seed = options->get(key + ".seed").as<int>();
-    _nelectrons = options->get(key + ".nelectrons").as<int>(); //Might not be necessary - but allows to keep same carrier positions and try new events
+    _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
     _injection_method = options->get(key + ".injectionmethod").as<string>();
@@ -105,49 +105,60 @@ void Terminal::RunKMC() {
     State state;
      
     std::string filename( "state.sql" );
-    terminalgraph.Create_electrodes( _nelectrons );
-    terminalgraph.Load( filename );
- 
+
+    //create the source electrode - one source node per carrier id 0 to id (number of carriers)
+    terminalgraph.Create_source_electrode( _nelectrons + _nholes );
+
+    //load the graph
+    terminalgraph.Load_Graph( filename );
+
+    //create the drain electrode - one drain node per carrier
+    terminalgraph.Create_drain_electrode( _nelectrons + _nholes );
+
+    terminalgraph.Load_Neighbours( filename );
+    
     //terminalgraph.Print();
     CarrierFactory::RegisterAll();
-
     EventFactory::RegisterAll();
     
-    std::cout << "Number of lattice nodes: " << terminalgraph.lattice_nodes_size() << std::endl;
-    std::cout << "Number of injection nodes (source): " << terminalgraph.inject_nodes_size() <<  std::endl;
-    std::cout << "Number of collection nodes (drain): " << terminalgraph.collect_nodes_size() <<  std::endl;
+    std::cout << "Number of nodes: " << terminalgraph.lattice_nodes_size() << std::endl;
+    std::cout << "Number of injection nodes (source): " << terminalgraph.source_nodes_size() <<  std::endl;
+    std::cout << "Number of collection nodes (drain): " << terminalgraph.drain_nodes_size() <<  std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
     std::cout << "Number of holes: " << _nholes << std::endl;
-    std::cout << "Method of carrier injection: " << _injection_method << std::endl;
-    
-    
-    if (_injection_method == "random"){
-        //For the random injection of electrons - independent from random events    
-        srand(_seedelectron);
-        RandomVariable.init(rand(), rand(), rand(), rand());
-    }
-    
-    
+    //std::cout << "Method of carrier injection: " << _injection_method << std::endl;
+   
     if(_nelectrons != 0){
         for ( int electron = 1; electron <= _nelectrons; ++electron ) {
             
             // Create electrons
-            Carrier* carrier =  state.AddCarrier( "electron" );
-            Electron* ecarrier = dynamic_cast<Electron*>(carrier);
+            Carrier* e_carrier =  state.AddCarrier( "electron" );
+            Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
 
-            //int node_id = RandomVariable.rand_uniform_int(terminalgraph.inject_nodes_size());
-            BNode* node_from = terminalgraph.GetInjectNode(electron);
+            BNode* node_from = terminalgraph.GetSourceNode(electron);
             ecarrier->AddNode( node_from );
             //node_from->PrintNode();  
             
         }
     }
     
-      
+    if(_nholes != 0){
+        for ( int hole = 1; hole <= _nholes; ++hole ) {
+            
+            // Create holes
+            Carrier* carrier =  state.AddCarrier( "hole" );
+            Hole* hcarrier = dynamic_cast<Hole*>(carrier);
+            
+            BNode* node_from = terminalgraph.GetSourceNode(hole);
+            hcarrier->AddNode( node_from );
+            //node_from->PrintNode();  
+            
+        }
+    }
+    
     VSSM2_TERMINAL vssm2;
     vssm2.Initialize( &state, &terminalgraph );
-    //vssm2.AttachObserver(Observer, _nsteps );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

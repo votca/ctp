@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_Electron_H_
-#define __VOTCA_KMC_Electron_H_
+#ifndef __VOTCA_KMC_Hole_H_
+#define __VOTCA_KMC_Hole_H_
 
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
@@ -25,17 +25,17 @@
 
 namespace votca { namespace kmc {
     
-class Electron : public Carrier {
+class Hole : public Carrier {
 public:
     
-    std::string Type(){ return "electron"; } ;
+    std::string Type(){ return "hole"; } ;
 
     virtual bool AddNode( BNode* _node ) { 
         node = _node;
         std::vector<BNode*>::iterator it_node  = NodeOccupation ( node ) ;
-        if (it_node == e_occupiedNodes.end()){    
+        if (it_node == h_occupiedNodes.end()){    
             std::cout << " on node: " <<  node->id << std::endl;
-            e_occupiedNodes.push_back( node );
+            h_occupiedNodes.push_back( node );
             return true;                
         }
         else {
@@ -47,16 +47,16 @@ public:
     virtual bool Move( Edge* edge ) {
         
         if(votca::tools::globals::verbose){
-        std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
+        std::cout << "Hole " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
                       << " Node_to position: " << edge->NodeTo()->position
-                      << " Occupied (e) Nodes: " ;
-                      for(auto& node : e_occupiedNodes) { std::cout << node->id << " "; }
-                      std::cout << " Total: " << e_occupiedNodes.size();
+                      << " Occupied (h) Nodes: " ;
+                      for(auto& node : h_occupiedNodes) { std::cout << node->id << " "; }
+                      std::cout << " Total: " << h_occupiedNodes.size();
         }
         
         std::vector<BNode*>::iterator it_to   = NodeOccupation ( edge->NodeTo() ) ;
         
-        if ( it_to == e_occupiedNodes.end() ) { //  move the electron if the node is free
+        if ( it_to == h_occupiedNodes.end() ) { //  move the hole if the node is free
 
             if(votca::tools::globals::verbose){std::cout << " --- MOVING. " << std::endl;}
             
@@ -82,12 +82,12 @@ public:
     }
      
 
-    /// shared between all nodes information about occupied (by an electron) nodes
-    static std::vector<BNode*> e_occupiedNodes;
+    /// shared between all nodes information about occupied (by an hole) nodes
+    static std::vector<BNode*> h_occupiedNodes;
     
-    /// returns an iterator to a node [if the node is in the occupied (by an electron) nodes] or the end iterator
+    /// returns an iterator to a node [if the node is in the occupied (by an hole) nodes] or the end iterator
     std::vector<BNode*>::iterator NodeOccupation( BNode* node ){  
-        return std::find(e_occupiedNodes.begin(), e_occupiedNodes.end(), node);
+        return std::find(h_occupiedNodes.begin(), h_occupiedNodes.end(), node);
     };
     
 private:   
@@ -105,6 +105,6 @@ private:
     
 }}
 
-BOOST_CLASS_VERSION(votca::kmc::Electron, 0)
+BOOST_CLASS_VERSION(votca::kmc::Hole, 0)
 
 #endif

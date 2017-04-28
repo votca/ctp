@@ -29,26 +29,21 @@ public:
 
     typedef std::vector< BNode* >::iterator iterator;
     typedef const std::vector< BNode* >::iterator const_iterator;
-    
-    // iterator over all the nodes
-    iterator nodes_begin() { return nodes.begin(); }
-    iterator nodes_end() { return nodes.end(); } 
-    int nodes_size() {return nodes.size(); }
 
-    // iterator over the source (inject) nodes
-    iterator inject_nodes_begin() { return inject_nodes.begin(); }
-    iterator inject_nodes_end() { return inject_nodes.end(); } 
-    int inject_nodes_size() {return inject_nodes.size(); }
+    // iterator over the source (source) nodes
+    iterator source_nodes_begin() { return source_nodes.begin(); }
+    iterator source_nodes_end() { return source_nodes.end(); } 
+    int source_nodes_size() {return source_nodes.size(); }
     
     // iterator over the lattice nodes
     iterator lattice_nodes_begin() { return lattice_nodes.begin(); }
     iterator lattice_nodes_end() { return lattice_nodes.end(); } 
     int lattice_nodes_size() {return lattice_nodes.size(); }
     
-    //iterator over the drain (collect) nodes
-    iterator collect_nodes_begin() { return collect_nodes.begin(); }
-    iterator collect_nodes_end() { return collect_nodes.end(); } 
-    int collect_nodes_size() {return collect_nodes.size(); }
+    //iterator over the drain (drain) nodes
+    iterator drain_nodes_begin() { return drain_nodes.begin(); }
+    iterator drain_nodes_end() { return drain_nodes.end(); } 
+    int drain_nodes_size() {return drain_nodes.size(); }
     
     // iterator over the injectable nodes/where a carrier can be injected (nodes at the source face)
     iterator injectable_nodes_begin() { return injectable_nodes.begin(); }
@@ -61,8 +56,11 @@ public:
     int collectable_nodes_size() {return collectable_nodes.size();}
     
     
-    void Create_electrodes(int nelectrons);
-    void Load(std::string filename);    
+    void Create_source_electrode(int ncarriers);
+    void Create_drain_electrode(int ncarriers);
+    
+    void Load_Graph(std::string filename);    
+    void Load_Neighbours(std::string filename);
     void Print();
     
     // add a node to the vector of lattice nodes
@@ -73,19 +71,19 @@ public:
         return node;
     };
   
-    // add a node to the vector of source (inject) nodes
-    BNode* AddInjectNode() {
+    // add a node to the vector of source nodes
+    BNode* AddSourceNode() {
         BNode *node = new BNode();
         nodes.push_back( node );
-        inject_nodes.push_back( node );
+        source_nodes.push_back( node );
         return node;
     };
     
-    // add a node to the vector of drain (collect) nodes
-    BNode* AddCollectNode() {
+    // add a node to the vector of drain nodes
+    BNode* AddDrainNode() {
         BNode *node = new BNode();
         nodes.push_back( node );
-        collect_nodes.push_back( node );
+        drain_nodes.push_back( node );
         return node;
     };
     
@@ -96,16 +94,16 @@ public:
         return *node;
     };
     
-    // node selection from the inject nodes
-    BNode* GetInjectNode( int id ) {
-        std::vector< BNode* >::iterator node = inject_nodes.begin() ;
+    // node selection from the source nodes
+    BNode* GetSourceNode( int id ) {
+        std::vector< BNode* >::iterator node = source_nodes.begin() ;
         while ( (*node)->id != id ) node++ ;
         return *node;
     };
     
-    //selecting a node from the collect nodes
-    BNode* GetCollectNode( int id ) {
-        std::vector< BNode* >::iterator node = collect_nodes.begin() ;
+    //selecting a node from the drain nodes
+    BNode* GetDrainNode( int id ) {
+        std::vector< BNode* >::iterator node = drain_nodes.begin() ;
         while ( (*node)->id != id ) node++ ;
         return *node;
     };
@@ -114,42 +112,30 @@ private:
 
     std::vector< BNode* > nodes;
     std::vector< BNode* > lattice_nodes;
-    std::vector< BNode* > inject_nodes;    
-    std::vector< BNode* > collect_nodes;
+    std::vector< BNode* > source_nodes;    
+    std::vector< BNode* > drain_nodes;
     std::vector < BNode* > injectable_nodes;
     std::vector < BNode* > collectable_nodes;
     std::vector< Edge* > edges;
     
 };
 
-void TerminalGraph::Create_electrodes (int nelectrons){
+void TerminalGraph::Create_source_electrode (int ncarriers){
     
     //Add the injection node - Source (in front of the face of injectable nodes)     
-    for ( int electron = 1; electron <= nelectrons; ++electron ) {  
-        BNode *inject_node = AddInjectNode();
-        inject_node->id = electron;
-        double x_inject = 0.0;
-        double y_inject = 5.0;
-        double z_inject = 5.0;  
-        myvec inject_position = myvec(x_inject, y_inject, z_inject); 
-        inject_node->position = inject_position;
+    for ( int carrier = 1; carrier <= ncarriers; ++carrier ) {  
+        BNode *source_node = AddSourceNode();
+        source_node->id = carrier;
+        double x_source = 0.0;
+        double y_source = 0.0;
+        double z_source = 0.0;  
+        myvec source_position = myvec(x_source, y_source, z_source); 
+        source_node->position = source_position;
   
     }
-    
-    //Add the collection nodes - Drain (behind the face of collectable nodes)
-    for ( int electron = 1; electron <= nelectrons; ++electron ) {
-        BNode *collect_node = AddCollectNode();
-        collect_node->id = 2000+electron ;
-        double x_collect = 20.0;
-        double y_collect = 5.0;
-        double z_collect = 5.0; 
-        myvec collect_position = myvec(x_collect, y_collect, z_collect);
-        collect_node->position = collect_position; 
-    }
-       
-}
+}  
 
-void TerminalGraph::Load(std::string filename) {
+void TerminalGraph::Load_Graph(std::string filename) {
       
     std::cout << "Loading the graph from " << filename << std::endl;
     
@@ -157,7 +143,7 @@ void TerminalGraph::Load(std::string filename) {
     votca::tools::Database db;
     db.Open( filename );
         
-    votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ, eCation FROM segments;");
+    votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ FROM segments;");
 
     while (stmt->Step() != SQLITE_DONE)
     {
@@ -174,16 +160,16 @@ void TerminalGraph::Load(std::string filename) {
         node->position = position;
         
         //Only add an injectable node from the source facing side of the lattice        
-        //if (node->id >= 1 && node->id <=100){
-        double injection_face = 0.5;
-        if ( x == injection_face ){
+        if (node->id >= 1 && node->id <=100){
+        //double injection_face = 0.5;
+        //if ( x == injection_face ){
             injectable_nodes.push_back( node );
         }
         
         //List of collection nodes, from the drain facing side of the lattice
-        double collection_face = 19.5;
-        //if (node->id >=1901 && node->id <=2000){
-        if ( x == collection_face ){
+        //double collection_face = 19.5;
+        if (node->id >=1901 && node->id <=2000){
+        //if ( x == collection_face ){
             collectable_nodes.push_back( node );
         }
         
@@ -191,11 +177,29 @@ void TerminalGraph::Load(std::string filename) {
     }
   
     delete stmt;
+}
+
+void TerminalGraph::Create_drain_electrode (int ncarriers){
     
+    //Add the collection nodes - Drain (behind the face of collectable nodes)
+    //has to be done after the graph is loaded - drain id should continue after final graph node id
+    for ( int carrier = 1; carrier <= ncarriers; ++carrier ) {
+        BNode *drain_node = AddDrainNode();
+        drain_node->id = lattice_nodes_size()+carrier ;
+        double x_drain = 20.0;
+        double y_drain = 0.0;
+        double z_drain = 0.0; 
+        myvec drain_position = myvec(x_drain, y_drain, z_drain);
+        drain_node->position = drain_position; 
+    }
+       
+}
 
-    for (std::vector< BNode* >::iterator inject_node = inject_nodes_begin() ; inject_node != inject_nodes_end(); ++inject_node){
+void TerminalGraph::Load_Neighbours(std::string filename) {
+    
+    for (std::vector< BNode* >::iterator source_node = source_nodes_begin() ; source_node != source_nodes_end(); ++source_node){
 
-        BNode* injecting_node = GetInjectNode( (*inject_node)->id );
+        BNode* source = GetSourceNode( (*source_node)->id );
     
         for (std::vector< BNode* >::iterator injection_edge = injectable_nodes.begin() ; injection_edge != injectable_nodes.end(); ++injection_edge){
 
@@ -203,66 +207,72 @@ void TerminalGraph::Load(std::string filename) {
             double dy_inj = 0.0;
             double dz_inj = 0.0;
             
-            //double E_Fermi_inj = 0.0; //Fermi level of the injecting electrode
+            //double E_Fermi_inj = 0.0; //Fermi level of the source electrode
             
-            // rate: injecting_node -> injection face 
-            double rate_inj_e = 10E10;
+            // rate: source_node -> injection face 
+            double rate_inj_h = 10E17;
             
             votca::tools::vec distance(dx_inj, dy_inj, dz_inj);
                 
-            Edge* edge_injection = new Edge(injecting_node, (*injection_edge), distance, rate_inj_e);
+            Edge* edge_injection = new Edge(source, (*injection_edge), distance, rate_inj_h);
             edges.push_back( edge_injection );
-            injecting_node->AddEdge( edge_injection );
+            source->AddEdge( edge_injection );
  
         }
     }
-    //Adding the collecting node (drain) as an edge of each of the collectable nodes 
-    for (std::vector< BNode* >::iterator collect_node = collect_nodes_begin() ; collect_node != collect_nodes_end(); ++collect_node){
-        BNode* collecting_node = GetCollectNode( (*collect_node)->id );
+    //Adding the drain node (drain) as an edge of each of the collectable nodes 
+    for (std::vector< BNode* >::iterator drain_node = drain_nodes_begin() ; drain_node != drain_nodes_end(); ++drain_node){
+        BNode* drain = GetDrainNode( (*drain_node)->id );
 
-        //std::cout << "collect node " << (*collect_node)->id << std::endl;
-        //Each collectable node has the collect node as an edge
+        //std::cout << "drain node " << (*drain_node)->id << std::endl;
+        //Each collectable node has the drain node as an edge
         for (std::vector< BNode* >::iterator collection_edge = collectable_nodes.begin() ; collection_edge != collectable_nodes.end(); ++collection_edge){
 
             double dx_col = 0.0;
             double dy_col = 0.0;
             double dz_col = 0.0;
             
-            //double E_Fermi_col = -1.0; //Fermi level of the collecting electrode
+            //double E_Fermi_col = -1.0; //Fermi level of the drain electrode
             
-            // rate : collection face -> collecting node 
-            double rate_col_e = 10E10;
+            // rate : collection face -> drain node 
+            double rate_col_h = 10E17;
             
             votca::tools::vec distance(dx_col, dy_col, dz_col);
  
-            Edge* edge_collection = new Edge( (*collection_edge), collecting_node, distance, rate_col_e);
+            Edge* edge_collection = new Edge( (*collection_edge), drain, distance, rate_col_h);
             edges.push_back( edge_collection );
             (*collection_edge)->AddEdge( edge_collection );
           
         }
         
-        for (std::vector< BNode* >::iterator inject_node = inject_nodes_begin() ; inject_node != inject_nodes_end(); ++inject_node){            
+        for (std::vector< BNode* >::iterator source_node = source_nodes_begin() ; source_node != source_nodes_end(); ++source_node){            
             
-            BNode* injecting_node = (*inject_node);
-            // The collecting node has the injecting node as an edge - carriers can be returned to the injection reservoir
+            BNode* source = (*source_node);
+            // The drain node has the source node as an edge - carriers can be returned to the injection reservoir
             double dx_col_inj = 0.0;
             double dy_col_inj = 0.0;
             double dz_col_inj = 0.0;
             
-            double rate_return_e = 10E15; // rate : collecting node -> injecting node (outer circuit motion considered instantaneous)
+            double rate_return_h = 10E20; // rate : drain node -> source node (outer circuit motion considered instantaneous)
                 
             votca::tools::vec distance(dx_col_inj, dy_col_inj, dz_col_inj);
     
-            Edge* edge_col_inj = new Edge( collecting_node, injecting_node, distance, rate_return_e);
+            Edge* edge_col_inj = new Edge( drain, source, distance, rate_return_h);
             edges.push_back(edge_col_inj);
-            collecting_node->AddEdge(edge_col_inj);
+            drain->AddEdge(edge_col_inj);
             
         }
     }
  
+        
+    // initialising the database file
+    votca::tools::Database db;
+    db.Open( filename );
+    
     //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table) 
-    //List of rates for electron transfer from seg 1 to seg 2 and vice versa
-    stmt = db.Prepare("SELECT seg1, seg2, drX, drY, drZ, rate12e, rate21e FROM pairs;");
+    //List of rates for hole transfer from seg 1 to seg 2 and vice versa
+    votca::tools::Statement *stmt = db.Prepare("SELECT seg1, seg2, drX, drY, drZ, rate12h, rate21h FROM pairs;");
+    
     while (stmt->Step() != SQLITE_DONE)     
     {         
         int seg1 = stmt->Column<int>(0);
@@ -275,16 +285,16 @@ void TerminalGraph::Load(std::string filename) {
         double dy_pbc = stmt->Column<double>(3);
         double dz_pbc = stmt->Column<double>(4);
         
-        double rate12e = 10E8;
-        double rate21e = 10E8;
-        
         //double rate12e = stmt->Column<double>(5); // 1 -> 2
         //double rate21e = stmt->Column<double>(6); // 2 -> 1
+        
+        double rate12h = stmt->Column<double>(5); // 1 -> 2
+        double rate21h = stmt->Column<double>(6); // 2 -> 1
    
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
  
-        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e);
-        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
+        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12h);
+        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21h);
  
         node1->AddEdge(edge12);
         node2->AddEdge( edge21 );
@@ -297,13 +307,13 @@ void TerminalGraph::Load(std::string filename) {
     delete stmt;
 
 }
-   
-    void TerminalGraph::Print(){
+  
+void TerminalGraph::Print(){
     
-        for (std::vector< BNode* >::iterator node = nodes.begin() ; node != nodes.end(); ++node) {
+    for (std::vector< BNode* >::iterator node = nodes.begin() ; node != nodes.end(); ++node) {
             (*node)->PrintNode();
-        }
-    };
+    }
+};
  
     
 }}

@@ -24,6 +24,7 @@
 #include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
 #include "events/electron_transfer_terminal.h"
+#include "events/hole_transfer_terminal.h"
 #include "events/e_injection.h"
 #include "events/e_collection.h"
 
@@ -41,172 +42,164 @@ class VSSM2_TERMINAL : public TerminalAlgorithm {
     
 public:
     
- 
 void Initialize ( State* _state, TerminalGraph* _graph ) { 
     
     state = _state;
     terminalgraph = _graph;
     
-    // Map of charge transfer events associated with a particular node
-    std::unordered_map< BNode*, std::vector<Event*> > charge_transfer_map;
-    //Map of charge injection events associated with a particular node
-    //std::unordered_map< BNode*, std::vector<Event*> > charge_injection_map;
-    //Map of charge collection events associated with a particular node
-    //std::unordered_map<BNode*, std::vector<Event*> > charge_collection_map;
+    // Map of charge transfer events (electron and hole) associated with a particular node
+    std::unordered_map< BNode*, std::vector<Event*> > electron_transfer_map;
+    std::unordered_map< BNode*, std::vector<Event*> > hole_transfer_map;
     
-    // Vector of all charge transfer events
-    std::vector<ElectronTransferTerminal*> ct_events;
-    //std::vector<ElectronInjection*> inj_events;
-    //std::vector<ElectronCollection*> col_events;
- 
+    // Vector of electron transfer events
+    std::vector<ElectronTransferTerminal*> et_events;
+    // Vector of hole transfer events
+    std::vector<HoleTransferTerminal*> ht_events;
          
-    for (TerminalGraph::iterator it_inject_node = _graph->inject_nodes_begin(); it_inject_node != _graph->inject_nodes_end(); ++it_inject_node) {
+    // Loop over all source nodes - injection events
+    for (TerminalGraph::iterator it_source_node = _graph->source_nodes_begin(); it_source_node != _graph->source_nodes_end(); ++it_source_node) {
         
-        BNode* node_from = *it_inject_node;
+        BNode* node_from = *it_source_node;
         
         // create a new key with an empty vector
-        charge_transfer_map.emplace(node_from, vector<Event*>() );
+        electron_transfer_map.emplace(node_from, vector<Event*>() );
+        hole_transfer_map.emplace(node_from, vector<Event*>() );
         
-        /*for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
-                    
-            Event* event_inject = Events().Create("electron_injection");            
-            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*> (event_inject);
-            electron_injection->Initialize(NULL, *it_edge);
-                        
-            // Add a list of charge transfer events to the map, indexed by a node pointer
-            charge_transfer_map.at(node_from).push_back(event_inject);
-            
-            // Add an event to the charge transfer events
-            inj_events.push_back(electron_injection);
-            //std::cout << "Electron inject transfer created " << std::endl;
-        }*/
-        
+        // Loop over all neighbours (edges) of the node
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
                     
-            Event* event_move = Events().Create("electron_transfer_terminal");            
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move);
+            Event* event_move_hole = Events().Create("hole_transfer_terminal");
+            HoleTransferTerminal* hole_transfer = dynamic_cast<HoleTransferTerminal*> (event_move_hole);
+            hole_transfer->Initialize(NULL, *it_edge);
+                        
+            // Add a list of hole transfer events to the map, indexed by a node pointer
+            hole_transfer_map.at(node_from).push_back(event_move_hole);
+            
+            // Add an event to the hole transfer events
+            ht_events.push_back(hole_transfer);
+            //std::cout << "Hole transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
+            
+            Event* event_move_electron = Events().Create("electron_transfer_terminal");
+            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move_electron);
             electron_transfer->Initialize(NULL, *it_edge);
                         
-            // Add a list of charge transfer events to the map, indexed by a node pointer
-            charge_transfer_map.at(node_from).push_back(event_move);
+            // Add a list of electron transfer events to the map, indexed by a node pointer
+            electron_transfer_map.at(node_from).push_back(event_move_electron);
             
-            // Add an event to the charge transfer events
-            ct_events.push_back(electron_transfer);
-            //std::cout << "Electron transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
+            // Add an event to the electron transfer events
+            et_events.push_back(electron_transfer);           
         }             
     }
     
+    //Loop over all lattice nodes - carrier move events
     for (TerminalGraph::iterator it_node = _graph->lattice_nodes_begin(); it_node != _graph->lattice_nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
-        
-        // create a new key with an empty vector
-        charge_transfer_map.emplace(node_from, vector<Event*>() );
+        electron_transfer_map.emplace(node_from, vector<Event*>() );
+        hole_transfer_map.emplace(node_from, vector<Event*>() );
 
-        // Loop over all neighbours (edges) of the node
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
                     
-            Event* event_move = Events().Create("electron_transfer_terminal");            
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move);
-            electron_transfer->Initialize(NULL, *it_edge);
-                        
-            // Add a list of charge transfer events to the map, indexed by a node pointer
-            charge_transfer_map.at(node_from).push_back(event_move);
+            Event* event_move_hole = Events().Create("hole_transfer_terminal");            
+            HoleTransferTerminal* hole_transfer = dynamic_cast<HoleTransferTerminal*> (event_move_hole);
+            hole_transfer->Initialize(NULL, *it_edge);
+
+            hole_transfer_map.at(node_from).push_back(event_move_hole);
+ 
+            ht_events.push_back(hole_transfer);
             
-            // Add an event to the charge transfer events
-            ct_events.push_back(electron_transfer);
-            //std::cout << "Electron transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
+            Event* event_move_electron = Events().Create("electron_transfer_terminal");
+            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move_electron);
+            electron_transfer->Initialize(NULL, *it_edge);
+
+            electron_transfer_map.at(node_from).push_back(event_move_electron);
+
+            et_events.push_back(electron_transfer);
         }             
     }
     
-    for (TerminalGraph::iterator it_collect_node = _graph->collect_nodes_begin(); it_collect_node != _graph->collect_nodes_end(); ++it_collect_node) {
+    //Loop over all drain nodes - collection events
+    for (TerminalGraph::iterator it_drain_node = _graph->drain_nodes_begin(); it_drain_node != _graph->drain_nodes_end(); ++it_drain_node) {
         
-        BNode* node_from = *it_collect_node;
+        BNode* node_from = *it_drain_node;
         
-        // create a new key with an empty vector
-        charge_transfer_map.emplace(node_from, vector<Event*>() );
-        
-        /*for (BNode::EdgeIterator it_col_edge = node_from->EdgesBegin(); it_col_edge != node_from->EdgesEnd(); ++it_col_edge) {
-                    
-            Event* event_collect = Events().Create("electron_collection");            
-            ElectronCollection* electron_collection = dynamic_cast<ElectronCollection*> (event_collect);
-            electron_collection->Initialize(NULL, *it_col_edge);
-                        
-            // Add a list of charge transfer events to the map, indexed by a node pointer
-            charge_transfer_map.at(node_from).push_back(event_collect);
-            
-            // Add an event to the charge transfer events
-            col_events.push_back(electron_collection);
-            std::cout << "Electron collect transfer created " << node_from->id << " -> " << (*it_col_edge)->NodeTo()->id << std::endl;
-        }*/   
+        electron_transfer_map.emplace(node_from, vector<Event*>() ); 
+        hole_transfer_map.emplace(node_from, vector<Event*>() );
 
-        // Loop over all neighbours (edges) of the node
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
                     
-            Event* event_move = Events().Create("electron_transfer_terminal");            
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move);
-            electron_transfer->Initialize(NULL, *it_edge);
-                        
-            // Add a list of charge transfer events to the map, indexed by a node pointer
-            charge_transfer_map.at(node_from).push_back(event_move);
+            Event* event_move_hole = Events().Create("hole_transfer_terminal");            
+            HoleTransferTerminal* hole_transfer = dynamic_cast<HoleTransferTerminal*> (event_move_hole);
+            hole_transfer->Initialize(NULL, *it_edge);
+
+            hole_transfer_map.at(node_from).push_back(event_move_hole);
+
+            ht_events.push_back(hole_transfer);
             
-            // Add an event to the charge transfer events
-            ct_events.push_back(electron_transfer);
+            Event* event_move_electron = Events().Create("electron_transfer_terminal");
+            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move_electron);
+            electron_transfer->Initialize(NULL, *it_edge);
+
+            electron_transfer_map.at(node_from).push_back(event_move_electron);
+
+            et_events.push_back(electron_transfer);
         }             
     }
     
     // for every event, add a list of "events-to-enable" after OnExecute
     // and a list of "events-to-disable" after OnExecute
-    for (auto& event: ct_events ) {
+    for (auto& event: ht_events ) {
         BNode* node_from = event->NodeFrom();
         BNode* node_to = event->NodeTo();
         
-        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
-        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
+        std::vector<Event*> events_to_disable = hole_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = hole_transfer_map.at(node_to);
 
         event->AddDisableOnExecute(&events_to_disable);
         event->AddEnableOnExecute(&events_to_enable);
     }
-
-    /*for (auto& event: inj_events ) {
-        
-        BNode* node_to = event->NodeTo();       
-        BNode* node_from = event->NodeFrom();
-
-        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
-        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
-
-        event->AddDisableOnExecute(&events_to_disable);
-        event->AddEnableOnExecute(&events_to_enable);
-    }*/
     
-    /*for (auto& event: col_events ) {
-        
-        BNode* node_to = event->NodeTo();
+    for (auto& event: et_events ) {
         BNode* node_from = event->NodeFrom();
-
-        std::vector<Event*> events_to_disable = charge_transfer_map.at(node_from);
-        std::vector<Event*> events_to_enable = charge_transfer_map.at(node_to);
+        BNode* node_to = event->NodeTo();
+        
+        std::vector<Event*> events_to_disable = electron_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = electron_transfer_map.at(node_to);
 
         event->AddDisableOnExecute(&events_to_disable);
         event->AddEnableOnExecute(&events_to_enable);
-        
-    }*/
+    }
     
     // for every event associated with node_from - create a list of events to check after onExecute
     // Events to check are every event for each node_to
-    for (auto& event: ct_events ) {
+    for (auto& event: ht_events ) {
         
         BNode* node_from = event->NodeFrom();
-        std::vector<Event*> ct_events = charge_transfer_map.at(node_from);
+        std::vector<Event*> ht_events = hole_transfer_map.at(node_from);
         
-        for (std::vector<Event*>::iterator it_event = ct_events.begin(); it_event != ct_events.end(); ++it_event) {
+        for (std::vector<Event*>::iterator it_event = ht_events.begin(); it_event != ht_events.end(); ++it_event) {          
+            Event* event_move_hole = *it_event;
+            HoleTransferTerminal* hole_transfer = dynamic_cast<HoleTransferTerminal*> (event_move_hole);
             
-            Event* event_move = *it_event;
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move);
+            BNode* node_to = hole_transfer->NodeTo();
+            std::vector<Event*> events_to_check = hole_transfer_map.at(node_to);
+            event->CheckEventsOnExecute(&events_to_check);
+            
+        }
+    }
+    
+    for (auto& event: et_events ) {
+        
+        BNode* node_from = event->NodeFrom();
+        std::vector<Event*> et_events = electron_transfer_map.at(node_from);
+        
+        for (std::vector<Event*>::iterator it_event = et_events.begin(); it_event != et_events.end(); ++it_event) {
+            Event* event_move_electron = *it_event;
+            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move_electron);
             
             BNode* node_to = electron_transfer->NodeTo();
-            std::vector<Event*> events_to_check = charge_transfer_map.at(node_to);
+            std::vector<Event*> events_to_check = electron_transfer_map.at(node_to);
+            
             event->CheckEventsOnExecute(&events_to_check);
         }
     }
@@ -214,10 +207,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     // organise events in a tree;
     // first level VSSM events (escape event for each carrier))
 
-    //for (TerminalGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
     for (State::iterator carrier = _state->begin(); carrier != _state->end(); ++carrier) {
-        
-        //BNode* node_from = *it_node;
         
         BNode* node_from = (*carrier)->GetNode();
         
@@ -225,54 +215,36 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
         CarrierEscape* carrier_escape = dynamic_cast<CarrierEscape*> (event_escape);
         carrier_escape->Initialize((*carrier));
         head_event.AddSubordinate( event_escape );
-                            
-        //std::vector<Event*> inj_events = charge_transfer_map.at(node_from);
-        
-        //std::cout << "Carrier " << (*carrier)->id() << " on node " << (*carrier)->GetNode()->id << std::endl;
-        
-        // add inject events from the map
-        /*for (std::vector<Event*>::iterator it_inj_event = inj_events.begin(); it_inj_event != inj_events.end(); ++it_inj_event) {
-
-            // New event - electron inject
-            Event* event_inject = *it_inj_event;
-            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*> (event_inject);
-            Electron* electron = dynamic_cast<Electron*> ((*carrier));
-            
-            electron_injection->SetElectron( electron );
-            electron_injection->Enable();
-            // add a subordinate event
-            carrier_escape->AddSubordinate( event_inject );            
-
-        }*/  
  
-        std::vector<Event*> ct_events = charge_transfer_map.at(node_from);        
-            
-        // Add move events from the map 
-        for (std::vector<Event*>::iterator it_ct_event = ct_events.begin(); it_ct_event != ct_events.end(); ++it_ct_event) {
-
-            // New event - electron transfer
-            Event* event_move = *it_ct_event;
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move);
-            Electron* electron = dynamic_cast<Electron*> ((*carrier));
-            electron_transfer->SetElectron( electron );
-            electron_transfer->Enable();
-            // add a subordinate event
-            carrier_escape->AddSubordinate( event_move );  
-            //std::cout << "Adding event move for node: " << node_from->id << std::endl; 
-        } 
+        std::vector<Event*> ht_events = hole_transfer_map.at(node_from);        
+        std::vector<Event*> et_events = electron_transfer_map.at(node_from);
         
-        /*std::vector<Event*> col_events = charge_transfer_map.at(node_from);        
-            
         // Add move events from the map 
-        for (std::vector<Event*>::iterator it_col_event = col_events.begin(); it_col_event != col_events.end(); ++it_col_event) {
+        for (std::vector<Event*>::iterator it_ht_event = ht_events.begin(); it_ht_event != ht_events.end(); ++it_ht_event) {
 
-            // New event - electron collection
-            Event* event_collect = *it_col_event;
-            ElectronCollection* electron_collection = dynamic_cast<ElectronCollection*> (event_collect);
-            // add a subordinate event
-            carrier_escape->AddSubordinate( event_collect );  
-            std::cout << "Adding event collect for node: " << node_from->id << std::endl;  
-        }*/
+            // New event - hole transfer
+            if ((*carrier)->Type() == "hole"){
+                Event* event_move_hole = *it_ht_event;
+                HoleTransferTerminal* hole_transfer = dynamic_cast<HoleTransferTerminal*> (event_move_hole);
+                Hole* hole = dynamic_cast<Hole*> ((*carrier));
+                hole_transfer->SetHole( hole );
+                hole_transfer->Enable();
+                carrier_escape->AddSubordinate( event_move_hole );  
+            }
+        }
+        
+        for (std::vector<Event*>::iterator it_et_event = et_events.begin(); it_et_event != et_events.end(); ++it_et_event) {
+            
+            // New event - electron transfer
+            if ((*carrier)->Type() == "electron"){
+                Event* event_move_electron = *it_et_event;
+                ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*> (event_move_electron);
+                Electron* electron = dynamic_cast<Electron*> ((*carrier));
+                electron_transfer->SetElectron( electron );
+                electron_transfer->Enable();
+                carrier_escape->AddSubordinate( event_move_electron );  
+            }
+        } 
 
     }
 
@@ -280,7 +252,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
+void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
@@ -334,7 +306,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         }
         
     }
-    state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
+    state->Print_properties(nholes, nholes, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
      

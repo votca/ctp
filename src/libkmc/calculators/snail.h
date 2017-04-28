@@ -159,7 +159,7 @@ void Snail::RunKMC() {
     VSSM2_SNAIL vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

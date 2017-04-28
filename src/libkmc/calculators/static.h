@@ -77,7 +77,7 @@ void Static::Initialize(Property *options) {
     _nsteps = options->get(key + ".nsteps").as<int>();
     _seedelectron = options->get(key + ".seedelectron").as<int>();
     _seed = options->get(key + ".seed").as<int>();
-    _nelectrons = options->get(key + ".nelectrons").as<int>(); //Might not be necessary - but allows to keep same carrier positions and try new events
+    _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
     _injection_method = options->get(key + ".injectionmethod").as<string>();
@@ -159,7 +159,7 @@ void Static::RunKMC() {
     VSSM2_NODES vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

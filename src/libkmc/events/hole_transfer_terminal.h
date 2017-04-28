@@ -15,29 +15,29 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ELECTRONTRANSFERTERMINAL_H
-#define __VOTCA_KMC_ELECTRONTRANSFERTERMINAL_H
+#ifndef __VOTCA_KMC_HOLETRANSFERTERMINAL_H
+#define __VOTCA_KMC_HOLETRANSFERTERMINAL_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
-#include "carriers/electron.h"
+#include "carriers/hole.h"
 
 namespace votca { namespace kmc {
     
-class ElectronTransferTerminal : public Event {
+class HoleTransferTerminal : public Event {
     
 public:
 
-    std::string Type(){ return "electron transfer terminal"; } ;
+    std::string Type(){ return "hole transfer terminal"; } ;
         
-    void Initialize( Electron* _electron, Edge* _edge ) {
-        electron = _electron;
+    void Initialize( Hole* _hole, Edge* _edge ) {
+        hole = _hole;
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
         SetRate( _edge->Rate() );
         //only enable this event if a carrier is provided
         Disable();
-        if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
+        if ( _hole != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
     }
 
@@ -45,12 +45,12 @@ public:
     BNode* NodeTo(){ return edge->NodeTo(); };
     
     // this has to go away eventually
-    void SetElectron( Electron* _electron ){ electron = _electron; };
+    void SetHole( Hole* _hole ){ hole = _hole; };
       
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
 
-        if ( electron->Move(edge) == true ) {
+        if ( hole->Move(edge) == true ) {
 
             // disable old events
             for (auto& event: disabled_events ) {   
@@ -64,8 +64,8 @@ public:
                     //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
 
                     //if a previous unavailable event is now available (no longer occupied) - Enable it
-                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
-                    if ( it_to == electron->e_occupiedNodes.end() ) {
+                    std::vector<BNode*>::iterator it_to   = hole->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == hole->h_occupiedNodes.end() ) {
                         event->Enable();
                     }
                 } 
@@ -78,7 +78,7 @@ public:
             // enable new events
             for (auto& event: enabled_events ) {
                 parent->AddSubordinate( event );
-                event->SetElectron(electron);
+                event->SetHole(hole);
                 event->Enable();
             }   
             
@@ -94,29 +94,29 @@ public:
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* et_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
-            enabled_events.push_back(et_transfer);
+            HoleTransferTerminal* ht_transfer = dynamic_cast<HoleTransferTerminal*>(event);
+            enabled_events.push_back(ht_transfer);
         }
     }
         
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* et_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
-            disabled_events.push_back(et_transfer);
+            HoleTransferTerminal* ht_transfer = dynamic_cast<HoleTransferTerminal*>(event);
+            disabled_events.push_back(ht_transfer);
         }
     }
      
     void CheckEventsOnExecute( std::vector<Event*>* events){
         for (auto& event: *events){
-            ElectronTransferTerminal* et_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
-            events_to_check.push_back(et_transfer);
+            HoleTransferTerminal* ht_transfer = dynamic_cast<HoleTransferTerminal*>(event);
+            events_to_check.push_back(ht_transfer);
         }  
     }
     
     virtual void Print(std::string offset="") {
         std::cout << offset << Type();
         if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
-        if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << electron->id(); }
+        if ( hole == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << hole->id(); }
         std::cout 
             << " Node "  << edge->NodeFrom()->id << "->" << edge->NodeTo()->id  
             << " Disabled: " << disabled_events.size() 
@@ -127,12 +127,12 @@ public:
         
 private:
 
-    std::vector<ElectronTransferTerminal*> disabled_events;
-    std::vector<ElectronTransferTerminal*> enabled_events;
-    std::vector<ElectronTransferTerminal*> events_to_check;
+    std::vector<HoleTransferTerminal*> disabled_events;
+    std::vector<HoleTransferTerminal*> enabled_events;
+    std::vector<HoleTransferTerminal*> events_to_check;
     
-    // electron to move
-    Electron* electron;
+    // hole to move
+    Hole* hole;
     Edge* edge;
     votca::tools::vec distance_pbc;
     

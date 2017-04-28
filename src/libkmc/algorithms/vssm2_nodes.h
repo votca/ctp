@@ -139,7 +139,7 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nelectrons, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
+void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
     votca::tools::Random2 RandomVariable;
 
@@ -194,7 +194,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, string trajector
         }
 
     }
-    state->Print_properties(nelectrons, fieldX, fieldY, fieldZ);
+    state->Print_properties(nelectrons, nholes, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
      
