@@ -29,7 +29,7 @@ private:
 void EImport::Initialize(Property *opt) {
 
     // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( opt );
+    UpdateWithDefaults( opt,"ctp" );
     string key = "options." + Identify();
 
     _energiesFile = opt->get(key + ".energies").as< string >();    
