@@ -47,6 +47,8 @@ public:
             : type( "" ), x(0), y(0), z(0), charge(0), from_environment( false )
             {};     
             
+   const tools::vec getPos() const {return tools::vec(x,y,z);}
+            
    std::string type;
    double x;
    double y;

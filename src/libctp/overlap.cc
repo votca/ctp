@@ -54,9 +54,10 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
     int _size = S.size1(); 
 
     _eigenvalues.resize( _size );
-    _eigenvectors.resize( _size, _size ); 
-    
-    votca::tools::linalg_eigenvalues_symmetric(S, _eigenvalues, _eigenvectors);
+    _eigenvectors.resize( _size, _size );
+    //convert from symmatrix to matrix for faster evaluation
+    ub::matrix<double> temp=S;
+    votca::tools::linalg_eigenvalues(temp, _eigenvalues, _eigenvectors);
     
     // compute inverse sqrt of all eigenvalues
     std::transform(_eigenvalues.begin(), _eigenvalues.end(), _eigenvalues.begin(),  _inv_sqrt );
@@ -69,7 +70,7 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
     
     // multiply from the right on the transpose U
     S2 = ub::prod( _temp, ub::trans( _eigenvectors ) );
-    
+    return;
  }
 
 double Overlap::getCouplingElement( int levelA, int levelB,  Orbitals* _orbitalsA,
