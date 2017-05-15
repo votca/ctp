@@ -69,29 +69,6 @@ public:
         } 
 
     };
-
-    // creates a vector of electron transfer events for a specific node and electron
-    /*void CreateEvents( std::vector< ElectronTransferSnail* >* events, BNode* node, Electron* electron, bool status ) {           
-            
-        for (BNode::EdgeIterator it_edge = node->EdgesBegin() ; it_edge != node->EdgesEnd(); ++it_edge) {
-                //New event - electron transfer
-                Event* _et =  Events().Create( "electron_transfer_snail" );
-                _et->SetParent( GetParent() );
-                ElectronTransferSnail* et = dynamic_cast<ElectronTransferSnail*>(_et);
-                et->Initialize( electron, *it_edge );
-                if ( status ) {
-                    et->Enable();
-                    //std::cout << node->id << "-" << (*node_to)->id << " ";
-                } else {
-                    et->Disable();
-                    //std::cout << node->id << "-" << (*node_to)->id << " ";
-                }
-                events->push_back(et);
-        }
-        //std::cout << std::endl;
-
-    }  
-    */
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {

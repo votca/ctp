@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ELECTRONTRANSFERTERMINAL_H
-#define __VOTCA_KMC_ELECTRONTRANSFERTERMINAL_H
+#ifndef __VOTCA_KMC_ELECTRONTRANSFER_H
+#define __VOTCA_KMC_ELECTRONTRANSFER_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
@@ -24,11 +24,11 @@
 
 namespace votca { namespace kmc {
     
-class ElectronTransferTerminal : public Event {
+class ElectronTransfer : public Event {
     
 public:
 
-    std::string Type(){ return "electron transfer terminal"; } ;
+    std::string Type(){ return "electron transfer"; } ;
         
     void Initialize( Electron* _electron, Edge* _edge ) {
         electron = _electron;
@@ -94,21 +94,21 @@ public:
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* et_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
+            ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
             enabled_events.push_back(et_transfer);
         }
     }
         
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* et_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
+            ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
             disabled_events.push_back(et_transfer);
         }
     }
      
     void CheckEventsOnExecute( std::vector<Event*>* events){
         for (auto& event: *events){
-            ElectronTransferTerminal* et_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
+            ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
             events_to_check.push_back(et_transfer);
         }  
     }
@@ -127,9 +127,9 @@ public:
         
 private:
 
-    std::vector<ElectronTransferTerminal*> disabled_events;
-    std::vector<ElectronTransferTerminal*> enabled_events;
-    std::vector<ElectronTransferTerminal*> events_to_check;
+    std::vector<ElectronTransfer*> disabled_events;
+    std::vector<ElectronTransfer*> enabled_events;
+    std::vector<ElectronTransfer*> events_to_check;
     
     // electron to move
     Electron* electron;
@@ -141,6 +141,3 @@ private:
 
 }}
 #endif 
-
-
-

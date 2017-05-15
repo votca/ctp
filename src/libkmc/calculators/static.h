@@ -52,6 +52,7 @@ private:
     double _runtime;
     int _nsteps;
     int _seedelectron;
+    int _seedhole;
     int _seed;
     int _nelectrons;
     int _nholes;
@@ -76,6 +77,7 @@ void Static::Initialize(Property *options) {
     _runtime = options->get(key + ".runtime").as<double>();
     _nsteps = options->get(key + ".nsteps").as<int>();
     _seedelectron = options->get(key + ".seedelectron").as<int>();
+    _seedhole = options->get(key + ".seedhole").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
@@ -118,12 +120,6 @@ void Static::RunKMC() {
     std::cout << "Number of holes: " << _nholes << std::endl;
     std::cout << "Method of carrier injection: " << _injection_method << std::endl;
     
-    if (_injection_method == "random"){
-        //For the random injection of electrons - independent from random events    
-        srand(_seedelectron);
-        RandomVariable.init(rand(), rand(), rand(), rand());
-    }
-    
     std::cout << std::endl;
     
     if(_nelectrons>graph.nodes_size()){
@@ -132,11 +128,16 @@ void Static::RunKMC() {
     }
     
     if(_nelectrons != 0){
+        
+        srand(_seedelectron);
+        RandomVariable.init(rand(), rand(), rand(), rand());
+        std::cout << std::endl;
+        
         for ( int electron = 1; electron <= _nelectrons; ++electron ) {
             
             // Create electrons
-            Carrier* carrier =  state.AddCarrier( "electron" );
-            Electron* ecarrier = dynamic_cast<Electron*>(carrier);
+            Carrier* e_carrier =  state.AddCarrier( "electron" );
+            Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
             
             if (_injection_method == "random"){ 
                 int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
@@ -154,6 +155,42 @@ void Static::RunKMC() {
                 //node_from->PrintNode();  
             }
         }
+        
+        std::cout << std::endl;
+        
+    }
+    
+    if(_nholes != 0){
+               
+        srand(_seedhole);        
+        RandomVariable.init(rand(), rand(), rand(), rand());
+        std::cout << std::endl;
+        
+        for ( int hole = 1; hole <= _nholes; ++hole ) {
+            
+            // Create holes
+            Carrier* h_carrier =  state.AddCarrier( "hole" );
+            Hole* hcarrier = dynamic_cast<Hole*>(h_carrier);
+            
+            if (_injection_method == "random"){ 
+                int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                BNode* node_from = graph.GetNode(node_id + 1);
+                while (hcarrier->AddNode(node_from)==false){
+                        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                        node_from = graph.GetNode(node_id + 1);
+                    } 
+                if (hcarrier->AddNode(node_from)==true){ hcarrier->AddNode( node_from );}
+            }
+            
+            else if (_injection_method == "uniform") {
+                BNode* node_from = graph.GetNode(1000 + hole);
+                hcarrier->AddNode( node_from );
+                //node_from->PrintNode();  
+            }
+            
+        }
+        
+        std::cout << std::endl;
     }
       
     VSSM2_NODES vssm2;

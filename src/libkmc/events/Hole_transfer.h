@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_HOLETRANSFERTERMINAL_H
-#define __VOTCA_KMC_HOLETRANSFERTERMINAL_H
+#ifndef __VOTCA_KMC_HOLETRANSFER_H
+#define __VOTCA_KMC_HOLETRANSFER_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
@@ -24,11 +24,11 @@
 
 namespace votca { namespace kmc {
     
-class HoleTransferTerminal : public Event {
+class HoleTransfer : public Event {
     
 public:
 
-    std::string Type(){ return "hole transfer terminal"; } ;
+    std::string Type(){ return "hole transfer"; } ;
         
     void Initialize( Hole* _hole, Edge* _edge ) {
         hole = _hole;
@@ -94,21 +94,21 @@ public:
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            HoleTransferTerminal* ht_transfer = dynamic_cast<HoleTransferTerminal*>(event);
+            HoleTransfer* ht_transfer = dynamic_cast<HoleTransfer*>(event);
             enabled_events.push_back(ht_transfer);
         }
     }
         
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            HoleTransferTerminal* ht_transfer = dynamic_cast<HoleTransferTerminal*>(event);
+            HoleTransfer* ht_transfer = dynamic_cast<HoleTransfer*>(event);
             disabled_events.push_back(ht_transfer);
         }
     }
      
     void CheckEventsOnExecute( std::vector<Event*>* events){
         for (auto& event: *events){
-            HoleTransferTerminal* ht_transfer = dynamic_cast<HoleTransferTerminal*>(event);
+            HoleTransfer* ht_transfer = dynamic_cast<HoleTransfer*>(event);
             events_to_check.push_back(ht_transfer);
         }  
     }
@@ -127,9 +127,9 @@ public:
         
 private:
 
-    std::vector<HoleTransferTerminal*> disabled_events;
-    std::vector<HoleTransferTerminal*> enabled_events;
-    std::vector<HoleTransferTerminal*> events_to_check;
+    std::vector<HoleTransfer*> disabled_events;
+    std::vector<HoleTransfer*> enabled_events;
+    std::vector<HoleTransfer*> events_to_check;
     
     // hole to move
     Hole* hole;

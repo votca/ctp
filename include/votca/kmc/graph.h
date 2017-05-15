@@ -88,7 +88,7 @@ void Graph::Load(std::string filename) {
     
     //List of neighbours (from neighbour list for charge transfer - state.sql "pairs" table) 
     //List of rates for electron transfer from seg 1 to seg 2 and vice versa
-    stmt = db.Prepare("SELECT seg1, seg2, drX, drY, drZ, rate12e, rate21e FROM pairs;");
+    stmt = db.Prepare("SELECT seg1, seg2, drX, drY, drZ, rate12e, rate21e, rate12h, rate21h FROM pairs;");
     while (stmt->Step() != SQLITE_DONE)     
     {           
         int seg1 = stmt->Column<int>(0);
@@ -100,12 +100,16 @@ void Graph::Load(std::string filename) {
         double dx_pbc = stmt->Column<double>(2);
         double dy_pbc = stmt->Column<double>(3);
         double dz_pbc = stmt->Column<double>(4);
+        
         double rate12e = stmt->Column<double>(5); // 1 -> 2
         double rate21e = stmt->Column<double>(6); // 2 -> 1
+        
+        double rate12h = stmt->Column<double>(7); // 1 -> 2
+        double rate21h = stmt->Column<double>(8); // 2 -> 1
        
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
-        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e); 
-        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e);
+        Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e, rate12h); 
+        Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e, rate21h);
         
         edges.push_back( edge12 );
         edges.push_back( edge21 );

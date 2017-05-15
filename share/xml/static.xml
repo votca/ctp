@@ -7,6 +7,7 @@
         <outtime help="Time difference between outputs into the trajectory file." unit="seconds" default="1E-8">1E-10</outtime>
         <trajectoryfile help="Name of the trajectory file" default="trajectory.csv">statictrajectory.csv</trajectoryfile>
 	<seedelectron help="Integer to initialise the random number generator for electron injection" unit="integer" default="123">123456</seedelectron>
+	<seedhole help="Integer to initialise the random number generator for hole injection" unit="integer" default="456">45678</seedhole>
         <seed help="Integer to initialise the random number generator for events" unit="integer" default="123">123456</seed>
         <injection help="Name pattern that specifies on which sites to inject." default="*">*</injection>
 	<injectionmethod help="Random or uniform injection of the carriers." default="random">random</injectionmethod>
