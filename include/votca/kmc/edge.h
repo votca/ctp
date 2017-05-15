@@ -30,18 +30,20 @@ class Edge {
 
 public:
     
-    Edge(BNode* _node_from, BNode* _node_to, votca::tools::vec _distance_pbc, double _rate = 0.0) {
+    Edge(BNode* _node_from, BNode* _node_to, votca::tools::vec _distance_pbc, double _rate_e = 0.0, double _rate_h = 0.0) {
         node_from = _node_from;
         node_to = _node_to;
         distance_pbc = _distance_pbc;
-        rate = _rate;
+        rate_electron = _rate_e;
+        rate_hole = _rate_h;
     }
     
     
     BNode* NodeFrom() { return node_from; }
     BNode* NodeTo() { return node_to; }
     votca::tools::vec DistancePBC() {return distance_pbc; }
-    double Rate() { return rate; }
+    double Rate_electron() { return rate_electron; }
+    double Rate_hole() { return rate_hole; }
     
 private:
         
@@ -52,7 +54,8 @@ private:
     
     votca::tools::vec distance_pbc;
 
-    double rate;
+    double rate_electron;
+    double rate_hole;
     
 };
  

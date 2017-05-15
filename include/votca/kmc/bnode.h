@@ -53,6 +53,18 @@ public:
 
     int id;
     
+    double reorg_intorig_hole;
+    double reorg_intorig_electron;
+    double reorg_intdest_hole;
+    double reorg_intdest_electron;
+        
+    double eAnion;
+    double eNeutral;
+    double eCation;
+        
+    double internal_energy_electron;
+    double internal_energy_hole;
+    
 private:
     
     std::vector< Edge* > edges;

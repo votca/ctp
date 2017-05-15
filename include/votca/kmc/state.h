@@ -192,7 +192,7 @@ inline void State::Trajectory_write(double time, std::string trajectoryfile){
 }
 
 inline void State::Print_properties(int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ){
-    
+        
     //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
     
     std::cout << "Time: " << time << " seconds" << std::endl;
@@ -235,6 +235,7 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     votca::tools::vec velocity;
     votca::tools::vec average_e_velocity;
     votca::tools::vec average_h_velocity;
+
     
     std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
     for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
@@ -276,9 +277,9 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         carrier = *it_carrier;
         velocity = (carrier->Distance()*1E-9/time);
         
-        mobility_x = (velocity.getX()/absolute_field);
-        mobility_y = (velocity.getY()/absolute_field);
-        mobility_z = (velocity.getZ()/absolute_field);
+        mobility_x = (velocity.getX()*field)/(absolute_field*absolute_field);
+        mobility_y = (velocity.getY()*field)/(absolute_field*absolute_field);
+        mobility_z = (velocity.getZ()*field)/(absolute_field*absolute_field);
         
         std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
 
@@ -288,9 +289,9 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         carrier = *it_carrier;
         velocity = (carrier->Distance()*1E-9/time);
         
-        mobility_x = (velocity.getX()/absolute_field);
-        mobility_y = (velocity.getY()/absolute_field);
-        mobility_z = (velocity.getZ()/absolute_field);
+        mobility_x = (velocity.getX()*field)/(absolute_field*absolute_field);
+        mobility_y = (velocity.getY()*field)/(absolute_field*absolute_field);
+        mobility_z = (velocity.getZ()*field)/(absolute_field*absolute_field);
         
         std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
 

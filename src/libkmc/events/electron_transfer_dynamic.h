@@ -41,7 +41,7 @@ public:
         electron = _electron;
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
-        SetRate( _edge->Rate() );
+        SetRate( _edge->Rate_electron() );
         // enable this event
         Enable();
     }

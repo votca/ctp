@@ -13,6 +13,11 @@
 	<fieldX help="x component of the external electric field" unit="V/m" default="0">0</fieldX>
 	<fieldY help="y component of the external electric field" unit="V/m" default="0">0</fieldY>
 	<fieldZ help="z component of the external electric field" unit="V/m" default="1E6">1E6</fieldZ>
+        <source_electrode help="Position of the source electrode (x,y,z)" unit="double" default="0,0,0">0,5,5</source_electrode>
+	<drain_electrode help="Position of the drain electrode (x,y,z)" unit="double" default="0,0,10">20,5,5</drain_electrode>
+	<!-- how to input the injection cutoff - for example at x=3.0 (y=0, z=0) all node positions at x<3.0 are injectable nodes-->
+	<injection_cutoff help="Defining a cutoff for carrier injection. Only define one axis as injection maximum (remaining 2 axes should be zero) (x,y,z)" default="0,0,3.0">0.5,0,0</injection_cutoff>
+ 	<collection_cutoff help="Defining a cutoff for carrier collection. Only define one axis as collection minimum (remaining 2 axes should be zero) (x,y,z)" default="0,0,9.0">19.5,0,0</collection_cutoff>
 
 </terminal>
 

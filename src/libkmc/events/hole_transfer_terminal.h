@@ -34,7 +34,7 @@ public:
         hole = _hole;
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
-        SetRate( _edge->Rate() );
+        SetRate( _edge->Rate_hole() );
         //only enable this event if a carrier is provided
         Disable();
         if ( _hole != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }

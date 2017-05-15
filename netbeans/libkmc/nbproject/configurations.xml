@@ -30,8 +30,6 @@
     </logicalFolder>
     <logicalFolder name="f3" displayName="Events" projectFiles="true">
       <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
-      <itemPath>../../src/libkmc/events/e_collection.h</itemPath>
-      <itemPath>../../src/libkmc/events/e_injection.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_snail.h</itemPath>
@@ -340,16 +338,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/events/e_collection.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/e_injection.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../src/libkmc/events/electron_transfer.h"
             ex="false"
             tool="3"
@@ -577,16 +565,6 @@
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libkmc/events/carrier_escape.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/e_collection.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/e_injection.h"
             ex="false"
             tool="3"
             flavor2="0">

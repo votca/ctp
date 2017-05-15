@@ -25,8 +25,6 @@
 #include <votca/kmc/bnode.h>
 #include "events/electron_transfer_terminal.h"
 #include "events/hole_transfer_terminal.h"
-#include "events/e_injection.h"
-#include "events/e_collection.h"
 
 //* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
 //          head
@@ -306,7 +304,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
         }
         
     }
-    state->Print_properties(nholes, nholes, fieldX, fieldY, fieldZ);
+    state->Print_properties(nelectrons, nholes, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
      

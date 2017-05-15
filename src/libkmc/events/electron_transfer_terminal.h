@@ -34,7 +34,7 @@ public:
         electron = _electron;
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
-        SetRate( _edge->Rate() );
+        SetRate( _edge->Rate_electron() );
         //only enable this event if a carrier is provided
         Disable();
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
