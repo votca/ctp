@@ -29,7 +29,6 @@
       <itemPath>../../src/libkmc/carriers/hole.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Events" projectFiles="true">
-      <itemPath>../../src/libkmc/events/Hole_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
@@ -37,6 +36,7 @@
       <itemPath>../../include/votca/kmc/event.h</itemPath>
       <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
       <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
+      <itemPath>../../src/libkmc/events/hole_transfer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -332,11 +332,6 @@
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../src/libkmc/events/Hole_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../src/libkmc/events/carrier_escape.h"
             ex="false"
             tool="3"
@@ -353,6 +348,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/hole_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -558,11 +558,6 @@
       </item>
       <item path="../../src/libkmc/eventfactory.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../src/libkmc/events/Hole_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../src/libkmc/events/carrier_escape.h"
             ex="false"
             tool="3"
@@ -579,6 +574,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/hole_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">

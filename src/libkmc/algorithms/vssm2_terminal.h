@@ -23,10 +23,11 @@
 #include <votca/kmc/terminal_algorithm.h>
 #include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
-#include "events/Electron_transfer.h"
-#include "events/Hole_transfer.h"
+#include "events/electron_transfer.h"
+#include "events/hole_transfer.h"
 
 //* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
+// node only enabled if a carrier is present
 //          head
 //        /  |  \
 //  node_1      node_n   
@@ -220,7 +221,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
         // Add move events from the map 
         for (std::vector<Event*>::iterator it_ht_event = ht_events.begin(); it_ht_event != ht_events.end(); ++it_ht_event) {
 
-            // New event - hole transfer
+            // New event - hole transfer (if there is a hole))
             if ((*carrier)->Type() == "hole"){
                 Event* event_move_hole = *it_ht_event;
                 HoleTransfer* hole_transfer = dynamic_cast<HoleTransfer*> (event_move_hole);
@@ -233,7 +234,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
         
         for (std::vector<Event*>::iterator it_et_event = et_events.begin(); it_et_event != et_events.end(); ++it_et_event) {
             
-            // New event - electron transfer
+            // New event - electron transfer (if there is an electron)
             if ((*carrier)->Type() == "electron"){
                 Event* event_move_electron = *it_et_event;
                 ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move_electron);

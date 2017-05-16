@@ -16,10 +16,10 @@
  */
 
 #include <votca/kmc/eventfactory.h>
-#include "events/Electron_transfer.h"
+#include "events/electron_transfer.h"
 #include "events/electron_transfer_snail.h"
 #include "events/carrier_escape.h"
-#include "events/Hole_transfer.h"
+#include "events/hole_transfer.h"
 
 namespace votca { namespace kmc {
 

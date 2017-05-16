@@ -21,8 +21,8 @@
 #include <unordered_map>
 #include <votca/kmc/algorithm.h>
 #include "events/carrier_escape.h"
-#include "events/Electron_transfer.h"
-#include "events/Hole_transfer.h"
+#include "events/electron_transfer.h"
+#include "events/hole_transfer.h"
 #include <time.h>
 
 //* Two-level VSSM algorithm with carriers at the top level and transfer reactions at the bottom level

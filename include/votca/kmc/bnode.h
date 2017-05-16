@@ -53,8 +53,11 @@ public:
 
     int id;
     
+    //UnCnN
     double reorg_intorig_hole;
     double reorg_intorig_electron;
+    
+    //UcNcC
     double reorg_intdest_hole;
     double reorg_intdest_electron;
         
@@ -62,8 +65,13 @@ public:
     double eNeutral;
     double eCation;
         
+    //UcCnN
     double internal_energy_electron;
     double internal_energy_hole;
+    
+    //internal energy plus the energy anion/cation
+    double site_energy_electron;
+    double site_energy_hole;
     
 private:
     

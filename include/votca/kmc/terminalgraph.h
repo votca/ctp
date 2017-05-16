@@ -162,6 +162,7 @@ void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inj
         //Energies for each node - for electron and hole
         node->reorg_intorig_electron =  stmt->Column<double>(4);
         node->reorg_intorig_hole =  stmt->Column<double>(5);
+        
         node->reorg_intdest_electron =  stmt->Column<double>(6);
         node->reorg_intdest_hole =  stmt->Column<double>(7);
         
@@ -172,6 +173,8 @@ void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inj
         node->internal_energy_electron = stmt->Column<double>(11);
         node->internal_energy_hole = stmt->Column<double>(12);
         
+        node->site_energy_electron = node->eAnion + node->internal_energy_electron;
+        node->site_energy_hole = node->eCation + node->internal_energy_hole;
         
         //Only add an injectable node from the source facing side of the lattice
         //defined as a cut-off for example: x-cut-off at x=3.0 all values below 3.0 are injectable nodes

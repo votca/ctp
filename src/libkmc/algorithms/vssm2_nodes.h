@@ -23,8 +23,8 @@
 #include <votca/kmc/algorithm.h>
 #include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
-#include "events/Electron_transfer.h"
-#include "events/Hole_transfer.h"
+#include "events/electron_transfer.h"
+#include "events/hole_transfer.h"
 
 
 //* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level

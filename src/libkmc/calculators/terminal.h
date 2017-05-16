@@ -83,7 +83,6 @@ void Terminal::Initialize(Property *options) {
     _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
-    //_injection_method = options->get(key + ".injectionmethod").as<string>();
     _fieldX = options->get(key + ".fieldX").as<double>();
     _fieldY = options->get(key + ".fieldY").as<double>();
     _fieldZ = options->get(key + ".fieldZ").as<double>();
@@ -196,6 +195,8 @@ void Terminal::RunKMC() {
             
         }
     }
+    
+    std::cout << std::endl;
     
     if(_nholes != 0){
         for ( int hole = 1; hole <= _nholes; ++hole ) {

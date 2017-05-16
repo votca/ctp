@@ -213,6 +213,8 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         average_e_distance += (carrier->Distance()*1E-9); 
     }
     
+    std::cout << std::endl;
+    
     for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
         carrier = *it_carrier;
         
@@ -222,6 +224,8 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
 
         average_h_distance += (carrier->Distance()*1E-9);                
     }
+    
+    std::cout << std::endl;
     
     if (electrons.size() != 0){
         average_e_distance /= nelectrons;
@@ -245,12 +249,16 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
                
     }
     
+    std::cout << std::endl;
+    
     for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
         carrier = *it_carrier;
         velocity = (carrier->Distance()*1E-9/time);
         std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
         
     }
+    
+    std::cout << std::endl;
     
     if (electrons.size() != 0){
         average_e_velocity = average_e_distance/time;
@@ -284,6 +292,8 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
 
     }
+    
+    std::cout << std::endl;
 
     for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
         carrier = *it_carrier;
@@ -296,6 +306,8 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
 
     }
+    
+    std::cout << std::endl;
     
     double average_e_mobility = 0;
     double average_e_mobility_x, average_e_mobility_y, average_e_mobility_z;
