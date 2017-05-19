@@ -62,8 +62,10 @@ private:
     double _fieldY;
     double _fieldZ;
     myvec _field;
+    double _temperature;
     double _outtime;
     std::string _trajectoryfile;
+    std::string _rates;
 };
 
 void Static::Initialize(Property *options) {
@@ -87,8 +89,10 @@ void Static::Initialize(Property *options) {
     _fieldY = options->get(key + ".fieldY").as<double>();
     _fieldZ = options->get(key + ".fieldZ").as<double>();
     _field = myvec(_fieldX,_fieldY,_fieldZ);
+    _temperature = options->get(key + ".temperature").as<double>();
     _outtime = options->get(key + ".outtime").as<double>();
     _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
+    _rates = options->get(key + ".rates").as<string>();
 
 }
 
@@ -108,7 +112,17 @@ void Static::RunKMC() {
     State state;
  
     std::string filename( "state.sql" );
-    graph.Load( filename );
+    graph.Load_Graph( filename );
+    
+    if (_rates == "read"){
+        graph.Load_Rates(filename);
+    }
+    else if ( _rates == "calculate"){
+        graph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
+    }
+    else {
+        std::cout << "The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::cout;
+    }
  
     //graph.Print();
     CarrierFactory::RegisterAll();

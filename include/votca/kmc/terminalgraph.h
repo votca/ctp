@@ -59,8 +59,13 @@ public:
     void Create_source_electrode(int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z);
     void Create_drain_electrode(int ncarriers, double drain_electrode_x, double drain_electrode_y, double drain_electrode_z);
     
-    void Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z);    
-    void Load_Neighbours(std::string filename);
+    void Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z);
+    void Load_Electrode_Neighbours(std::string filename);
+    void Load_Rates(std::string filename);
+    
+    void Simulation_box_size(std::string filename);
+    void Rates_Calculation(std::string filename, int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ, double temperature);
+    
     void Print();
     
     // add a node to the vector of lattice nodes
@@ -175,7 +180,7 @@ void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inj
         
         node->site_energy_electron = node->eAnion + node->internal_energy_electron;
         node->site_energy_hole = node->eCation + node->internal_energy_hole;
-        
+                
         //Only add an injectable node from the source facing side of the lattice
         //defined as a cut-off for example: x-cut-off at x=3.0 all values below 3.0 are injectable nodes
         if(inject_x != 0 && inject_y==0 && inject_z==0) {
@@ -233,7 +238,7 @@ void TerminalGraph::Create_drain_electrode (int ncarriers, double drain_electrod
        
 }
 
-void TerminalGraph::Load_Neighbours(std::string filename) {
+void TerminalGraph::Load_Electrode_Neighbours(std::string filename) {
     
     for (std::vector< BNode* >::iterator source_node = source_nodes_begin() ; source_node != source_nodes_end(); ++source_node){
 
@@ -305,7 +310,10 @@ void TerminalGraph::Load_Neighbours(std::string filename) {
         }
     }
  
-        
+}
+
+void TerminalGraph::Load_Rates(std::string filename) {
+    
     // initialising the database file
     votca::tools::Database db;
     db.Open( filename );
@@ -333,7 +341,7 @@ void TerminalGraph::Load_Neighbours(std::string filename) {
         double rate21h = stmt->Column<double>(8); // 2 -> 1
    
         double Jeff2e = stmt->Column<double>(9);
-        double Jeff2h = stmt->Column<double>(10);
+        double Jeff2h = stmt->Column<double>(10); 
         
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
  
@@ -352,6 +360,131 @@ void TerminalGraph::Load_Neighbours(std::string filename) {
 
 }
   
+void TerminalGraph::Simulation_box_size(std::string filename){
+    
+    // initialising the database file
+    votca::tools::Database db;
+    db.Open( filename );
+    
+    votca::tools::Statement *stmt = db.Prepare("SELECT box11, box22, box33 FROM FRAMES;");
+    
+    std::cout << std::endl << "Retrieving the size of the simulation box from " << filename << std::endl;
+    while (stmt->Step() != SQLITE_DONE){   
+             
+        double box11 = stmt->Column<double>(0);
+        double box22 = stmt->Column<double>(1);
+        double box33 = stmt->Column<double>(2);
+    
+        double boxsizeX = box11;
+        double boxsizeY = box22;
+        double boxsizeZ = box33;
+
+        cout << "Cell dimensions: " << boxsizeX << "nm  x " << boxsizeY << "nm  x " << boxsizeZ << "nm" << endl;
+  
+    }
+    
+    delete stmt;
+}
+
+void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ, double temperature){
+    
+    double kB   = 8.617332478E-5; // eV/K
+    double hbar = 6.5821192815E-16; // eV*s
+    double Pi   = 3.14159265358979323846;
+    
+    double charge_e = -1.0;
+    double charge_h = 1.0;
+    
+    //Calculation of the initial Marcus rates - allows the rates to be calculated with varying field and temperature    
+    std::cout << "Calculating initial Marcus rates." << std::endl;
+    std::cout << "Temperature T = " << temperature << " K." << std::endl;
+    std::cout << "Field: (" << fieldX << ", " << fieldY << ", " << fieldZ << ") V/m" << std::endl;
+    
+    votca::tools::Database db;
+    db.Open( filename );
+    
+    votca::tools::Statement *stmt = db.Prepare("SELECT seg1, seg2, drX, drY, drZ, Jeff2e, Jeff2h, lOe, lOh FROM pairs;");
+    
+    while (stmt->Step() != SQLITE_DONE)     
+    {         
+        int seg1 = stmt->Column<int>(0);
+        int seg2 = stmt->Column<int>(1);
+       
+        BNode* node1 = GetLatticeNode( seg1 );
+        BNode* node2 = GetLatticeNode( seg2 );
+        
+        //distance (nm) from node 1 to node 2) - keep in (nm) as all other objects use (nm)
+        double dX = stmt->Column<double>(2);
+        double dY = stmt->Column<double>(3);
+        double dZ = stmt->Column<double>(4);
+       
+        votca::tools::vec distance(dX, dY, dZ);
+        
+        //distance (nm) from node 1 to node 2) converted to (m) for dG field calculation
+        double _dX = dX*1E-9;
+        double _dY = dY*1E-9;
+        double _dZ = dZ*1E-9;
+        
+        //Effect of field on charge carrier (electron and hole)
+        double dG_Field_e = charge_e * (_dX*fieldX +  _dY*fieldY + _dZ*fieldZ);
+        double dG_Field_h = charge_h * (_dX*fieldX +  _dY*fieldY + _dZ*fieldZ);
+   
+        double Jeff2e = stmt->Column<double>(5);
+        double Jeff2h = stmt->Column<double>(6);
+        
+        double reorg_out_e = stmt->Column<double>(7); 
+        double reorg_out_h = stmt->Column<double>(8);
+
+        //reorganisation energy difference for nodes 1 and 2 (for electrons and holes)
+        //1->2
+        double reorg_e12 = node1->reorg_intorig_electron + node2->reorg_intdest_electron + reorg_out_e;
+        double reorg_h12 = node1->reorg_intorig_hole + node2->reorg_intdest_hole + reorg_out_h;
+        //2->1
+        double reorg_e21 = node2->reorg_intorig_electron + node1->reorg_intdest_electron + reorg_out_e;
+        double reorg_h21 = node2->reorg_intorig_hole + node1->reorg_intdest_hole + reorg_out_h;
+        
+        //Site energy difference for nodes 1 and 2 (for electrons and holes)
+        //1->2
+        double dG_Site_e12 = node2->site_energy_electron - node1->site_energy_electron;
+        double dG_Site_h12 = node2->site_energy_hole - node1->site_energy_hole;
+        //2->1
+        double dG_Site_e21 = node1->site_energy_electron - node2->site_energy_electron;
+        double dG_Site_h21 = node1->site_energy_hole - node2->site_energy_hole;
+        
+        
+        //Site energy difference and field difference for charge carrier hop
+        //1->2
+        double dG_e12 = dG_Site_e12 - dG_Field_e;
+        double dG_h12 = dG_Site_h12 - dG_Field_h;
+        //2->1
+        double dG_e21 = dG_Site_e21 - dG_Field_e;
+        double dG_h21 = dG_Site_h21 - dG_Field_h;
+        
+        //KMC calculated Marcus rates
+        //1->2
+        double cal_rate12e = 2*Pi/hbar * Jeff2e/sqrt(4*Pi*reorg_e12*kB*temperature) * exp(-(dG_e12+reorg_e12)*(dG_e12+reorg_e12) / (4*reorg_e12*kB*temperature));
+        double cal_rate12h = 2*Pi/hbar * Jeff2h/sqrt(4*Pi*reorg_h12*kB*temperature) * exp(-(dG_h12+reorg_h12)*(dG_h12+reorg_h12) / (4*reorg_h12*kB*temperature));
+        //2->1
+        double cal_rate21e = 2*Pi/hbar * Jeff2e/sqrt(4*Pi*reorg_e21*kB*temperature) * exp(-(dG_e21+reorg_e21)*(dG_e21+reorg_e21) / (4*reorg_e21*kB*temperature));
+        double cal_rate21h = 2*Pi/hbar * Jeff2h/sqrt(4*Pi*reorg_h21*kB*temperature) * exp(-(dG_h21+reorg_h21)*(dG_h21+reorg_h21) / (4*reorg_h21*kB*temperature));
+        
+        //std::cout << "Rate 12h " << cal_rate12h << "   Rate 21h: " << cal_rate21h << std::endl;
+        
+        //add the new edge with calculated rate
+        Edge* edge12 = new Edge(node1, node2, distance, cal_rate12e, cal_rate12h);
+        Edge* edge21 = new Edge(node2, node1, -distance, cal_rate21e, cal_rate21h);
+ 
+        node1->AddEdge(edge12);
+        node2->AddEdge( edge21 );
+
+        edges.push_back( edge12 );
+        edges.push_back( edge21 );
+                      
+    }
+       
+    delete stmt;
+}
+
 void TerminalGraph::Print(){
     
     for (std::vector< BNode* >::iterator node = nodes.begin() ; node != nodes.end(); ++node) {

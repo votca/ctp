@@ -61,8 +61,10 @@ private:
     double _fieldY;
     double _fieldZ;
     myvec _field;
+    double _temperature;
     double _outtime;
     std::string _trajectoryfile;
+    std::string _rates;
     std::string _source_electrode;
     std::string _drain_electrode;
     std::string _injection_cutoff;
@@ -79,6 +81,8 @@ void Terminal::Initialize(Property *options) {
     
     _runtime = options->get(key + ".runtime").as<double>();
     _nsteps = options->get(key + ".nsteps").as<int>();
+    _outtime = options->get(key + ".outtime").as<double>();
+    _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
@@ -87,8 +91,8 @@ void Terminal::Initialize(Property *options) {
     _fieldY = options->get(key + ".fieldY").as<double>();
     _fieldZ = options->get(key + ".fieldZ").as<double>();
     _field = myvec(_fieldX,_fieldY,_fieldZ);
-    _outtime = options->get(key + ".outtime").as<double>();
-    _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
+    _temperature = options->get(key + ".temperature").as<double>();
+    _rates = options->get(key + ".rates").as<string>();
     _source_electrode = options->get(key + ".source_electrode").as<string>();
     _drain_electrode = options->get(key + ".drain_electrode").as<string>();
     _injection_cutoff = options->get(key + ".injection_cutoff").as<string>();
@@ -170,13 +174,27 @@ void Terminal::RunKMC() {
     std::cout << "Drain electrode created at position: (" << drain_electrode_x << "," << drain_electrode_y << "," << drain_electrode_z << ") "<< std::endl;
     terminalgraph.Create_drain_electrode( (_nelectrons + _nholes), drain_electrode_x, drain_electrode_y, drain_electrode_z );
 
-    terminalgraph.Load_Neighbours( filename );
+    terminalgraph.Load_Electrode_Neighbours( filename );
+    
+    //terminalgraph.Simulation_box_size( filename );
+    
+    if (_rates == "read"){
+        std::cout << "Reading rates from " << filename << std::endl;
+        terminalgraph.Load_Rates(filename);
+    }
+    else if ( _rates == "calculate"){
+        terminalgraph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
+    }
+    else {
+        std::cout << "Error: The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::cout;
+    }
     
     //terminalgraph.Print();
+    
     CarrierFactory::RegisterAll();
     EventFactory::RegisterAll();
     
-    std::cout << "Number of nodes: " << terminalgraph.lattice_nodes_size() << std::endl;
+    std::cout << std::endl << "Number of nodes: " << terminalgraph.lattice_nodes_size() << std::endl;
     std::cout << "Number of source nodes (injection): " << terminalgraph.source_nodes_size() <<  std::endl;
     std::cout << "Number of drain nodes (collection): " << terminalgraph.drain_nodes_size() <<  std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
