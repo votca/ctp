@@ -115,14 +115,33 @@ public:
     vec             getQ1() { return vec(Q1x, Q1y, Q1z); }  // Only IOP
     //this is really ugly I apologize but I do not know who designed these objects
     vector<double>  getQ2() {
-                                vector<double> temp=vector<double>(5);
-                                temp[0]=Q20;
-                                temp[1]=Q21c;
-                                temp[2]=Q21s;
-                                temp[3]=Q22c;
-                                temp[4]=Q22s;
-                                   return temp;
+        vector<double> temp=vector<double>(5);
+        temp[0]=Q20;
+        temp[1]=Q21c;
+        temp[2]=Q21s;
+        temp[3]=Q22c;
+        temp[4]=Q22s;
+           return temp;
     }
+    
+    matrix getQ2cartesian(){
+       tools::matrix cartesian;
+       double sqrt3=sqrt(3);
+       cartesian[0][0]=0.5*(sqrt3*Q22c-Q20);
+       cartesian[1][1]=-0.5*(sqrt3*Q22c+Q20);
+       cartesian[1][1]=Q20;
+       
+       cartesian[0][1]=0.5*sqrt3*Q22s;
+       cartesian[1][0]=cartesian[0][1];
+       
+       cartesian[0][2]=0.5*sqrt3*Q21c;
+       cartesian[2][0]=cartesian[0][2];
+       
+       cartesian[1][2]=0.5*sqrt3*Q21s;
+       cartesian[2][1]=cartesian[1][2];
+       return cartesian;
+    }
+    
     
     // POLARIZABILITIES
     bool            IsPolarizable();
