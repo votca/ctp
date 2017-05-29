@@ -59,7 +59,8 @@ public:
     void Create_source_electrode(int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z);
     void Create_drain_electrode(int ncarriers, double drain_electrode_x, double drain_electrode_y, double drain_electrode_z);
     
-    void Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z);
+    void Load_Graph(std::string filename);
+    void Load_injectable_collectable(std::string field_direction);
     void Load_Electrode_Neighbours(std::string filename);
     void Load_Rates(std::string filename);
     
@@ -125,6 +126,32 @@ private:
     
 };
 
+void TerminalGraph::Simulation_box_size(std::string filename){
+    
+    // initialising the database file
+    votca::tools::Database db;
+    db.Open( filename );
+    
+    votca::tools::Statement *stmt = db.Prepare("SELECT box11, box22, box33 FROM FRAMES;");
+    
+    std::cout << std::endl << "Retrieving the size of the simulation box from " << filename << std::endl;
+    while (stmt->Step() != SQLITE_DONE){   
+             
+        double box11 = stmt->Column<double>(0);
+        double box22 = stmt->Column<double>(1);
+        double box33 = stmt->Column<double>(2);
+    
+        double boxsizeX = box11;
+        double boxsizeY = box22;
+        double boxsizeZ = box33;
+
+        cout << "Cell dimensions: " << boxsizeX << "nm  x " << boxsizeY << "nm  x " << boxsizeZ << "nm" << endl;
+  
+    }
+    
+    delete stmt;
+}
+
 void TerminalGraph::Create_source_electrode (int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z){
     
     //Add the injection node - Source (in front of the face of injectable nodes)     
@@ -140,8 +167,8 @@ void TerminalGraph::Create_source_electrode (int ncarriers, double source_electr
     }
 }  
 
-void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z) {
-      
+//void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z) {
+void TerminalGraph::Load_Graph(std::string filename) {   
     std::cout << "Loading the graph from " << filename << std::endl;
     
     // initialising the database file
@@ -149,18 +176,18 @@ void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inj
     db.Open( filename );
         
     votca::tools::Statement *stmt = db.Prepare("SELECT id-1, posX, posY, posZ, UnCnNe, UnCnNh, UcNcCe, UcNcCh, eAnion, eNeutral, eCation, UcCnNe, UcCnNh FROM segments;");
-
+  
     while (stmt->Step() != SQLITE_DONE)
-    {
+    {        
         BNode *node = AddLatticeNode();
         int id = stmt->Column<int>(0);
         node->id = id+1;
-
+       
         // position in nm
         double x = stmt->Column<double>(1);
         double y = stmt->Column<double>(2);
-        double z = stmt->Column<double>(3);       
-   
+        double z = stmt->Column<double>(3); 
+        
         myvec position = myvec(x, y, z); 
         node->position = position;
         
@@ -180,46 +207,103 @@ void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inj
         
         node->site_energy_electron = node->eAnion + node->internal_energy_electron;
         node->site_energy_hole = node->eCation + node->internal_energy_hole;
-                
-        //Only add an injectable node from the source facing side of the lattice
-        //defined as a cut-off for example: x-cut-off at x=3.0 all values below 3.0 are injectable nodes
-        if(inject_x != 0 && inject_y==0 && inject_z==0) {
-            if ( x <= inject_x ){
-                injectable_nodes.push_back( node );
-            }
-        }
-        else if(inject_y != 0 && inject_x==0 && inject_z==0) {
-            if ( y <= inject_y ){
-                injectable_nodes.push_back( node );
-            }
-        }        
-        else if(inject_z != 0 && inject_x==0 && inject_y==0) {
-            if ( z <= inject_z ){
-                injectable_nodes.push_back( node );
-            }
-        }
-
-        //List of collection nodes, from the drain facing side of the lattice
-        //defined as a cut-off for example: x-cut-off at x=10.0 all values above 10.0 are collectable nodes         
-        if(collect_x != 0 && collect_y==0 && collect_z==0) {
-            if ( x >= collect_x ){
-                collectable_nodes.push_back( node );
-            }
-        }
-        else if(collect_y != 0 && collect_x==0 && collect_z==0) {
-            if ( y >= collect_y ){
-                collectable_nodes.push_back( node );
-            }
-        }       
-        else if(collect_z != 0 && collect_x==0 && collect_y==0) {
-            if ( z >= collect_z ){
-                collectable_nodes.push_back( node );
-            }
-        }    
+        
         //node->PrintNode();   
     }
-  
+    
     delete stmt;
+}
+
+void TerminalGraph::Load_injectable_collectable(std::string field_direction){
+    
+    //Start with the first node - use it's position as the initial minimum position
+    BNode* node1 = GetLatticeNode( 1 );
+    
+    double x_pos1 = node1->position.getX();
+    double y_pos1 = node1->position.getY();
+    double z_pos1 = node1->position.getZ(); 
+        
+    double minX = x_pos1;
+    double minY = y_pos1;
+    double minZ = z_pos1;
+    
+    //Use the last node to make an initial maximum position
+    int max_node = lattice_nodes_size();
+    BNode* node2 = GetLatticeNode( max_node );
+    
+    double x_pos2 = node2->position.getX();
+    double y_pos2 = node2->position.getY();
+    double z_pos2 = node2->position.getZ();
+    
+    double maxX = x_pos2;
+    double maxY = y_pos2;
+    double maxZ = z_pos2; 
+        
+    //Then loop through all nodes to check the minimum and maximum position
+    for (std::vector< BNode* >::iterator node = lattice_nodes_begin() ; node != lattice_nodes_end(); ++node){
+             
+        BNode* node_pos = GetLatticeNode( (*node)->id );      
+        double x_pos_node = node_pos->position.getX();
+        double y_pos_node = node_pos->position.getY();
+        double z_pos_node = node_pos->position.getZ(); 
+     
+        if(x_pos_node < minX) {minX = x_pos_node;}
+        else if(y_pos_node < minY) {minY = y_pos_node;}
+        else if(z_pos_node < minZ) {minZ = z_pos_node;}
+        else if(x_pos_node > maxX) {maxX = x_pos_node;}
+        else if(y_pos_node > maxY) {maxY = y_pos_node;}
+        else if(z_pos_node > maxZ) {maxZ = z_pos_node;}
+        
+        //When the field is in the x direction, the face for injection will be the first x face
+        //Only add these nodes to the injectable nodes
+        if (field_direction == "X"){
+            if ( x_pos_node == minX ){              
+                injectable_nodes.push_back( node_pos );
+            }
+        }
+        else if (field_direction == "Y"){
+            if ( y_pos_node == minY ){
+                injectable_nodes.push_back ( node_pos );
+            }
+        }
+        else if (field_direction == "Z"){
+            if ( z_pos_node == minZ ){
+                injectable_nodes.push_back ( node_pos );
+            }
+        }
+    
+        //When the field is in the x direction, the face for collection will be the last x face
+        //Only add these nodes to the collectable nodes
+        if (field_direction == "X"){
+            if ( x_pos_node == maxX ){              
+                collectable_nodes.push_back( node_pos );
+            }    
+        }
+        else if (field_direction == "Y"){
+            if ( y_pos_node == maxY ){
+                collectable_nodes.push_back ( node_pos );
+            }
+        }
+        else if (field_direction == "Z"){
+            if ( z_pos_node == maxZ ){
+                collectable_nodes.push_back ( node_pos );
+            }
+        }
+    }
+    
+    /*for (std::vector< BNode* >::iterator injection_edge = injectable_nodes.begin() ; injection_edge != injectable_nodes.end(); ++injection_edge){
+            
+            BNode* injection = (*injection_edge);
+            
+            std::cout << injection->id << std::endl;
+    }
+    
+    for (std::vector< BNode* >::iterator collection_edge = collectable_nodes.begin() ; collection_edge != collectable_nodes.end(); ++collection_edge){
+            
+            BNode* collection = (*collection_edge);
+            
+            std::cout << collection->id << std::endl;
+    }*/
 }
 
 void TerminalGraph::Create_drain_electrode (int ncarriers, double drain_electrode_x, double drain_electrode_y, double drain_electrode_z){
@@ -245,7 +329,9 @@ void TerminalGraph::Load_Electrode_Neighbours(std::string filename) {
         BNode* source = GetSourceNode( (*source_node)->id );
     
         for (std::vector< BNode* >::iterator injection_edge = injectable_nodes.begin() ; injection_edge != injectable_nodes.end(); ++injection_edge){
-
+            
+            BNode* injection = (*injection_edge);
+            
             double dx_inj = 0.0;
             double dy_inj = 0.0;
             double dz_inj = 0.0;
@@ -358,32 +444,6 @@ void TerminalGraph::Load_Rates(std::string filename) {
     
     delete stmt;
 
-}
-  
-void TerminalGraph::Simulation_box_size(std::string filename){
-    
-    // initialising the database file
-    votca::tools::Database db;
-    db.Open( filename );
-    
-    votca::tools::Statement *stmt = db.Prepare("SELECT box11, box22, box33 FROM FRAMES;");
-    
-    std::cout << std::endl << "Retrieving the size of the simulation box from " << filename << std::endl;
-    while (stmt->Step() != SQLITE_DONE){   
-             
-        double box11 = stmt->Column<double>(0);
-        double box22 = stmt->Column<double>(1);
-        double box33 = stmt->Column<double>(2);
-    
-        double boxsizeX = box11;
-        double boxsizeY = box22;
-        double boxsizeZ = box33;
-
-        cout << "Cell dimensions: " << boxsizeX << "nm  x " << boxsizeY << "nm  x " << boxsizeZ << "nm" << endl;
-  
-    }
-    
-    delete stmt;
 }
 
 void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ, double temperature){
