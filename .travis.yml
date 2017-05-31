@@ -44,8 +44,8 @@ env:
     - CCACHE_CPP2=yes #for clang
     - GVER=4.8
   matrix: #NINJA=1 is currently not support by Travis' cmake, enable when >=2.8.9
-    - CTP=yes WERROR=yes J=4
-    - CTP=yes WALL=yes J=4
+    - XTP=yes WERROR=yes J=4
+    - XTP=yes WALL=yes J=4
 
 before_script:
   - rm -vrf * .git
@@ -69,7 +69,7 @@ script:
     ${J:+-j$J} ${BDIR:+--builddir=$BDIR} ${NINJA:+--ninja} ${WALL:+--Wall} ${GMX_VERSION:+--gmx-release ${GMX_VERSION}}
     --directory "$HOME/votca/src" --no-clean --depth 1 -DGMX_USE_RDTSCP=OFF ${GMX_DOUBLE:+-DGMX_DOUBLE=yes}
     tools $([[ ${MINIMAL} ]] || echo gromacs) csg csgapps ${MAN:+csg-manual} ${TEST:+csg-tutorials}
-    ${CTP:+kmc moo ctp} ${XTP:+xtp}
+    ${XTP:+kmc moo ctp xtp}
 
 cache:
   - ccache
