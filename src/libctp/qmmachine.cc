@@ -82,7 +82,7 @@ QMMachine<QMPackage>::~QMMachine() {
 template<class QMPackage>
 void QMMachine<QMPackage>::Evaluate(XJob *job) {
     
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
        << format("... dR %1$1.4f dQ %2$1.4f QM %3$1.4f MM %4$1.4f IT %5$d")
        % _crit_dR % _crit_dQ % _crit_dE_QM % _crit_dE_MM % _maxIter << flush;
     
@@ -93,7 +93,7 @@ void QMMachine<QMPackage>::Evaluate(XJob *job) {
     }
     int chrg = round(dQ);
     int spin = ( (chrg < 0) ? -chrg:chrg ) % 2 + 1;
-    LOG(logINFO,*_log) << "... Q = " << chrg << ", 2S+1 = " << spin << flush;
+    CTP_LOG(logINFO,*_log) << "... Q = " << chrg << ", 2S+1 = " << spin << flush;
     
     
     // PREPARE JOB DIRECTORY
@@ -101,7 +101,7 @@ void QMMachine<QMPackage>::Evaluate(XJob *job) {
                      + "_" + _job->getTag();    
     bool created = boost::filesystem::create_directory(jobFolder);
     if (created){ 
-        LOG(logINFO,*_log) << "Created directory " << jobFolder << flush;
+        CTP_LOG(logINFO,*_log) << "Created directory " << jobFolder << flush;
     }
     
     
@@ -120,7 +120,7 @@ void QMMachine<QMPackage>::Evaluate(XJob *job) {
     }
     
     if (iterCnt == iterMax-1 && !_isConverged) {
-        LOG(logWARNING,*_log)
+        CTP_LOG(logWARNING,*_log)
             << format("Not converged within %1$d iterations.") % iterMax;
     }
     
@@ -138,9 +138,9 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
        
     bool created = boost::filesystem::create_directory(runFolder);
     if (created) 
-        LOG(logDEBUG,*_log) << "Created directory " << runFolder << flush;
+        CTP_LOG(logDEBUG,*_log) << "Created directory " << runFolder << flush;
     else
-        LOG(logWARNING,*_log) << "Could not create directory " << runFolder << flush;
+        CTP_LOG(logWARNING,*_log) << "Could not create directory " << runFolder << flush;
     
     
     // RUN CLASSICAL INDUCTION & SAVE
@@ -159,7 +159,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
       
     _qmpack->setRunDir(runFolder);
     
-    LOG(logDEBUG,*_log) << "Writing input file " << runFolder << flush;
+    CTP_LOG(logDEBUG,*_log) << "Writing input file " << runFolder << flush;
     
     _qmpack->WriteInputFile(empty, &orb_iter_input);
  
@@ -168,7 +168,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
     orb_iter_input.WritePDB( out );
     fclose(out);
          
-    // RUN HERE (OVERRIDE - COPY EXISTING LOG-FILE)
+    // RUN HERE (OVERRIDE - COPY EXISTING CTP_LOG-FILE)
     //string cpstr = "cp e_1_n.log " + path_logFile;
     //int sig = system(cpstr.c_str());
     //_qmpack->setLogFileName(path_logFile);
@@ -176,7 +176,7 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
     //Commented out for test Jens 
     _qmpack->Run();
     
-    // EXTRACT LOG-FILE INFOS TO ORBITALS   
+    // EXTRACT CTP_LOG-FILE INFOS TO ORBITALS   
     Orbitals orb_iter_output;
     _qmpack->ParseLogFile(&orb_iter_output);
     
@@ -200,25 +200,25 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
     
     thisIter->UpdatePosChrgFromQMAtoms(atoms, _job->getPolarTop()->QM0());
 
-    LOG(logINFO,*_log) 
+    CTP_LOG(logINFO,*_log) 
         << format("Summary - iteration %1$d:") % (iterCnt+1) << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... QM Size  = %1$d atoms") % int(atoms.size()) << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... E(QM)    = %1$+4.9e") % thisIter->getQMEnergy() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... E(SF)    = %1$+4.9e") % thisIter->getSFEnergy() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... E(FM)    = %1$+4.9e") % thisIter->getFMEnergy() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... E(MM)    = %1$+4.9e") % thisIter->getMMEnergy() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... E(QMMM)  = %1$+4.9e") % thisIter->getQMMMEnergy() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... RMS(dR)  = %1$+4.9e") % thisIter->getRMSdR() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... RMS(dQ)  = %1$+4.9e") % thisIter->getRMSdQ() << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << format("... SUM(dQ)  = %1$+4.9e") % thisIter->getSUMdQ() << flush;
     
     // CLEAN DIRECTORY
@@ -228,9 +228,9 @@ bool QMMachine<QMPackage>::Iterate(string jobFolder, int iterCnt) {
     /*
     int removed = boost::filesystem::remove_all(runFolder);
     if (removed > 0) 
-        LOG(logDEBUG,*_log) << "Removed directory " << runFolder << flush;
+        CTP_LOG(logDEBUG,*_log) << "Removed directory " << runFolder << flush;
     else 
-        LOG(logWARNING,*_log) << "Could not remove dir " << runFolder << flush;
+        CTP_LOG(logWARNING,*_log) << "Could not remove dir " << runFolder << flush;
     */
     return 0;
      
@@ -287,13 +287,13 @@ bool QMMachine<QMPackage>::hasConverged() {
     
     _isConverged = ((_convg_dR && _convg_dQ) && (_convg_dE_QM && _convg_dE_MM));
     
-    LOG(logINFO,*_log) 
+    CTP_LOG(logINFO,*_log) 
         << format("... Convg dR = %s") % (_convg_dR ? "true" : "false") << flush;
-    LOG(logINFO,*_log) 
+    CTP_LOG(logINFO,*_log) 
         << format("... Convg dQ = %s") % (_convg_dQ ? "true" : "false") << flush;
-    LOG(logINFO,*_log) 
+    CTP_LOG(logINFO,*_log) 
         << format("... Convg QM = %s") % (_convg_dE_QM ? "true" : "false") << flush;
-    LOG(logINFO,*_log) 
+    CTP_LOG(logINFO,*_log) 
         << format("... Convg MM = %s") % (_convg_dE_MM ? "true" : "false") << flush;
     
     return _isConverged;

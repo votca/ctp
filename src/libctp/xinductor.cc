@@ -44,7 +44,7 @@ void XInductor::Evaluate(XJob *job) {
 
     if (job->StartFromCPT()) {
         // Permanent fields already computed, do not zero these out ...
-        LOG(logDEBUG,*_log) << "Carry out partial depolarization." << flush;
+        CTP_LOG(logDEBUG,*_log) << "Carry out partial depolarization." << flush;
         vector< PolarSeg* >   ::iterator sit;
         vector< APolarSite* > ::iterator pit;
 
@@ -63,7 +63,7 @@ void XInductor::Evaluate(XJob *job) {
         }}
     }
     else {        
-        LOG(logDEBUG,*_log) << "Carry out full depolarization." << flush;        
+        CTP_LOG(logDEBUG,*_log) << "Carry out full depolarization." << flush;        
         vector< PolarSeg* >   ::iterator sit;
         vector< APolarSite* > ::iterator pit;
 
@@ -120,11 +120,11 @@ void XInductor::Evaluate(XJob *job) {
     
     double t_indu = (t1.wall - t0.wall)/1e9/60.;
     double t_ener = (t2.wall - t1.wall)/1e9/60.;
-    LOG(logINFO,*_log) << (format("  o Total:     %1$1.2f min")
+    CTP_LOG(logINFO,*_log) << (format("  o Total:     %1$1.2f min")
         % (t_ener+t_indu)) << flush;
-    LOG(logINFO,*_log) << (format("  o Induction: %1$1.2f min")
+    CTP_LOG(logINFO,*_log) << (format("  o Induction: %1$1.2f min")
         % (t_indu)) << flush;
-    LOG(logINFO,*_log) << (format("  o Energy:    %1$1.2f min")
+    CTP_LOG(logINFO,*_log) << (format("  o Energy:    %1$1.2f min")
         % (t_ener)) << flush;
 
     job->setInduIter(iter);
@@ -197,7 +197,7 @@ int XInductor::Induce(XJob *job) {
         }
     }
     
-    LOG(logINFO,*_log) << "Inductor: Using WSOR = " << wSOR 
+    CTP_LOG(logINFO,*_log) << "Inductor: Using WSOR = " << wSOR 
         << ", ASHARP = " << _aDamp << flush;
 
     // Intra-pair induction ...
@@ -298,9 +298,9 @@ int XInductor::Induce(XJob *job) {
     
     boost::timer::cpu_times t_perm_1 = cpu_t_perm.elapsed();
     double t_perm = (t_perm_1.wall-t_perm_0.wall)/1e9;
-    LOG(logINFO,*_log) << (format("  PERM      |  T=%1$1.2fs ") 
+    CTP_LOG(logINFO,*_log) << (format("  PERM      |  T=%1$1.2fs ") 
         % (t_perm));
-    LOG(logINFO,*_log) << flush;
+    CTP_LOG(logINFO,*_log) << flush;
 
     // +++++++++++++++++++ //
     // 1st-order induction //
@@ -316,7 +316,7 @@ int XInductor::Induce(XJob *job) {
         }
     }
     else {
-        LOG(logINFO,*_log) << "Job started from archive, reusing existing "
+        CTP_LOG(logINFO,*_log) << "Job started from archive, reusing existing "
             << "state as starting configuration" << flush;
     }
     
@@ -464,15 +464,15 @@ int XInductor::Induce(XJob *job) {
             double t_intra = (t3.wall-t2.wall)/1e9;
             double t_inter = (t4.wall-t3.wall)/1e9;
 
-            LOG(logINFO,*_log) << (boost::format(
+            CTP_LOG(logINFO,*_log) << (boost::format(
                 "  ITER %1$3d  |  AVG(dU/U) %3$1.7e  EPS %11$1.1e  |  NN(0<>%7$1.1f<>%6$1.1f) %8$04d|%9$04d|%10$04d") 
                 % iter_cg % maxdU_U % avgdU_U % rmsdU % baseN % rc_seg 
                 % rc_frag % count_atm_atm % count_atm_frag % count_atm_seg 
                 % eTOL).str();
-            LOG(logINFO,*_log) << (format("  |  T=%1$1.2fs CG/I/O %2$2.2f%% %3$2.2f%% %4$2.2f%%") 
+            CTP_LOG(logINFO,*_log) << (format("  |  T=%1$1.2fs CG/I/O %2$2.2f%% %3$2.2f%% %4$2.2f%%") 
                 % (t_total) % (100*t_cg/t_total) % (100*t_intra/t_total) 
                 % (100*t_inter/t_total));
-            LOG(logINFO,*_log) << flush;
+            CTP_LOG(logINFO,*_log) << flush;
 
 
             // Break if converged
@@ -573,7 +573,7 @@ int XInductor::Induce(XJob *job) {
 //        rmsdU = sqrt(rmsdU);
 //        if (avgdU_U < eTOL/10.) { converged = true; }
 //        
-//        LOG(logINFO,*_log) << (boost::format(
+//        CTP_LOG(logINFO,*_log) << (boost::format(
 //            "  Iter %1$3d | max(dU/U) %2$1.7e  avg(dU/U) %3$1.7e  rms(dU) %4$1.7e  N %5$d") 
 //            % iter % maxdU_U % avgdU_U % rmsdU % baseN).str() << flush;
 //
@@ -832,7 +832,7 @@ double XInductor::Energy(XJob *job) {
           + E_Pair_Sph2
           + E_Sph1_Sph2;
 
-//    LOG(logINFO,*_log) 
+//    CTP_LOG(logINFO,*_log) 
 //             << "... E(X) = " << E_Tot * int2eV << " eV "
 //             << flush << "...      = (Site, Site) " << E_Pair_Pair * int2eV
 //             << flush << "...      + (Site, Sph1) " << E_Pair_Sph1 * int2eV
@@ -846,7 +846,7 @@ double XInductor::Energy(XJob *job) {
                   + epu 
                   + euu;
 
-//    LOG(logINFO,*_log)
+//    CTP_LOG(logINFO,*_log)
 //             << "... E(X) = " << E_PPUU * int2eV << " eV " 
 //             << flush << "...      = (PP) "    << epp  * int2eV
 //             << flush << "...      + (PU) "    << epu  * int2eV
@@ -863,7 +863,7 @@ double XInductor::Energy(XJob *job) {
                  + e_m_non_c
                  + e_m_out;
 
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << (format("PP-PU-UU Splitting")).str()
         << flush << (format("  + U [Q  -  Q]       = %1$+1.7f eV") % (epp      * int2eV)).str()
         << flush << (format("  + U [Q  - dQ]       = %1$+1.7f eV") % (epu      * int2eV)).str()       
@@ -871,7 +871,7 @@ double XInductor::Energy(XJob *job) {
         << flush << (format("  = ------------------------------")).str()
         << flush << (format("  + SUM(E)            = %1$+1.7f eV") % (E_PPUU   * int2eV)).str()
         << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << (format("QM0-MM1-MM2 Splitting")).str()
         << flush << (format("  + Field-term [0-0]  = %1$+1.7f eV (%2$+1.7f)") % (e_f_c_c          * int2eV) % (e_f_intra_0*int2eV)).str()
         << flush << (format("  + Field-term [0-1]  = %1$+1.7f eV") % (e_f_c_non_c      * int2eV)).str()       
@@ -887,7 +887,7 @@ double XInductor::Energy(XJob *job) {
         << flush;
     
     
-//    LOG(logINFO,*_log)
+//    CTP_LOG(logINFO,*_log)
 //             << "... E(X) = " << E_f_m * int2eV << " eV " 
 //             << flush << "...      = (f,0-0) " << e_f_c_c          * int2eV
 //             << flush << "...      + (f,0-1) " << e_f_c_non_c      * int2eV
@@ -1047,7 +1047,7 @@ double XInductor::EnergyStatic(XJob *job) {
           + E_Pair_Sph2
           + E_Sph1_Sph2;
     
-//    LOG(logINFO,*_log) 
+//    CTP_LOG(logINFO,*_log) 
 //             << "... E(X) = " << E_Tot * int2eV << " eV "
 //             << flush << "...      = (Site, Site) " << E_Pair_Pair * int2eV
 //             << flush << "...      + (Site, Sph1) " << E_Pair_Sph1 * int2eV
@@ -1061,7 +1061,7 @@ double XInductor::EnergyStatic(XJob *job) {
                   + epu 
                   + euu;
 
-//    LOG(logINFO,*_log)
+//    CTP_LOG(logINFO,*_log)
 //             << "... E(X) = " << E_PPUU * int2eV << " eV " 
 //             << flush << "...      = (PP) "    << epp  * int2eV
 //             << flush << "...      + (PU) "    << epu  * int2eV
@@ -1078,7 +1078,7 @@ double XInductor::EnergyStatic(XJob *job) {
                  + e_m_non_c
                  + e_m_out;
 
-//    LOG(logINFO,*_log)
+//    CTP_LOG(logINFO,*_log)
 //             << "... E(X) = " << E_f_m * int2eV << " eV " 
 //             << flush << "...      = (f,0-0) " << e_f_c_c          * int2eV
 //             << flush << "...      + (f,0-1) " << e_f_c_non_c      * int2eV
@@ -1091,7 +1091,7 @@ double XInductor::EnergyStatic(XJob *job) {
 //             << flush;
 
     
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << (format("PP-PU-UU Splitting")).str()
         << flush << (format("  + U [Q  -  Q]       = %1$+1.7f eV") % (epp      * int2eV)).str()
         << flush << (format("  + U [Q  - dQ]       = %1$+1.7f eV") % (epu      * int2eV)).str()       
@@ -1099,7 +1099,7 @@ double XInductor::EnergyStatic(XJob *job) {
         << flush << (format("    ------------------------------")).str()
         << flush << (format("    SUM(E)            = %1$+1.7f eV") % (E_PPUU   * int2eV)).str()
         << flush;
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << (format("QM0-MM1-MM2 Splitting")).str()
         << flush << (format("  + Field-term [0-0]  = %1$+1.7f eV") % (e_f_c_c          * int2eV)).str()
         << flush << (format("  + Field-term [0-1]  = %1$+1.7f eV") % (e_f_c_non_c      * int2eV)).str()       

@@ -224,7 +224,7 @@ XJob XQMP::ProcessInputString(Job *job, Topology *top, QMThread *thread) {
 
         Segment *seg = top->getSegment(segId);
         if (seg->getName() != segName) {
-            LOG(logERROR,*(thread->getLogger()))
+            CTP_LOG(logERROR,*(thread->getLogger()))
                 << "ERROR: Seg " << segId << ":" << seg->getName() << " "
                 << " maltagged as " << segName << ". Skip job ..." << flush;
             throw std::runtime_error("Input does not match topology.");
@@ -242,7 +242,7 @@ Job::JobResult XQMP::EvalJob(Topology *top, Job *job, QMThread *thread) {
     
     Logger *log = thread->getLogger();
     
-    LOG(logINFO,*log)
+    CTP_LOG(logINFO,*log)
         << "Job input = " << job->getInput().as<string>() << flush;
     
     // CREATE XJOB FROM JOB INPUT STRING
@@ -255,7 +255,7 @@ Job::JobResult XQMP::EvalJob(Topology *top, Job *job, QMThread *thread) {
     
     _mps_mapper.Gen_QM_MM1_MM2(top, &xjob, co1, co2, thread);
     
-    LOG(logINFO,*log)
+    CTP_LOG(logINFO,*log)
          << xjob.getPolarTop()->ShellInfoStr() << flush;
     
     if (tools::globals::verbose || _pdb_check)
@@ -294,7 +294,7 @@ Job::JobResult XQMP::EvalJob(Topology *top, Job *job, QMThread *thread) {
     if (!inductor.hasConverged()) {
         jres.setStatus(Job::FAILED);
         jres.setError(inductor.getError());
-        LOG(logERROR,*log) << inductor.getError() << flush;
+        CTP_LOG(logERROR,*log) << inductor.getError() << flush;
     }
     
     return jres;

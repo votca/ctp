@@ -118,7 +118,7 @@ double Overlap::getCouplingElement( int levelA, int levelB,  Orbitals* _orbitals
 bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB, 
     Orbitals* _orbitalsAB, ub::matrix<double>* _JAB) {
 
-    LOG(logDEBUG,*_pLog) << "Calculating electronic couplings" << std::flush;
+    CTP_LOG(logDEBUG,*_pLog) << "Calculating electronic couplings" << std::flush;
     
     const std::vector<QMAtom*> atomsA=_orbitalsA->QMAtoms();
     const std::vector<QMAtom*> atomsB=_orbitalsB->QMAtoms();
@@ -141,7 +141,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
 	  throw std::runtime_error("\nERROR: Atom types do not agree in dimer and monomers\n");
         }
         if(std::abs(monomer->x-dimer->x)>0.001 || std::abs(monomer->y-dimer->y)>0.001 || std::abs(monomer->z-dimer->z)>0.001){
-            LOG(logERROR,*_pLog) << "======WARNING=======\n Coordinates of monomers and dimer atoms do not agree, do you know what you are doing?\n " << std::flush;
+            CTP_LOG(logERROR,*_pLog) << "======WARNING=======\n Coordinates of monomers and dimer atoms do not agree, do you know what you are doing?\n " << std::flush;
             break;
         }
         
@@ -155,7 +155,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     int _basisB = _orbitalsB->getBasisSetSize();
     
     if ( ( _basisA == 0 ) || ( _basisB == 0 ) ) {
-        LOG(logERROR,*_pLog) << "Basis set size is not stored in monomers" << std::flush;
+        CTP_LOG(logERROR,*_pLog) << "Basis set size is not stored in monomers" << std::flush;
         return false;
     }
         
@@ -165,11 +165,11 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     //boost::timer t; // start timing
     //double _st = t.elapsed();
     
-    LOG(logDEBUG,*_pLog) << "Levels:Basis A[" << _levelsA << ":" << _basisA << "]"
+    CTP_LOG(logDEBUG,*_pLog) << "Levels:Basis A[" << _levelsA << ":" << _basisA << "]"
                                      << " B[" << _levelsB << ":" << _basisB << "]" << std::flush;
     
     if ( ( _levelsA == 0 ) || (_levelsB == 0) ) {
-        LOG(logERROR,*_pLog) << "No information about number of occupied/unoccupied levels is stored" << std::flush;
+        CTP_LOG(logERROR,*_pLog) << "No information about number of occupied/unoccupied levels is stored" << std::flush;
         return false;
     } 
     
@@ -180,7 +180,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     ub::matrix<double> _psi_AxB ( _levelsA + _levelsB, _basisA + _basisB  );
     
 
-    LOG(logDEBUG,*_pLog) << "Constructing direct product AxB [" 
+    CTP_LOG(logDEBUG,*_pLog) << "Constructing direct product AxB [" 
             << _psi_AxB.size1() << "x" 
             << _psi_AxB.size2() << "]" << std::flush;    
     
@@ -190,10 +190,10 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( _basisA, _basisA + _basisB ) ) = *_orbitalsB->getOrbitals(); 
 
     // psi_AxB * S_AB * psi_AB
-    LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals" << std::flush; 
+    CTP_LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals" << std::flush; 
     ub::matrix<double> _orbitalsAB_Transposed = ub::trans( *_orbitalsAB->getOrbitals() );  
     if ( (*_orbitalsAB->getOverlap()).size1() == 0 ) {
-            LOG(logERROR,*_pLog) << "Overlap matrix is not stored"; 
+            CTP_LOG(logERROR,*_pLog) << "Overlap matrix is not stored"; 
             return false;
     }
      
@@ -215,23 +215,23 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
  
      
     // J = psi_AxB_dimer_basis * FAB * psi_AxB_dimer_basis^T
-    LOG(logDEBUG,*_pLog) << "Projecting the Fock matrix onto the dimer basis" << std::flush;   
+    CTP_LOG(logDEBUG,*_pLog) << "Projecting the Fock matrix onto the dimer basis" << std::flush;   
     ub::diagonal_matrix<double> _fock_AB( _orbitalsAB->getNumberOfLevels(), (*_orbitalsAB->getEnergies()).data() ); 
     ub::matrix<double> _temp = ub::prod( _fock_AB, ub::trans( _psi_AxB_dimer_basis ) ) ; 
     ub::matrix<double> JAB_dimer = ub::prod( _psi_AxB_dimer_basis, _temp);  
  
     // S = psi_AxB_dimer_basis * psi_AxB_dimer_basis^T
-    LOG(logDEBUG,*_pLog) << "Constructing Overlap matrix" << std::flush;    
+    CTP_LOG(logDEBUG,*_pLog) << "Constructing Overlap matrix" << std::flush;    
     ub::symmetric_matrix<double> _S_AxB = ub::prod( _psi_AxB_dimer_basis, ub::trans( _psi_AxB_dimer_basis ));  
     ub::matrix<double> _S_AxB_2(_S_AxB.size1(), _S_AxB.size1() );
     ub::trans( _S_AxB );
   
     // Square root of the overlap matrix
-    LOG(logDEBUG,*_pLog) << "Calculating square root of the overlap matrix" << std::flush;    
+    CTP_LOG(logDEBUG,*_pLog) << "Calculating square root of the overlap matrix" << std::flush;    
     SQRTOverlap( _S_AxB , _S_AxB_2 );
  
      
-   LOG(logDEBUG,*_pLog) << "Calculating the effective overlap JAB [" 
+   CTP_LOG(logDEBUG,*_pLog) << "Calculating the effective overlap JAB [" 
               << JAB_dimer.size1() << "x" 
               << JAB_dimer.size2() << "]" << std::flush;  
        
@@ -240,7 +240,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     (*_JAB) = ub::prod( _S_AxB_2, JAB_temp );    
     
     
-    LOG(logDEBUG,*_pLog) << "Done with electronic couplings" << std::flush;
+    CTP_LOG(logDEBUG,*_pLog) << "Done with electronic couplings" << std::flush;
     return true;   
 
 }
@@ -259,14 +259,14 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
 bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbitalsB, 
     Orbitals* _orbitalsAB, ub::matrix<double>* _JAB) {
           
-    LOG(logDEBUG,*_pLog) << "Calculating electronic couplings" << std::flush;
+    CTP_LOG(logDEBUG,*_pLog) << "Calculating electronic couplings" << std::flush;
         
     // constructing the direct product orbA x orbB
     int _basisA = _orbitalsA->getBasisSetSize();
     int _basisB = _orbitalsB->getBasisSetSize();
     
     if ( ( _basisA == 0 ) || ( _basisB == 0 ) ) {
-        LOG(logERROR,*_pLog) << "Basis set size is not stored in monomers" << std::flush;
+        CTP_LOG(logERROR,*_pLog) << "Basis set size is not stored in monomers" << std::flush;
         return false;
     }
         
@@ -276,11 +276,11 @@ bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbit
     boost::timer t; // start timing
     double _st = t.elapsed();
     
-    LOG(logDEBUG,*_pLog) << "Levels:Basis A[" << _levelsA << ":" << _basisA << "]"
+    CTP_LOG(logDEBUG,*_pLog) << "Levels:Basis A[" << _levelsA << ":" << _basisA << "]"
                                      << " B[" << _levelsB << ":" << _basisB << "]" << std::flush;
     
     if ( ( _levelsA == 0 ) || (_levelsB == 0) ) {
-        LOG(logERROR,*_pLog) << "No information about number of occupied/unoccupied levels is stored" << std::flush;
+        CTP_LOG(logERROR,*_pLog) << "No information about number of occupied/unoccupied levels is stored" << std::flush;
         return false;
     } 
      
@@ -294,7 +294,7 @@ bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbit
     ub::matrix_range< ub::symmetric_matrix<double> > Overlap_A = ub::project( *_orbitalsAB->getOverlap(), ub::range ( 0, _basisA), ub::range (0, _basisA +_basisB) );
     ub::matrix_range< ub::symmetric_matrix<double> > Overlap_B = ub::project( *_orbitalsAB->getOverlap(), ub::range ( _basisA, _basisA +_basisB ), ub::range (0, _basisA +_basisB) );
     
-    LOG(logDEBUG,*_pLog) << "Projecting the monomer onto dimer orbitals [" << _levelsA + _levelsB << "x" << _basisA + _basisB << "]";   
+    CTP_LOG(logDEBUG,*_pLog) << "Projecting the monomer onto dimer orbitals [" << _levelsA + _levelsB << "x" << _basisA + _basisB << "]";   
     ub::matrix<double> _psi_AB ( _levelsA + _levelsB, _basisA + _basisB  );
 
     ub::matrix_range< ub::matrix<double> > _psi_AB_A = ub::project( _psi_AB, ub::range (0, _levelsA ), ub::range ( 0, _basisA +_basisB ) ) ;
@@ -302,19 +302,19 @@ bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbit
 
     ub::matrix_range< ub::matrix<double> > _psi_AB_B = ub::project( _psi_AB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( 0, _basisA +_basisB ) ) ;
     ub::noalias(_psi_AB_B) = ub::prod(*_orbitalsB->getOrbitals(), Overlap_B );
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();
+    CTP_LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s) " << std::flush; _st = t.elapsed();
  
     ub::matrix<double> _psi_AxB_dimer_basis (_levelsA + _levelsB, _basisA + _basisB );
     ub::matrix<double> OrbAB_Transp = ub::trans( *_orbitalsAB->getOrbitals() );
-    LOG(logDEBUG,*_pLog)  << "Transposing OrbitalsAB (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
+    CTP_LOG(logDEBUG,*_pLog)  << "Transposing OrbitalsAB (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
     ub::noalias(_psi_AxB_dimer_basis) = ub::prod( _psi_AB,  OrbAB_Transp );
   
-    LOG(logDEBUG,*_pLog)  << "Multiplying PsiAB x OrbitalsAB (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
+    CTP_LOG(logDEBUG,*_pLog)  << "Multiplying PsiAB x OrbitalsAB (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
     
     _psi_AB.resize(0,0,false); OrbAB_Transp.resize(0,0,false);
     
     //   _psi_AxB_dimer_basis * F  * _psi_AxB_dimer_basis^T
-    LOG(logDEBUG,*_pLog) << "Projecting the Fock matrix onto the dimer basis";    
+    CTP_LOG(logDEBUG,*_pLog) << "Projecting the Fock matrix onto the dimer basis";    
     ub::zero_matrix<double> _zero ( _levelsA + _levelsB, _levelsA + _levelsB );
     ub::matrix<double> JAB_dimer( _zero ) ;
     ub::vector<double> energies = (*_orbitalsAB->getEnergies());
@@ -327,7 +327,7 @@ bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbit
         JAB_dimer(i2,i1) = JAB_dimer(i1,i2);
     }}   
     energies.clear();
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
+    CTP_LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
     
     // S = psi_AxB_dimer_basis * psi_AxB_dimer_basis^T
     ub::symmetric_matrix<double> _S_AxB = ub::prod( _psi_AxB_dimer_basis, ub::trans( _psi_AxB_dimer_basis ));
@@ -336,15 +336,15 @@ bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbit
     ub::matrix<double> _S_AxB_2(_S_AxB.size1(), _S_AxB.size1() );
     
      ub::trans( _S_AxB );
-     LOG(logDEBUG,*_pLog) << "Calculating square root of the overlap matrix [" 
+     CTP_LOG(logDEBUG,*_pLog) << "Calculating square root of the overlap matrix [" 
              << _S_AxB.size1() << "x" 
              << _S_AxB.size2() << "]";    
      SQRTOverlap( _S_AxB , _S_AxB_2 );        
      _S_AxB.resize(0,0,false); 
-     LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
+     CTP_LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
     
     
-     LOG(logDEBUG,*_pLog) << "Calculating the effective overlap JAB [" 
+     CTP_LOG(logDEBUG,*_pLog) << "Calculating the effective overlap JAB [" 
              << JAB_dimer.size1() << "x" 
              << JAB_dimer.size2() << "]";    
     
@@ -355,9 +355,9 @@ bool Overlap::CalculateIntegralsOptimized(Orbitals* _orbitalsA, Orbitals* _orbit
     
     // cleanup
     JAB_dimer.resize(0,0,false); JAB_temp.resize(0,0,false); _S_AxB_2.resize(0,0,false);
-    LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
+    CTP_LOG(logDEBUG,*_pLog)  << " (" << t.elapsed() - _st << "s)" << "\x1b[0;39m" << std::flush; _st = t.elapsed();
     
-    LOG(logDEBUG,*_pLog) << "Done with electronic couplings" << std::flush;
+    CTP_LOG(logDEBUG,*_pLog) << "Done with electronic couplings" << std::flush;
     return true;   
 };
 

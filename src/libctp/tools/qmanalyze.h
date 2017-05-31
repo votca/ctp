@@ -97,13 +97,13 @@ bool QMAnalyze::Evaluate() {
     _log.setPreface(logWARNING, "\n... ...");
     _log.setPreface(logDEBUG,   "\n... ..."); 
 
-    LOG(logDEBUG, _log) << "Analyzing serialized QM data in " << _orbfile << flush;
+    CTP_LOG(logDEBUG, _log) << "Analyzing serialized QM data in " << _orbfile << flush;
 
     Orbitals _orbitals;
     // load the QM data from serialized orbitals object
 
     std::ifstream ifs( (_orbfile).c_str());
-    LOG(logDEBUG, _log) << " Loading QM data from " << _orbfile << flush;
+    CTP_LOG(logDEBUG, _log) << " Loading QM data from " << _orbfile << flush;
     boost::archive::binary_iarchive ia(ifs);
     ia >> _orbitals;
     ifs.close();
@@ -114,7 +114,7 @@ bool QMAnalyze::Evaluate() {
     
     
     
-    // LOG(logDEBUG, _log) << "Written text data to " << _output_file << flush;
+    // CTP_LOG(logDEBUG, _log) << "Written text data to " << _output_file << flush;
     
     
     return true;
@@ -127,103 +127,103 @@ void QMAnalyze::CheckContent( Orbitals& _orbitals ){
 
 
    
-    LOG(logDEBUG, _log) << "===== Summary of serialized content ===== " << flush;
-    LOG(logDEBUG, _log) << "   Information about DFT:" << flush;
+    CTP_LOG(logDEBUG, _log) << "===== Summary of serialized content ===== " << flush;
+    CTP_LOG(logDEBUG, _log) << "   Information about DFT:" << flush;
     
           
     // DFT atoms
     if ( _orbitals.hasQMAtoms() ) {
-        LOG(logDEBUG, _log) << "      atoms:                  " << _orbitals.QMAtoms().size() << flush;
+        CTP_LOG(logDEBUG, _log) << "      atoms:                  " << _orbitals.QMAtoms().size() << flush;
     } else {
-        LOG(logDEBUG, _log) << "      atoms:                  not stored "<< flush;
+        CTP_LOG(logDEBUG, _log) << "      atoms:                  not stored "<< flush;
     } 
     
     // QM package
     if ( _orbitals.hasQMpackage() ){
-        LOG(logDEBUG, _log) << "      QM package:             " << _orbitals.getQMpackage() << flush;
+        CTP_LOG(logDEBUG, _log) << "      QM package:             " << _orbitals.getQMpackage() << flush;
     
     } else {
-        LOG(logDEBUG, _log) << "      QM package:             not stored " << flush;
+        CTP_LOG(logDEBUG, _log) << "      QM package:             not stored " << flush;
     }
     
     
     // DFT basis set
     if ( _orbitals.hasDFTbasis() ) {
-        LOG(logDEBUG, _log) << "      basis set:              " << _orbitals.getDFTbasis() << flush;
+        CTP_LOG(logDEBUG, _log) << "      basis set:              " << _orbitals.getDFTbasis() << flush;
     } else {
-        LOG(logDEBUG, _log) << "      basis set:              not stored "<< flush;
+        CTP_LOG(logDEBUG, _log) << "      basis set:              not stored "<< flush;
     }
 
     // DFT basis set size
     if ( _orbitals.hasBasisSetSize() ) {
-        LOG(logDEBUG, _log) << "      basis set size:         " << _orbitals.getBasisSetSize() << flush;
+        CTP_LOG(logDEBUG, _log) << "      basis set size:         " << _orbitals.getBasisSetSize() << flush;
    
     } else {
-        LOG(logDEBUG, _log) << "      basis set size:          not stored "<< flush;
+        CTP_LOG(logDEBUG, _log) << "      basis set size:          not stored "<< flush;
     }
 
     // DFT number of electrons
     if ( _orbitals.hasNumberOfElectrons() ) {
-        LOG(logDEBUG, _log) << "      number of electrons:    " << _orbitals.getNumberOfElectrons() << flush;
+        CTP_LOG(logDEBUG, _log) << "      number of electrons:    " << _orbitals.getNumberOfElectrons() << flush;
     } else {
-         LOG(logDEBUG, _log) << "      number of electrons:    not stored "<< flush;
+         CTP_LOG(logDEBUG, _log) << "      number of electrons:    not stored "<< flush;
     }    
     
     // DFT number of levels
     if ( _orbitals.hasNumberOfLevels() ) {
-        LOG(logDEBUG, _log) << "      number of levels:       " << _orbitals.getNumberOfLevels() << flush;
+        CTP_LOG(logDEBUG, _log) << "      number of levels:       " << _orbitals.getNumberOfLevels() << flush;
     } else {
-         LOG(logDEBUG, _log) << "      number of levels:       not stored "<< flush;
+         CTP_LOG(logDEBUG, _log) << "      number of levels:       not stored "<< flush;
     }    
 
     // DFT orbital energies
     if ( _orbitals.hasMOEnergies() ) {
-        LOG(logDEBUG, _log) << "      MO energies:            " << _orbitals.getEnergies()->size() << flush;
+        CTP_LOG(logDEBUG, _log) << "      MO energies:            " << _orbitals.getEnergies()->size() << flush;
     } else {
-         LOG(logDEBUG, _log) << "      MO energies:            not stored "<< flush;
+         CTP_LOG(logDEBUG, _log) << "      MO energies:            not stored "<< flush;
     }    
 
     // DFT orbital coefficients
     if ( _orbitals.hasMOCoefficients() ) {
-        LOG(logDEBUG, _log) << "      MO coefficients:        " << _orbitals.MOCoefficients().size1() << " x " << _orbitals.MOCoefficients().size2() << flush;
+        CTP_LOG(logDEBUG, _log) << "      MO coefficients:        " << _orbitals.MOCoefficients().size1() << " x " << _orbitals.MOCoefficients().size2() << flush;
     } else {
-        LOG(logDEBUG, _log) << "      MO coefficients:        not stored "<< flush;
+        CTP_LOG(logDEBUG, _log) << "      MO coefficients:        not stored "<< flush;
     }  
     
     // DFT AO overlap matrix
     if ( _orbitals.hasAOOverlap() ) {
-        LOG(logDEBUG, _log) << "      AO overlap matrix:      " << _orbitals.getOverlap()->size1()  << " x " << _orbitals.getOverlap()->size2() << flush;
+        CTP_LOG(logDEBUG, _log) << "      AO overlap matrix:      " << _orbitals.getOverlap()->size1()  << " x " << _orbitals.getOverlap()->size2() << flush;
     } else {
-        LOG(logDEBUG, _log) << "      AO overlap matrix:      not stored "<< flush;
+        CTP_LOG(logDEBUG, _log) << "      AO overlap matrix:      not stored "<< flush;
     }    
     
     // DFT AO XC matrix
     if ( _orbitals.hasAOVxc() ) {
-        LOG(logDEBUG, _log) << "      AO XC matrix:           " << _orbitals.AOVxc().size1()  << " x " << _orbitals.AOVxc().size2() << flush;
+        CTP_LOG(logDEBUG, _log) << "      AO XC matrix:           " << _orbitals.AOVxc().size1()  << " x " << _orbitals.AOVxc().size2() << flush;
     } else {
-        LOG(logDEBUG, _log) << "      AO XC matrix:           not stored "<< flush;
+        CTP_LOG(logDEBUG, _log) << "      AO XC matrix:           not stored "<< flush;
     }    
 
     // QM total energy
     if ( _orbitals.hasQMEnergy() ){
-        LOG(logDEBUG, _log) << "      QM energy:              " << _orbitals.getQMEnergy() << flush;
+        CTP_LOG(logDEBUG, _log) << "      QM energy:              " << _orbitals.getQMEnergy() << flush;
     } else{
-        LOG(logDEBUG, _log) << "      QM energy:              not stored " << flush;
+        CTP_LOG(logDEBUG, _log) << "      QM energy:              not stored " << flush;
     }
     
     // MM self-energy 
     if ( _orbitals.hasSelfEnergy() ){
-        LOG(logDEBUG, _log) << "      MM self energy:         " << _orbitals.getSelfEnergy() << flush;
+        CTP_LOG(logDEBUG, _log) << "      MM self energy:         " << _orbitals.getSelfEnergy() << flush;
     } else{
-        LOG(logDEBUG, _log) << "      MM self energy:         not stored " << flush;
+        CTP_LOG(logDEBUG, _log) << "      MM self energy:         not stored " << flush;
     }    
     
     // DFT transfer integrals
     if ( _orbitals.hasMOCouplings() ) {
-        LOG(logDEBUG, _log) << "      DFT transfer integrals: " << _orbitals.MOCouplings().size1() << " x " << _orbitals.MOCouplings().size2() << flush;
+        CTP_LOG(logDEBUG, _log) << "      DFT transfer integrals: " << _orbitals.MOCouplings().size1() << " x " << _orbitals.MOCouplings().size2() << flush;
 
     } else {
-         LOG(logDEBUG, _log) << "      DFT transfer integrals: not stored "<< flush;
+         CTP_LOG(logDEBUG, _log) << "      DFT transfer integrals: not stored "<< flush;
     }    
     
     
