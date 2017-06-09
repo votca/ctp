@@ -114,23 +114,27 @@ void Terminal::RunKMC() {
     std::string filename( "state.sql" );
 
     //create the source electrode - one source node per carrier id 0 to id (number of carriers)
-    std::istringstream iss_source(_source_electrode); // position = "x,y,z" 
+    /*std::istringstream iss_source(_source_electrode); // position = "x,y,z" 
     double source_electrode_x, source_electrode_y, source_electrode_z;
     char delimiter_source;
     iss_source >> source_electrode_x >> delimiter_source >> source_electrode_y >> delimiter_source >> source_electrode_z;
     std::cout << "Source electrode created at position: (" << source_electrode_x  << "," << source_electrode_y << "," << source_electrode_z << ") " << std::endl;
     terminalgraph.Create_source_electrode( (_nelectrons + _nholes), source_electrode_x, source_electrode_y, source_electrode_z );
 
-    string field_direction = "";
+     */
+    
+    /*string field_direction = "";
     if(_fieldX != 0 && _fieldY==0 && _fieldZ==0) {field_direction = "X"; }
     else if(_fieldY != 0 && _fieldX==0 && _fieldZ==0) {field_direction = "Y"; }
     else if(_fieldZ != 0 && _fieldX==0 && _fieldY==0) {field_direction = "Z"; }
+    */
     
     terminalgraph.Load_Graph(filename);
-    terminalgraph.Load_injectable_collectable(field_direction);
+    
+    //terminalgraph.Load_injectable_collectable(field_direction);
   
     //create the drain electrode - one drain node per carrier
-    std::istringstream iss_drain(_drain_electrode); // position = "x,y,z" 
+    /*std::istringstream iss_drain(_drain_electrode); // position = "x,y,z" 
     double drain_electrode_x, drain_electrode_y, drain_electrode_z;
     char delimiter_drain;
     iss_drain >> drain_electrode_x >> delimiter_drain >> drain_electrode_y >> delimiter_drain >> drain_electrode_z;
@@ -138,6 +142,7 @@ void Terminal::RunKMC() {
     terminalgraph.Create_drain_electrode( (_nelectrons + _nholes), drain_electrode_x, drain_electrode_y, drain_electrode_z );
 
     terminalgraph.Load_Electrode_Neighbours( filename );
+    */
     
     if (_rates == "read"){
         std::cout << "Reading rates from " << filename << std::endl;
@@ -155,9 +160,9 @@ void Terminal::RunKMC() {
     CarrierFactory::RegisterAll();
     EventFactory::RegisterAll();
     
-    std::cout << std::endl << "Number of nodes: " << terminalgraph.lattice_nodes_size() << std::endl;
-    std::cout << "Number of source nodes (injection): " << terminalgraph.source_nodes_size() <<  std::endl;
-    std::cout << "Number of drain nodes (collection): " << terminalgraph.drain_nodes_size() <<  std::endl;
+    std::cout << std::endl << "Number of nodes: " << terminalgraph.nodes_size() << std::endl;
+    //std::cout << "Number of source nodes (injection): " << terminalgraph.source_nodes_size() <<  std::endl;
+    //std::cout << "Number of drain nodes (collection): " << terminalgraph.drain_nodes_size() <<  std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
     std::cout << "Number of holes: " << _nholes << std::endl;
    
@@ -168,7 +173,7 @@ void Terminal::RunKMC() {
             Carrier* e_carrier =  state.AddCarrier( "electron" );
             Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
 
-            BNode* node_from = terminalgraph.GetSourceNode(electron);
+            BNode* node_from = terminalgraph.GetNode(electron);
             ecarrier->AddNode( node_from );
             //node_from->PrintNode();  
             
@@ -184,7 +189,7 @@ void Terminal::RunKMC() {
             Carrier* h_carrier =  state.AddCarrier( "hole" );
             Hole* hcarrier = dynamic_cast<Hole*>(h_carrier);
             
-            BNode* node_from = terminalgraph.GetSourceNode(hole);
+            BNode* node_from = terminalgraph.GetNode(hole);
             hcarrier->AddNode( node_from );
             //node_from->PrintNode();  
             
