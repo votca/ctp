@@ -1,5 +1,5 @@
 <options>
-	<ewdbgpol>
+	<ewdbgpol help="Calculates background polarisation needed for ewald calc" section="sec:ewdbgpol">
 		<multipoles>system.xml</multipoles>
 		<control>
 			<mps_table>mps.tab</mps_table>
