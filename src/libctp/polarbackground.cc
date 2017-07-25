@@ -100,6 +100,7 @@ PolarBackground::PolarBackground(Topology *top, PolarTop *ptop, Property *opt,
     
     // RESTART / CONVERGENCE OPTIONS
     _converged = false;
+    _do_restart= false;
     _restart_from_iter = ptop->getPolarizationIter();
     if (_restart_from_iter > -1) {
         CTP_LOG(logINFO,*_log) << "Restarting from iteration " 
