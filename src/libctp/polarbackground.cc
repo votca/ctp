@@ -566,7 +566,7 @@ void PolarBackground::RThread::FP_FieldCalc() {
     
     // CLEAR POLAR NEIGHBOR-LIST BEFORE SET-UP
     if (_do_setup_nbs) {
-        if (_verbose) {
+        if (tools::globals::verbose) {
             CTP_LOG(logDEBUG,*(_master->_log)) 
                 << "   - Clearing polar nb-list" << endl; }
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
@@ -579,7 +579,7 @@ void PolarBackground::RThread::FP_FieldCalc() {
     
     for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
         PolarSeg *pseg1 = *sit1;
-        if (_verbose) {
+        if (tools::globals::verbose) {
             CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - Progress " << pseg1->getId() 
                 << "/" << _full_bg_P.size() << flush; }
@@ -723,7 +723,7 @@ void PolarBackground::RThread::FU_FieldCalc() {
     if (_do_setup_nbs) {
         
         // CLEAR POLAR NEIGHBOR-LIST BEFORE SET-UP
-        if (_verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "   - Clearing polar nb-list" << endl; }
+        if (tools::globals::verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "   - Clearing polar nb-list" << endl; }
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             (*sit1)->ClearPolarNbs();
         }
@@ -733,7 +733,7 @@ void PolarBackground::RThread::FU_FieldCalc() {
 
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             PolarSeg *pseg1 = *sit1;
-            if (_verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
+            if (tools::globals::verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
 
             // GENERATE NEIGHBOUR SHELLS
             double dR_shell = 0.5;
@@ -866,7 +866,7 @@ void PolarBackground::RThread::FU_FieldCalc() {
         int rms_count = 0;
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             PolarSeg *pseg1 = *sit1;
-            if (_verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
+            if (tools::globals::verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
             // LONG-RANGE TREATMENT: REAL-SPACE SUM
             if (!_master->_do_use_cutoff) {
                 for (nit = pseg1->PolarNbs().begin(); nit < pseg1->PolarNbs().end(); ++nit) {
@@ -974,7 +974,7 @@ void PolarBackground::KThread::SP_SFactorCalc() {
         EWD::cmplx sfactor
             = _ewdactor.PStructureAmplitude(_full_bg_P, (*kit)->getK());
         (*kit)->setStructureFactor(sfactor);
-        if (_verbose) {
+        if (tools::globals::verbose) {
             CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(SP) Progress " << kvec_count
                 << "/" << _part_kvecs.size() << flush; }
@@ -1001,7 +1001,7 @@ void PolarBackground::KThread::FP_KFieldCalc() {
         EWD::cmplx f_rms = _ewdactor.FP12_At_ByS2(k, _part_bg_P, S, rV);
         _rms_sum_re += f_rms._re;
         _sum_im += f_rms._im;
-        if (_verbose) {
+        if (tools::globals::verbose) {
             CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(FP) Progress " << kvec_count
                 << "/" << _full_kvecs.size() << flush; }
@@ -1021,7 +1021,7 @@ void PolarBackground::KThread::SU_SFactorCalc() {
         EWD::cmplx sfactor
             = _ewdactor.UStructureAmplitude(_full_bg_P, (*kit)->getK());
         (*kit)->setStructureFactor(sfactor);
-        if (_verbose) {
+        if (tools::globals::verbose) {
             CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(SU) Progress " << kvec_count
                 << "/" << _part_kvecs.size() << flush; }
@@ -1048,7 +1048,7 @@ void PolarBackground::KThread::FU_KFieldCalc() {
         EWD::cmplx f_rms = _ewdactor.FU12_At_ByS2(k, _part_bg_P, S, rV);
         _rms_sum_re += f_rms._re;
         _sum_im += f_rms._im;
-        if (_verbose) {
+        if (tools::globals::verbose) {
             CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(FU) Progress " << kvec_count
                 << "/" << _full_kvecs.size() << flush; }
