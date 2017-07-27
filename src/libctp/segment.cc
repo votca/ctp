@@ -353,6 +353,43 @@ void Segment::calcPos() {
     _CoM = pos / totWeight;
 }
 
+
+void Segment::calcApproxSize(){
+    _approxsize=0.0;
+    
+    tools::vec min=vec(std::numeric_limits<double>::max());
+    tools::vec max=vec(std::numeric_limits<double>::min());
+    std::vector< ctp::Fragment* > ::iterator fragit1;           
+       for (fragit1 = Fragments().begin();
+                    fragit1 < Fragments().end();
+                    fragit1 ++) {
+            const tools::vec& pos= (*fragit1)->getPos();
+            if(pos.getX()>max.getX()){
+                max.x()=pos.getX();
+            }
+            else if(pos.getX()<min.getX()){
+                min.x()=pos.getX();
+            }
+            if(pos.getY()>max.getY()){
+                max.y()=pos.getY();
+            }
+            else if(pos.getY()<min.getY()){
+                min.y()=pos.getY();
+            }
+            if(pos.getZ()>max.getZ()){
+                max.z()=pos.getZ();
+            }
+            else if(pos.getZ()<min.getZ()){
+                min.z()=pos.getZ();
+                }
+        }
+            
+    _approxsize=abs(max-min);
+    
+    return;
+}
+
+
 void Segment::Rigidify() {
 
     if (this->getType()->canRigidify()) {

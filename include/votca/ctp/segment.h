@@ -49,6 +49,9 @@ public:
     void             setPos(vec pos) { _CoM = pos; }
     void             calcPos();
     void             TranslateBy(const vec &shift);
+    
+    void            calcApproxSize();
+    double          getApproxSize(){return _approxsize;}
 
     void             setHasState(bool yesno, int state);
     bool             hasState(int state);
@@ -113,6 +116,7 @@ private:
     std::vector < APolarSite* >  _apolarSites;
 
     vec         _CoM;
+    double   _approxsize;
 
 
     double _U_cC_nN_e;   // from ::EInternal     input     DEFAULT 0
