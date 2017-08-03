@@ -16,7 +16,7 @@ XInductor::~XInductor() {
     _indus.clear();
 }
     
-    
+
 void XInductor::Evaluate(XJob *job) {    
     
     this->Configure(job);
@@ -114,8 +114,8 @@ void XInductor::Evaluate(XJob *job) {
     //[-Wunused-but-set-variable]
     //if (this->_induce) E_state   = this->Energy(job);
     //else               E_state   = this->EnergyStatic(job);
-    
-    
+    if (this->_induce) this->Energy(job);
+    else               this->EnergyStatic(job);
     boost::timer::cpu_times t2 = cpu_t.elapsed();
     
     double t_indu = (t1.wall - t0.wall)/1e9/60.;
