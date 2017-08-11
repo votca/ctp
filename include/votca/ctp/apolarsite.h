@@ -129,7 +129,7 @@ public:
        double sqrt3=sqrt(3);
        cartesian[0][0]=0.5*(sqrt3*Q22c-Q20);
        cartesian[1][1]=-0.5*(sqrt3*Q22c+Q20);
-       cartesian[1][1]=Q20;
+       cartesian[2][2]=Q20;
        
        cartesian[0][1]=0.5*sqrt3*Q22s;
        cartesian[1][0]=cartesian[0][1];
