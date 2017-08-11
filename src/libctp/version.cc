@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2017 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -32,9 +32,9 @@ extern "C" {
 
 namespace votca { namespace ctp {
 
-//defines hgversion
-#include "hgversion.h"
-static const std::string version_str = std::string(VERSION) + " " + hgversion + " (compiled " __DATE__ ", " __TIME__ ")";
+//defines gitversion
+#include "gitversion.h"
+static const std::string version_str = std::string(VERSION) + " " + gitversion + " (compiled " __DATE__ ", " __TIME__ ")";
 
 const std::string &CtpVersionStr()
 {

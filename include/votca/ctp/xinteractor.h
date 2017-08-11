@@ -117,38 +117,38 @@ private:
     //[-Wunused-private-field]
     Topology        *_top;
 
-    double EP;       //   <- Interaction permanent multipoles (inter-site)
-    double EU_INTRA; //   <- Interaction induction multipoles (intra-site)
-    double EU_INTER; //   <- Interaction induction multipoles (inter-site)
+    double EP = 0.0;       //   <- Interaction permanent multipoles (inter-site)
+    double EU_INTRA = 0.0; //   <- Interaction induction multipoles (intra-site)
+    double EU_INTER = 0.0; //   <- Interaction induction multipoles (inter-site)
 
-    double EPP;
-    double EPU;
-    double EUU;
+    double EPP = 0.0;
+    double EPU = 0.0;
+    double EUU = 0.0;
 
 
-    vec    e12;      //  |
-    double u3;       //  |-> NOTE: Only needed when using Thole model
-    double a;        //  |         (do not forget to init. though...)
-    double lambda3;  //  |
-    double lambda5;  //  |
-    double lambda7;  //  |
-    double lambda9;  //  |
-    double plambda3; //  |
-    double plambda5; //  |
-    double plambda7; //  |
-    double plambda9; //  |
+    vec    e12 = 0.0;      //  |
+    double u3 = 0.0;       //  |-> NOTE: Only needed when using Thole model
+    double a = 0.0;        //  |         (do not forget to init. though...)
+    double lambda3 = 0.0;  //  |
+    double lambda5 = 0.0;  //  |
+    double lambda7 = 0.0;  //  |
+    double lambda9 = 0.0;  //  |
+    double plambda3 = 0.0; //  |
+    double plambda5 = 0.0; //  |
+    double plambda7 = 0.0; //  |
+    double plambda9 = 0.0; //  |
     
-    double R;       //  |
-    double R2;      //  |
-    double R3;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
-    double R4;      //  |
-    double R5;      //  |
+    double R = 0.0;       //  |
+    double R2 = 0.0;      //  |
+    double R3 = 0.0;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
+    double R4 = 0.0;      //  |
+    double R5 = 0.0;      //  |
 
-    double rax, ray, raz;
-    double rbx, rby, rbz;
-    double cxx, cxy, cxz;
-    double cyx, cyy, cyz;
-    double czx, czy, czz;
+    double rax = 0.0, ray = 0.0, raz = 0.0;
+    double rbx = 0.0, rby = 0.0, rbz = 0.0;
+    double cxx = 0.0, cxy = 0.0, cxz = 0.0;
+    double cyx = 0.0, cyy = 0.0, cyz = 0.0;
+    double czx = 0.0, czy = 0.0, czz = 0.0;
 
     inline void setLambda3() { lambda3 = 1 - exp( -a*u3); }
     inline void setLambda5() { lambda5 = 1 - (1 + a*u3) * exp( -a*u3); }

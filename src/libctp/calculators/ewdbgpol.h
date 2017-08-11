@@ -121,7 +121,7 @@ bool EwaldBgPolarizer::EvaluateFrame(Topology *top) {
     
     // SAVE POLARIZATION STATE
     if (pbg.HasConverged()) {
-		CTP_LOG(logINFO,log) << "Save polarization state" << flush;
+		CTP_LOG_SAVE(logINFO,log) << "Save polarization state" << flush;
 		ptop.SaveToDrive("bgp_main.ptop");
 		ptop.PrintPDB("bgp_main.pdb");
     }
