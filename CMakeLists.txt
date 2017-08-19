@@ -50,6 +50,11 @@ if (NOT DEFINED DATA)
 endif(NOT DEFINED DATA)
 #option(WITH_DIPRO "Build mergeorbitals and DIPRO, which use fortran" ON)
 
+option(ENABLE_TESTING "Build and enable testing stuff" OFF)
+if(ENABLE_TESTING)
+  enable_testing()
+endif(ENABLE_TESTING)
+
 #for votca_ctp_config.h
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

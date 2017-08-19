@@ -19,5 +19,10 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump)
      add_dependencies(manpages ${PROG}_manpage)
      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROG}.man DESTINATION ${MAN}/man1 RENAME ${PROG}.1)
   endif (BUILD_MANPAGES)
+
+  if(ENABLE_TESTING)
+    add_test(${PROG}Help ${PROG} --help)
+    set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;moo;csg;ctp;votca")
+  endif(ENABLE_TESTING)
 endforeach(PROG)
 
