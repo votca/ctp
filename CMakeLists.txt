@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(votca-kmc)
 
-set(PROJECT_VERSION "1.3-dev")
+set(PROJECT_VERSION "1.5-dev")
 set(PROJECT_CONTACT "bugs@votca.org")
 
 # Cmake modules/macros are in a subdirectory to keep this file cleaner
@@ -38,6 +38,11 @@ endif(NOT DEFINED MAN)
 if (NOT DEFINED DATA)
   set(DATA "share/votca")
 endif(NOT DEFINED DATA)
+
+option(ENABLE_TESTING "Build and enable testing stuff" OFF)
+if(ENABLE_TESTING)
+  enable_testing()
+endif(ENABLE_TESTING)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
