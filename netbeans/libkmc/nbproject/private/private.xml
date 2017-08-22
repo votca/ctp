@@ -9,6 +9,18 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/people/thnfs/homes/andrienk/votca/src/kmc/src/libkmc/calculators/kmcmultiple.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/edge.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/events/hole_transfer.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/calculators/static.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/events/electron_transfer.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/calculators/kmcmultiple.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/calculators/terminal.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/bnode.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/state.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/graph.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/include/votca/kmc/terminalgraph.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/carriers/hole.h</file>
+            <file>file:/home/theorie/paterson/votca/src/kmc/src/libkmc/algorithms/vssm2_terminal.h</file>
         </group>
     </open-files>
 </project-private>

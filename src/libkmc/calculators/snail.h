@@ -106,7 +106,8 @@ void Snail::RunKMC() {
     State state;
  
     std::string filename( "state.sql" );
-    graph.Load( filename );
+    graph.Load_Graph( filename );
+    graph.Load_Rates(filename);
  
     //graph.Print();
     CarrierFactory::RegisterAll();

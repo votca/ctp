@@ -56,7 +56,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     std::vector<HoleTransfer*> ht_events;
          
     // Loop over all source nodes - injection events
-    for (TerminalGraph::iterator it_source_node = _graph->source_nodes_begin(); it_source_node != _graph->source_nodes_end(); ++it_source_node) {
+    /*for (TerminalGraph::iterator it_source_node = _graph->source_nodes_begin(); it_source_node != _graph->source_nodes_end(); ++it_source_node) {
         
         BNode* node_from = *it_source_node;
         
@@ -88,10 +88,10 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
             // Add an event to the electron transfer events
             et_events.push_back(electron_transfer);           
         }             
-    }
+    }*/
     
     //Loop over all lattice nodes - carrier move events
-    for (TerminalGraph::iterator it_node = _graph->lattice_nodes_begin(); it_node != _graph->lattice_nodes_end(); ++it_node) {
+    for (TerminalGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
         electron_transfer_map.emplace(node_from, vector<Event*>() );
@@ -117,8 +117,8 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
         }             
     }
     
-    //Loop over all drain nodes - collection events
-    for (TerminalGraph::iterator it_drain_node = _graph->drain_nodes_begin(); it_drain_node != _graph->drain_nodes_end(); ++it_drain_node) {
+    //Loop over all drain nodes - collection events and/or return to source events (closed circuit)
+    /*for (TerminalGraph::iterator it_drain_node = _graph->drain_nodes_begin(); it_drain_node != _graph->drain_nodes_end(); ++it_drain_node) {
         
         BNode* node_from = *it_drain_node;
         
@@ -143,8 +143,8 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
 
             et_events.push_back(electron_transfer);
         }             
-    }
-    
+    }*/
+   
     // for every event, add a list of "events-to-enable" after OnExecute
     // and a list of "events-to-disable" after OnExecute
     for (auto& event: ht_events ) {

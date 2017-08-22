@@ -51,8 +51,6 @@ private:
     
     double _runtime;
     int _nsteps;
-    int _seedelectron;
-    int _seedhole;
     int _seed;
     int _nelectrons;
     int _nholes;
@@ -62,8 +60,10 @@ private:
     double _fieldY;
     double _fieldZ;
     myvec _field;
+    double _temperature;
     double _outtime;
     std::string _trajectoryfile;
+    std::string _rates;
 };
 
 void Static::Initialize(Property *options) {
@@ -76,8 +76,6 @@ void Static::Initialize(Property *options) {
     
     _runtime = options->get(key + ".runtime").as<double>();
     _nsteps = options->get(key + ".nsteps").as<int>();
-    _seedelectron = options->get(key + ".seedelectron").as<int>();
-    _seedhole = options->get(key + ".seedhole").as<int>();
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
@@ -87,8 +85,10 @@ void Static::Initialize(Property *options) {
     _fieldY = options->get(key + ".fieldY").as<double>();
     _fieldZ = options->get(key + ".fieldZ").as<double>();
     _field = myvec(_fieldX,_fieldY,_fieldZ);
+    _temperature = options->get(key + ".temperature").as<double>();
     _outtime = options->get(key + ".outtime").as<double>();
     _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
+    _rates = options->get(key + ".rates").as<string>();
 
 }
 
@@ -108,7 +108,17 @@ void Static::RunKMC() {
     State state;
  
     std::string filename( "state.sql" );
-    graph.Load( filename );
+    graph.Load_Graph( filename );
+    
+    if (_rates == "read"){
+        graph.Load_Rates(filename);
+    }
+    else if ( _rates == "calculate"){
+        graph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
+    }
+    else {
+        std::cout << "The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::cout;
+    }
  
     //graph.Print();
     CarrierFactory::RegisterAll();
@@ -122,14 +132,14 @@ void Static::RunKMC() {
     
     std::cout << std::endl;
     
-    if(_nelectrons>graph.nodes_size()){
-        std::cout << "The number of electrons exceeds the number of available nodes!" << std::endl;
+    if(_nelectrons>graph.nodes_size() || _nholes>graph.nodes_size()){
+        std::cout << "The number of carriers exceeds the number of available nodes!" << std::endl;
         return;
     }
     
     if(_nelectrons != 0){
         
-        srand(_seedelectron);
+        srand(_seed);
         RandomVariable.init(rand(), rand(), rand(), rand());
         std::cout << std::endl;
         
@@ -149,8 +159,8 @@ void Static::RunKMC() {
                 if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
             }
             
-            else if (_injection_method == "uniform") {
-                BNode* node_from = graph.GetNode(2180 + electron);
+            else if (_injection_method == "electrode") {
+                BNode* node_from = graph.GetNode(electron);
                 ecarrier->AddNode( node_from );
                 //node_from->PrintNode();  
             }
@@ -162,7 +172,7 @@ void Static::RunKMC() {
     
     if(_nholes != 0){
                
-        srand(_seedhole);        
+        srand(_seed);        
         RandomVariable.init(rand(), rand(), rand(), rand());
         std::cout << std::endl;
         
@@ -174,16 +184,16 @@ void Static::RunKMC() {
             
             if (_injection_method == "random"){ 
                 int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
-                BNode* node_from = graph.GetNode(node_id + 1);
+                BNode* node_from = graph.GetNode(node_id + 2);
                 while (hcarrier->AddNode(node_from)==false){
                         int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
-                        node_from = graph.GetNode(node_id + 1);
+                        node_from = graph.GetNode(node_id + 2);
                     } 
                 if (hcarrier->AddNode(node_from)==true){ hcarrier->AddNode( node_from );}
             }
             
-            else if (_injection_method == "uniform") {
-                BNode* node_from = graph.GetNode(1000 + hole);
+            else if (_injection_method == "electrode") {
+                BNode* node_from = graph.GetNode(hole);
                 hcarrier->AddNode( node_from );
                 //node_from->PrintNode();  
             }

@@ -73,6 +73,10 @@ public:
     double site_energy_electron;
     double site_energy_hole;
     
+    //Carrier density occupying energetic levels - Fermi-Dirac statistics
+    double e_density;
+    double h_density;
+    
 private:
     
     std::vector< Edge* > edges;
