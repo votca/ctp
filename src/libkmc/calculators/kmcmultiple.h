@@ -1128,7 +1128,68 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     
     // calculate mobilities
     //double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
-    double average_mobilityZ = 0;
+    
+    if (_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ != 0.0)
+    {
+        myvec average_mobility = myvec (0.0,0.0,0.0);
+        myvec fieldfactors = myvec (0.0, 0.0, 0.0);
+        if (_fieldX != 0)
+        {
+            fieldfactors.setX(1.0E4/_fieldX);
+        }
+        if (_fieldY != 0)
+        {
+            fieldfactors.setY(1.0E4/_fieldY);
+        }
+        if (_fieldZ != 0)
+        {
+            fieldfactors.setZ(1.0E4/_fieldZ);
+        }
+
+        cout << endl << "Mobilities (cm^2/Vs): " << endl;
+
+        for(unsigned int i=0; i<numberofcharges; i++)
+        {
+            myvec velocity = carrier[i]->dr_travelled/simtime;
+            myvec mobility = elementwiseproduct(velocity, fieldfactors);
+            average_mobility += mobility;
+            cout << std::scientific << "    charge " << i+1 << ": ";
+            if (_fieldX != 0)
+            {
+                cout << std::scientific << "muX=" << mobility.getX() << "   ";
+            }
+            if (_fieldY != 0)
+            {
+                cout << std::scientific << "muY=" << mobility.getY() << "   ";
+            }
+            if (_fieldZ != 0)
+            {
+                cout << std::scientific << "muZ=" << mobility.getZ() << "   ";
+            }
+            cout << endl;
+        }
+        if (numberofcharges != 0){
+            cout << std::scientific << "  Overall average mobilities ";
+            average_mobility /= numberofcharges;
+            if (_fieldX != 0)
+            {
+                cout << std::scientific << "<muX>=" << average_mobility.getX() << "  ";
+            }
+            if (_fieldY != 0)
+            {
+                cout << std::scientific << "<muY>=" << average_mobility.getY() << "  ";
+            }
+            if (_fieldZ != 0)
+            {
+                cout << std::scientific << "<muZ>=" << average_mobility.getZ() << "  ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+}
+    
+    
+ /*   double average_mobilityZ = 0;
     if (_fieldZ != 0)
     {
         cout << endl << "Mobilities (cm^2/Vs): " << endl;
@@ -1145,7 +1206,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         cout << std::scientific << "  Overall average z-mobility <muZ>=" << average_mobilityZ << endl;
       }
     cout << endl;
-
+*/
     
     return occP;
 }
