@@ -72,10 +72,10 @@ public:
     //internal energy plus the energy anion/cation
     double site_energy_electron;
     double site_energy_hole;
-    
-    //Carrier density occupying energetic levels - Fermi-Dirac statistics
-    double e_density;
-    double h_density;
+
+    //h for site i, for holes and electrons
+    double hi_e;
+    double hi_h;
     
 private:
     

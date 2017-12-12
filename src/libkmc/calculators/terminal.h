@@ -43,7 +43,7 @@ public:
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
-
+    
 protected:
    void RunKMC(void); 
             
@@ -129,8 +129,8 @@ void Terminal::RunKMC() {
     else if(_fieldZ != 0 && _fieldX==0 && _fieldY==0) {field_direction = "Z"; }
     */
     
-    terminalgraph.Load_Graph(filename);
-    
+    terminalgraph.Load_Graph(filename, _temperature);
+        
     //terminalgraph.Load_injectable_collectable(field_direction);
   
     //create the drain electrode - one drain node per carrier

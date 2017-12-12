@@ -65,7 +65,7 @@ public:
     
     iterator begin() { return carriers.begin(); }
     iterator end() { return carriers.end(); }    
-    
+       
     // Save and Load state into a file
     bool Save(std::string filename);
     bool Load(std::string filename);
@@ -77,12 +77,12 @@ public:
     void Trajectory_write( double time, std::string trajectoryfile);
     void Print_properties(int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ); 
    
-private:
+private:   
     // Allow serialization to access non-public data members
     friend class boost::serialization::access;   
     std::vector< Carrier* > carriers; 
     std::vector< Carrier* > electrons; 
-    std::vector< Carrier* > holes; 
+    std::vector< Carrier* > holes;    
     double time;
     //myvec field;
     
