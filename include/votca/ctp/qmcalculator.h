@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2016 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -37,17 +37,11 @@ public:
                     QMCalculator() {}
     virtual        ~QMCalculator() {}
 
-    virtual string  Identify() = 0;
+    virtual std::string  Identify() = 0;
 
     virtual void    Initialize(Property *options) = 0;
     virtual bool    EvaluateFrame(CTP::Topology *top) { return true; }
     virtual void    EndEvaluate(CTP::Topology *top) { }
-
-
-    void UpdateWithDefaults( TOOLS::Property *options ) {
-         TOOLS::Calculator::UpdateWithDefaults(options, "ctp");
-    }
-    
 
 protected:
 

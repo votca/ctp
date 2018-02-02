@@ -8,7 +8,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump)
   endif()
 
   target_link_libraries(${PROG} votca_ctp ${BOOST_LIBRARIES})
-  install(TARGETS ${PROG} RUNTIME DESTINATION bin)
+  install(TARGETS ${PROG} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   if (BUILD_MANPAGES)
      add_custom_command(OUTPUT ${PROG}.man
@@ -17,7 +17,12 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump)
        DEPENDS ${PROG})
      add_custom_target(${PROG}_manpage DEPENDS ${PROG}.man)
      add_dependencies(manpages ${PROG}_manpage)
-     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROG}.man DESTINATION ${MAN}/man1 RENAME ${PROG}.1)
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROG}.man DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 RENAME ${PROG}.1)
   endif (BUILD_MANPAGES)
+
+  if(ENABLE_TESTING)
+    add_test(${PROG}Help ${PROG} --help)
+    set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;moo;csg;ctp;votca")
+  endif(ENABLE_TESTING)
 endforeach(PROG)
 

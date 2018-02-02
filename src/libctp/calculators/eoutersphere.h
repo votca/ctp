@@ -84,23 +84,23 @@ public:
 
     private:
 
-        vec    e12;     //  |
+        vec    e12 = 0.0;     //  |
 
-        double dDx;     //  |
-        double dDy;     //  |<- Electric displ. fields D_initial - D_final
-        double dDz;     //  |
+        double dDx = 0.0;     //  |
+        double dDy = 0.0;     //  |<- Electric displ. fields D_initial - D_final
+        double dDz = 0.0;     //  |
 
-        double R;       //  |
-        double R2;      //  |
-        double R3;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
-        double R4;      //  |
-        double R5;      //  |
+        double R  = 0.0;      //  |
+        double R2 = 0.0;      //  |
+        double R3 = 0.0;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
+        double R4 = 0.0;      //  |
+        double R5 = 0.0;      //  |
 
-        double rax, ray, raz;
-        double rbx, rby, rbz;
-        double cxx, cxy, cxz;
-        double cyx, cyy, cyz;
-        double czx, czy, czz;
+        double rax = 0, ray = 0, raz = 0;
+        double rbx = 0, rby = 0, rbz = 0;
+        double cxx = 0, cxy = 0, cxz = 0;
+        double cyx = 0, cyy = 0, cyz = 0;
+        double czx = 0, czy = 0, czz = 0;
 
         inline double T00_00() { return R; }
 

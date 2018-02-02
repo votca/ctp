@@ -1,5 +1,5 @@
 /* 
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2016 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -59,18 +59,18 @@ class APolarSite
 
 public:
 
-    APolarSite(int id, string name)
+    APolarSite(int id, std::string name)
             : _id(id),              _name(name),         _isVirtual(false), 
               _locX(vec(1,0,0)),    _locY(vec(0,1,0)),   _locZ(vec(0,0,1)), 
               _top(0),              _seg(0),             _frag(0),
-              _resolution(atomistic)
+              _resolution(atomistic),PhiP(0.0),          PhiU(0.0)
             { _Qs.resize(3); _Ps.resize(3); this->Depolarize();
               for (int s = -1; s < 2; ++s) _Ps[s+1].ZeroMatrix(); }
     APolarSite()
             : _id(-1),              _name(""),          _isVirtual(false),  
               _locX(vec(1,0,0)),    _locY(vec(0,1,0)),  _locZ(vec(0,0,1)),  
               _top(0),              _seg(0),            _frag(0),
-              _resolution(atomistic)
+              _resolution(atomistic),PhiP(0.0),          PhiU(0.0)
             { _Qs.resize(3); _Ps.resize(3); this->Depolarize();
               for (int s = -1; s < 2; ++s) _Ps[s+1].ZeroMatrix(); }
     APolarSite(APolarSite *templ, bool do_depolarize);
@@ -83,7 +83,7 @@ public:
     
     // GET & SET & IMPORT FUNCTIONS
     int            &getId() { return _id; }
-    string         &getName() { return _name; }
+    std::string         &getName() { return _name; }
     vec            &getPos() { return _pos; }
     int            &getRank() { return _rank; }
     Topology       *getTopology() { return _top; }
@@ -92,7 +92,7 @@ public:
     bool            getIsVirtual() { return _isVirtual; }
     bool            getIsActive(bool estatics_only);
 
-    void            ImportFrom(APolarSite *templ, string tag = "basic");
+    void            ImportFrom(APolarSite *templ, std::string tag = "basic");
     void            setIsVirtual(bool isVirtual) { _isVirtual = isVirtual; }
     void            setPos(vec &pos) { _pos = pos; }
     void            setRank(int rank) { _rank = rank; } // rank; } // OVERRIDE
@@ -108,9 +108,41 @@ public:
     vector<double> &getQs(int state) { return _Qs[state+1]; }
     void            setQs(vector<double> Qs, int state) { while(Qs.size() < 9) Qs.push_back(0.0); _Qs[state+1] = Qs; }
     void            setQ00(double q, int s) { Q00 = q; if (_Qs[s+1].size() < 1) _Qs[s+1].resize(1); _Qs[s+1][0] = q; }
+    
+    //these are apparently set in charge function of apolarsite
     double         &getQ00() { return Q00; }
     void            setQ1(const vec &dpl) { Q1x=dpl.getX(); Q1y=dpl.getY(); Q1z=dpl.getZ(); }
     vec             getQ1() { return vec(Q1x, Q1y, Q1z); }  // Only IOP
+    //this is really ugly I apologize but I do not know who designed these objects
+    vector<double>  getQ2() {
+        vector<double> temp=vector<double>(5);
+        temp[0]=Q20;
+        temp[1]=Q21c;
+        temp[2]=Q21s;
+        temp[3]=Q22c;
+        temp[4]=Q22s;
+           return temp;
+    }
+    
+    matrix getQ2cartesian(){
+       tools::matrix cartesian;
+       double sqrt3=sqrt(3);
+       cartesian[0][0]=0.5*(sqrt3*Q22c-Q20);
+       cartesian[1][1]=-0.5*(sqrt3*Q22c+Q20);
+       cartesian[2][2]=Q20;
+       
+       cartesian[0][1]=0.5*sqrt3*Q22s;
+       cartesian[1][0]=cartesian[0][1];
+       
+       cartesian[0][2]=0.5*sqrt3*Q21c;
+       cartesian[2][0]=cartesian[0][2];
+       
+       cartesian[1][2]=0.5*sqrt3*Q21s;
+       cartesian[2][1]=cartesian[1][2];
+       return cartesian;
+    }
+    
+    
     // POLARIZABILITIES
     bool            IsPolarizable();
     void            setPs(matrix polar, int state) { _Ps[state+1] = polar; }
@@ -128,6 +160,7 @@ public:
     double          getPhiP() { return PhiP; }
     double          getPhiU() { return PhiU; }
     double          getPhi() { return PhiP+PhiU; }
+    void          setPhi(double _PhiU, double _PhiP) {PhiU=_PhiU;PhiP=_PhiP;}
     void            ResetPhi(bool p, bool u) { if (p) PhiP = 0.0; if (u) PhiU = 0.0; }
     // CHARGE -1 0 +1 & DELTA
     void            Charge(int state);
@@ -147,10 +180,10 @@ public:
     // PRINT FUNCTS & OUTPUT TO FORMAT
     void            PrintInfo(std::ostream &out);
     void            PrintTensorPDB(FILE *out, int state);
-    void            WriteChkLine(FILE *, vec &, bool, string, double);
-    void            WriteXyzLine(FILE *, vec &, string);
-    void            WritePdbLine(FILE *out, const string &tag = "");
-    void            WriteMpsLine(std::ostream &out, string unit);
+    void            WriteChkLine(FILE *, vec &, bool, std::string, double);
+    void            WriteXyzLine(FILE *, vec &, std::string);
+    void            WritePdbLine(FILE *out, const std::string &tag = "");
+    void            WriteMpsLine(std::ostream &out, std::string unit);
     void            WriteXmlLine(std::ostream &out);
     
     template<class Archive>
@@ -203,7 +236,7 @@ public:
 private:
 
     int     _id;
-    string  _name;
+    std::string  _name;
     bool    _isVirtual;
     vec     _pos;
     vec     _locX;
@@ -213,7 +246,7 @@ private:
     Topology *_top;
     Segment  *_seg;
     Fragment *_frag;
-    res_t   _resolution;
+    
 
     vector < vector<double> > _Qs;
     int     _rank;
@@ -242,7 +275,7 @@ private:
     double FPx, FPy, FPz;                   // Electric field (due to permanent)
     double FUx, FUy, FUz;                   // Electric field (due to induced)
     vector< vec > U1_Hist;                  // Ind. u history
-    
+    res_t   _resolution;
     double PhiP;                            // Electric potential (due to perm.)
     double PhiU;                            // Electric potential (due to indu.)
     
@@ -258,8 +291,8 @@ private:
 
 
 
-vector<APolarSite*> APS_FROM_MPS(string filename, int state, QMThread *thread = NULL);
-std::map<string,double> POLAR_TABLE();
+vector<APolarSite*> APS_FROM_MPS(std::string filename, int state, QMThread *thread = NULL);
+std::map<std::string,double> POLAR_TABLE();
 
 
 class BasicInteractor
@@ -396,21 +429,21 @@ public:
 
 private:
 
-    vec    e12;     //  |
-    double u3;      //  |-> NOTE: Only needed when using Thole model
-    double a;       //  |         (do not forget to init. though...)
+    vec    e12 = 0.0;     //  |
+    double u3 = 0.0;      //  |-> NOTE: Only needed when using Thole model
+    double a = 0.0;       //  |         (do not forget to init. though...)
 
-    double R;       //  |
-    double R2;      //  |
-    double R3;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
-    double R4;      //  |
-    double R5;      //  |
+    double R = 0.0;       //  |
+    double R2 = 0.0;      //  |
+    double R3 = 0.0;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
+    double R4 = 0.0;      //  |
+    double R5 = 0.0;      //  |
 
-    double rax, ray, raz;
-    double rbx, rby, rbz;
-    double cxx, cxy, cxz;
-    double cyx, cyy, cyz;
-    double czx, czy, czz;
+    double rax = 0, ray = 0, raz = 0;
+    double rbx = 0, rby = 0, rbz = 0;
+    double cxx = 0, cxy = 0, cxz = 0;
+    double cyx = 0, cyy = 0, cyz = 0;
+    double czx = 0, czy = 0, czz = 0;
 
     inline double lambda3() { return 1 - exp( -a*u3); }
     inline double lambda5() { return 1 - (1 + a*u3) * exp( -a*u3); }

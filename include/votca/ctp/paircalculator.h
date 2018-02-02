@@ -1,7 +1,7 @@
 #ifndef _PAIRCALCULATOR2_H
 #define	_PAIRCALCULATOR2_H
 
-#include "qmcalculator.h"
+#include <votca/ctp/qmcalculator.h>
 
 namespace votca { namespace ctp {
 

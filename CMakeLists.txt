@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.1)
 project(votca-ctp)
 
 set(PROJECT_VERSION "1.5-dev")
@@ -16,6 +16,12 @@ enable_language(CXX)
 #####################################################################
 
 include(CheckCXXCompilerFlag)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND CMAKE_VERSION VERSION_LESS "3.6.0")
+  message(FATAL_ERROR "Using the intel compiler requires cmake 3.6 or higher")
+endif()
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -24,31 +30,19 @@ if (OPENMP_FOUND)
 endif()
 
 
+
 ########################################################################
 # User input options                                                   #
 ########################################################################
 
-
-find_package(LIBXC)
-if (LIBXC_FOUND)
-        include_directories(${LIBXC_INCLUDE_DIRS})
-        set (LIBXC TRUE )
-else()
-        set(LIBXC_LIBRARIES)
-endif()
-
-
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
-if (NOT DEFINED LIB)
-  set(LIB "lib")
-endif(NOT DEFINED LIB)
-if (NOT DEFINED MAN)
-  set(MAN "share/man")
-endif(NOT DEFINED MAN)
-if (NOT DEFINED DATA)
-  set(DATA "share/votca")
-endif(NOT DEFINED DATA)
+include(GNUInstallDirs)
 #option(WITH_DIPRO "Build mergeorbitals and DIPRO, which use fortran" ON)
+
+option(ENABLE_TESTING "Build and enable testing stuff" OFF)
+if(ENABLE_TESTING)
+  enable_testing()
+endif(ENABLE_TESTING)
 
 #for votca_ctp_config.h
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
@@ -56,19 +50,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ########################################################################
 #Find external packages
 ########################################################################
-if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.hg)
-  find_package(Mercurial)
-endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.hg)
-
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
 endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
 
-find_package(Boost 1.48.0 REQUIRED COMPONENTS program_options serialization filesystem timer)
+find_package(Boost 1.48.0 REQUIRED COMPONENTS program_options serialization filesystem system timer)
 include_directories(${Boost_INCLUDE_DIRS})
-set (BOOST_LIBRARIES ${Boost_THREAD_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_SERIALIZATION_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_TIMER_LIBRARY})
 set (BOOST_CFLAGS_PKG "-I${Boost_INCLUDE_DIRS}")
-string(REGEX REPLACE "^(.*)/lib([^/]*)\\.[^.]*$" "-L\\1 -l\\2" BOOST_LIBS_PKG ${BOOST_LIBRARIES})
+set(BOOST_LIBS_PKG "-L${Boost_LIBRARY_DIRS}")
+foreach(_blib ${Boost_LIBRARIES})
+  string(REGEX REPLACE ".*/lib([^/]*)\\.[^.]*$" "-l\\1" _blib ${_blib})
+  set(BOOST_LIBS_PKG "${BOOST_LIBS_PKG} ${_blib}")
+endforeach(_blib)
 
 option(BUILD_MANPAGES "Build manpages (might lead to problem on system without rpath" OFF)
 #define this target here, so that individual man pages can append to it.
@@ -89,41 +82,6 @@ include_directories(${VOTCA_MOO_INCLUDE_DIRS})
 ########################################################################
 # Checks what linear algebra packages are installed                    #
 ########################################################################
-option(WITH_LINALG "Checking which BLAS libraries are installed" ON)
-if (WITH_LINALG)
-
-  find_package(Eigen)
-
-
-  if (EIGEN_FOUND) 
-    message("-- EIGEN found (not used at the moment)")
-    set(EIGEN TRUE) #used in votca_ctp_config.h
-    include_directories(${EIGEN_INCLUDE_DIRS})
-  else()
-    message("-- EIGEN not found")
-    set(EIGEN FALSE) #used in votca_ctp_config.h
-  endif()
-
-  set(MKL FALSE)
-  set(GSL FALSE)
-
-  find_package(GSL)
-  find_package(MKL)
-
-
-  if (MKL_FOUND AND CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-    message("-- MKL found, overloading uBLAS prod()")
-    set(MKL TRUE) #used in votca_ctp_config.h
-  elseif(GSL_FOUND)
-    message("-- GSL found, overloading uBLAS prod()")
-    include_directories(${GSL_INCLUDE_DIRS})
-    set(GSL_PKG "gsl")
-    set(GSL TRUE) #used in votca_ctp_config.h
-  endif()
-
-endif(WITH_LINALG)
-
-#configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
 ########################################################################

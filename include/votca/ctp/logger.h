@@ -29,13 +29,13 @@ namespace votca { namespace ctp {
 enum TLogLevel {logERROR, logWARNING, logINFO, logDEBUG};
  
 /*
- * Macros to use the Logger: LOG(level,logger) << message
+ * Macros to use the Logger: CTP_LOG(level,logger) << message
  */
-#define LOG(level, log) \
+#define CTP_LOG(level, log) \
 if ( &log != NULL && level > (log).getReportLevel() ) ; \
 else (log)(level)
 
-#define LOG_SAVE(level, log) \
+#define CTP_LOG_SAVE(level, log) \
 if ( level > (log).getReportLevel() ) ; \
 else (log)(level)
 
@@ -157,7 +157,7 @@ protected:
 *  #include <votca/ctp/logger.h>
 *  Logger* log = new Logger(); // create a logger object
 *  log->setReportLevel(logDEBUG); // output only log messages starting from a DEBUG level
-*  LOG(logERROR,*log) << "Error detected" << flush; // write to the logger at an ERROR level
+*  CTP_LOG(logERROR,*log) << "Error detected" << flush; // write to the logger at an ERROR level
 *  cout << log; // output logger content to standard output
 *  \endcode
 *

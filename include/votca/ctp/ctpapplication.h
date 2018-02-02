@@ -18,8 +18,8 @@
  */
 
 
-#ifndef VOTCA_CTP_CTPAPPLICATION_H
-#define	VOTCA_CTP_CTPAPPLICATION_H
+#ifndef VOTCA_CTPAPPLICATION_H
+#define	VOTCA_CTPAPPLICATION_H
 
 #include <votca/tools/application.h>
 #include <votca/tools/property.h>

@@ -63,8 +63,7 @@ public:
 
    bool ParseOrbitalsFile( Orbitals* _orbitals );
 
-   bool ConvertToGW( Orbitals* _orbitals );
-   
+ 
 private:  
 
     //static const double _conv_Hrt_eV = 27.21138386;

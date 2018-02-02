@@ -130,26 +130,26 @@ public:
 
     private:
 
-        double EP;       //   <- Interaction permanent multipoles (inter-site)
-        double EU_INTRA; //   <- Interaction induction multipoles (intra-site)
-        double EU_INTER; //   <- Interaction induction multipoles (inter-site)
+        double EP       = 0; //   <- Interaction permanent multipoles (inter-site)
+        double EU_INTRA = 0; //   <- Interaction induction multipoles (intra-site)
+        double EU_INTER = 0; //   <- Interaction induction multipoles (inter-site)
 
 
-        vec    e12;     //  |
-        double u3;      //  |-> NOTE: Only needed when using Thole model
-        double a;       //  |         (do not forget to init. though...)
+        vec    e12 = 0.0;   //  |
+        double u3  = 0;     //  |-> NOTE: Only needed when using Thole model
+        double a   = 0;     //  |         (do not forget to init. though...)
 
-        double R;       //  |
-        double R2;      //  |
-        double R3;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
-        double R4;      //  |
-        double R5;      //  |
+        double R  = 0;       //  |
+        double R2 = 0;;      //  |
+        double R3 = 0;;      //  |-> NOTE: reciprocal, i.e. e.g. R3 = 1/(R*R*R)
+        double R4 = 0;;      //  |
+        double R5 = 0;;      //  |
 
-        double rax, ray, raz;
-        double rbx, rby, rbz;
-        double cxx, cxy, cxz;
-        double cyx, cyy, cyz;
-        double czx, czy, czz;
+        double rax = 0, ray = 0, raz = 0;
+        double rbx = 0, rby = 0, rbz = 0;
+        double cxx = 0, cxy = 0, cxz = 0;
+        double cyx = 0, cyy = 0, cyz = 0;
+        double czx = 0, czy = 0, czz = 0;
 
         inline double lambda3() { return 1 - exp( -a*u3); }
         inline double lambda5() { return 1 - (1 + a*u3) * exp( -a*u3); }

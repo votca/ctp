@@ -100,9 +100,10 @@ PolarBackground::PolarBackground(Topology *top, PolarTop *ptop, Property *opt,
     
     // RESTART / CONVERGENCE OPTIONS
     _converged = false;
+    _do_restart= false;
     _restart_from_iter = ptop->getPolarizationIter();
     if (_restart_from_iter > -1) {
-        LOG(logINFO,*_log) << "Restarting from iteration " 
+        CTP_LOG(logINFO,*_log) << "Restarting from iteration " 
            << _restart_from_iter << flush << flush;
         _do_restart = true;
     }
@@ -122,7 +123,7 @@ PolarBackground::PolarBackground(Topology *top, PolarTop *ptop, Property *opt,
         if ((*sit)->IsPolarizable()) polar_count += 1;
     }
     
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << (format("Net ground charge and size:")).str()
         << flush << (format("  o Q(BGP) = %1$+1.3fe |BGP| = %2$+5d") % Q_bg_P % _bg_P.size())
         << flush << (format("  o Activity <qdQ %1$d/%3$d> <P %2$d/%3$d>") % estat_count % polar_count % _bg_P.size())
@@ -141,7 +142,7 @@ PolarBackground::PolarBackground(Topology *top, PolarTop *ptop, Property *opt,
     
     // APPLY SYSTEM DIPOLE COMPENSATION
     if (_do_compensate_net_dipole) {
-        LOG(logINFO,*_log) << (format("  o Dpl. compensation: type '%1$s', "
+        CTP_LOG(logINFO,*_log) << (format("  o Dpl. compensation: type '%1$s', "
                 "direction '%2$s' ") % _dipole_compensation_type 
                 % _dipole_compensation_direction) << flush;
         vec system_dpl(0,0,0);
@@ -157,7 +158,7 @@ PolarBackground::PolarBackground(Topology *top, PolarTop *ptop, Property *opt,
                 }
             }
         }
-        LOG(logINFO,*_log) << "    - System Q1: " << - system_dpl 
+        CTP_LOG(logINFO,*_log) << "    - System Q1: " << - system_dpl 
             << "  (apply to " << charged_count << " polar sites)" << flush;
         vec atomic_compensation_dpl_system = - system_dpl/charged_count;
         int compensation_count = 0;
@@ -222,11 +223,11 @@ PolarBackground::PolarBackground(Topology *top, PolarTop *ptop, Property *opt,
         }
     }
     
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << (format("Net dipole moment of background density")).str()
         << flush << (format("  o D(BGP) [e*nm]           = %1$+1.3f %2$+1.3f %3$+1.3f  ") 
         % netdpl_bgP.getX() % netdpl_bgP.getY() % netdpl_bgP.getZ()).str();
-    LOG(logINFO,*_log)
+    CTP_LOG(logINFO,*_log)
         << flush << (format("  o Sigma q|z|**2 [e*nm**2] = %1$+1.7f   ")
         % qzz_bgP) << flush;
     
@@ -249,27 +250,27 @@ PolarBackground::~PolarBackground() {
 
 
 void PolarBackground::Checkpoint(int iter, bool converged) {
-    LOG(logDEBUG,*_log) << "  o Checkpointing (iteration " << iter << ") ... ";
+    CTP_LOG(logDEBUG,*_log) << "  o Checkpointing (iteration " << iter << ") ... ";
     _ptop->setPolarizationIter(iter, converged);
     _ptop->SaveToDrive("bgp_check.ptop");
-    LOG(logDEBUG,*_log) << "done." << flush;
+    CTP_LOG(logDEBUG,*_log) << "done." << flush;
     return;
 }
 
 
 void PolarBackground::Polarize(int n_threads = 1) {
     
-    LOG(logDEBUG,*_log) << flush;
-    LOG(logDEBUG,*_log) << "System & Ewald parameters" << flush;
-    LOG(logDEBUG,*_log) << "  o Real-space unit cell:      " << _a << " x " << _b << " x " << _c << flush;
-    LOG(logDEBUG,*_log) << "  o Real-space c/o (guess):    " << _R_co << " nm" << flush;
-    LOG(logDEBUG,*_log) << "  o na(max), nb(max), nc(max): " << _na_max << ", " << _nb_max << ", " << _nc_max << flush;
-    LOG(logDEBUG,*_log) << "  o 1st Brillouin zone:        " << _A << " x " << _B << " x " << _C << flush;
-    LOG(logDEBUG,*_log) << "  o Reciprocal-space c/o:      " << _K_co << " 1/nm" << flush;
-    LOG(logDEBUG,*_log) << "  o R-K switching param.       " << _alpha << " 1/nm" << flush;
-    LOG(logDEBUG,*_log) << "  o Unit-cell volume:          " << _LxLyLz << " nm**3" << flush;
-    LOG(logDEBUG,*_log) << "  o LxLy (for 3D2D EW):        " << _LxLy << " nm**2" << flush;
-    LOG(logDEBUG,*_log) << "  o kx(max), ky(max), kz(max): " << _NA_max << ", " << _NB_max << ", " << _NC_max << flush;    
+    CTP_LOG_SAVE(logDEBUG,*_log) << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "System & Ewald parameters" << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o Real-space unit cell:      " << _a << " x " << _b << " x " << _c << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o Real-space c/o (guess):    " << _R_co << " nm" << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o na(max), nb(max), nc(max): " << _na_max << ", " << _nb_max << ", " << _nc_max << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o 1st Brillouin zone:        " << _A << " x " << _B << " x " << _C << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o Reciprocal-space c/o:      " << _K_co << " 1/nm" << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o R-K switching param.       " << _alpha << " 1/nm" << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o Unit-cell volume:          " << _LxLyLz << " nm**3" << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o LxLy (for 3D2D EW):        " << _LxLy << " nm**2" << flush;
+    CTP_LOG_SAVE(logDEBUG,*_log) << "  o kx(max), ky(max), kz(max): " << _NA_max << ", " << _NB_max << ", " << _NC_max << flush;    
     
     TLogLevel dbg = logDEBUG;
     
@@ -311,20 +312,20 @@ void PolarBackground::Polarize(int n_threads = 1) {
     
     if (!_do_restart) {
         // I GENERATE PERMANENT FIELDS (FP)
-        LOG(dbg,log) << flush;
-        LOG(dbg,log) << "Generate permanent fields (FP)" << flush;
+        CTP_LOG_SAVE(dbg,log) << flush;
+        CTP_LOG_SAVE(dbg,log) << "Generate permanent fields (FP)" << flush;
         // I.A Intermolecular real-space contribution
-        LOG(dbg,log) << "  o Real-space, intermolecular" << flush;
+        CTP_LOG_SAVE(dbg,log) << "  o Real-space, intermolecular" << flush;
         this->FX_RealSpace("FP_MODE", true);
         if (!_do_use_cutoff) {
             // I.B Reciprocal-space contribution
-            LOG(dbg,log) << "  o Reciprocal-space" << flush;
+            CTP_LOG_SAVE(dbg,log) << "  o Reciprocal-space" << flush;
             this->FX_ReciprocalSpace("SP_MODE", "FP_MODE", true);
             // I.C Shape fields
-            LOG(dbg,log) << "  o Shape fields ('" << _shape << "')" << flush;
+            CTP_LOG_SAVE(dbg,log) << "  o Shape fields ('" << _shape << "')" << flush;
             _ewdactor.FP12_ShapeField_At_By(_bg_P, _bg_P, _shape, _LxLyLz);
             // I.D Molecular ERF self-interaction correction
-            LOG(dbg,log) << "  o Molecular SI correction" << flush;
+            CTP_LOG_SAVE(dbg,log) << "  o Molecular SI correction" << flush;
             for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
                 for (pit1 = (*sit1)->begin(); pit1 < (*sit1)->end(); ++pit1) {
                     for (pit2 = (*sit1)->begin(); pit2 < (*sit1)->end(); ++pit2) {
@@ -337,22 +338,22 @@ void PolarBackground::Polarize(int n_threads = 1) {
         }
 
         // TEASER OUTPUT PERMANENT FIELDS
-        LOG(logDEBUG,*_log) << flush << "Foreground fields:" << flush;
+        CTP_LOG_SAVE(logDEBUG,*_log) << flush << "Foreground fields:" << flush;
         int fieldCount = 0;
         for (sit1 = _bg_P.begin()+16; sit1 < _bg_P.end(); ++sit1) {
             PolarSeg *pseg = *sit1;
             Segment *seg = _top->getSegment(pseg->getId());
-            LOG(logDEBUG,*_log) << "ID = " << pseg->getId() << " (" << seg->getName() << ") " << flush;
+            CTP_LOG_SAVE(logDEBUG,*_log) << "ID = " << pseg->getId() << " (" << seg->getName() << ") " << flush;
             for (pit1 = pseg->begin(); pit1 < pseg->end(); ++pit1) {
                 vec fp = (*pit1)->getFieldP();
-                LOG(logDEBUG,*_log)
+                CTP_LOG_SAVE(logDEBUG,*_log)
                    << (format("FP = (%1$+1.7e %2$+1.7e %3$+1.7e) V/m") 
                         % (fp.getX()*EWD::int2V_m)
                         % (fp.getY()*EWD::int2V_m) 
                         % (fp.getZ()*EWD::int2V_m)).str() << flush;
                 fieldCount += 1;
                 if (fieldCount > 10) {
-                    LOG(logDEBUG,*_log)
+                    CTP_LOG_SAVE(logDEBUG,*_log)
                         << "FP = ... ... ..." << flush;
                     break;
                 }
@@ -361,7 +362,7 @@ void PolarBackground::Polarize(int n_threads = 1) {
         }
 
         // II INDUCE TO 1ST ORDER
-        LOG(dbg,log) << flush << "Induce to first order" << flush;
+        CTP_LOG_SAVE(dbg,log) << flush << "Induce to first order" << flush;
         for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
             for (pit1 = (*sit1)->begin(); pit1 < (*sit1)->end(); ++pit1) {
                 (*pit1)->InduceDirect();
@@ -372,8 +373,8 @@ void PolarBackground::Polarize(int n_threads = 1) {
         if (_do_checkpointing) this->Checkpoint(0, false);
     }
     else {
-        LOG(dbg,log) << flush;
-        LOG(dbg,log) << "Restarting from checkpoint => "
+        CTP_LOG_SAVE(dbg,log) << flush;
+        CTP_LOG_SAVE(dbg,log) << "Restarting from checkpoint => "
             << "Permanent fields already generated." << flush;
     }
     
@@ -386,26 +387,26 @@ void PolarBackground::Polarize(int n_threads = 1) {
     int setup_nbs_iter = (_do_restart) ? _restart_from_iter+1 : 1;    
     int generate_kvecs_iter = (_do_restart) ? _restart_from_iter+1 : -1;
     
-    LOG(dbg,log) << "  o Setup real-space neighbours at iteration " << setup_nbs_iter << flush;
-    LOG(dbg,log) << "  o Generate k-vectors at iteration " << generate_kvecs_iter << flush;
+    CTP_LOG_SAVE(dbg,log) << "  o Setup real-space neighbours at iteration " << setup_nbs_iter << flush;
+    CTP_LOG_SAVE(dbg,log) << "  o Generate k-vectors at iteration " << generate_kvecs_iter << flush;
     
     int max_iter = iter+_max_iter;
     double epstol = 1e-3;
     for ( ; iter != max_iter; ++iter) {
-        LOG(dbg,log) << flush;
-        LOG(dbg,log) << "Iter " << iter << " started" << flush;
+        CTP_LOG_SAVE(dbg,log) << flush;
+        CTP_LOG_SAVE(dbg,log) << "Iter " << iter << " started" << flush;
         
         // III.A Reset 2nd-order fields (FU)
-        LOG(dbg,log) << "  o Reset fields (FU)" << flush;
+        CTP_LOG_SAVE(dbg,log) << "  o Reset fields (FU)" << flush;
         for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
             for (pit1 = (*sit1)->begin(); pit1 < (*sit1)->end(); ++pit1) {
                 (*pit1)->ResetFieldU();
             }
         }
         // III.B (Re-)generate induction fields FU
-        LOG(dbg,log) << "  o (Re-)generate induction fields" << flush;
+        CTP_LOG_SAVE(dbg,log) << "  o (Re-)generate induction fields" << flush;
         // (1) Real-space intramolecular contribution
-        LOG(dbg,log) << "  o Real-space, intramolecular" << flush;
+        CTP_LOG_SAVE(dbg,log) << "  o Real-space, intramolecular" << flush;
         for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
             for (pit1 = (*sit1)->begin(); pit1 < (*sit1)->end(); ++pit1) {
                 for (pit2 = pit1+1; pit2 < (*sit1)->end(); ++pit2) {
@@ -422,13 +423,13 @@ void PolarBackground::Polarize(int n_threads = 1) {
         this->FX_RealSpace("FU_MODE", do_setup_nbs);
         if (!_do_use_cutoff) {
             // (3) Reciprocal-space contribution
-            LOG(dbg,log) << "  o Reciprocal-space" << flush;
+            CTP_LOG_SAVE(dbg,log) << "  o Reciprocal-space" << flush;
             this->FX_ReciprocalSpace("SU_MODE", "FU_MODE", generate_kvecs);
             // (4) Calculate shape fields
-            LOG(dbg,log) << "  o Shape fields ('" << _shape << "')" << flush;
+            CTP_LOG_SAVE(dbg,log) << "  o Shape fields ('" << _shape << "')" << flush;
             _ewdactor.FU12_ShapeField_At_By(_bg_P, _bg_P, _shape, _LxLyLz);
             // (5) Apply atomic ERF self-interaction correction
-            LOG(dbg,log) << "  o Atomic SI correction" << flush;
+            CTP_LOG_SAVE(dbg,log) << "  o Atomic SI correction" << flush;
             rms = 0.0;
             rms_count = 0;
             for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
@@ -442,22 +443,22 @@ void PolarBackground::Polarize(int n_threads = 1) {
         
         
         // TEASER OUTPUT INDUCTION FIELDS   
-        LOG(logDEBUG,*_log) << flush << "Foreground fields:" << flush;
+        CTP_LOG_SAVE(logDEBUG,*_log) << flush << "Foreground fields:" << flush;
         int fieldCount = 0;
         for (sit1 = _bg_P.begin()+288; sit1 < _bg_P.end(); ++sit1) {
             PolarSeg *pseg = *sit1;
             Segment *seg = _top->getSegment(pseg->getId());
-            LOG(logDEBUG,*_log) << "ID = " << pseg->getId() << " (" << seg->getName() << ") " << flush;
+            CTP_LOG_SAVE(logDEBUG,*_log) << "ID = " << pseg->getId() << " (" << seg->getName() << ") " << flush;
             for (pit1 = pseg->begin(); pit1 < pseg->end(); ++pit1) {
                 vec fu = (*pit1)->getFieldU();
-                LOG(logDEBUG,*_log)
+                CTP_LOG_SAVE(logDEBUG,*_log)
                    << (format("FU = (%1$+1.7e %2$+1.7e %3$+1.7e) V/m") 
                         % (fu.getX()*EWD::int2V_m)
                         % (fu.getY()*EWD::int2V_m) 
                         % (fu.getZ()*EWD::int2V_m)).str() << flush;
                 fieldCount += 1;
                 if (fieldCount > 10) {
-                    LOG(logDEBUG,*_log)
+                    CTP_LOG_SAVE(logDEBUG,*_log)
                         << "FU = ... ... ..." << flush << flush;
                     break;
                 }
@@ -467,7 +468,7 @@ void PolarBackground::Polarize(int n_threads = 1) {
         
         
         // III.C Induce again
-        LOG(dbg,log) << "  o Induce again" << flush;
+        CTP_LOG_SAVE(dbg,log) << "  o Induce again" << flush;
         for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1) {
             for (pit1 = (*sit1)->begin(); pit1 < (*sit1)->end(); ++pit1) {
                 (*pit1)->Induce(_polar_wSOR_N);
@@ -475,7 +476,7 @@ void PolarBackground::Polarize(int n_threads = 1) {
         }
         
         // III.D Check for convergence
-        LOG(dbg,log) << "  o Convergence check" << flush;
+        CTP_LOG_SAVE(dbg,log) << "  o Convergence check" << flush;
         bool converged = true;
         double maxdU = -1;
         double avgdU = 0.0;
@@ -494,8 +495,8 @@ void PolarBackground::Polarize(int n_threads = 1) {
         if (_do_checkpointing) this->Checkpoint(iter, converged);
         if (converged) {
         	_converged = true;
-            LOG(dbg,log) << flush;
-            LOG(dbg,log) << ":: Converged induction fields" << flush;
+            CTP_LOG_SAVE(dbg,log) << flush;
+            CTP_LOG_SAVE(dbg,log) << ":: Converged induction fields" << flush;
             break;
         }
         else if (iter == max_iter) {
@@ -505,8 +506,8 @@ void PolarBackground::Polarize(int n_threads = 1) {
     }
 
     if (iter == max_iter) {
-    	LOG(dbg,log) << flush;
-    	LOG(dbg,log) << "Reached maximum number of iterations. Stop here." << flush;
+    	CTP_LOG_SAVE(dbg,log) << flush;
+    	CTP_LOG_SAVE(dbg,log) << "Reached maximum number of iterations. Stop here." << flush;
     }
         
     if (tools::globals::verbose) {
@@ -565,8 +566,8 @@ void PolarBackground::RThread::FP_FieldCalc() {
     
     // CLEAR POLAR NEIGHBOR-LIST BEFORE SET-UP
     if (_do_setup_nbs) {
-        if (_verbose) {
-            LOG(logDEBUG,*(_master->_log)) 
+        if (tools::globals::verbose) {
+            CTP_LOG(logDEBUG,*(_master->_log)) 
                 << "   - Clearing polar nb-list" << endl; }
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             (*sit1)->ClearPolarNbs();
@@ -578,8 +579,8 @@ void PolarBackground::RThread::FP_FieldCalc() {
     
     for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
         PolarSeg *pseg1 = *sit1;
-        if (_verbose) {
-            LOG(logDEBUG,*(_master->_log))
+        if (tools::globals::verbose) {
+            CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - Progress " << pseg1->getId() 
                 << "/" << _full_bg_P.size() << flush; }
         
@@ -722,7 +723,7 @@ void PolarBackground::RThread::FU_FieldCalc() {
     if (_do_setup_nbs) {
         
         // CLEAR POLAR NEIGHBOR-LIST BEFORE SET-UP
-        if (_verbose) { LOG(logDEBUG,*(_master->_log)) << "   - Clearing polar nb-list" << endl; }
+        if (tools::globals::verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "   - Clearing polar nb-list" << endl; }
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             (*sit1)->ClearPolarNbs();
         }
@@ -732,7 +733,7 @@ void PolarBackground::RThread::FU_FieldCalc() {
 
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             PolarSeg *pseg1 = *sit1;
-            if (_verbose) { LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
+            if (tools::globals::verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
 
             // GENERATE NEIGHBOUR SHELLS
             double dR_shell = 0.5;
@@ -865,7 +866,7 @@ void PolarBackground::RThread::FU_FieldCalc() {
         int rms_count = 0;
         for (sit1 = _part_bg_P.begin(); sit1 < _part_bg_P.end(); ++sit1) {
             PolarSeg *pseg1 = *sit1;
-            if (_verbose) { LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
+            if (tools::globals::verbose) { CTP_LOG(logDEBUG,*(_master->_log)) << "\rMST DBG     - Progress " << pseg1->getId() << "/" << _full_bg_P.size() << flush; }
             // LONG-RANGE TREATMENT: REAL-SPACE SUM
             if (!_master->_do_use_cutoff) {
                 for (nit = pseg1->PolarNbs().begin(); nit < pseg1->PolarNbs().end(); ++nit) {
@@ -916,14 +917,14 @@ void PolarBackground::FX_RealSpace(string mode, bool do_setup_nbs) {
     tforce.AssignMode<string>(mode);
     
     // Output workload
-    LOG(logDEBUG,*_log) << "    - Thread workload = [ ";
+    CTP_LOG(logDEBUG,*_log) << "    - Thread workload = [ ";
     for (tfit = tforce.begin(); tfit != tforce.end(); ++tfit) {
-        LOG(logDEBUG,*_log) << (format("%1$1.2f%% ") % (*tfit)->Workload(mode));
+        CTP_LOG(logDEBUG,*_log) << (format("%1$1.2f%% ") % (*tfit)->Workload(mode));
     }
-    LOG(logDEBUG,*_log) << "]" << flush;
+    CTP_LOG(logDEBUG,*_log) << "]" << flush;
     
     // Start & wait
-    LOG(logDEBUG,*_log) << "    - Start & wait until done" << flush << flush;
+    CTP_LOG(logDEBUG,*_log) << "    - Start & wait until done" << flush << flush;
     _log->setPreface(logDEBUG, "");
     tforce.StartAndWait();
     _log->setPreface(logDEBUG, "\nMST DBG");
@@ -932,21 +933,21 @@ void PolarBackground::FX_RealSpace(string mode, bool do_setup_nbs) {
     int not_converged_count = 0;
     for (tfit = tforce.begin(); tfit != tforce.end(); ++tfit)
         not_converged_count += (*tfit)->NotConverged();
-    if (not_converged_count == 0) LOG(logDEBUG,*_log) << "    - Converged" << flush;
-    else LOG(logERROR,*_log) << "    - ERROR " << not_converged_count 
+    if (not_converged_count == 0) CTP_LOG(logDEBUG,*_log) << "    - Converged" << flush;
+    else CTP_LOG(logERROR,*_log) << "    - ERROR " << not_converged_count 
         << " items not converged." << flush;
     
     // Neighbor-list info: radius & neighbours/site
     double avg_R_co = 0;
     for (tfit = tforce.begin(); tfit != tforce.end(); ++tfit)
         avg_R_co += 0.01*(*tfit)->Workload(mode)*(*tfit)->AvgRco();
-    LOG(logDEBUG,*_log) << "    - Real-space nb-list set: <R(c/o)> = " 
+    CTP_LOG(logDEBUG,*_log) << "    - Real-space nb-list set: <R(c/o)> = " 
         << avg_R_co << flush;
     int total_nbs_count = 0;
     vector<PolarSeg*>::iterator sit1;
     for (sit1 = _bg_P.begin(); sit1 < _bg_P.end(); ++sit1)
         total_nbs_count += (*sit1)->PolarNbs().size();
-    LOG(logDEBUG,*_log) << "    - Real-space nb-list set: <nbs/seg> = " 
+    CTP_LOG(logDEBUG,*_log) << "    - Real-space nb-list set: <nbs/seg> = " 
         << (double)total_nbs_count/_bg_P.size() << flush;
     if (_bg_P.size() > 288+1)
         _bg_P[288]->PrintPolarNbPDB("seg289.pdb");
@@ -973,8 +974,8 @@ void PolarBackground::KThread::SP_SFactorCalc() {
         EWD::cmplx sfactor
             = _ewdactor.PStructureAmplitude(_full_bg_P, (*kit)->getK());
         (*kit)->setStructureFactor(sfactor);
-        if (_verbose) {
-            LOG(logDEBUG,*(_master->_log))
+        if (tools::globals::verbose) {
+            CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(SP) Progress " << kvec_count
                 << "/" << _part_kvecs.size() << flush; }
     }
@@ -1000,8 +1001,8 @@ void PolarBackground::KThread::FP_KFieldCalc() {
         EWD::cmplx f_rms = _ewdactor.FP12_At_ByS2(k, _part_bg_P, S, rV);
         _rms_sum_re += f_rms._re;
         _sum_im += f_rms._im;
-        if (_verbose) {
-            LOG(logDEBUG,*(_master->_log))
+        if (tools::globals::verbose) {
+            CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(FP) Progress " << kvec_count
                 << "/" << _full_kvecs.size() << flush; }
     }
@@ -1020,8 +1021,8 @@ void PolarBackground::KThread::SU_SFactorCalc() {
         EWD::cmplx sfactor
             = _ewdactor.UStructureAmplitude(_full_bg_P, (*kit)->getK());
         (*kit)->setStructureFactor(sfactor);
-        if (_verbose) {
-            LOG(logDEBUG,*(_master->_log))
+        if (tools::globals::verbose) {
+            CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(SU) Progress " << kvec_count
                 << "/" << _part_kvecs.size() << flush; }
     }
@@ -1047,8 +1048,8 @@ void PolarBackground::KThread::FU_KFieldCalc() {
         EWD::cmplx f_rms = _ewdactor.FU12_At_ByS2(k, _part_bg_P, S, rV);
         _rms_sum_re += f_rms._re;
         _sum_im += f_rms._im;
-        if (_verbose) {
-            LOG(logDEBUG,*(_master->_log))
+        if (tools::globals::verbose) {
+            CTP_LOG(logDEBUG,*(_master->_log))
                 << "\rMST DBG     - " << _current_mode << "(FU) Progress " << kvec_count
                 << "/" << _full_kvecs.size() << flush; }
     }
@@ -1070,7 +1071,7 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
     
     // GENERATE K-VECTORS
     if (generate_kvecs) {
-        LOG(logDEBUG,*_log)
+        CTP_LOG(logDEBUG,*_log)
             << "  o Generate k-vectors" << flush;
         _log->setPreface(logDEBUG, "\nMST DBG     - ");
         GenerateKVectors(_bg_P, _bg_P);
@@ -1090,19 +1091,19 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
     
     
     // TWO COMPONENTS ZERO, ONE NON-ZERO
-    LOG(logDEBUG,*_log)
+    CTP_LOG(logDEBUG,*_log)
         << "  o Two components zero, one non-zero" << flush;    
     // Assign k-vectors
     threadforce.AddSharedInput< vector<KVector*> >(_kvecs_2_0);
     threadforce.AddAtomicInput< EWD::KVector* >(_kvecs_2_0);
     // Compute structure factors
-    LOG(logDEBUG,*_log) << flush;
+    CTP_LOG(logDEBUG,*_log) << flush;
     threadforce.AssignMode<string>(mode1);
     _log->setPreface(logDEBUG, "");
     threadforce.StartAndWait();
     _log->setPreface(logDEBUG, "\nMST DBG");
     // Increment fields
-    LOG(logDEBUG,*_log) << flush;
+    CTP_LOG(logDEBUG,*_log) << flush;
     threadforce.AssignMode<string>(mode2);
     _log->setPreface(logDEBUG, "");
     threadforce.StartAndWait();
@@ -1115,7 +1116,7 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
     }
     double shell_rms = sqrt(rms_sum_re/_kvecs_2_0.size())*EWD::int2V_m;
     double e_measure = shell_rms*1e-10*_kvecs_2_0.size();    
-    if (_kvecs_2_0.size() > 0) { LOG(logDEBUG,*_log)
+    if (_kvecs_2_0.size() > 0) { CTP_LOG(logDEBUG,*_log)
          << (format("    - M = %1$04d   G = %2$+1.3e   dF(rms) = %3$+1.3e V/m   [1eA => %4$+1.3e eV]")
          % _kvecs_2_0.size()
          % 0.0
@@ -1128,7 +1129,7 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
     
     
     // ONE COMPONENT ZERO, TWO NON-ZERO
-    LOG(logDEBUG,*_log)
+    CTP_LOG(logDEBUG,*_log)
         << "  o One component zero, two non-zero" << flush;    
     double crit_grade = 1. * _kxyz_s1s2_norm;
     bool converged10 = false;
@@ -1147,13 +1148,13 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
             threadforce.AddSharedInput< vector<KVector*> >(shell_kvecs);
             threadforce.AddAtomicInput< EWD::KVector* >(shell_kvecs);
             // Compute structure factors
-            LOG(logDEBUG,*_log) << flush;
+            CTP_LOG(logDEBUG,*_log) << flush;
             threadforce.AssignMode<string>(mode1);
             _log->setPreface(logDEBUG, "");
             threadforce.StartAndWait();
             _log->setPreface(logDEBUG, "\nMST DBG");
             // Increment fields
-            LOG(logDEBUG,*_log) << flush;
+            CTP_LOG(logDEBUG,*_log) << flush;
             threadforce.AssignMode<string>(mode2);
             _log->setPreface(logDEBUG, "");
             threadforce.StartAndWait();
@@ -1167,14 +1168,14 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
             shell_rms = sqrt(rms_sum_re/shell_kvecs.size())*EWD::int2V_m;
             e_measure = shell_rms*1e-10*shell_kvecs.size();
             // Log & assert convergence
-            LOG(logDEBUG,*_log)
+            CTP_LOG(logDEBUG,*_log)
                  << (format("    - M = %1$04d   G = %2$+1.3e   dF(rms) = %3$+1.3e V/m   [1eA => %4$+1.3e eV]")
                  % shell_kvecs.size()
                  % crit_grade
                  % shell_rms
                  % e_measure).str() << flush;
             if (shell_kvecs.size() > 10 && e_measure <= _crit_dE) {
-                LOG(logDEBUG,*_log)
+                CTP_LOG(logDEBUG,*_log)
                     << (format("    :: RE %1$+1.7e IM %2$+1.7e") 
                     % (sqrt(sum_re)*EWD::int2V_m)
                     % (sum_im*EWD::int2V_m)).str() << flush;
@@ -1191,7 +1192,7 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
     
     
     // ZERO COMPONENTS ZERO, THREE NON-ZERO
-    LOG(logDEBUG,*_log)
+    CTP_LOG(logDEBUG,*_log)
         << "  o Zero components zero, three non-zero" << flush;    
     crit_grade = 1. * _kxyz_s1s2_norm;
     bool converged00 = false;
@@ -1209,13 +1210,13 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
             threadforce.AddSharedInput< vector<KVector*> >(shell_kvecs);
             threadforce.AddAtomicInput< EWD::KVector* >(shell_kvecs);
             // Compute structure factors
-            LOG(logDEBUG,*_log) << flush;
+            CTP_LOG(logDEBUG,*_log) << flush;
             threadforce.AssignMode<string>(mode1);
             _log->setPreface(logDEBUG, "");
             threadforce.StartAndWait();
             _log->setPreface(logDEBUG, "\nMST DBG");
             // Increment fields
-            LOG(logDEBUG,*_log) << flush;
+            CTP_LOG(logDEBUG,*_log) << flush;
             threadforce.AssignMode<string>(mode2);
             _log->setPreface(logDEBUG, "");
             threadforce.StartAndWait();
@@ -1229,14 +1230,14 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
             shell_rms = sqrt(rms_sum_re/shell_kvecs.size())*EWD::int2V_m;
             e_measure = shell_rms*1e-10*shell_kvecs.size();
             // Log & assert convergence
-            LOG(logDEBUG,*_log)
+            CTP_LOG(logDEBUG,*_log)
                  << (format("    - M = %1$04d   G = %2$+1.3e   dF(rms) = %3$+1.3e V/m   [1eA => %4$+1.3e eV]")
                  % shell_kvecs.size()
                  % crit_grade
                  % shell_rms
                  % e_measure).str() << flush;
             if (shell_kvecs.size() > 10 && e_measure <= _crit_dE) {
-                LOG(logDEBUG,*_log)
+                CTP_LOG(logDEBUG,*_log)
                     << (format("    :: RE %1$+1.7e IM %2$+1.7e") 
                     % (sqrt(sum_re)*EWD::int2V_m)
                     % (sum_im*EWD::int2V_m)).str() << flush;
@@ -1254,7 +1255,7 @@ void PolarBackground::FX_ReciprocalSpace(string mode1, string mode2,
     _field_converged_K = converged10 && converged00;
     
     if (_field_converged_K) {
-        LOG(logDEBUG,*_log)
+        CTP_LOG(logDEBUG,*_log)
             << (format("  o Converged to precision, {2-1}, {1-2}, {0-3}."))
             << flush; }
     
@@ -1296,7 +1297,7 @@ void PolarBackground::GenerateKVectors(vector<PolarSeg*> &ps1,
     double avg_kz_s1s2 = 0.0;
     
     // TWO COMPONENTS ZERO, ONE NON-ZERO
-    LOG(logDEBUG,*_log)
+    CTP_LOG(logDEBUG,*_log)
         << "Generating K-vectors: Exploring K resonances" << flush;
     for (int i = 1; i < _NA_max+1; ++i) {
         vec k = +i*_A;
@@ -1340,7 +1341,7 @@ void PolarBackground::GenerateKVectors(vector<PolarSeg*> &ps1,
     kz_s1s2[0] = pow(avg_kx_s1s2*avg_ky_s1s2,1./6.)*pow(avg_kz_s1s2,2./3.);
     
     // ONE COMPONENT ZERO, TWO NON-ZERO
-    LOG(logDEBUG,*_log)
+    CTP_LOG(logDEBUG,*_log)
         << "K-planes through origin: Applying K resonances" << flush;
     
     int kx, ky, kz;
@@ -1381,7 +1382,7 @@ void PolarBackground::GenerateKVectors(vector<PolarSeg*> &ps1,
     std::sort(kvecs_1_0.begin(), kvecs_1_0.end(), _kvecsort);
     
     // ZERO COMPONENTS ZERO, THREE NON-ZERO
-    LOG(logDEBUG,*_log)
+    CTP_LOG(logDEBUG,*_log)
         << "K-space (off-axis): Applying K resonances" << flush;
     
     for (kx = -_NA_max; kx < _NA_max+1; ++kx) {
