@@ -1,5 +1,5 @@
 <options>
-	<ewald> 
+	<ewald help="Evaluates site energies in a periodic setting" section="sec:ewald"> 
 		<jobcontrol>
 			<job_file>job.xml</job_file> 
 		</jobcontrol>

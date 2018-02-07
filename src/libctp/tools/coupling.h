@@ -63,7 +63,7 @@ void Coupling::Initialize(Property* options)
 {
 
    // update options with the VOTCASHARE defaults   
-    UpdateWithDefaults( options );
+    UpdateWithDefaults( options, "ctp" );
     std::string key = "options." + Identify();    
     
     _degeneracy = options->get(key + ".degeneracy").as<double> ();
@@ -115,27 +115,27 @@ bool Coupling::Evaluate() {
   
     _qmpackage->setOrbitalsFileName( _orbA );
     bool _parse_orbitalsA_status = _qmpackage->ParseOrbitalsFile( &_orbitalsA );
-    if ( !_parse_orbitalsA_status ) { LOG(logERROR,_log) << "Failed to read orbitals of molecule A" << std::flush; }
+    if ( !_parse_orbitalsA_status ) { CTP_LOG(logERROR,_log) << "Failed to read orbitals of molecule A" << std::flush; }
 
     _qmpackage->setOrbitalsFileName( _orbB );   
     bool _parse_orbitalsB_status = _qmpackage->ParseOrbitalsFile( &_orbitalsB );
-    if ( !_parse_orbitalsB_status ) { LOG(logERROR,_log) << "Failed to read orbitals of molecule B" << std::flush; }
+    if ( !_parse_orbitalsB_status ) { CTP_LOG(logERROR,_log) << "Failed to read orbitals of molecule B" << std::flush; }
     
     _qmpackage->setOrbitalsFileName( _orbAB );   
     bool _parse_orbitalsAB_status = _qmpackage->ParseOrbitalsFile( &_orbitalsAB );
-     if ( !_parse_orbitalsAB_status ) { LOG(logERROR,_log) << "Failed to read orbitals of dimer AB" << std::flush; }
+     if ( !_parse_orbitalsAB_status ) { CTP_LOG(logERROR,_log) << "Failed to read orbitals of dimer AB" << std::flush; }
    
     _qmpackage->setLogFileName( _logA );
     bool _parse_logA_status = _qmpackage->ParseLogFile( &_orbitalsA );
-    if ( !_parse_logA_status ) { LOG(logERROR,_log) << "Failed to read log of molecule A" << std::flush; }
+    if ( !_parse_logA_status ) { CTP_LOG(logERROR,_log) << "Failed to read log of molecule A" << std::flush; }
     
     _qmpackage->setLogFileName( _logB );
     bool _parse_logB_status = _qmpackage->ParseLogFile( &_orbitalsB );
-    if ( !_parse_logB_status ) { LOG(logERROR,_log) << "Failed to read log of molecule B" << std::flush; }
+    if ( !_parse_logB_status ) { CTP_LOG(logERROR,_log) << "Failed to read log of molecule B" << std::flush; }
     
     _qmpackage->setLogFileName( _logAB );
     bool _parse_logAB_status = _qmpackage->ParseLogFile( &_orbitalsAB );
-    if ( !_parse_logAB_status ) { LOG(logERROR,_log) << "Failed to read log of molecule AB" << std::flush; }
+    if ( !_parse_logAB_status ) { CTP_LOG(logERROR,_log) << "Failed to read log of molecule AB" << std::flush; }
 
     int _degAH = 1;
     int _degAL = 1;
@@ -163,14 +163,14 @@ bool Coupling::Evaluate() {
     } else {
  
         if ( _orbitalsA.getNumberOfElectrons()*(_trimA-1) <   _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() ) {
-            LOG(logDEBUG,_log) << "Trimming virtual orbitals A:" 
+            CTP_LOG(logDEBUG,_log) << "Trimming virtual orbitals A:" 
                     << _orbitalsA.getNumberOfLevels() - _orbitalsA.getNumberOfElectrons() << "->" 
                     << _orbitalsA.getNumberOfElectrons()*(_trimA-1) << std::flush;  
             _orbitalsA.Trim(_trimA);
         }
     
         if ( _orbitalsB.getNumberOfElectrons()*(_trimB-1) <   _orbitalsB.getNumberOfLevels() - _orbitalsB.getNumberOfElectrons() ) {
-            LOG(logDEBUG,_log) << "Trimming virtual orbitals B:" 
+            CTP_LOG(logDEBUG,_log) << "Trimming virtual orbitals B:" 
                     << _orbitalsB.getNumberOfLevels() - _orbitalsB.getNumberOfElectrons() << "->" 
                     << _orbitalsB.getNumberOfElectrons()*(_trimB-1) << std::flush;      
             _orbitalsB.Trim(_trimB);
@@ -183,7 +183,7 @@ bool Coupling::Evaluate() {
           
     ub::matrix<double> _JAB;
     bool _calculate_integrals = _overlap.CalculateIntegrals( &_orbitalsA, &_orbitalsB, &_orbitalsAB, &_JAB );  
-    if ( !_calculate_integrals ) { LOG(logERROR,_log) << "Failed to evaluate integrals" << std::flush; }
+    if ( !_calculate_integrals ) { CTP_LOG(logERROR,_log) << "Failed to evaluate integrals" << std::flush; }
 
      std::cout << _log;
  

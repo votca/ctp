@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2016 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -24,12 +24,13 @@
 
 namespace votca { namespace ctp {
 
-QMPair *QMNBList::Add(Segment* seg1, Segment* seg2) {
-
+QMPair *QMNBList::Add(Segment* seg1, Segment* seg2,bool safe) {
+    
+    if (safe){
     if (this->FindPair(seg1, seg2) != NULL) {
         throw std::runtime_error("Critical bug: pair already exists");
     }
-
+    }
     // POTENTIAL BUGS : +1 added to start from 1;
     int id = this->size()+1;
 
@@ -40,8 +41,6 @@ QMPair *QMNBList::Add(Segment* seg1, Segment* seg2) {
     return pair;
     
 }
-
-
 
 
 void QMNBList::PrintInfo(FILE *out) {
@@ -88,7 +87,7 @@ void QMNBList::GenerateSuperExchange() {
         map< int, Segment*> _ns;
 
         // loop over all segments in the topology
-        for (vector< Segment* >::iterator segit = _top->Segments().begin(); segit != _top->Segments().end(); segit++) {
+        for (std::vector< Segment* >::iterator segit = _top->Segments().begin(); segit != _top->Segments().end(); segit++) {
 
             // check if this is a bridge
             Segment* segment = *segit;

@@ -202,7 +202,7 @@ XJob Ewald<EwaldMethod>::ProcessInputString(Job *job, Topology *top,
 
         Segment *seg = top->getSegment(segId);
         if (seg->getName() != segName) {
-            LOG(logERROR,*(thread->getLogger()))
+            CTP_LOG(logERROR,*(thread->getLogger()))
                 << "ERROR: Seg " << segId << ":" << seg->getName() << " "
                 << " maltagged as " << segName << ". Skip job ..." << flush;
             throw std::runtime_error("Input does not match topology.");
@@ -225,7 +225,7 @@ Job::JobResult Ewald<EwaldMethod>::EvalJob(Topology *top, Job *job,
     boost::timer::cpu_times t_in = cpu_t.elapsed();
     
     Logger *log = thread->getLogger();    
-    LOG(logINFO,*log)
+    CTP_LOG(logINFO,*log)
         << "Job input = " << job->getInput().as<string>() << flush;
     
     // CREATE XJOB FROM JOB INPUT STRING
@@ -233,11 +233,11 @@ Job::JobResult Ewald<EwaldMethod>::EvalJob(Topology *top, Job *job,
     
     // GENERATE POLAR TOPOLOGY (GENERATE VS LOAD IF PREPOLARIZED)
     if (_polar_bg_arch == "") {
-        LOG(logINFO,*log) << "Mps-Mapper: Generate FGC FGN BGN" << flush;
+        CTP_LOG(logINFO,*log) << "Mps-Mapper: Generate FGC FGN BGN" << flush;
         _mps_mapper.Gen_FGC_FGN_BGN(top, &xjob, thread);
     }
     else {
-        LOG(logINFO,*log) << "Mps-Mapper: Generate FGC, load FGN BGN from '" 
+        CTP_LOG(logINFO,*log) << "Mps-Mapper: Generate FGC, load FGN BGN from '" 
                 << _polar_bg_arch << "'" << flush;
         _mps_mapper.Gen_FGC_Load_FGN_BGN(top, &xjob, _polar_bg_arch, thread);
     }
@@ -261,12 +261,12 @@ Job::JobResult Ewald<EwaldMethod>::EvalJob(Topology *top, Job *job,
     if (!ewaldnd.Converged()) {
         jres.setStatus(Job::FAILED);
         jres.setError(ewaldnd.GenerateErrorString());
-        LOG(logERROR,*log) << ewaldnd.GenerateErrorString() << flush;
+        CTP_LOG(logERROR,*log) << ewaldnd.GenerateErrorString() << flush;
     }
     
     boost::timer::cpu_times t_out = cpu_t.elapsed();
     double t_run = (t_out.wall-t_in.wall)/1e9/60.;
-    LOG(logINFO,*log)
+    CTP_LOG(logINFO,*log)
         << "Job runtime was " << t_run << " min" << flush;
     
     return jres;

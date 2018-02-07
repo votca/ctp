@@ -58,7 +58,7 @@ EWD::triple<> Ewald3D2D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
     std::sort(Ks.begin(), Ks.end(), _eucsort);  
         
     // K=K TERM
-    LOG(logDEBUG,*_log) << flush;
+    CTP_LOG(logDEBUG,*_log) << flush;
     double EKK_fgC_bgP = 0.0;    
     unsigned int N_EKK_memory = (unsigned int)(0.5*(_NA_max+_NB_max)+0.5);
     int N_K_proc = 0;
@@ -69,7 +69,7 @@ EWD::triple<> Ewald3D2D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
         vec k = *kit;
         double K = abs(k);
         double dEKK = 0.0;
-        LOG(logDEBUG,*_log)  
+        CTP_LOG(logDEBUG,*_log)  
             << (format("k = %1$+1.3f %2$+1.3f %3$+1.3f   |K| = %4$+1.3f 1/nm") 
             % (k.getX()) % (k.getY()) % (k.getZ()) % K);
         for (sit1 = target.begin(); sit1 < target.end(); ++sit1) {
@@ -98,7 +98,7 @@ EWD::triple<> Ewald3D2D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
         dEKK_rms /= dEKKs.size();
         dEKK_rms = sqrt(dEKK_rms);
         
-        LOG(logDEBUG,*_log)  
+        CTP_LOG(logDEBUG,*_log)  
             << (format("   dE = %1$+1.7f   EKK = %2$+1.7f   RMS(%4$d) = %3$+1.7f") 
             % (dEKK*2*M_PI/_LxLy*int2eV) % (EKK_fgC_bgP*2*M_PI/_LxLy*int2eV)
             % (dEKK_rms*2*M_PI/_LxLy*int2eV) % N_EKK_memory) << flush;
@@ -112,7 +112,7 @@ EWD::triple<> Ewald3D2D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
         if (dEKK_rms*2*M_PI/_LxLy*int2eV <= _crit_dE && N_K_proc > 10) {
         //if (dEKK_rms*2*M_PI/LxLy*int2eV <= dEKK_rms_crit) {
             _converged_K = true;
-            LOG(logDEBUG,*_log)  
+            CTP_LOG(logDEBUG,*_log)  
                 << (format(":::: Converged to precision as of |K| = %1$+1.3f 1/nm") 
                 % K ) << flush;
             break;

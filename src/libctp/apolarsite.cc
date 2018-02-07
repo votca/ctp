@@ -1,5 +1,25 @@
+/* 
+ *            Copyright 2009-2016 The VOTCA Development Team
+ *                       (http://www.votca.org)
+ *
+ *      Licensed under the Apache License, Version 2.0 (the "License")
+ *
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *              http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 #include <votca/ctp/apolarsite.h>
 #include <boost/math/special_functions/round.hpp>
+#include <boost/format.hpp>
 #include <fstream>
 #include <string>
 
@@ -8,13 +28,13 @@ namespace votca { namespace ctp {
 
 
 APolarSite::APolarSite(APolarSite *templ, bool do_depolarize) 
-    : _id(templ->_id), _name(templ->_name), _isVirtual(templ->_isVirtual),        
-      _pos(templ->_pos),
+    : _id(templ->_id), _name(templ->_name), _isVirtual(templ->_isVirtual),   
+       _pos(templ->_pos),
         
       _locX(templ->_locX), _locY(templ->_locY), _locZ(templ->_locZ),
         
       _top(templ->_top), _seg(templ->_seg), _frag(templ->_frag),
-      _resolution(templ->_resolution),  
+        
       _Qs(templ->_Qs), _rank(templ->_rank), _Ps(templ->_Ps),
       Pxx(templ->Pxx), Pxy(templ->Pxy), Pxz(templ->Pxz), Pyy(templ->Pyy),
       Pyz(templ->Pyz), Pzz(templ->Pzz), pax(templ->pax), pay(templ->pay),
@@ -30,7 +50,7 @@ APolarSite::APolarSite(APolarSite *templ, bool do_depolarize)
       FPx(templ->FPx), FPy(templ->FPy), FPz(templ->FPz),
       FUx(templ->FUx), FUy(templ->FUy), FUz(templ->FUz),
 
-      PhiP(templ->PhiP), PhiU(templ->PhiU) {
+     _resolution(templ->_resolution),PhiP(templ->PhiP), PhiU(templ->PhiU) {
     
     if (do_depolarize) this->Depolarize();
 }
@@ -467,18 +487,19 @@ void APolarSite::WritePdbLine(FILE *out, const string &tag) {
 
 
 void APolarSite::WriteXyzLine(FILE *out, vec &shift, string format) {
+/*
+    double int2ext = 1.0;
 
-    //double int2ext = 1.0;
+    
 
-    vec pos = _pos + shift;
-
-    /*if (format == "gaussian") {
+    if (format == "gaussian") {
         int2ext = 10.;
     }
     else {
         int2ext = 10.;
-    }*/
-
+    }
+*/
+    vec pos = _pos + shift;
     fprintf(out, "%-2s %+4.9f %+4.9f %+4.9f \n",
             _name.c_str(),
             pos.getX()*10, pos.getY()*10, pos.getZ()*10);
@@ -500,7 +521,7 @@ void APolarSite::WriteChkLine(FILE *out, vec &shift, bool split_dpl,
     }
 
     // Take care of unit conversion
-    double int2ext;
+    double int2ext=0;
 
     if (unit == "nanometer") {
         int2ext = 1.;
@@ -510,8 +531,6 @@ void APolarSite::WriteChkLine(FILE *out, vec &shift, bool split_dpl,
     }
     else if (unit == "bohr") {
         assert(false);
-    } else {
-        throw std::runtime_error( "Unit has to be nanometer, angstrom or bohr");
     }
 
     if (format == "xyz") {
@@ -684,7 +703,7 @@ void APolarSite::WriteXmlLine(std::ostream &out) {
     for (int state = -1; state < 2; ++state) {
         out << "<state>" << endl;
         out << state << endl;
-        for (unsigned int i = 0; i < _Qs[state+1].size(); ++i) {
+        for (unsigned i = 0; i < _Qs[state+1].size(); ++i) {
             out << _Qs[state+1][i] << " ";
         }
         out << endl;
@@ -849,7 +868,7 @@ vector<APolarSite*> APS_FROM_MPS(string filename, int state, QMThread *thread) {
                 if (lineRank == 0) {
                     Q0_total += boost::lexical_cast<double>(split[0]);
                 }
-                for (unsigned int i = 0; i < split.size(); i++) {
+                for (unsigned i = 0; i < split.size(); i++) {
                     double qXYZ = boost::lexical_cast<double>(split[i]);
                     // Convert e*(a_0)^k to e*(nm)^k where k = rank
                     double BOHR2NM = 0.0529189379;
@@ -949,6 +968,8 @@ map<string,double> POLAR_TABLE() {
     polar_table["F"] = 0.440e-3;
     polar_table["Si"] = 3.962e-3;   // B3LYP/6-311+g(2d,2p)
     polar_table["Zn"] = 5.962e-3;   // B3LYP/6-311+g(2d,2p)
+    polar_table["Al"] = 5.80e-3;   //[1]P. Fuentealba, “The static dipole polarizability of aluminium atom: discrepancy between theory and experiment,” Chemical physics letters, vol. 397, no. 4, pp. 459–461, 2004.
+
     return polar_table;
 }
 

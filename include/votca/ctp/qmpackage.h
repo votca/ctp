@@ -47,7 +47,7 @@ public:
    
    virtual void CleanUp() = 0;
    
-   virtual bool ConvertToGW( Orbitals* _orbitals ) = 0;
+   //virtual bool ConvertToGW( Orbitals* _orbitals ) = 0;
 
    void setRunDir( string run_dir ) { _run_dir = run_dir; }
    

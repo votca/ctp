@@ -82,7 +82,7 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
      
         
     // K=K TERM
-    LOG(logDEBUG,*_log) << flush;
+    CTP_LOG(logDEBUG,*_log) << flush;
     double EKK_fgC_bgP = 0.0;    
     unsigned int N_EKK_memory = (unsigned int)(0.5*(_NA_max+_NB_max)+0.5);
     int N_K_proc = 0;
@@ -102,7 +102,7 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
             double K = abs(k);
             double expkk_k = 4*M_PI*exp(-K*K/(4*_alpha*_alpha)) / (K*K);        
 
-            LOG(logDEBUG,*_log)
+            CTP_LOG(logDEBUG,*_log)
                 << (format("k[%5$d] = %1$+1.3f %2$+1.3f %3$+1.3f   |K| = %4$+1.3f 1/nm") 
                 % (k.getX()) % (k.getY()) % (k.getZ()) % K % (N_shells_proc+1));
 
@@ -135,11 +135,11 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
             re_E += re_dE;
             im_E += im_dE;
 
-            LOG(logDEBUG,*_log)
+            CTP_LOG(logDEBUG,*_log)
                 << (format("    Re(dE) = %1$+1.7f")
                 % (re_dE/_LxLyLz*int2eV));
 
-            LOG(logDEBUG,*_log)
+            CTP_LOG(logDEBUG,*_log)
                 << (format("    Re(E) = %1$+1.7f Im(E) = %2$+1.7f")
                 % (re_E/_LxLyLz*int2eV) % (im_E/_LxLyLz*int2eV));        
 
@@ -158,13 +158,13 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
             dEKK_rms /= dEKKs.size();
             dEKK_rms = sqrt(dEKK_rms);
 
-            LOG(logDEBUG,*_log)
+            CTP_LOG(logDEBUG,*_log)
                 << (format("   RMS(%2$d) = %1$+1.7f") 
                 % (dEKK_rms/_LxLyLz*int2eV) % N_EKK_memory) << flush;
 
             if (dEKK_rms/_LxLyLz*int2eV <= _crit_dE && N_K_proc > 2 && N_shells_proc > 0) {
                 _converged_K = true;
-                LOG(logDEBUG,*_log)
+                CTP_LOG(logDEBUG,*_log)
                     << (format(":::: Converged to precision as of |K| = %1$+1.3f 1/nm") 
                     % K ) << flush;
                 break;
@@ -226,7 +226,7 @@ EWD::triple<> Ewald3D3D::CalculateShapeCorrection(vector<PolarSeg*> &target) {
         EJ *= - 2*M_PI/_LxLyLz;
     }
     else {
-        LOG(logERROR,*_log)
+        CTP_LOG(logERROR,*_log)
             << (format("Shape %1$s not implemented. Setting EJ = 0.0 ...") 
             % _shape) << flush;
         EJ = 0.0;

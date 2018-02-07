@@ -175,9 +175,9 @@ private:
     
     // Thole sharpness parameter & reduced interaction distance
     double ta1, ta2, ta3;
-    double tu3;
-    double l3, l5, l7, l9;     // (damps fields originating in indu. m'poles)
-    double lp3, lp5, lp7, lp9; // (damps fields originating in perm. m'poles)
+    double tu3 = 0;
+    double l3 = 0, l5 = 0, l7 = 0, l9 = 0;     // (damps fields originating in indu. m'poles)
+    double lp3 = 0, lp5 = 0, lp7 = 0, lp9 = 0; // (damps fields originating in perm. m'poles)
     
     // Ewald sharpness parameter powers
     double a1, a2, a3, a4, a5, a6, a7;
@@ -185,53 +185,53 @@ private:
     // ============================= REAL SPACE ============================= //
     
     // Connection vector (1) <- (2), i.e. r12 = r1 - r2 == rab = ra - rb;
-    vec r12;
+    vec r12 = 0.0;
     
     // Vector components rx = r12x, ...
-    double rx, ry, rz;
+    double rx = 0.0, ry = 0.0, rz = 0.0;
     
     // Matrix product rxx = r12x*r12x, rxy = r12x*r12y, ...
-    double rxx, rxy, rxz, ryy, ryz, rzz;
+    double rxx = 0.0, rxy = 0.0, rxz = 0.0, ryy = 0.0, ryz = 0.0, rzz = 0.0;
     
     // Real-space distance powers
-    double R1, R2, R3;//, R4, R5;
+    double R1 = 0.0, R2 = 0.0, R3 = 0.0;//, R4, R5;
     
     // Real-space inverse distance powers
-    double rR1, rR2;//, rR3, rR4, rR5;
+    double rR1 = 0.0, rR2 = 0.0;//, rR3, rR4, rR5;
     
     // {G} function values
-    double ppG0, ppG1, ppG2, ppG3, ppG4;
-    double puG1, puG2, puG3;
-    double uuG1, uuG2;
+    double ppG0 = 0.0, ppG1 = 0.0, ppG2 = 0.0, ppG3 = 0.0, ppG4 = 0.0;
+    double puG1 = 0.0, puG2 = 0.0, puG3 = 0.0;
+    double uuG1 = 0.0, uuG2 = 0.0;
     
     // {Bl}, {Cl} function values
-    double rSqrtPiExp;
-    double B0, B1, B2, B3, B4;
-    double C0, C1, C2, C3, C4;
+    double rSqrtPiExp = 0.0;
+    double B0 = 0.0, B1 = 0.0, B2 = 0.0, B3 = 0.0, B4 = 0.0;
+    double C0 = 0.0, C1 = 0.0, C2 = 0.0, C3 = 0.0, C4 = 0.0;
     
     
     // ========================== RECIPROCAL SPACE ========================== //
     
     // k-space vector
-    vec k12;
-    double K;
-    double AK;
+    vec k12 = 0.0;
+    double K = 0.0;
+    double AK = 0.0;
     
     // Vector components kx, ...
-    double kx, ky, kz;
+    double kx = 0.0, ky = 0.0, kz = 0.0;
     
     // Matrix product kxx = kx*kx, kxy = kx*ky, ...
-    double kxx, kxy, kxz, kyy, kyz, kzz;
+    double kxx = 0.0, kxy = 0.0, kxz = 0.0, kyy = 0.0, kyz = 0.0, kzz = 0.0;
     
     // cos(k*r), sin(k*r), µ * k, Q : K
-    double dk;             // <- µ(perm.) * k
-    double u_dk;           // <- µ(indu.) * k
-    double Qk;
-    double kr;
-    double coskr;
-    double sinkr;    
-    double re_s, im_s;     // <- perm. moments
-    double u_re_s, u_im_s; // <- indu. moments
+    double dk = 0.0;             // <- µ(perm.) * k
+    double u_dk = 0.0;           // <- µ(indu.) * k
+    double Qk = 0.0;
+    double kr = 0.0;
+    double coskr = 0.0;
+    double sinkr = 0.0;    
+    double re_s = 0.0, im_s = 0.0;     // <- perm. moments
+    double u_re_s = 0.0, u_im_s = 0.0; // <- indu. moments
 };
 
 // =============================== REAL SPACE =============================== //

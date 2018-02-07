@@ -18,8 +18,8 @@ PoissonGrid::PoissonGrid(Topology *top, vector<PolarSeg*> &fg, vector<PolarSeg*>
     // Shift center to front lower left corner of central cell
     //_center = _center - 0.5*vec(dx0, dy0, dz0);
     
-    LOG(logDEBUG,*_log) << flush;
-    LOG(logDEBUG,*_log) << "Setup <PoissonGrid> @ " << _center << flush;
+    CTP_LOG(logDEBUG,*_log) << flush;
+    CTP_LOG(logDEBUG,*_log) << "Setup <PoissonGrid> @ " << _center << flush;
     
     
     // GRID PARAMETERS
