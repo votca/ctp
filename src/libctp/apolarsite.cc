@@ -964,16 +964,18 @@ vector<APolarSite*> APS_FROM_MPS(string filename, int state, QMThread *thread) {
 map<string,double> POLAR_TABLE() {
     map<string,double> polar_table;
     polar_table["H"] = 0.496e-3;
+    polar_table["B"] = 2.797e-3;   // B3LYP/6-311+g(2d,2p)
     polar_table["C"] = 1.334e-3;
     polar_table["N"] = 1.073e-3;
     polar_table["O"] = 0.837e-3;
     polar_table["S"] = 2.926e-3;
     polar_table["F"] = 0.440e-3;
     polar_table["Si"] = 3.962e-3;   // B3LYP/6-311+g(2d,2p)
+    polar_table["Cl"] = 1.504e-3;   // B3LYP/6-311+g(2d,2p)
     polar_table["Zn"] = 5.962e-3;   // B3LYP/6-311+g(2d,2p)
     polar_table["Cu"] = 6.295e-3;   // B3LYP/6-311+g(2d,2p)
     polar_table["Al"] = 5.80e-3;   //[1]P. Fuentealba, “The static dipole polarizability of aluminium atom: discrepancy between theory and experiment,” Chemical physics letters, vol. 397, no. 4, pp. 459–461, 2004.
-
+   
     return polar_table;
 }
 
