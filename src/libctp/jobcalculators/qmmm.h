@@ -51,6 +51,8 @@ public:
     void            PreProcess(Topology *top);
     Job::JobResult  EvalJob(Topology *top, Job *job, QMThread *thread);
     XJob            ProcessInputString(Job *job, Topology *top, QMThread *thread);
+
+    void WriteJobFile(Topology *top);
     
 
 private:
@@ -222,33 +224,7 @@ void QMMM::Initialize(Property *opt) {
         }
     
     
-    // GWBSE options, depending on whether it is there, decide for ground
-    // or excited state QM/MM
-    key = "options.qmmm.gwbse";
-    
-    if ( opt->exists(key)) { 
-        cout << " Excited state QM/MM " << endl;
-        
-         if ( opt->exists(key+".gwbse_options")) {
-            string gwbse_xml = opt->get(key+".gwbse_options").as< string >();
-            load_property_from_xml(_gwbse_opt, gwbse_xml.c_str());
-            // _gwbse = _gwbse_opt.get("package.name").as< string >();
-        }
-        else {
-            throw runtime_error("GWBSE options not specified.");
-        }
-        
-        _state = opt->get(key+".state").as< int >();
-        
-        
-    } else {
-        cout << " Ground state QM/MM " << endl;
-    }
-    
-
-    
-    
-    //cout << TXT << _options;
+    cout << " Ground state QM/MM " << endl;
     
     // register all QM packages (Gaussian, turbomole, etc))
     QMPackageFactory::RegisterAll();
@@ -282,6 +258,49 @@ void QMMM::CustomizeLogger(QMThread *thread) {
 //                            QMMM MEMBER FUNCTIONS                           //
 // ========================================================================== //
 
+void QMMM::WriteJobFile(Topology *top) {
+
+    cout << endl << "... ... Writing job file " << flush;
+
+    // OPEN STREAM
+    std::ofstream ofs;
+    ofs.open(_jobfile.c_str(), std::ofstream::out);
+    if (!ofs.is_open()) throw runtime_error("\nERROR: bad file handle: " + _jobfile);
+ 
+    ofs << "<jobs>" << endl;   
+
+    int jobCount = 0;
+
+    std::vector< Segment* > segments = top->Segments();
+    std::vector< Segment* >::iterator sit;
+
+    for (sit = segments.begin(); sit != segments.end(); ++sit) {
+    
+        int id = ++jobCount;
+        std::string tag = "";
+
+        Property Input;
+        std::string state = "h";
+        std::string name = (*sit)->getName();
+        int idt = (*sit)->getId();
+                
+        std::string mpsFile = "MP_FILES/" + name + "_" + state + ".mps";
+
+        std::string inp = (format("%1$d:%2$s:%3$s") % idt % name % mpsFile).str();
+        
+        Property *pInput = &Input.add("input",inp);
+        Job job(id, tag, Input, Job::AVAILABLE );
+        job.ToStream(ofs,"xml");
+    }
+     
+    
+    // CLOSE STREAM
+    ofs << "</jobs>" << endl;    
+    ofs.close();
+    
+     
+    //throw std::invalid_argument( "ctp_parallel -e qmmm -j write" );
+}
 
 XJob QMMM::ProcessInputString(Job *job, Topology *top, QMThread *thread) {
     
