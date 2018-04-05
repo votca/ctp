@@ -330,9 +330,13 @@ void JobWriter::mps_single(Topology *top) {
     return;
 }
     
-    
+/*
+ * OBSOLETE AND SHOULD BE REMOVED
+ */    
 void JobWriter::edft(Topology *top) {
 
+    throw std::invalid_argument( "Jobwriter for edft is not supported anymore. Use ctp_parallel -e edft -j write" );
+    
     string jobFile = "edft.jobs";   
     
     ofstream ofs;
@@ -390,8 +394,13 @@ void JobWriter::edft(Topology *top) {
     ofs.close();
     
 }
-    
+
+/*
+ * OBSOLETE AND SHOULD BE REMOVED
+ */    
 void JobWriter::idft(Topology *top) {
+    
+    throw std::invalid_argument( "Jobwriter for idft is not supported anymore. Use ctp_parallel -e idft -j write" );
 
     string jobFile = "idft.jobs";   
     ofstream ofs;

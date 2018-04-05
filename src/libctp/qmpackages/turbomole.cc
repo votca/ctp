@@ -139,7 +139,7 @@ bool Turbomole::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_g
         
     // run "define" which prepares the input
     string _input_exe = "define";
-    _command  = "cd " + _run_dir + "; " + _input_exe + " <  ./" + _input_file_name + " >& " + _input_file_name + ".log" ;
+    _command  = "cd " + _run_dir + "; " + _input_exe + " <  ./" + _input_file_name + " > " + _input_file_name + ".log" + " 2>&1 " ;
     //cerr << _command << flush;
     int i = system ( _command.c_str() );
     CTP_LOG(logDEBUG,*_pLog) << "TURBOMOLE: Finished DEFINE with status " << i << flush;
@@ -250,9 +250,9 @@ bool Turbomole::Run()
     
     if (system(NULL)) {
         // if scratch is provided, run the shell script; 
-        // otherwise run gaussian directly and rely on global variables 
+        // otherwise run directly and rely on global variables 
         string _command;
-        _command  = "cd " + _run_dir + "; " + _executable + " >& " + _executable + ".log ";
+        _command  = "cd " + _run_dir + "; " + _executable + " > " + _executable + ".log " + " 2>&1 ";
         
         int i = system ( _command.c_str() );
         CTP_LOG(logDEBUG,*_pLog) << "TURBOMOLE: Finished job with status " << i << flush;
