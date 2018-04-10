@@ -97,7 +97,6 @@ private:
     // GWBSE options
     string                          _gwbse;
     Property                        _gwbse_opt;
-    int                             _state;
 
     // XJob logbook (file output)
     string                          _outFile;
