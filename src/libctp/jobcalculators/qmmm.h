@@ -97,7 +97,6 @@ private:
     // GWBSE options
     string                          _gwbse;
     Property                        _gwbse_opt;
-    int                             _state;
 
     // XJob logbook (file output)
     string                          _outFile;
@@ -288,7 +287,7 @@ void QMMM::WriteJobFile(Topology *top) {
 
         std::string inp = (format("%1$d:%2$s:%3$s") % idt % name % mpsFile).str();
         
-        Property *pInput = &Input.add("input",inp);
+        (void)Input.add("input",inp);
         Job job(id, tag, Input, Job::AVAILABLE );
         job.ToStream(ofs,"xml");
     }
