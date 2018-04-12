@@ -1,5 +1,6 @@
 #include <votca/ctp/polarbackground.h>
 #include <boost/format.hpp>
+#include <votca/tools/globals.h>
 
 namespace votca {
 namespace ctp {

@@ -1,4 +1,4 @@
-foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump)
+foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
   file(GLOB ${PROG}_SOURCES ${PROG}*.cc)
 
   if( ${PROG} STREQUAL "ctp_map" )
@@ -7,7 +7,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump)
      add_executable(${PROG} ${${PROG}_SOURCES})
   endif()
 
-  target_link_libraries(${PROG} votca_ctp ${BOOST_LIBRARIES})
+  target_link_libraries(${PROG} votca_ctp votca_moo ${BOOST_LIBRARIES})
   install(TARGETS ${PROG} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   if (BUILD_MANPAGES)

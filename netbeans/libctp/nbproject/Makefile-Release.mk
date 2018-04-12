@@ -81,7 +81,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1ce03da5/xinductor.o \
 	${OBJECTDIR}/_ext/1ce03da5/xinteractor.o \
 	${OBJECTDIR}/_ext/1ce03da5/xjob.o \
-	${OBJECTDIR}/_ext/1ce03da5/xmapper.o
+	${OBJECTDIR}/_ext/1ce03da5/xmapper.o \
+	${OBJECTDIR}/_ext/2aac7050/Md2QmEngine.o \
+	${OBJECTDIR}/_ext/2aac7050/moo_overlap.o
 
 
 # C Compiler Flags
@@ -344,6 +346,16 @@ ${OBJECTDIR}/_ext/1ce03da5/xmapper.o: ../../src/libctp/xmapper.cc nbproject/Make
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce03da5/xmapper.o ../../src/libctp/xmapper.cc
+
+${OBJECTDIR}/_ext/2aac7050/Md2QmEngine.o: ../../src/tools/Md2QmEngine.cc nbproject/Makefile-${CND_CONF}.mk
+	${MKDIR} -p ${OBJECTDIR}/_ext/2aac7050
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2aac7050/Md2QmEngine.o ../../src/tools/Md2QmEngine.cc
+
+${OBJECTDIR}/_ext/2aac7050/moo_overlap.o: ../../src/tools/moo_overlap.cc nbproject/Makefile-${CND_CONF}.mk
+	${MKDIR} -p ${OBJECTDIR}/_ext/2aac7050
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2aac7050/moo_overlap.o ../../src/tools/moo_overlap.cc
 
 # Subprojects
 .build-subprojects:

@@ -17,6 +17,7 @@ src/tools/ctp_parallel
 src/tools/ctp_map
 src/tools/ctp_run
 src/tools/ctp_tools
+src/tools/moo_overlap
 src/dipro/*.mod
 src/dipro/*.x
 src/tools/*.man

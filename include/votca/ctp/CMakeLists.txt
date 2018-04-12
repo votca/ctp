@@ -2,3 +2,4 @@ configure_file(votca_ctp_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/votca_ctp_confi
 
 file(GLOB_RECURSE VOTCA_HEADERS *.h ${CMAKE_CURRENT_BINARY_DIR}/votca_ctp_config.h)
 install(FILES ${VOTCA_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/votca/ctp)
+

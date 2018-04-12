@@ -24,10 +24,11 @@
 #include <votca/ctp/qmpair.h>
 #include <votca/ctp/paircalculator.h>
 #include <votca/moo/mol_and_orb.h>
-
-namespace votca { namespace ctp {
+#include <votca/moo/fock.h>
 
 namespace MOO = votca::moo;
+
+namespace votca { namespace ctp {
 
 /**
 * \brief Semi-empirical electronic coupling elements for QM pairs
