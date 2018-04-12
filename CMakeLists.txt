@@ -3,10 +3,13 @@ project(votca-ctp)
 
 set(PROJECT_VERSION "1.5-dev")
 set(PROJECT_CONTACT "bugs@votca.org")
+string(REGEX REPLACE "^[1-9]+\\.([1-9]+).*$" "\\1" SOVERSION "${PROJECT_VERSION}")
+if (NOT ${SOVERSION} MATCHES "[1-9]+")
+  message(FATAL_ERROR "Could not determind SOVERSION from ${PROJECT_VERSION}")
+endif (NOT ${SOVERSION} MATCHES "[1-9]+")
 
 # Cmake modules/macros are in a subdirectory to keep this file cleaner
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
-
 
 enable_language(CXX)
 
