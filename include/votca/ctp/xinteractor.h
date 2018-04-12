@@ -126,7 +126,7 @@ private:
     double EUU = 0.0;
 
 
-    vec    e12 = 0.0;      //  |
+    vec    e12 ;      //  |
     double u3 = 0.0;       //  |-> NOTE: Only needed when using Thole model
     double a = 0.0;        //  |         (do not forget to init. though...)
     double lambda3 = 0.0;  //  |

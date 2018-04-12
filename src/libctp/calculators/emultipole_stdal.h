@@ -119,7 +119,7 @@ public:
         double EU_INTER = 0.0; //   <- Interaction induction multipoles (inter-site)
 
 
-        vec    e12 = 0.0;     //  |
+        vec    e12 ;     //  |
         double u3 = 0.0;      //  |-> NOTE: Only needed when using Thole model
         double a = 0.0;       //  |         (do not forget to init. though...)
 

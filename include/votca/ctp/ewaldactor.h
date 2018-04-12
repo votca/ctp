@@ -185,7 +185,7 @@ private:
     // ============================= REAL SPACE ============================= //
     
     // Connection vector (1) <- (2), i.e. r12 = r1 - r2 == rab = ra - rb;
-    vec r12 = 0.0;
+    vec r12 ;
     
     // Vector components rx = r12x, ...
     double rx = 0.0, ry = 0.0, rz = 0.0;
@@ -213,7 +213,7 @@ private:
     // ========================== RECIPROCAL SPACE ========================== //
     
     // k-space vector
-    vec k12 = 0.0;
+    vec k12 ;
     double K = 0.0;
     double AK = 0.0;
     
