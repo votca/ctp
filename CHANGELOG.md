@@ -1,5 +1,9 @@
 For more detailed information about the changes see the history of the [repository](https://github.com/votca/ctp/commits/master).
 
+## Version 1.4 rc1 (released XX.XX.18)
+* jobwriter functionality moved to the parallel calculators
+* splitting of the jobfile for cluster runs 
+
 ## Version 1.3 (released XX.09.15)
 * new executables: ctp_tools, ctp_dump, ctp_parallel, ctp_testsuite, ctp_update
 * ctp_tools wraps light-weight tools that assist e.g. in generating the system mapping file
