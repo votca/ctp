@@ -26,8 +26,6 @@
 
 #include <string> 
 
-using namespace std;
-
 namespace votca { namespace ctp {
 /**
     \brief Wrapper for the Gaussian program
@@ -40,7 +38,7 @@ class Gaussian : public QMPackage
 {
 public:   
 
-   string getPackageName() { return "gaussian"; }
+   std::string getPackageName() { return "gaussian"; }
 
    void Initialize( Property *options );
 
@@ -68,16 +66,16 @@ public:
    
 private:  
 
-    string                              _shell_file_name;
-    string                              _chk_file_name;
-    string                              _scratch_dir;
-    string                              _input_vxc_file_name;    
-    string                              _cleanup;
+    std::string                              _shell_file_name;
+    std::string                              _chk_file_name;
+    std::string                              _scratch_dir;
+    std::string                              _input_vxc_file_name;    
+    std::string                              _cleanup;
 
-    int NumberOfElectrons( string _line ); 
-    int BasisSetSize( string _line ); 
-    int EnergiesFromLog( string _line, ifstream inputfile ); 
-    string FortranFormat( const double &number );
+    int NumberOfElectrons( std::string _line ); 
+    int BasisSetSize( std::string _line ); 
+    int EnergiesFromLog( std::string _line, ifstream inputfile ); 
+    std::string FortranFormat( const double &number );
 
     
     

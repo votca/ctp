@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f1" displayName="Calculators" projectFiles="true">
       <logicalFolder name="f2" displayName="Calculators" projectFiles="true">
@@ -192,10 +192,60 @@
       <itemPath>../../src/libctp/xjob.cc</itemPath>
       <itemPath>../../src/libctp/xmapper.cc</itemPath>
     </logicalFolder>
+    <logicalFolder name="f3" displayName="XML" projectFiles="true">
+      <itemPath>../../share/xml/cgpolar.xml</itemPath>
+      <itemPath>../../share/xml/coupling.xml</itemPath>
+      <itemPath>../../share/xml/dft.xml</itemPath>
+      <itemPath>../../share/xml/eanalyze.xml</itemPath>
+      <itemPath>../../share/xml/edft.xml</itemPath>
+      <itemPath>../../share/xml/eimport.xml</itemPath>
+      <itemPath>../../share/xml/einternal.xml</itemPath>
+      <itemPath>../../share/xml/emultipole.xml</itemPath>
+      <itemPath>../../share/xml/energy2xml.xml</itemPath>
+      <itemPath>../../share/xml/eoutersphere.xml</itemPath>
+      <itemPath>../../share/xml/ewald.xml</itemPath>
+      <itemPath>../../share/xml/ewdbgpol.xml</itemPath>
+      <itemPath>../../share/xml/ianalyze.xml</itemPath>
+      <itemPath>../../share/xml/idft.xml</itemPath>
+      <itemPath>../../share/xml/iimport.xml</itemPath>
+      <itemPath>../../share/xml/integrals2xml.xml</itemPath>
+      <itemPath>../../share/xml/izindo.xml</itemPath>
+      <itemPath>../../share/xml/jobwriter.xml</itemPath>
+      <itemPath>../../share/xml/log2mps.xml</itemPath>
+      <itemPath>../../share/xml/map.xml</itemPath>
+      <itemPath>../../share/xml/molpol.xml</itemPath>
+      <itemPath>../../share/xml/neighborlist.xml</itemPath>
+      <itemPath>../../share/xml/occupations2xml.xml</itemPath>
+      <itemPath>../../share/xml/options.xml</itemPath>
+      <itemPath>../../share/xml/pairdump.xml</itemPath>
+      <itemPath>../../share/xml/pairs2xml.xml</itemPath>
+      <itemPath>../../share/xml/pdb2map.xml</itemPath>
+      <itemPath>../../share/xml/pdb2top.xml</itemPath>
+      <itemPath>../../share/xml/pewald3d.xml</itemPath>
+      <itemPath>../../share/xml/pmultipole.xml</itemPath>
+      <itemPath>../../share/xml/profile.xml</itemPath>
+      <itemPath>../../share/xml/ptopreader.xml</itemPath>
+      <itemPath>../../share/xml/qmanalyze.xml</itemPath>
+      <itemPath>../../share/xml/qmmm.xml</itemPath>
+      <itemPath>../../share/xml/rates.xml</itemPath>
+      <itemPath>../../share/xml/rates2xml.xml</itemPath>
+      <itemPath>../../share/xml/sandbox.xml</itemPath>
+      <itemPath>../../share/xml/segments.xml</itemPath>
+      <itemPath>../../share/xml/segments2xml.xml</itemPath>
+      <itemPath>../../share/xml/stateserver.xml</itemPath>
+      <itemPath>../../share/xml/tdump.xml</itemPath>
+      <itemPath>../../share/xml/testsuite.xml</itemPath>
+      <itemPath>../../share/xml/trajectory2pdb.xml</itemPath>
+      <itemPath>../../share/xml/vaverage.xml</itemPath>
+      <itemPath>../../share/xml/xmultipole.xml</itemPath>
+      <itemPath>../../share/xml/xqmultipole.xml</itemPath>
+      <itemPath>../../share/xml/zmultipole.xml</itemPath>
+    </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>../../README</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -414,6 +464,103 @@
       <item path="../../include/votca/ctp/xjob.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/xmapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/coupling.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/dft.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/edft.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/eimport.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/einternal.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/emultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/energy2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/eoutersphere.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ewald.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ewdbgpol.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ianalyze.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/idft.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/iimport.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/integrals2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/izindo.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/jobwriter.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/log2mps.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/map.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/molpol.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/neighborlist.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/occupations2xml.xml"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../share/xml/options.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pairdump.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pairs2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/profile.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ptopreader.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/qmanalyze.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/qmmm.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/rates.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/rates2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/sandbox.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/segments.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/segments2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/stateserver.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/tdump.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/testsuite.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/trajectory2pdb.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/vaverage.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/xmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/xqmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/zmultipole.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/apolarsite.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -989,6 +1136,103 @@
       <item path="../../include/votca/ctp/xjob.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/xmapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/coupling.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/dft.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/edft.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/eimport.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/einternal.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/emultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/energy2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/eoutersphere.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ewald.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ewdbgpol.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ianalyze.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/idft.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/iimport.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/integrals2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/izindo.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/jobwriter.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/log2mps.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/map.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/molpol.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/neighborlist.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/occupations2xml.xml"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../share/xml/options.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pairdump.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pairs2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/pmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/profile.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/ptopreader.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/qmanalyze.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/qmmm.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/rates.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/rates2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/sandbox.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/segments.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/segments2xml.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/stateserver.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/tdump.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/testsuite.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/trajectory2pdb.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/vaverage.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/xmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/xqmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/xml/zmultipole.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/apolarsite.cc" ex="false" tool="1" flavor2="0">
       </item>

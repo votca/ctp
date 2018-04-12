@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/715944016/ctp_parallel.o
+	${OBJECTDIR}/_ext/2aac7050/ctp_parallel.o
 
 
 # C Compiler Flags
@@ -70,10 +70,10 @@ LDLIBSOPTIONS=../libctp/dist/Debug/GNU-Linux-x86/liblibctp.a ../../../csg/netbea
 	${MKDIR} -p ../../src/tools
 	${LINK.cc} -o ../../src/tools/ctp_parallel ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/715944016/ctp_parallel.o: ../../src/tools/ctp_parallel.cc 
-	${MKDIR} -p ${OBJECTDIR}/_ext/715944016
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../../include -I../../../tools/include -I../../../moo/include -I../../../csg/include -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/715944016/ctp_parallel.o ../../src/tools/ctp_parallel.cc
+${OBJECTDIR}/_ext/2aac7050/ctp_parallel.o: ../../src/tools/ctp_parallel.cc
+	${MKDIR} -p ${OBJECTDIR}/_ext/2aac7050
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I../../include -I../../../tools/include -I../../../moo/include -I../../../csg/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2aac7050/ctp_parallel.o ../../src/tools/ctp_parallel.cc
 
 # Subprojects
 .build-subprojects:
@@ -85,7 +85,6 @@ ${OBJECTDIR}/_ext/715944016/ctp_parallel.o: ../../src/tools/ctp_parallel.cc
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ../../src/tools/ctp_parallel
 
 # Subprojects
 .clean-subprojects:

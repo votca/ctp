@@ -18,7 +18,7 @@
  */
 
 #include <votca/ctp/segment.h>
-
+#include <limits>
 
 
 namespace votca { namespace ctp {
@@ -353,12 +353,12 @@ void Segment::calcPos() {
     _CoM = pos / totWeight;
 }
 
-
+/*
 void Segment::calcApproxSize(){
     _approxsize=0.0;
     
-    tools::vec min=vec(std::numeric_limits<double>::max());
-    tools::vec max=vec(std::numeric_limits<double>::min());
+    tools::vec min=vec( std::numeric_limits<const double>::max() );
+    tools::vec max=vec(std::numeric_limits<const double>::min());
     std::vector< ctp::Fragment* > ::iterator fragit1;           
        for (fragit1 = Fragments().begin();
                     fragit1 < Fragments().end();
@@ -388,7 +388,7 @@ void Segment::calcApproxSize(){
     
     return;
 }
-
+*/
 
 void Segment::Rigidify() {
 

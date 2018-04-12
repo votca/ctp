@@ -40,7 +40,7 @@ namespace votca { namespace ctp {
 void Gaussian::Initialize( Property *options ) {
 
     // GAUSSIAN file names
-    string fileName = "system";
+    std::string fileName = "system";
 
     _xyz_file_name = fileName + ".xyz";
     _input_file_name = fileName + ".com";
@@ -476,8 +476,8 @@ bool Gaussian::CheckLogFile() {
     // check if the log file exists
     boost::filesystem::path arg_path;
     char ch;
-
-    string _full_name = ( arg_path / _run_dir / _log_file_name ).c_str();
+    
+    std::string _full_name = ( arg_path / _run_dir / _log_file_name ).c_str();
     ifstream _input_file( _full_name.c_str() );
     
     if (_input_file.fail()) {
@@ -489,7 +489,7 @@ bool Gaussian::CheckLogFile() {
     
     // get empty lines and end of lines out of the way
     do {
-        _input_file.seekg(-2,ios_base::cur);
+        _input_file.seekg(-2, ios_base::cur);
         _input_file.get(ch);   
         //cout << "\nChar: " << ch << endl;
     } while ( ch == '\n' || ch == ' ' || ch == '\t' || (int)_input_file.tellg() == -1 );

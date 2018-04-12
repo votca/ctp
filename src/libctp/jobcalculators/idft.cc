@@ -135,7 +135,7 @@ void IDFT::LoadOrbitals(string file_name, Orbitals* orbitals, Logger *log ) {
 }
 
 Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
-
+  
     string idft_work_dir = "OR_FILES";
     string edft_work_dir = "OR_FILES";
     string frame_dir =  "frame_" + boost::lexical_cast<string>(top->getDatabaseId());     
@@ -154,9 +154,9 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
     Orbitals _orbitalsA, _orbitalsB;
     Overlap _overlap; 
 
+    Property _job_summary;
+    Property *_job_output = &_job_summary.add("output","");
 
-
-    
      // report back to the progress observer
     Job::JobResult jres = Job::JobResult();
     
@@ -192,6 +192,7 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
             << _job_ID << " ["  << ID_A << ":" << ID_B << "] out of " << 
            (top->NBList()).size()  << flush; 
 
+    
     string _qmpackage_work_dir = (arg_path / idft_work_dir / _package / frame_dir / _pair_dir).c_str();    
     // get the corresponding object from the QMPackageFactory
     QMPackage *_qmpackage =  QMPackages().Create( _package );
@@ -305,8 +306,6 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
    ub::matrix<double> _JAB;
 
    
-   Property _job_summary;
-
    // Orbitals _orbitalsA, _orbitalsB;
 
     int _degAH = 1;
@@ -492,7 +491,6 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
    }
    
    if ( _do_project || _do_extract ) {
-        Property *_job_output = &_job_summary.add("output","");
         Property *_pair_summary = &_job_output->add("pair","");
          string nameA = seg_A->getName();
          string nameB = seg_B->getName();
