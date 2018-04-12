@@ -1,10 +1,11 @@
-libdir=@CMAKE_INSTALL_FULL_LIBDIR@
-includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${prefix}/@LIB@
+includedir=${prefix}/include
 
 Name: libvotca_moo
 Description: moo functions of the votca package
 URL: http://www.votca.org
-Version: @PROJECT_VERSION@
+Version: @VERSION@
 Requires: libvotca_tools
 Libs: -L${libdir} -lvotca_moo
 Libs.private: -lm

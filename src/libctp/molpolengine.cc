@@ -1,4 +1,5 @@
 #include <votca/ctp/molpolengine.h>
+#include <votca/tools/globals.h>
 
 namespace votca {
 namespace ctp {

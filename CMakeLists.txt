@@ -76,8 +76,8 @@ find_package(VOTCA_TOOLS REQUIRED)
 include_directories(${VOTCA_TOOLS_INCLUDE_DIRS})
 find_package(VOTCA_CSG REQUIRED)
 include_directories(${VOTCA_CSG_INCLUDE_DIRS})
-find_package(VOTCA_MOO REQUIRED)
-include_directories(${VOTCA_MOO_INCLUDE_DIRS})
+#find_package(VOTCA_MOO REQUIRED)
+#include_directories(${VOTCA_MOO_INCLUDE_DIRS})
 
 ########################################################################
 # Checks what linear algebra packages are installed                    #
@@ -117,8 +117,10 @@ endforeach(FUNC)
 # Include the following subdirectory # 
 ######################################
 add_subdirectory(include/votca/ctp)
+add_subdirectory(include/votca/moo)
 add_subdirectory(scripts)
 add_subdirectory(src/libctp)
+add_subdirectory(src/libmoo)
 add_subdirectory(src/tools)
 add_subdirectory(share)  
 add_subdirectory(share/man)

@@ -39,8 +39,8 @@
 #include <votca/ctp/qmpair.h>
 #include <votca/ctp/qmnblist.h>
 
-#include <votca/moo/jcalc.h>
-#include <votca/moo/mol_and_orb.h>
+//#include <votca/moo/jcalc.h>
+//#include <votca/moo/mol_and_orb.h>
 
 namespace CSG = votca::csg;
 
