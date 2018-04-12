@@ -8,6 +8,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
   endif()
 
   target_link_libraries(${PROG} votca_ctp votca_moo ${BOOST_LIBRARIES})
+
   install(TARGETS ${PROG} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   if (BUILD_MANPAGES)

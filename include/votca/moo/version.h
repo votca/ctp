@@ -15,9 +15,20 @@
  *
  */
 
-extern "C" {
-   void VotcaMooFromC(){
-     //do nothing - this is just that we have a c function for autotools
-   }
-}
+#ifndef __VOTCA_MOO_VERSION_H
+#define	__VOTCA_MOO_VERSION_H
+
+#include <string>
+/**
+ * \namespace votca::moo
+ * \brief Molecular orbital overlap
+ * 
+ * Classes used for semi-empirical MOO calculations         
+ */
+namespace votca { namespace moo {
+    const std::string & MooVersionStr();
+    void HelpTextHeader(const std::string &tool_name);
+}}
+
+#endif
 
