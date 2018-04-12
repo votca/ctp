@@ -4,7 +4,7 @@ The development of VOTCA is mainly funded by academic research grants.
 If you use this package, please cite the following VOTCA papers:
 
 * _Long-range embedding of molecular ions and excitations in a polarizable molecular environment_
-  C. Poelking, D. Andrienko_
+  C. Poelking, D. Andrienko
   [J. Chem. Theo. Comp. 12, 4516-4523 (2016)](http://dx.doi.org/10.1021/acs.jctc.6b00599).
 
 * _Microscopic simulations of charge transport in disordered organic semiconductors_
