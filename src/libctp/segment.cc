@@ -353,7 +353,6 @@ void Segment::calcPos() {
     _CoM = pos / totWeight;
 }
 
-/*
 void Segment::calcApproxSize(){
     _approxsize=0.0;
     
@@ -388,7 +387,6 @@ void Segment::calcApproxSize(){
     
     return;
 }
-*/
 
 void Segment::Rigidify() {
 
