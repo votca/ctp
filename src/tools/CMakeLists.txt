@@ -7,7 +7,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
      add_executable(${PROG} ${${PROG}_SOURCES})
   endif()
 
-  target_link_libraries(${PROG} votca_ctp votca_moo ${BOOST_LIBRARIES})
+  target_link_libraries(${PROG} votca_ctp ${BOOST_LIBRARIES})
 
   install(TARGETS ${PROG} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -23,7 +23,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
 
   if(ENABLE_TESTING)
     add_test(${PROG}Help ${PROG} --help)
-    set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;moo;csg;ctp;votca")
+    set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;csg;ctp;votca")
   endif(ENABLE_TESTING)
 endforeach(PROG)
 
