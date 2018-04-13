@@ -1,6 +1,3 @@
-// Overload of uBLAS prod function with MKL/GSL implementations
-#include <votca/ctp/votca_ctp_config.h>
-
 #include <votca/ctp/qmmachine.h>
 #include <sys/stat.h>
 #include <boost/format.hpp>

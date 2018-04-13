@@ -19,9 +19,6 @@
 
 #ifndef __VOTCA_CTP_ORBITALS_H
 #define	__VOTCA_CTP_ORBITALS_H
-// Overload of uBLAS prod function with MKL/GSL implementations
-#include <votca/ctp/votca_ctp_config.h>
-
 // #include <votca/ctp/basisset.h>
 // #include <votca/ctp/aobasis.h>
 #include <votca/ctp/qmatom.h>
