@@ -84,7 +84,7 @@ public:
 
     private:
 
-        vec    e12 ;     //  |
+        vec    e12  = 0.0;     //  |
 
         double dDx = 0.0;     //  |
         double dDy = 0.0;     //  |<- Electric displ. fields D_initial - D_final
