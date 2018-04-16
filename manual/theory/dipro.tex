@@ -135,7 +135,7 @@ This then yields an effective Hamiltonian matrix in an orthogonal basis, and its
 
  \begin{figure}[htb]
      \center
-     \includegraphics[width=\linewidth]{fig/idft_flow/schemes_all}
+     \includegraphics[width=\linewidth]{fig/coupling}
      \caption{Schematics of the DIPRO method. (a) General workflow of the projection technique. (b) Strategy of the efficient noCP+noSCF implementation, in which the monomer calculations are performed independently form the dimer configurations (noCP), using the \calc{edft} \calculator. The dimer Hamiltonian is subsequently constructed based on an initial guess formed from monomer orbitals and only diagonalized once (noSCF) before the transfer integral is calculated by projection. This second step is performed by the \calc{idft} \calculator. }
      \label{fig:dipro_scheme}
  \end{figure}

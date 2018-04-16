@@ -44,6 +44,7 @@ ADD_LATEX_DOCUMENT( manual.tex
             ${manual_XML}
             ${manual_FIGURES}
     DEPENDS calculator_refs program_refs xml_refs
+    IMAGE_DIRS fig
     BIBFILES manual.bib
     USE_INDEX
     FORCE_PDF
