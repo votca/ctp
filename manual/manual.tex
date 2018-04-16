@@ -23,16 +23,11 @@
 \usepackage{makeidx}
 \usepackage{palatino}
 \usepackage{sidecap}
-
-
-
+\usepackage{epstopdf} 
 
 \usepackage[tikz]{bclogo}
 % \usepackage[framemethod=tikz]{mdframed}
 \usepackage{lipsum}
-
-
-
 
 \definecolor{bgblue}{RGB}{245,243,253}
 \definecolor{ttblue}{RGB}{91,194,224}
@@ -49,15 +44,14 @@
 \definecolor{invisiblegray}{rgb}{.97,0.97,0.97}
 \definecolor{mygray}{rgb}{0.86,0.86,0.86}
 \usepackage
-[ps2pdf, %dvips, %dvipdf, %or dvips or pdftex 
-pagebackref, %or backref
+[pagebackref, %or backref
 breaklinks,
 colorlinks=true,
 linkcolor=webgreen, %defined below
 filecolor=webbrown, %defined below
 citecolor=webgreen, %defined below
 urlcolor=magenta,
-pdftitle={VOTCA-CT manual},
+pdftitle={VOTCA-CTP manual},
 pdfauthor={},
 pdfsubject={VOTCA-CTP},
 pdfkeywords={charge transport organic semiconductors},
@@ -65,7 +59,6 @@ bookmarksopen=false,
 pdfpagemode=UseNone]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage[hyphenbreaks]{breakurl}
-%\pdfcompresslevel=9
 
 \usepackage[T1]{fontenc}
 %\usepackage{times}
@@ -76,20 +69,15 @@ pdfpagemode=UseNone]{hyperref}
 \usepackage{braket}
 \usepackage{amssymb}
 
-%%%%%%%% TESTING
-
-
 \usepackage{tikz}
 \usetikzlibrary{shapes,shadows,arrows}
 \usetikzlibrary{positioning}
 
 
-
-
-
 \makeindex
 
 \input{newcommands}
+%\input{hgid}
 
 \begin{document}
 
@@ -130,33 +118,33 @@ pdfpagemode=UseNone]{hyperref}
 \chapter{Theoretical background}
 \label{sec:theory}
 
-\input{theory/workflow}	
-\input{theory/morphology}
-\input{theory/fragments}
-\input{theory/neighborlist}
-\input{theory/reorganization_energy}
-\input{theory/energetic_disorder}
-\input{theory/gdma}
-\input{theory/thole}
-\input{theory/electronic_couplings}
+%\input{theory/workflow}	
+%\input{theory/morphology}
+%\input{theory/fragments}
+%\input{theory/neighborlist}
+%\input{theory/reorganization_energy}
+%\input{theory/energetic_disorder}
+%\input{theory/gdma}
+%\input{theory/thole}
+%\input{theory/electronic_couplings}
 \input{theory/rate}
-\input{theory/kmc}
-\input{theory/nondispersive}
-\input{theory/analysis}
-\input{theory/correlations}
+%\input{theory/kmc}
+%\input{theory/nondispersive}
+%\input{theory/analysis}
+%\input{theory/correlations}
 %\input{theory/idft}
 
 \chapter{Input and output files}
 \label{sec:io}
-\input{input/topology_atomistic}
-\input{input/topology_coarsegrained}
+%\input{input/topology_atomistic}
+%\input{input/topology_coarsegrained}
 
 %\input{input/topology_conjseg}
-\input{input/orbitals_zindo}
-\input{input/header_edft}
-\input{input/header_idft}
-\input{input/output_dft}
-\input{input/statefile}
+%\input{input/orbitals_zindo}
+%\input{input/header_edft}
+%\input{input/header_idft}
+%\input{input/output_dft}
+%\input{input/statefile}
 
 \input{reference/reference}
 
@@ -166,6 +154,6 @@ pdfpagemode=UseNone]{hyperref}
 \nolinenumbers
 
 \bibliographystyle{short}
-{\footnotesize \bibliography{literature_short} }
+{\footnotesize \bibliography{manual} }
 
 \end{document} 

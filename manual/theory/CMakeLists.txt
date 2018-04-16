@@ -1,0 +1,17 @@
+list(APPEND manual_SOURCES
+    "theory/analysis.tex"
+    "theory/correlations.tex"
+    "theory/dft.tex"
+    "theory/dipro.tex"
+    "theory/introduction.tex"
+    "theory/electronic_couplings.tex"
+    "theory/fragments.tex"
+    "theory/gdma.tex"
+    "theory/kmc.tex"
+    "theory/lowdin.tex"
+    "theory/moo.tex"
+    "theory/rate.tex"
+    "theory/reorganization_energy.tex"
+    "theory/thole.tex"
+    "theory/workflow.tex"
+)

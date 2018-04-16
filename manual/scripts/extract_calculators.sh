@@ -2,7 +2,7 @@
 
 VOTCASHARE="$(csg_call --show-share)"
 
-texfile="$PWD/calculators.tex"
+texfile=$1
 rm -f $texfile; touch $texfile
 
 for package in ctp_tools ctp_run ctp_parallel ctp_dump kmc_run; do
