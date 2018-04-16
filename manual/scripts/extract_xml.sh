@@ -11,5 +11,6 @@ echo ${xmls}
 for xml in $xmls; do
 	echo ${xml} "--" ${tex_dir}/${xml}.tex
 	name=$(basename ${xml})
-	votca_property --file ${xml} --format TEX --level 2 >> ${tex_dir}/${name}.tex
+	rm ${tex_dir}/${name}.tex
+	votca_property --file ${xml} --format TEX --level 2 > ${tex_dir}/${name}.tex
 done
