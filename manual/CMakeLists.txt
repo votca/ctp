@@ -12,7 +12,7 @@ include(theory/CMakeLists.txt) # description files
 #include(reference/programs/CMakeLists.txt) # 
 include(reference/xml/CMakeLists.txt)
 include(fig/CMakeLists.txt)
-
+include(input/CMakeLists.txt)
 
 
 # generates tex refernce for all calculators 
@@ -27,6 +27,13 @@ add_custom_command(OUTPUT program_refs
     ARGS   ${output_dir}/reference/programs.tex
 )
 
+# generates tex reference for xml files
+add_custom_command(OUTPUT xml_refs
+    COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_xml.sh
+    ARGS   ${CMAKE_CURRENT_SOURCE_DIR}/input/dcv2t ${output_dir}/reference/xml
+)
+
+
 ADD_LATEX_DOCUMENT( manual.tex
     INPUTS  newcommands.tex 
             titlepage.tex 
@@ -36,7 +43,7 @@ ADD_LATEX_DOCUMENT( manual.tex
             ${manual_PROGRAMS}
             ${manual_XML}
             ${manual_FIGURES}
-    DEPENDS calculator_refs program_refs
+    DEPENDS calculator_refs program_refs xml_refs
     BIBFILES manual.bib
     USE_INDEX
     FORCE_PDF
