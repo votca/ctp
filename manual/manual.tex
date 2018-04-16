@@ -29,20 +29,6 @@
 % \usepackage[framemethod=tikz]{mdframed}
 \usepackage{lipsum}
 
-\definecolor{bgblue}{RGB}{245,243,253}
-\definecolor{ttblue}{RGB}{91,194,224}
-% \renewcommand\bcStyleTitre[1]{\large\textcolor{ttblue}{#1}}
-
-%\mdfdefinestyle{mystyle}{%
-%rightline=true,innerleftmargin=10,innerrightmargin=10,
-%outerlinewidth=3pt,topline=false,rightline=true,bottomline=false,
-%skipabove=\topsep,skipbelow=\topsep
-%}
-
-\definecolor{webgreen}{rgb}{0,.5,0}
-\definecolor{webbrown}{rgb}{.6,0,0}
-\definecolor{invisiblegray}{rgb}{.97,0.97,0.97}
-\definecolor{mygray}{rgb}{0.86,0.86,0.86}
 \usepackage
 [pagebackref, %or backref
 breaklinks,
@@ -57,6 +43,7 @@ pdfsubject={VOTCA-CTP},
 pdfkeywords={charge transport organic semiconductors},
 bookmarksopen=false,
 pdfpagemode=UseNone]{hyperref}
+
 \usepackage[all]{hypcap}
 \usepackage[hyphenbreaks]{breakurl}
 
@@ -73,6 +60,12 @@ pdfpagemode=UseNone]{hyperref}
 \usetikzlibrary{shapes,shadows,arrows}
 \usetikzlibrary{positioning}
 
+\definecolor{bgblue}{RGB}{245,243,253}
+\definecolor{ttblue}{RGB}{91,194,224}
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{invisiblegray}{rgb}{.97,0.97,0.97}
+\definecolor{mygray}{rgb}{0.86,0.86,0.86}
 
 \makeindex
 
@@ -138,7 +131,6 @@ input{theory/rate}
 \label{sec:io}
 \input{input/topology_atomistic}
 \input{input/topology_coarsegrained}
-
 \input{input/topology_conjseg}
 \input{input/orbitals_zindo}
 \input{input/header_edft}
