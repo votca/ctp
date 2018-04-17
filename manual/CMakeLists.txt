@@ -46,7 +46,7 @@ add_custom_command(OUTPUT xml_refs
 )
 
 
-ADD_LATEX_DOCUMENT( manual.tex
+ADD_LATEX_DOCUMENT( ctp-manual.tex
     INPUTS  newcommands.tex 
             titlepage.tex 
             reference/reference.tex 
@@ -56,11 +56,12 @@ ADD_LATEX_DOCUMENT( manual.tex
             ${manual_XML}
             ${manual_FIGURES}
     DEPENDS calculator_refs program_refs xml_refs gitid_tex
+    TARGET_NAME ctp-manual
     IMAGE_DIRS fig
     BIBFILES manual.bib
     USE_INDEX
     FORCE_PDF
 )
 
-add_custom_target(manual_pdf ALL DEPENDS manual.pdf)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/manual.pdf DESTINATION ${CMAKE_INSTALL_DOCDIR})
+add_custom_target(ctp-manual_pdf ALL DEPENDS ctp-manual.pdf)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ctp-manual.pdf DESTINATION ${CMAKE_INSTALL_DOCDIR})
