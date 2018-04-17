@@ -347,12 +347,12 @@ ${OBJECTDIR}/_ext/1ce03da5/xmapper.o: nbproject/Makefile-${CND_CONF}.mk ../../sr
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce03da5/xmapper.o ../../src/libctp/xmapper.cc
 
-${OBJECTDIR}/_ext/2aac7050/Md2QmEngine.o: ../../src/tools/Md2QmEngine.cc nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/_ext/2aac7050/Md2QmEngine.o: nbproject/Makefile-${CND_CONF}.mk ../../src/tools/Md2QmEngine.cc 
 	${MKDIR} -p ${OBJECTDIR}/_ext/2aac7050
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2aac7050/Md2QmEngine.o ../../src/tools/Md2QmEngine.cc
 
-${OBJECTDIR}/_ext/2aac7050/moo_overlap.o: ../../src/tools/moo_overlap.cc nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/_ext/2aac7050/moo_overlap.o: nbproject/Makefile-${CND_CONF}.mk ../../src/tools/moo_overlap.cc 
 	${MKDIR} -p ${OBJECTDIR}/_ext/2aac7050
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2aac7050/moo_overlap.o ../../src/tools/moo_overlap.cc
