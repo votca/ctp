@@ -2,12 +2,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 INCLUDE(${CMAKE_MODULE_PATH}/UseLATEX.cmake)
-latex_get_output_path(output_dir)
+latex_get_output_path(CMAKE_BUILD_DIR)
 
 MESSAGE( STATUS "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR} ) 
 MESSAGE( STATUS "CMAKE_MODULE_PATH: " ${CMAKE_MODULE_PATH} ) 
 MESSAGE( STATUS "MANUAL_SOURCES: " ${manual_SOURCES} ) 
-MESSAGE( STATUS "OUTPUT_PATH: " ${output_dir} ) 
+MESSAGE( STATUS "OUTPUT_PATH: " ${CMAKE_BUILD_DIR} ) 
 
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
@@ -22,7 +22,6 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitid.tex)
 add_custom_command(OUTPUT gitid_tex DEPENDS ctp-gitid)
 
 include(theory/CMakeLists.txt)        # manual_SOURCES
-include(reference/xml/CMakeLists.txt) # manual_PROGRAMS
 include(fig/CMakeLists.txt)           # manual_FIGURES
 include(input/CMakeLists.txt)         # manual_XML
 
@@ -30,20 +29,20 @@ include(input/CMakeLists.txt)         # manual_XML
 # generates tex refernce for all calculators 
 add_custom_command(OUTPUT calculator_refs
     COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_calculators.sh 
-    ARGS   ${output_dir}/reference/calculators.tex
+    ARGS   ${CMAKE_BUILD_DIR}/reference/calculators.tex
 )
 
 # generates tex reference for all programs
 add_custom_command(OUTPUT program_refs
     COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_programs.sh
-    ARGS   ${output_dir}/reference/programs.tex
+    ARGS   ${CMAKE_BUILD_DIR}/reference/programs.tex
 )
 
 # generates tex reference for xml files
-add_custom_command(OUTPUT xml_refs
-    COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_xml.sh
-    ARGS   ${CMAKE_CURRENT_SOURCE_DIR}/input/dcv2t ${output_dir}/reference/xml
-)
+#add_custom_command(OUTPUT xml_refs
+#    COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_xml.sh
+#    ARGS   ${CMAKE_CURRENT_SOURCE_DIR}/input/dcv2t ${CMAKE_BUILD_DIR}/reference/xml
+#)
 
 
 ADD_LATEX_DOCUMENT( ctp-manual.tex
@@ -55,7 +54,7 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
             ${manual_PROGRAMS}
             ${manual_XML}
             ${manual_FIGURES}
-    DEPENDS calculator_refs program_refs xml_refs gitid_tex
+    DEPENDS calculator_refs program_refs gitid_tex
     TARGET_NAME ctp-manual
     IMAGE_DIRS fig
     BIBFILES manual.bib
