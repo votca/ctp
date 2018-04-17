@@ -21,15 +21,4 @@ list(APPEND manual_SOURCES
   "input/qmpackage_headers/nwchem_pair.xml"
   "input/qmpackage_headers/nwchem_pair_scf.xml"
   "input/qmpackage_headers/nwchem_idft.xml"
-  
  )
-
-#  "gaussian_edft.xml"
-#  "gaussian_idft.xml"  
-#  "nwchem_edft.xml"  
-#  "nwchem_idft.xml"  
-#  "nwchem_pair_scf.xml"  
-#  "nwchem_pair.xml" 
-#  "turbomole_edft.xml"
-#  "turbomole_idft.xml"  
-#  "turbomole_pair_scf.xml"

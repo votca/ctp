@@ -125,4 +125,9 @@ add_subdirectory(src/libmoo)
 add_subdirectory(src/tools)
 add_subdirectory(share)  
 add_subdirectory(share/man)
-add_subdirectory(manual)
+
+option(BUILD_MANUAL "Build manual" OFF)
+if(BUILD_MANUAL)
+  add_subdirectory(manual)
+endif()
+
