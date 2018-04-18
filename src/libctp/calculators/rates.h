@@ -25,9 +25,16 @@
 #include <math.h>
 #include <cmath>
 #include <complex>
-//#include <boost/math/special_functions/gamma.hpp>
 
 namespace votca { namespace ctp {
+
+/**
+* \brief Charge hopping rates
+*
+* Evaluates Marcus, Jortner, or Weiss-Dorsey rates
+* and stores them to the sql database
+* *
+*/
 
 class Rates : public PairCalculator2
 {
@@ -68,25 +75,6 @@ private:
     int Factorial(int i);
 
 };
-
-/* complex <double> cgamma (complex <double> argument)
-{   // complex result of Gamma(z) with complex z
-
-    // calc log(Gamma(z)) then exp^()
-    complex<double> result;
-    gsl_sf_result result_logradius;
-    gsl_sf_result result_phi;
-    gsl_sf_lngamma_complex_e(real(argument),imag(argument), &result_logradius, &result_phi);
-    double radius = result_logradius.val;
-    radius = exp(radius);
-    double phi = result_phi.val;
-    result  = polar(radius,phi);
-    // cout << "Complex Gamma functions not supported by MKL " << endl;
-    // exit(1);
-    return result;
-} */
-
-
 
 complex<double> ccgamma(complex<double> z,int OPT)
 {
@@ -372,18 +360,6 @@ void Rates::EvaluatePair(Topology *top, QMPair *qmpair) {
     pair_has_s = qmpair->isPathCarrier(+2);
     pair_has_t = qmpair->isPathCarrier(+3);
 
-//    try {
-//        pair_has_e = _seg_has_e.at(segName1) && _seg_has_e.at(segName2);
-//        pair_has_h = _seg_has_h.at(segName1) && _seg_has_h.at(segName2);
-//    }
-//    catch (out_of_range) {
-//        cout << endl << "... ... WARNING: No energy information for pair ["
-//                     << segName1 << ", " << segName2 << "]. "
-//                     << "Skipping... " << endl;
-//
-//        return;
-//    }
-
     if (pair_has_e) {
         this->CalculateRate(top, qmpair, -1);
     }
@@ -413,7 +389,7 @@ void Rates::CalculateRate(Topology *top, QMPair *qmpair, int state) {
 
     double rate_symm12 = 0;
     double rate_symm21 = 0;
-    //double measure = 0;
+
     double reorg12=0;
     double reorg21=0;
     double dG_Site=0;
