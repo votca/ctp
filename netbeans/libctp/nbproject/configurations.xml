@@ -232,6 +232,35 @@
       <itemPath>../../include/votca/ctp/xjob.h</itemPath>
       <itemPath>../../include/votca/ctp/xmapper.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="f5" displayName="Manual" projectFiles="true" kind="ROOT">
+      <logicalFolder name="f1" displayName="theory" projectFiles="true" kind="ROOT">
+        <itemPath>../../manual/theory/CMakeLists.txt</itemPath>
+        <itemPath>../../manual/theory/analysis.tex</itemPath>
+        <itemPath>../../manual/theory/correlations.tex</itemPath>
+        <itemPath>../../manual/theory/dft.tex</itemPath>
+        <itemPath>../../manual/theory/dipro.tex</itemPath>
+        <itemPath>../../manual/theory/electronic_couplings.tex</itemPath>
+        <itemPath>../../manual/theory/energetic_disorder.tex</itemPath>
+        <itemPath>../../manual/theory/fragments.tex</itemPath>
+        <itemPath>../../manual/theory/gdma.tex</itemPath>
+        <itemPath>../../manual/theory/introduction.tex</itemPath>
+        <itemPath>../../manual/theory/kmc.tex</itemPath>
+        <itemPath>../../manual/theory/lowdin.tex</itemPath>
+        <itemPath>../../manual/theory/moo.tex</itemPath>
+        <itemPath>../../manual/theory/morphology.tex</itemPath>
+        <itemPath>../../manual/theory/neighborlist.tex</itemPath>
+        <itemPath>../../manual/theory/nondispersive.tex</itemPath>
+        <itemPath>../../manual/theory/rate.tex</itemPath>
+        <itemPath>../../manual/theory/reorganization_energy.tex</itemPath>
+        <itemPath>../../manual/theory/thole.tex</itemPath>
+        <itemPath>../../manual/theory/workflow.tex</itemPath>
+      </logicalFolder>
+      <itemPath>../../manual/CMakeLists.txt</itemPath>
+      <itemPath>../../manual/ctp-manual.tex</itemPath>
+      <itemPath>../../manual/manual.bib</itemPath>
+      <itemPath>../../manual/newcommands.tex</itemPath>
+      <itemPath>../../manual/titlepage.tex</itemPath>
+    </logicalFolder>
     <logicalFolder name="f2" displayName="QMPackages" projectFiles="true">
       <itemPath>../../src/libctp/qmpackages/gaussian.cc</itemPath>
       <itemPath>../../src/libctp/qmpackages/gaussian.h</itemPath>
@@ -514,6 +543,77 @@
       <item path="../../include/votca/ctp/xjob.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/xmapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/CMakeLists.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/ctp-manual.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/manual.bib" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/newcommands.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/CMakeLists.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/analysis.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/correlations.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/dft.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/dipro.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/electronic_couplings.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/energetic_disorder.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/fragments.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/gdma.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/introduction.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/kmc.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/lowdin.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/moo.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/morphology.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/neighborlist.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/nondispersive.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/rate.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/reorganization_energy.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/thole.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/workflow.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1182,6 +1282,77 @@
       <item path="../../include/votca/ctp/xjob.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/xmapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/CMakeLists.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/ctp-manual.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/manual.bib" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/newcommands.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/CMakeLists.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/analysis.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/correlations.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/dft.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/dipro.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/electronic_couplings.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/energetic_disorder.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/fragments.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/gdma.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/introduction.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/kmc.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/lowdin.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/moo.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/morphology.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/neighborlist.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/nondispersive.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/rate.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/reorganization_energy.tex"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../manual/theory/thole.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/theory/workflow.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
       </item>
