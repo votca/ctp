@@ -8,6 +8,15 @@
 
 namespace votca { namespace ctp {
 
+/**
+* \brief Analysis of site energies
+*
+* Evaluates site the histogram of site, its mean and width. 
+* Evaluates site energy differences, their histogram, and width
+* Evaluates spatial correlations of site energies
+*
+*/
+    
 class EAnalyze : public QMCalculator
 {
 public:

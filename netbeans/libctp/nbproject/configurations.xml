@@ -1,30 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f4"
+                   displayName="Applications"
+                   projectFiles="true"
+                   kind="ROOT">
+      <logicalFolder name="f4" displayName="ctp_dump" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="ctp_parallel" projectFiles="true">
+        <itemPath>../../src/libctp/job.cc</itemPath>
+        <itemPath>../../src/libctp/jobapplication.cc</itemPath>
+        <itemPath>../../src/libctp/jobcalculatorfactory.cc</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="ctp_run" projectFiles="true">
+        <itemPath>../../src/libctp/calculatorfactory.cc</itemPath>
+        <itemPath>../../src/libctp/sqlapplication.cc</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="ctp_tools" projectFiles="true">
+        <itemPath>../../src/libctp/toolfactory.cc</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="moo_overlap" projectFiles="true">
+        <itemPath>../../src/tools/moo_overlap.cc</itemPath>
+      </logicalFolder>
+      <itemPath>../../src/libctp/ctpapplication.cc</itemPath>
+    </logicalFolder>
     <logicalFolder name="f1" displayName="Calculators" projectFiles="true">
-      <logicalFolder name="f2" displayName="Calculators" projectFiles="true">
+      <logicalFolder name="f5" displayName="cgpolar" projectFiles="true">
         <itemPath>../../src/libctp/calculators/cgpolar.h</itemPath>
+        <itemPath>../../share/xml/cgpolar.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f7" displayName="coupling" projectFiles="true">
+        <itemPath>../../src/libctp/tools/coupling.h</itemPath>
+        <itemPath>../../share/xml/coupling.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="eanalyze" projectFiles="true">
         <itemPath>../../src/libctp/calculators/eanalyze.h</itemPath>
+        <itemPath>../../share/xml/eanalyze.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f21" displayName="edft" projectFiles="true">
+        <itemPath>../../src/libctp/jobcalculators/edft.h</itemPath>
+        <itemPath>../../share/xml/edft.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="eimport" projectFiles="true">
         <itemPath>../../src/libctp/calculators/eimport.h</itemPath>
+        <itemPath>../../share/xml/eimport.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f8" displayName="einternal" projectFiles="true">
         <itemPath>../../src/libctp/calculators/einternal.h</itemPath>
+        <itemPath>../../share/xml/einternal.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f9" displayName="emultipole" projectFiles="true">
         <itemPath>../../src/libctp/calculators/emultipole.h</itemPath>
+        <itemPath>../../share/xml/emultipole.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f10" displayName="eoutersphere" projectFiles="true">
         <itemPath>../../src/libctp/calculators/eoutersphere.cc</itemPath>
         <itemPath>../../src/libctp/calculators/eoutersphere.h</itemPath>
+        <itemPath>../../share/xml/eoutersphere.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f23" displayName="ewald" projectFiles="true">
+        <itemPath>../../src/libctp/jobcalculators/ewald.h</itemPath>
+        <itemPath>../../share/xml/ewald.xml</itemPath>
+        <itemPath>../../share/xml/pewald3d.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f11" displayName="ewdbgpol" projectFiles="true">
         <itemPath>../../src/libctp/calculators/ewdbgpol.h</itemPath>
-        <itemPath>../../src/libctp/calculators/ianalyze.h</itemPath>
-        <itemPath>../../src/libctp/calculators/iimport.h</itemPath>
-        <itemPath>../../src/libctp/calculators/izindo.h</itemPath>
-        <itemPath>../../src/libctp/calculators/jobwriter.cc</itemPath>
-        <itemPath>../../src/libctp/calculators/jobwriter.h</itemPath>
-        <itemPath>../../src/libctp/calculators/neighborlist.h</itemPath>
-        <itemPath>../../src/libctp/calculators/pairdump.h</itemPath>
-        <itemPath>../../src/libctp/calculators/profile.h</itemPath>
-        <itemPath>../../src/libctp/calculators/rates.h</itemPath>
-        <itemPath>../../src/libctp/calculators/sandbox.h</itemPath>
-        <itemPath>../../src/libctp/calculators/stateserver.h</itemPath>
-        <itemPath>../../src/libctp/calculators/tdump.h</itemPath>
-        <itemPath>../../src/libctp/calculators/vaverage.h</itemPath>
-        <itemPath>../../src/libctp/calculators/zmultipole.h</itemPath>
+        <itemPath>../../share/xml/ewdbgpol.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="Extractors" projectFiles="true">
         <itemPath>../../src/libctp/extractors/energyextractor.h</itemPath>
@@ -35,47 +76,97 @@
         <itemPath>../../src/libctp/extractors/segmentsextractor.h</itemPath>
         <itemPath>../../src/libctp/extractors/trajextractor.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="JobCalculators" projectFiles="true">
-        <itemPath>../../src/libctp/jobcalculators/edft.h</itemPath>
-        <itemPath>../../src/libctp/jobcalculators/ewald.h</itemPath>
+      <logicalFolder name="f2" displayName="ianalyze" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/ianalyze.h</itemPath>
+        <itemPath>../../share/xml/ianalyze.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f22" displayName="idft" projectFiles="true">
         <itemPath>../../src/libctp/jobcalculators/idft.cc</itemPath>
         <itemPath>../../src/libctp/jobcalculators/idft.h</itemPath>
-        <itemPath>../../src/libctp/jobcalculators/qmmm.h</itemPath>
-        <itemPath>../../src/libctp/jobcalculators/xqmultipole.h</itemPath>
+        <itemPath>../../share/xml/idft.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f12" displayName="iimport" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/iimport.h</itemPath>
+        <itemPath>../../share/xml/iimport.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f13" displayName="izindo" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/izindo.h</itemPath>
+        <itemPath>../../share/xml/izindo.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="jobwriter" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/jobwriter.cc</itemPath>
+        <itemPath>../../src/libctp/calculators/jobwriter.h</itemPath>
+        <itemPath>../../share/xml/jobwriter.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f26" displayName="molpol" projectFiles="true">
+        <itemPath>../../src/libctp/tools/molpol.cc</itemPath>
+        <itemPath>../../src/libctp/tools/molpol.h</itemPath>
+        <itemPath>../../src/libctp/calculators/molpol.h</itemPath>
+        <itemPath>../../share/xml/molpol.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f14" displayName="neighborlist" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/neighborlist.h</itemPath>
+        <itemPath>../../share/xml/neighborlist.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="Obsolete" projectFiles="true">
         <itemPath>../../src/libctp/calculators/ecoulomb.h</itemPath>
         <itemPath>../../src/libctp/calculators/emultipole_stdal.h</itemPath>
-        <itemPath>../../src/libctp/calculators/molpol.h</itemPath>
         <itemPath>../../src/libctp/calculators/qmultipole.h</itemPath>
         <itemPath>../../src/libctp/calculators/velocity.h</itemPath>
         <itemPath>../../src/libctp/calculators/xmultipole.h</itemPath>
         <itemPath>../../src/libctp/calculators/xmultipole2.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="Tools" projectFiles="true">
-        <itemPath>../../src/libctp/tools/coupling.h</itemPath>
-        <itemPath>../../src/libctp/tools/molpol.cc</itemPath>
-        <itemPath>../../src/libctp/tools/molpol.h</itemPath>
-        <itemPath>../../src/libctp/tools/pdb2map.h</itemPath>
-        <itemPath>../../src/libctp/tools/qmanalyze.h</itemPath>
-        <itemPath>../../src/libctp/tools/qmsandbox.h</itemPath>
+      <logicalFolder name="f15" displayName="pairdump" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/pairdump.h</itemPath>
+        <itemPath>../../share/xml/pairdump.xml</itemPath>
       </logicalFolder>
+      <logicalFolder name="f27" displayName="pdb2map" projectFiles="true">
+        <itemPath>../../src/libctp/tools/pdb2map.h</itemPath>
+        <itemPath>../../share/xml/pdb2map.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f16" displayName="profile" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/profile.h</itemPath>
+        <itemPath>../../share/xml/profile.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f28" displayName="qmanalyze" projectFiles="true">
+        <itemPath>../../src/libctp/tools/qmanalyze.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f24" displayName="qmmm" projectFiles="true">
+        <itemPath>../../src/libctp/jobcalculators/qmmm.h</itemPath>
+        <itemPath>../../share/xml/qmmm.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="rates" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/rates.h</itemPath>
+        <itemPath>../../share/xml/rates.xml</itemPath>
+        <itemPath>../../share/xml/rates2xml.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f17" displayName="stateserver" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/stateserver.h</itemPath>
+        <itemPath>../../share/xml/stateserver.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f18" displayName="tdump" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/tdump.h</itemPath>
+        <itemPath>../../share/xml/tdump.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f20" displayName="vaverage" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/vaverage.h</itemPath>
+        <itemPath>../../share/xml/vaverage.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f25" displayName="xqmultipole" projectFiles="true">
+        <itemPath>../../src/libctp/jobcalculators/xqmultipole.h</itemPath>
+        <itemPath>../../share/xml/xqmultipole.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f19" displayName="zmultipole" projectFiles="true">
+        <itemPath>../../src/libctp/calculators/zmultipole.h</itemPath>
+        <itemPath>../../share/xml/zmultipole.xml</itemPath>
+      </logicalFolder>
+      <itemPath>../../src/libctp/tools/qmsandbox.h</itemPath>
+      <itemPath>../../src/libctp/calculators/sandbox.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="moo" projectFiles="true">
-        <itemPath>../../include/votca/ctp/moo/basis_set.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/charges.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/crgunit.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/crgunittype.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/fock.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/global.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/jcalc.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/jcalc2.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/mol_and_orb.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/orbitals.h</itemPath>
-        <itemPath>../../include/votca/ctp/moo/units.h</itemPath>
       </logicalFolder>
       <itemPath>../../src/tools/Md2QmEngine.cc</itemPath>
       <itemPath>../../include/votca/ctp/apolarsite.h</itemPath>
@@ -136,8 +227,6 @@
       <itemPath>../../include/votca/ctp/xjob.h</itemPath>
       <itemPath>../../include/votca/ctp/xmapper.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f4" displayName="MOO" projectFiles="true">
-    </logicalFolder>
     <logicalFolder name="f2" displayName="QMPackages" projectFiles="true">
       <itemPath>../../src/libctp/qmpackages/gaussian.cc</itemPath>
       <itemPath>../../src/libctp/qmpackages/gaussian.h</itemPath>
@@ -153,18 +242,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="Applications" projectFiles="true">
-        <itemPath>../../src/libctp/ctpapplication.cc</itemPath>
-        <itemPath>../../src/libctp/jobapplication.cc</itemPath>
-        <itemPath>../../src/tools/moo_overlap.cc</itemPath>
-        <itemPath>../../src/libctp/sqlapplication.cc</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="Factories" projectFiles="true">
-        <itemPath>../../src/libctp/calculatorfactory.cc</itemPath>
         <itemPath>../../src/libctp/extractorfactory.cc</itemPath>
-        <itemPath>../../src/libctp/jobcalculatorfactory.cc</itemPath>
         <itemPath>../../src/libctp/qmpackagefactory.cc</itemPath>
-        <itemPath>../../src/libctp/toolfactory.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Topology" projectFiles="true">
         <itemPath>../../src/libctp/fragment.cc</itemPath>
@@ -180,8 +260,6 @@
       <itemPath>../../src/libctp/ewald3d.cc</itemPath>
       <itemPath>../../src/libctp/ewaldactor.cc</itemPath>
       <itemPath>../../src/libctp/ewaldnd.cc</itemPath>
-      <itemPath>../../src/libctp/hgversion.h</itemPath>
-      <itemPath>../../src/libctp/job.cc</itemPath>
       <itemPath>../../src/libctp/molpolengine.cc</itemPath>
       <itemPath>../../src/libctp/orbitals.cc</itemPath>
       <itemPath>../../src/libctp/overlap.cc</itemPath>
@@ -210,59 +288,29 @@
       <itemPath>../../src/libctp/xmapper.cc</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="XML" projectFiles="true">
-      <itemPath>../../share/xml/cgpolar.xml</itemPath>
-      <itemPath>../../share/xml/coupling.xml</itemPath>
-      <itemPath>../../share/xml/dft.xml</itemPath>
-      <itemPath>../../share/xml/eanalyze.xml</itemPath>
-      <itemPath>../../share/xml/edft.xml</itemPath>
-      <itemPath>../../share/xml/eimport.xml</itemPath>
-      <itemPath>../../share/xml/einternal.xml</itemPath>
-      <itemPath>../../share/xml/emultipole.xml</itemPath>
       <itemPath>../../share/xml/energy2xml.xml</itemPath>
-      <itemPath>../../share/xml/eoutersphere.xml</itemPath>
-      <itemPath>../../share/xml/ewald.xml</itemPath>
-      <itemPath>../../share/xml/ewdbgpol.xml</itemPath>
-      <itemPath>../../share/xml/ianalyze.xml</itemPath>
-      <itemPath>../../share/xml/idft.xml</itemPath>
-      <itemPath>../../share/xml/iimport.xml</itemPath>
       <itemPath>../../share/xml/integrals2xml.xml</itemPath>
-      <itemPath>../../share/xml/izindo.xml</itemPath>
-      <itemPath>../../share/xml/jobwriter.xml</itemPath>
       <itemPath>../../share/xml/log2mps.xml</itemPath>
       <itemPath>../../share/xml/map.xml</itemPath>
-      <itemPath>../../share/xml/molpol.xml</itemPath>
-      <itemPath>../../share/xml/neighborlist.xml</itemPath>
       <itemPath>../../share/xml/occupations2xml.xml</itemPath>
       <itemPath>../../share/xml/options.xml</itemPath>
-      <itemPath>../../share/xml/pairdump.xml</itemPath>
       <itemPath>../../share/xml/pairs2xml.xml</itemPath>
-      <itemPath>../../share/xml/pdb2map.xml</itemPath>
       <itemPath>../../share/xml/pdb2top.xml</itemPath>
-      <itemPath>../../share/xml/pewald3d.xml</itemPath>
       <itemPath>../../share/xml/pmultipole.xml</itemPath>
-      <itemPath>../../share/xml/profile.xml</itemPath>
       <itemPath>../../share/xml/ptopreader.xml</itemPath>
       <itemPath>../../share/xml/qmanalyze.xml</itemPath>
-      <itemPath>../../share/xml/qmmm.xml</itemPath>
-      <itemPath>../../share/xml/rates.xml</itemPath>
-      <itemPath>../../share/xml/rates2xml.xml</itemPath>
       <itemPath>../../share/xml/sandbox.xml</itemPath>
       <itemPath>../../share/xml/segments.xml</itemPath>
       <itemPath>../../share/xml/segments2xml.xml</itemPath>
-      <itemPath>../../share/xml/stateserver.xml</itemPath>
-      <itemPath>../../share/xml/tdump.xml</itemPath>
       <itemPath>../../share/xml/testsuite.xml</itemPath>
       <itemPath>../../share/xml/trajectory2pdb.xml</itemPath>
-      <itemPath>../../share/xml/vaverage.xml</itemPath>
       <itemPath>../../share/xml/xmultipole.xml</itemPath>
-      <itemPath>../../share/xml/xqmultipole.xml</itemPath>
-      <itemPath>../../share/xml/zmultipole.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>../../README</itemPath>
+      <itemPath>../../README.md</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -342,58 +390,6 @@
       <item path="../../include/votca/ctp/molecule.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/molpolengine.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/basis_set.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/charges.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/crgunit.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/crgunittype.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/fock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/global.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/jcalc.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/jcalc2.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/mol_and_orb.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/orbitals.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/units.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -534,80 +530,9 @@
       </item>
       <item path="../../include/votca/ctp/xmapper.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../manual/CMakeLists.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/manual.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/newcommands.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/CMakeLists.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/analysis.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/correlations.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/dft.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/dipro.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/electronic_couplings.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/energetic_disorder.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/fragments.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/gdma.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/introduction.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/kmc.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/lowdin.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/moo.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/morphology.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/neighborlist.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/nondispersive.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/rate.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/reorganization_energy.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/thole.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/workflow.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/coupling.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/dft.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -897,8 +822,6 @@
             flavor2="0">
       </item>
       <item path="../../src/libctp/fragment.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libctp/hgversion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/job.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -1143,58 +1066,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../include/votca/ctp/moo/basis_set.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/charges.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/crgunit.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/crgunittype.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/fock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/global.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/jcalc.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/jcalc2.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/mol_and_orb.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/orbitals.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/moo/units.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../include/votca/ctp/orbitals.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/overlap.h" ex="false" tool="3" flavor2="0">
@@ -1331,80 +1202,9 @@
       </item>
       <item path="../../include/votca/ctp/xmapper.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../manual/CMakeLists.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/manual.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/newcommands.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/CMakeLists.txt" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/analysis.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/correlations.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/dft.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/dipro.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/electronic_couplings.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/energetic_disorder.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/fragments.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/gdma.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/introduction.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/kmc.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/lowdin.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/moo.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/morphology.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/neighborlist.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/nondispersive.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/rate.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/reorganization_energy.tex"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../manual/theory/thole.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/theory/workflow.tex" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/coupling.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/dft.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1694,8 +1494,6 @@
             flavor2="0">
       </item>
       <item path="../../src/libctp/fragment.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libctp/hgversion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/job.cc" ex="false" tool="1" flavor2="0">
       </item>
