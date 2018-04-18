@@ -966,7 +966,11 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                     {
                         if (ForbiddenEvents(do_oldnode->id,(node[do_oldnode->event[j].destination])->forbiddenevent)==1)
                         {
-                            (node[do_oldnode->event[j].destination])->ClearForbiddenevents();
+                            // Removes the ForbiddenEvent and adjust the escape rate
+                            node[do_oldnode->event[j].destination]->RemoveForbiddenEvent(do_oldnode->id);
+                            //node[do_oldnode->event[j].destination]->ClearForbiddenevents();
+                            //node[do_oldnode->event[j].destination]->escaperate= node[do_oldnode->event[j].destination]->initialescaperate;
+                            
                         }
                     }
                     if(votca::tools::globals::verbose) {cout << "Charge has jumped to segment: " << do_newnode->id+1 << "." << endl;}

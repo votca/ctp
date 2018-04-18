@@ -50,6 +50,7 @@ class Node
         void InitEscapeRate();
         void AddForbiddenEvent(int seg2, double rate12);
         void ClearForbiddenevents();
+        void RemoveForbiddenEvent(int seg2);
 };
 
 
@@ -90,7 +91,16 @@ void Node::InitEscapeRate()
     this->initialescaperate = newEscapeRate;
     // cout << "Escape rate for segment " << this->id << " was set to " << newEscapeRate << endl;
 };
-
+void Node::RemoveForbiddenEvent(int seg2)
+{
+    for(unsigned int i=0; i<this->forbiddenevent.size();i++){
+        if (this->forbiddenevent[i].destination ==seg2){
+            this->escaperate = this->escaperate+this->forbiddenevent[i].rate;
+            this->forbiddenevent.erase(forbiddenevent.begin()+i);
+        }
+    }
+    
+};
 
 void Node::ClearForbiddenevents()
 {
