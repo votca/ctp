@@ -19,23 +19,54 @@ add_custom_target(ctp-gitid COMMAND ${CMAKE_COMMAND}
   -DGIT_EXECUTABLE="${GIT_EXECUTABLE}"
   -P ${CMAKE_MODULE_PATH}/gitid.cmake)
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitid.tex)
-add_custom_command(OUTPUT gitid_tex DEPENDS ctp-gitid)
+add_custom_command(OUTPUT gitid.tex DEPENDS ctp-gitid)
 
 include(theory/CMakeLists.txt)        # manual_SOURCES
 include(fig/CMakeLists.txt)           # manual_FIGURES
 include(input/CMakeLists.txt)         # manual_XML
 
+foreach(prog votca_property)
+  string(TOUPPER "${prog}" PROG)
+  if(TARGET ${prog})
+    set(${PROG} $<TARGET_FILE:${prog}>)
+  endif()
+  find_program(${PROG} ${prog})
+  find_package_handle_standard_args(${PROG} REQUIRED_VARS ${PROG})
+  if(NOT ${PROG}_FOUND)
+    message(FATAL_ERROR "Could not find ${prog}")
+  endif()
+endforeach()
 
+set(CTP_PROGS_FULL)
+foreach(prog ${CTP_PROGS})
+  string(TOUPPER "${prog}" PROG)
+  if(TARGET ${prog})
+    set(${PROG} $<TARGET_FILE:${prog}>)
+  endif()
+  find_program(${PROG} ${prog})
+  find_package_handle_standard_args(${PROG} REQUIRED_VARS ${PROG})
+  if(NOT ${PROG})
+    message(FATAL_ERROR "Could not find ${prog}")
+  endif()
+  set(CTP_PROGS_FULL "${CTP_PROGS_FULL} ${${PROG}}")
+endforeach()
+
+
+set(VOTCASHARE ${CMAKE_CURRENT_SOURCE_DIR}/../share)
 # generates tex refernce for all calculators 
-add_custom_command(OUTPUT calculator_refs
-    COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_calculators.sh 
-    ARGS   ${CMAKE_BUILD_DIR}/reference/calculators.tex
+add_custom_command(OUTPUT ${CMAKE_BUILD_DIR}/reference/calculators.tex
+    COMMAND VOTCASHARE=${VOTCASHARE} VOTCA_PROPERTY=${VOTCA_PROPERTY}
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_calculators.sh
+    ARGS   ${CMAKE_BUILD_DIR}/reference/calculators.tex ${CTP_PROGS_FULL} 
+    DEPENDS ${CTP_PROGS_FULL} ${VOTCA_PROPERTY} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_calculators.sh
 )
 
 # generates tex reference for all programs
-add_custom_command(OUTPUT program_refs
-    COMMAND  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_programs.sh
-    ARGS   ${CMAKE_BUILD_DIR}/reference/programs.tex
+add_custom_command(OUTPUT ${CMAKE_BUILD_DIR}/reference/programs.tex
+    COMMAND VOTCASHARE=${VOTCASHARE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_programs.sh
+    ARGS   ${CMAKE_BUILD_DIR}/reference/programs.tex ${CTP_PROGS_FULL}
+    DEPENDS ${CTP_PROGS_FULL} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_programs.sh
 )
 
 # generates tex reference for xml files
@@ -54,7 +85,7 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
             ${manual_PROGRAMS}
             ${manual_XML}
             ${manual_FIGURES}
-    DEPENDS calculator_refs program_refs gitid_tex
+    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex
     TARGET_NAME ctp-manual
     IMAGE_DIRS fig
     BIBFILES manual.bib
