@@ -1,3 +1,4 @@
+set(CTP_PROGS)
 foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
   file(GLOB ${PROG}_SOURCES ${PROG}*.cc)
 
@@ -20,10 +21,11 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
      add_dependencies(manpages ${PROG}_manpage)
      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROG}.man DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 RENAME ${PROG}.1)
   endif (BUILD_MANPAGES)
+  list(APPEND CTP_PROGS "${PROG}")
 
   if(ENABLE_TESTING)
     add_test(${PROG}Help ${PROG} --help)
     set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;csg;ctp;votca")
   endif(ENABLE_TESTING)
 endforeach(PROG)
-
+set(CTP_PROGS "${CTP_PROGS}" PARENT_SCOPE)

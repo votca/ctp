@@ -126,8 +126,8 @@ add_subdirectory(src/tools)
 add_subdirectory(share)  
 add_subdirectory(share/man)
 
-option(BUILD_MANUAL "Build manual" OFF)
-if(BUILD_MANUAL)
+option(BUILD_CTP_MANUAL "Build manual" OFF)
+if(BUILD_CTP_MANUAL)
   add_subdirectory(manual)
 endif()
 
