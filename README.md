@@ -15,7 +15,7 @@ The development of VOTCA is mainly funded by academic research grants. If you us
   V. Ruehle, A. Lukyanov, F. May, M. Schrader, T. Vehoff, J. Kirkpatrick, B. Baumeier and D. Andrienko,  
   [J. Chem. Theo. Comp. 7, 3335-3345 (2011)](http://dx.doi.org/10.1021/ct200388s)
 
-* _Extracting nondispersive charge carrier mobilities of organic emiconductors from simulations of small systems_,  
+* _Extracting nondispersive charge carrier mobilities of organic semiconductors from simulations of small systems_,  
   A. Lukyanov, D. Andrienko,  
   [Phys. Rev. B, 82, 193202 (2010)](http://dx.doi.org/10.1103/PhysRevB.82.193202)
 
@@ -27,6 +27,9 @@ The development of VOTCA is mainly funded by academic research grants. If you us
   V. Ruehle, C. Junghans, A. Lukyanov, K. Kremer, and D. Andrienko,  
   [J. Chem. Theo. Comp. 5 (12), 3211 (2009)](http://dx.doi.org/10.1021/ct900369w).
 
+* _An approximate method for calculating transfer integrals based on the ZINDO Hamiltonian_,  
+  James Kirkpatrick,  
+  [Int. J. Quantum Chem. 108, 51 (2007)](https://doi.org/10.1002/qua.21378)
 
 In case of questions, please post them in the google discussion group for votca at http://groups.google.com/group/votca-ctp
 
