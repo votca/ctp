@@ -93,5 +93,5 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
     FORCE_PDF
 )
 
-add_custom_target(ctp-manual_pdf ALL DEPENDS ctp-manual.pdf)
+#add_custom_target(ctp-manual_pdf ALL DEPENDS ctp-manual.pdf)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ctp-manual.pdf DESTINATION ${CMAKE_INSTALL_DOCDIR})
