@@ -152,7 +152,7 @@ void Terminal::RunKMC() {
         terminalgraph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
     }
     else {
-        std::cout << "Error: The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::cout;
+        std::cout << "Error: The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::endl;
     }
     
     //terminalgraph.Print();
