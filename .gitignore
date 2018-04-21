@@ -14,7 +14,7 @@ src/tools/*.man
 install_manifest.txt
 
 src/libkmc/libvotca_kmc.so
-src/libkmc/hgversion.h
+src/libkmc/gitversion.h
 src/libkmc/votca_config.h
 src/libkmc/*.pc
 

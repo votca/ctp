@@ -35,12 +35,11 @@
 #include <votca/tools/tokenizer.h>
 #include <votca/tools/globals.h>
 #include <votca/tools/random2.h>
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <cmath> // needed for abs(double)
 #include "node.h"
 
 using namespace std;
-using namespace std::tr1;
 
 namespace votca { namespace kmc {
 
@@ -85,33 +84,6 @@ void progressbar(double fraction)
         std::cout << std::endl;
     }
 }
-
-
-//int OMPinfo() 
-//{
-//    int nthreads=1, tid=0, procs, inpar=0;
-//    printf("\n||\n|| openMP PARALLEL COMPUTATION STATUS:\n");
-//    #pragma omp parallel private(tid)
-//    {
-//        # ifdef _OPENMP
-//        tid = omp_get_thread_num();
-//        if (tid == 0) 
-//        {
-//            procs = omp_get_num_procs();
-//            nthreads = omp_get_num_threads();
-//            inpar = omp_in_parallel();
-//            printf("|| Number of processors = %d\n", procs);
-//            printf("|| Number of threads = %d\n", nthreads);
-//    
-//        }
-//        # endif
-//        if (tid == 0) 
-//        {
-//            printf("|| In parallel? = %d\n||\n", inpar);
-//        }
-//    }
-//    return nthreads;
-//}
 
 
 class KMCMultiple : public KMCCalculator 
@@ -566,7 +538,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << "number of charges: " << numberofcharges << endl;
     cout << "number of nodes: " << node.size() << endl;
     string stopcondition;
-    unsigned long maxsteps;
+    unsigned long maxsteps = 0;
     if(runtime > 100)
     {
         stopcondition = "steps";
@@ -616,7 +588,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << endl << "injection method: " << _injectionmethod << endl;
     double deltaE = 0;
     double energypercarrier;
-    double totalenergy;
+    double totalenergy = 0;
     if(_injectionmethod == "equilibrated")
     {
         vector< double > energy;
@@ -1094,27 +1066,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             cout << endl;
         }
         cout << endl;
-}
-    
-    
- /*   double average_mobilityZ = 0;
-    if (_fieldZ != 0)
-    {
-        cout << endl << "Mobilities (cm^2/Vs): " << endl;
-        for(unsigned int i=0; i<numberofcharges; i++)
-        {
-            //myvec velocity = carrier[i]->dr_travelled/simtime*1e-9;
-            myvec velocity = carrier[i]->dr_travelled/simtime;
-            //double absolute_velocity = sqrt(velocity.x()*velocity.x() + velocity.y()*velocity.y() + velocity.z()*velocity.z());
-            //cout << std::scientific << "    charge " << i+1 << ": mu=" << absolute_velocity/absolute_field*1E4 << endl;
-            cout << std::scientific << "    charge " << i+1 << ": muZ=" << velocity.z()/_fieldZ*1E4 << endl;
-            average_mobilityZ += velocity.z()/_fieldZ*1E4;
-        }
-        average_mobilityZ /= numberofcharges;
-        cout << std::scientific << "  Overall average z-mobility <muZ>=" << average_mobilityZ << endl;
-      }
-    cout << endl;
-*/
+    }
     
     return occP;
 }
@@ -1152,25 +1104,6 @@ bool KMCMultiple::EvaluateFrame()
     
     vector<Node*> node;
     node = KMCMultiple::LoadGraph();
-   /*if(_explicitcoulomb == 2)
-    {
-        cout << endl << "Explicit Coulomb Interaction: ON (Raw Coulomb Interaction)." << endl << "[explicitcoulomb=2]" << endl;
-        KMCMultiple::InitialRates(node);
-        KMCMultiple::InitBoxSize(node);
-    }
-    else
-    {
-        cout << endl << "Explicit Coulomb Interaction: OFF." << endl;
-        if(_rates == "calculate")
-        {
-            cout << "Calculating rates (i.e. rates from state file are not used)." << endl;
-            KMCMultiple::InitialRates(node);
-        }
-        else
-        {
-            cout << "Using rates from state file." << endl;
-        }
-    }*/
     vector<double> occP(node.size(),0.);
 
     occP = KMCMultiple::RunVSSM(node, _runtime, _numberofcharges, RandomVariable);
