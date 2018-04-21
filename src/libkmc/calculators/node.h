@@ -2,7 +2,6 @@
  * author: Kordt
  */
 
-
 #ifndef NODE_H
 #define	NODE_H
 #include <votca/tools/vec.h>
