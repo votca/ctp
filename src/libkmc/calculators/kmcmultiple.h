@@ -131,7 +131,6 @@ public:
 
 protected:
 	    vector<Node*>  LoadGraph();
-	    CoulombMap LoadCoulomb(int numberofnodes);
             vector<double> RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable);// CoulombMap coulomb);
             void WriteOcc(vector<double> occP, vector<Node*> node);
             void InitialRates(vector<Node*> node);
