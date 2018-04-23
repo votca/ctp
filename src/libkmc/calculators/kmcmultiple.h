@@ -35,12 +35,11 @@
 #include <votca/tools/tokenizer.h>
 #include <votca/tools/globals.h>
 #include <votca/tools/random2.h>
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <cmath> // needed for abs(double)
 #include "node.h"
 
 using namespace std;
-using namespace std::tr1;
 
 namespace votca { namespace kmc {
 
@@ -731,7 +730,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << "number of charges: " << numberofcharges << endl;
     cout << "number of nodes: " << node.size() << endl;
     string stopcondition;
-    unsigned long maxsteps;
+    unsigned long maxsteps = 0;
     if(runtime > 100)
     {
         stopcondition = "steps";
@@ -781,7 +780,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << endl << "injection method: " << _injectionmethod << endl;
     double deltaE = 0;
     double energypercarrier;
-    double totalenergy;
+    double totalenergy = 0;
     if(_injectionmethod == "equilibrated")
     {
         vector< double > energy;
@@ -1128,6 +1127,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     
     // calculate mobilities
     //double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
+    // THIS HAS TO BE FIXED FOR THE TENSOR OUTPUT. BUG!
     
     if (_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ != 0.0)
     {
@@ -1186,28 +1186,80 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             cout << endl;
         }
         cout << endl;
-}
+    }
     
     
  /*   double average_mobilityZ = 0;
     if (_fieldZ != 0)
+=======
+    if (_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ != 0.0)
+>>>>>>> 543f0a6fcd7efc02809c8c13544da37832f3b2d8
     {
+        myvec average_mobility = myvec (0.0,0.0,0.0);
+        myvec fieldfactors = myvec (0.0, 0.0, 0.0);
+        if (_fieldX != 0)
+        {
+            fieldfactors.setX(1.0E4/_fieldX);
+        }
+        if (_fieldY != 0)
+        {
+            fieldfactors.setY(1.0E4/_fieldY);
+        }
+        if (_fieldZ != 0)
+        {
+            fieldfactors.setZ(1.0E4/_fieldZ);
+        }
+
         cout << endl << "Mobilities (cm^2/Vs): " << endl;
+
         for(unsigned int i=0; i<numberofcharges; i++)
         {
-            //myvec velocity = carrier[i]->dr_travelled/simtime*1e-9;
             myvec velocity = carrier[i]->dr_travelled/simtime;
-            //double absolute_velocity = sqrt(velocity.x()*velocity.x() + velocity.y()*velocity.y() + velocity.z()*velocity.z());
-            //cout << std::scientific << "    charge " << i+1 << ": mu=" << absolute_velocity/absolute_field*1E4 << endl;
-            cout << std::scientific << "    charge " << i+1 << ": muZ=" << velocity.z()/_fieldZ*1E4 << endl;
-            average_mobilityZ += velocity.z()/_fieldZ*1E4;
+            myvec mobility = elementwiseproduct(velocity, fieldfactors);
+            average_mobility += mobility;
+            cout << std::scientific << "    charge " << i+1 << ": ";
+            if (_fieldX != 0)
+            {
+                cout << std::scientific << "muX=" << mobility.getX() << "   ";
+            }
+            if (_fieldY != 0)
+            {
+                cout << std::scientific << "muY=" << mobility.getY() << "   ";
+            }
+            if (_fieldZ != 0)
+            {
+                cout << std::scientific << "muZ=" << mobility.getZ() << "   ";
+            }
+            cout << endl;
         }
+<<<<<<< HEAD
         average_mobilityZ /= numberofcharges;
         cout << std::scientific << "  Overall average z-mobility <muZ>=" << average_mobilityZ << endl;
       }
     cout << endl;
+
+
+        if (numberofcharges != 0){
+            cout << std::scientific << "  Overall average mobilities ";
+            average_mobility /= numberofcharges;
+            if (_fieldX != 0)
+            {
+                cout << std::scientific << "<muX>=" << average_mobility.getX() << "  ";
+            }
+            if (_fieldY != 0)
+            {
+                cout << std::scientific << "<muY>=" << average_mobility.getY() << "  ";
+            }
+            if (_fieldZ != 0)
+            {
+                cout << std::scientific << "<muZ>=" << average_mobility.getZ() << "  ";
+            }
+            cout << endl;
+        }
+        cout << endl;
 */
-    
+    //}
+
     return occP;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2017 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ bool KMCApplication::EvaluateOptions() {
             //char char_outputfile[1024] = {_outputfile}; // max. 1024 characters for filename
             //char_outputfile = _outputfile;
             cout << "Output into file: " << _outputfile.c_str() << "." << endl;
-            freopen(_outputfile.c_str(),"w",stdout);   
+            //freopen(_outputfile.c_str(),"w",stdout);   
             //cout << "hier ist output" << endl;
         }
         else

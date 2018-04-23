@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.1)
 
 project(votca-kmc)
 
-set(PROJECT_VERSION "1.3-dev")
+set(PROJECT_VERSION "1.5-dev")
 set(PROJECT_CONTACT "bugs@votca.org")
 
 # Cmake modules/macros are in a subdirectory to keep this file cleaner
@@ -17,30 +17,30 @@ enable_language(CXX)
 #####################################################################
 
 include(CheckCXXCompilerFlag)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND CMAKE_VERSION VERSION_LESS "3.6.0")
+  message(FATAL_ERROR "Using the intel compiler requires cmake 3.6 or higher")
+endif()
+
 
 ########################################################################
 # User input options                                                   #
 ########################################################################
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
-if (NOT DEFINED LIB)
-  set(LIB "lib")
-endif(NOT DEFINED LIB)
-if (NOT DEFINED MAN)
-  set(MAN "share/man")
-endif(NOT DEFINED MAN)
-if (NOT DEFINED DATA)
-  set(DATA "share/votca")
-endif(NOT DEFINED DATA)
+include(GNUInstallDirs)
+
+option(ENABLE_TESTING "Build and enable testing stuff" OFF)
+if(ENABLE_TESTING)
+  enable_testing()
+endif(ENABLE_TESTING)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 ########################################################################
 #Find external packages
 ########################################################################
-if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.hg)
-  find_package(Mercurial)
-endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.hg)
-
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
 endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
