@@ -22,6 +22,7 @@
 #include "calculators/static.h"
 #include "calculators/snail.h"
 #include "calculators/terminal.h"
+#include "calculators/excited.h"
 
 namespace votca { namespace kmc {
 
@@ -33,6 +34,7 @@ void KMCCalculatorFactory::RegisterAll(void)
     Calculators().Register<Static>("static"); // precomputed rates
     Calculators().Register<Snail>("snail"); // precomputed rates
     Calculators().Register<Terminal>("terminal"); // source and drain (injection and collection) of carriers
+    Calculators().Register<Excited>("excited"); // excited molecule energy transfer hops depend on distance (foster/dexter)
 }
 
 }}

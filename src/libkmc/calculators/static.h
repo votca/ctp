@@ -136,13 +136,13 @@ void Static::RunKMC() {
         std::cout << "The number of carriers exceeds the number of available nodes!" << std::endl;
         return;
     }
-    
+ 
+    srand(_seed);
+    RandomVariable.init(rand(), rand(), rand(), rand());
+    std::cout << std::endl;
+        
     if(_nelectrons != 0){
-        
-        srand(_seed);
-        RandomVariable.init(rand(), rand(), rand(), rand());
-        std::cout << std::endl;
-        
+ 
         for ( int electron = 1; electron <= _nelectrons; ++electron ) {
             
             // Create electrons
@@ -171,10 +171,6 @@ void Static::RunKMC() {
     }
     
     if(_nholes != 0){
-               
-        srand(_seed);        
-        RandomVariable.init(rand(), rand(), rand(), rand());
-        std::cout << std::endl;
         
         for ( int hole = 1; hole <= _nholes; ++hole ) {
             

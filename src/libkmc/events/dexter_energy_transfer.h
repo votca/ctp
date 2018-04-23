@@ -15,48 +15,66 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ElectronInjection_H
-#define __VOTCA_KMC_ElectronInjection_H
+#ifndef __VOTCA_KMC_DEXTERENERGYTRANSFER_H
+#define __VOTCA_KMC_DEXTERENERGYTRANSFER_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
-#include "carriers/electron.h"
+#include "../carriers/energy.h"
 
 namespace votca { namespace kmc {
     
-class ElectronInjection : public Event {
+class DexterEnergyTransfer : public Event {
     
 public:
 
-    std::string Type(){ return "electron injection"; } ;
-    
-    void Initialize( Electron* _electron, Edge* _edge ) {
-        electron = _electron;
+    std::string Type(){ return "dexter energy transfer"; } ;
+        
+    void Initialize( Energy* _energy, Edge* _edge ) {
+        energy = _energy;
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
-        SetRate( _edge->Rate() );
+        SetRate( _edge->Rate_dexter_energy() );
         //only enable this event if a carrier is provided
         Disable();
-        if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
+        if ( _energy != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
     }
-    
+
     BNode* NodeFrom(){ return edge->NodeFrom(); };
     BNode* NodeTo(){ return edge->NodeTo(); };
     
     // this has to go away eventually
-    void SetElectron( Electron* _electron ){ electron = _electron; };
+    void SetEnergy( Energy* _energy ){ energy = _energy; };
       
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
-        
-        if ( electron->Move(edge) == true ) {
+
+        if ( energy->Move(edge) == true ) {
+
+            if (energy->move_type=="dexter"){state->CountEvent("dexter energy transfer");}
+            else if (energy->move_type=="inject"){state->CountEvent("inject");}
+            else if (energy->move_type=="collect"){state->CountEvent("dexter collect");}
             
             // disable old events
             for (auto& event: disabled_events ) {   
                 event->Disable();     
             }
-            
+            //check all the events connected to the previous node (node_from)
+            for (auto& event: events_to_check) {
+
+                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+                if (event->UnivailableEvent()==true){
+                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+
+                    //if a previous unavailable event is now available (no longer occupied) - Enable it
+                    std::vector<BNode*>::iterator it_to   = energy->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == energy->energy_occupiedNodes.end() ) {
+                        event->Enable();
+                    }
+                } 
+            }
+      
             // update the parent VSSM group
             Event* parent = GetParent();
             parent->ClearSubordinate();
@@ -64,11 +82,10 @@ public:
             // enable new events
             for (auto& event: enabled_events ) {
                 parent->AddSubordinate( event );
-                event->SetElectron(electron);
+                event->SetEnergy(energy);
                 event->Enable();
-            }
-
-            std::cout << "Electron Injected" << std::endl;            
+            }  
+            
         }        
         else 
         { 
@@ -81,22 +98,29 @@ public:
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransferTerminal* electron_transfer = dynamic_cast<ElectronTransferTerminal*>(event);
-            enabled_events.push_back(electron_transfer);
+            DexterEnergyTransfer* dexter_transfer = dynamic_cast<DexterEnergyTransfer*>(event);
+            enabled_events.push_back(dexter_transfer);
         }
     }
-
+        
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronInjection* electron_injection = dynamic_cast<ElectronInjection*>(event);
-            disabled_events.push_back(electron_injection);
+            DexterEnergyTransfer* dexter_transfer = dynamic_cast<DexterEnergyTransfer*>(event);
+            disabled_events.push_back(dexter_transfer);
         }
+    }
+     
+    void CheckEventsOnExecute( std::vector<Event*>* events){
+        for (auto& event: *events){
+            DexterEnergyTransfer* dexter_transfer = dynamic_cast<DexterEnergyTransfer*>(event);
+            events_to_check.push_back(dexter_transfer);
+        }  
     }
     
     virtual void Print(std::string offset="") {
         std::cout << offset << Type();
         if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
-        if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << electron->id(); }
+        if ( energy == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << energy->id(); }
         std::cout 
             << " Node "  << edge->NodeFrom()->id << "->" << edge->NodeTo()->id  
             << " Disabled: " << disabled_events.size() 
@@ -107,11 +131,12 @@ public:
         
 private:
 
-    std::vector<ElectronInjection*> disabled_events;
-    std::vector<ElectronTransferTerminal*> enabled_events;
+    std::vector<DexterEnergyTransfer*> disabled_events;
+    std::vector<DexterEnergyTransfer*> enabled_events;
+    std::vector<DexterEnergyTransfer*> events_to_check;
     
-    // electron to inject
-    Electron* electron;
+    // energy to move
+    Energy* energy;
     Edge* edge;
     votca::tools::vec distance_pbc;
     
@@ -119,4 +144,4 @@ private:
 
 
 }}
-#endif 
+#endif

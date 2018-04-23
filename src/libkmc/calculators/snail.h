@@ -131,8 +131,41 @@ void Snail::RunKMC() {
         std::cout << "The number of electrons exceeds the number of available nodes!" << std::endl;
         return;
     }
-    
+ 
+    srand(_seed);
+    RandomVariable.init(rand(), rand(), rand(), rand());
+    std::cout << std::endl;
+        
     if(_nelectrons != 0){
+ 
+        for ( int electron = 1; electron <= _nelectrons; ++electron ) {
+            
+            // Create electrons
+            Carrier* e_carrier =  state.AddCarrier( "electron" );
+            Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
+            
+            if (_injection_method == "random"){ 
+                int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                BNode* node_from = graph.GetNode(node_id + 1);
+                while (ecarrier->AddNode(node_from)==false){
+                        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                        node_from = graph.GetNode(node_id + 1);
+                    } 
+                if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
+            }
+            
+            else if (_injection_method == "electrode") {
+                BNode* node_from = graph.GetNode(electron);
+                ecarrier->AddNode( node_from );
+                //node_from->PrintNode();  
+            }
+        }
+        
+        std::cout << std::endl;
+        
+    }
+    
+    /*if(_nelectrons != 0){
         for ( int electron = 1; electron <= _nelectrons; ++electron ) {
             
             // Create electrons
@@ -155,7 +188,7 @@ void Snail::RunKMC() {
                 //node_from->PrintNode();  
             }
         }
-    }
+    }*/
       
     VSSM2_SNAIL vssm2;
     vssm2.Initialize( &state, &graph );

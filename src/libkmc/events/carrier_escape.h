@@ -29,7 +29,7 @@ public:
 
     std::string Type(){ return "carrier escape"; } ;
     
-    // electron to move
+    // carrier to move
     Carrier* carrier;
     
     void Initialize( Carrier* _carrier) {

@@ -33,6 +33,9 @@ public:
     
     virtual void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) = 0;
        
+    virtual void progressbar(double fraction) = 0;
+    //virtual void printtime(int seconds_t)= 0;
+    
 protected:
    
     double time;

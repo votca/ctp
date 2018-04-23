@@ -42,7 +42,8 @@ public:
    void Enable(){  enabled = true;  };
    bool Enabled(){ return enabled; };
     
-   void Unavailable() { unavailable = true; enabled = false;};
+   void Unavailable() { unavailable = true; }; //enabled = false;};
+   void Available() { unavailable = false;};//enabled = true;};
    bool UnivailableEvent() { return unavailable;};
 
    double Rate() { return rate; };
@@ -66,18 +67,18 @@ public:
    
    void RemoveExpired() {
        if ( has_expired_subordinates ) {
-           Event* event;
+            Event* event;
             int count = 0;
-           for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ) {
-               event = *it;
-               if ( event->Expired() ) {
-                   count++;
-                   delete event;
-                   subordinate.erase( it );
-               } else {
-                   ++it;
-               }
-           }
+            for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ) {
+                event = *it;
+                if ( event->Expired() ) {
+                    count++;
+                    delete event;
+                    subordinate.erase( it );
+                } else {
+                    ++it;
+                }
+            }
           //std::cout << "Removing expired events: " << count << " deleted" << std::endl;
            has_expired_subordinates = false;
        }
@@ -99,10 +100,11 @@ public:
         
         else
         {
-            double rate = 0.0;
+            double rate_ = 0.0;
             for ( Event::iterator event = begin(); event != end(); ++event  ) {
-                if ( (*event)->Enabled() ) { rate += (*event)->CumulativeRate(); }
+                if ( (*event)->Enabled() ) { rate_ += (*event)->CumulativeRate(); }
             }
+            rate = rate_;
             return rate;
             }        
     }

@@ -52,6 +52,7 @@ public:
     votca::tools::vec position;
 
     int id;
+    int type;
     
     //UnCnN
     double reorg_intorig_hole;
