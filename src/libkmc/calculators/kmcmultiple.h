@@ -6,47 +6,42 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *vector<Node*> 
+ *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * author: Kordt
  */
 
 #ifndef __VOTCA_KMC_MULTIPLE_H
 #define	__VOTCA_KMC_MULTIPLE_H
 
-// #include <votca/kmc/vssmgroup.h>
 #include <vector>
 #include <map>
 #include <iostream>
 #include <fstream>
 #include <string>
-//#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include <votca/tools/vec.h>
 #include <votca/tools/statement.h>
 #include <votca/tools/database.h>
 #include <votca/tools/tokenizer.h>
 #include <votca/tools/globals.h>
 #include <votca/tools/random2.h>
+
 #include <unordered_map>
 #include <cmath> // needed for abs(double)
 #include "node.h"
-
-using namespace std;
 
 namespace votca { namespace kmc {
 
 static double kB   = 8.617332478E-5; // eV/K
 static double hbar = 6.5821192815E-16; // eV*s
-//static double eps0 = 8.85418781762E-12/1.602176565E-19; // e**2/eV/m = 8.85418781762E-12 As/Vm
-//static double epsr = 3.0; // relative material permittivity
 static double Pi   = 3.14159265358979323846;
 
 typedef unordered_map<unsigned long, double> CoulombMap;
@@ -59,9 +54,7 @@ class Chargecarrier
         int id;
         Node *node;
         bool forbidden;
-        //int[40] forbiddenlist;
-        //vector<int> forbiddendests;
-        myvec dr_travelled;
+        votca::tools::vec dr_travelled;
 };
 
 
@@ -89,33 +82,6 @@ void progressbar(double fraction)
 }
 
 
-//int OMPinfo() 
-//{
-//    int nthreads=1, tid=0, procs, inpar=0;
-//    printf("\n||\n|| openMP PARALLEL COMPUTATION STATUS:\n");
-//    #pragma omp parallel private(tid)
-//    {
-//        # ifdef _OPENMP
-//        tid = omp_get_thread_num();
-//        if (tid == 0) 
-//        {
-//            procs = omp_get_num_procs();
-//            nthreads = omp_get_num_threads();
-//            inpar = omp_in_parallel();
-//            printf("|| Number of processors = %d\n", procs);
-//            printf("|| Number of threads = %d\n", nthreads);
-//    
-//        }
-//        # endif
-//        if (tid == 0) 
-//        {
-//            printf("|| In parallel? = %d\n||\n", inpar);
-//        }
-//    }
-//    return nthreads;
-//}
-
-
 class KMCMultiple : public KMCCalculator 
 {
 public:
@@ -127,13 +93,10 @@ public:
 
 protected:
 	    vector<Node*>  LoadGraph();
-	    //CoulombMap LoadCoulomb(int numberofnodes);
             vector<double> RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable);//, CoulombMap coulomb);
             void WriteOcc(vector<double> occP, vector<Node*> node);
             void InitialRates(vector<Node*> node);
-            //void RateUpdateCoulomb(vector<Node*> &node,  vector< Chargecarrier* > &carrier, CoulombMap &coulomb);
             void InitBoxSize(vector<Node*> node);
-
 
             string _injection_name;
             string _injectionmethod;
@@ -148,7 +111,6 @@ protected:
             double _outputtime;
             string _trajectoryfile;
             string _carriertype;
-            int _explicitcoulomb;
             double _temperature;
             string _filename;
             string _outputfile;
@@ -257,13 +219,7 @@ void KMCMultiple::Initialize(const char *filename, Property *options, const char
             _carriertype = "e";
             cout << "Carrier type specification invalid. Setting type to electrons." << endl;
         }
-        if (options->exists("options.kmcmultiple.explicitcoulomb")) {
-	    _explicitcoulomb = options->get("options.kmcmultiple.explicitcoulomb").as<int>();
-	}
-        else {
-	    cout << "WARNING in kmcmultiple: You did not specify if you want explicit Coulomb interaction to be switched on. It will be switched off." << endl;
-            _explicitcoulomb = 0;
-        }
+
         if (options->exists("options.kmcmultiple.temperature")) {
 	    _temperature = options->get("options.kmcmultiple.temperature").as<double>();
 	}
@@ -309,7 +265,7 @@ vector<Node*> KMCMultiple::LoadGraph()
         int newid = stmt->Column<int>(0);
         string name = stmt->Column<string>(1);
         node[i]->id = newid;
-        myvec nodeposition = myvec(stmt->Column<double>(2)*1E-9, stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9); // converted from nm to m
+        votca::tools::vec nodeposition = votca::tools::vec(stmt->Column<double>(2)*1E-9, stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9); // converted from nm to m
         node[i]->position = nodeposition;
         node[i]->reorg_intorig = stmt->Column<double>(5); // UnCnN
         node[i]->reorg_intdest = stmt->Column<double>(6); // UcNcC
@@ -350,7 +306,7 @@ vector<Node*> KMCMultiple::LoadGraph()
 
         double rate12 = stmt->Column<double>(2);
 
-        myvec dr = myvec(stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9, stmt->Column<double>(5)*1E-9); // converted from nm to m
+        votca::tools::vec dr = votca::tools::vec(stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9, stmt->Column<double>(5)*1E-9); // converted from nm to m
         double Jeff2 = stmt->Column<double>(6);
         double reorg_out = stmt->Column<double>(7); 
         node[seg1]->AddEvent(seg2,rate12,dr,Jeff2,reorg_out);
@@ -710,7 +666,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         
     }
     vector< Chargecarrier* > carrier;
-    vector<myvec> startposition(numberofcharges,myvec(0,0,0));
+    vector<votca::tools::vec> startposition(numberofcharges,votca::tools::vec(0,0,0));
     cout << "looking for injectable nodes..." << endl;
     for (unsigned int i = 0; i < numberofcharges; i++)
     {
@@ -733,7 +689,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         }
         // cout << "selected segment " << newCharge->node->id+1 << " which has energy " << newCharge->node->siteenergy << " within the interval [" << energypercarrier-0*deltaE << ", " << energypercarrier+2*deltaE << "]" << endl;
         newCharge->node->occupied = 1;
-        newCharge->dr_travelled = myvec(0,0,0);
+        newCharge->dr_travelled = votca::tools::vec(0,0,0);
         startposition[i] = newCharge->node->position;
         cout << "starting position for charge " << i+1 << ": segment " << newCharge->node->id+1 << endl;
         carrier.push_back(newCharge);
@@ -828,7 +784,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             Node* do_newnode;
             double escaperate = 0;
             Chargecarrier* do_affectedcarrier;
-            double escaperateweight = 0;
+            //double escaperateweight = 0;
             
             double u = 1 - RandomVariable->rand_uniform();
             for(unsigned int i=0; i<numberofcharges; i++)
@@ -848,7 +804,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                 
             //double maxprob = 0.;
             //double newprob = 0.;
-            myvec dr;
+            votca::tools::vec dr;
             if(votca::tools::globals::verbose) {cout << "Charge number " << do_affectedcarrier->id+1 << " which is sitting on segment " << do_oldnode->id+1 << " will escape!" << endl ;}
             //cout<< "TESTCASE 1 : Carrier " << do_affectedcarrier->id << " Segment " << do_oldnode->id<< " Forbitten " << do_oldnode->id << endl;
             if(Forbidden(do_oldnode->id, forbiddennodes) == 1) {continue;}
@@ -1037,7 +993,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << "simulated time " << simtime << " seconds." << endl;
     cout << "runtime: ";
     printtime(time(NULL) - realtime_start); 
-    myvec dr_travelled = myvec (0,0,0);
+    votca::tools::vec dr_travelled = votca::tools::vec (0,0,0);
     cout << endl << "Average velocities (m/s): " << endl;
     for(unsigned int i=0; i<numberofcharges; i++)
     {
@@ -1059,8 +1015,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     //double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
     if (_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ != 0.0)
     {
-        myvec average_mobility = myvec (0.0,0.0,0.0);
-        myvec fieldfactors = myvec (0.0, 0.0, 0.0);
+        votca::tools::vec average_mobility = votca::tools::vec (0.0,0.0,0.0);
+        votca::tools::vec fieldfactors = votca::tools::vec (0.0, 0.0, 0.0);
         if (_fieldX != 0)
         {
             fieldfactors.setX(1.0E4/_fieldX);
@@ -1078,8 +1034,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
 
         for(unsigned int i=0; i<numberofcharges; i++)
         {
-            myvec velocity = carrier[i]->dr_travelled/simtime;
-            myvec mobility = elementwiseproduct(velocity, fieldfactors);
+            votca::tools::vec velocity = carrier[i]->dr_travelled/simtime;
+            votca::tools::vec mobility = elementwiseproduct(velocity, fieldfactors);
             average_mobility += mobility;
             cout << std::scientific << "    charge " << i+1 << ": ";
             if (_fieldX != 0)
