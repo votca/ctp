@@ -39,7 +39,7 @@ public:
     iterator nodes_begin() { return nodes.begin(); }
     iterator nodes_end() { return nodes.end(); } 
     int nodes_size() {return nodes.size(); }
-    
+       
     //iterator over the drain (drain) nodes
     iterator drain_nodes_begin() { return drain_nodes.begin(); }
     iterator drain_nodes_end() { return drain_nodes.end(); } 
@@ -59,7 +59,7 @@ public:
     //void Create_source_electrode(int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z);
     //void Create_drain_electrode(int ncarriers, double drain_electrode_x, double drain_electrode_y, double drain_electrode_z);
     
-    void Load_Graph(std::string filename);
+    void Load_Graph(std::string filename, double temperature);
     //void Load_injectable_collectable(std::string field_direction);
     //void Load_Electrode_Neighbours(std::string filename);
     void Load_Rates(std::string filename);
@@ -68,13 +68,13 @@ public:
     
     void Print();
     
-    // add a node to the vector of lattice nodes
+    // add a node to the vector of nodes
     BNode* AddNode() {
         BNode *node = new BNode(); 
         nodes.push_back( node );
         return node;
     };
-  
+      
     // add a node to the vector of source nodes
     BNode* AddSourceNode() {
         BNode *node = new BNode();
@@ -89,13 +89,13 @@ public:
         return node;
     };
     
-    //selecting a node from the lattice nodes
+    //selecting a node from the nodes
     BNode* GetNode( int id ) {
         std::vector< BNode* >::iterator node = nodes.begin() ;
         while ( (*node)->id != id  ) node++ ;
         return *node;
     };
-    
+       
     // node selection from the source nodes
     BNode* GetSourceNode( int id ) {
         std::vector< BNode* >::iterator node = source_nodes.begin() ;
@@ -113,13 +113,11 @@ public:
 private:
 
     std::vector< BNode* > nodes;
-    //std::vector< BNode* > lattice_nodes;
     std::vector< BNode* > source_nodes;    
     std::vector< BNode* > drain_nodes;
     //std::vector < BNode* > injectable_nodes;
     //std::vector < BNode* > collectable_nodes;
     std::vector< Edge* > edges;
-    
 };
 
 /*void TerminalGraph::Create_source_electrode (int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z){
@@ -139,7 +137,11 @@ private:
 */
 
 //void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z) {
-void TerminalGraph::Load_Graph(std::string filename) {   
+void TerminalGraph::Load_Graph(std::string filename, double temperature) {   
+ 
+    double kB   = 8.617332478E-5; // eV/K
+    double sigma = 0.1; // energetic disorder ----> should be read in
+    
     std::cout << "Loading the graph from " << filename << std::endl;
     
     // initialising the database file
@@ -152,21 +154,21 @@ void TerminalGraph::Load_Graph(std::string filename) {
     {             
         string name = stmt->Column<string>(0);
         
-        if (name == "SSS"){
-            BNode *source_node = AddSourceNode();
-            int id = stmt->Column<int>(1);
-            source_node->id = id+1;           
-        }
-        if (name == "DDD"){
-            BNode *drain_node = AddDrainNode();
-            int id = stmt->Column<int>(1);
-            drain_node->id = id+1;
-        }
+        //if (name == "SSS"){
+            //BNode *source_node = AddSourceNode();
+            //int id = stmt->Column<int>(1);
+            //source_node->id = id+1;             
+        //}
+        //if (name == "DDD"){
+            //BNode *drain_node = AddDrainNode();
+            //int id = stmt->Column<int>(1);
+            //drain_node->id = id+1;
+        //}
 
         BNode *node = AddNode();
         int id = stmt->Column<int>(1);
         node->id = id+1;
-       
+           
         // position in nm
         double x = stmt->Column<double>(2);
         double y = stmt->Column<double>(3);
@@ -191,6 +193,9 @@ void TerminalGraph::Load_Graph(std::string filename) {
         
         node->site_energy_electron = node->eAnion + node->internal_energy_electron;
         node->site_energy_hole = node->eCation + node->internal_energy_hole;
+        
+        node->hi_e = node->eAnion * (-(sigma*sigma)/(2*kB*temperature));
+        node->hi_h = node->eCation * (-(sigma*sigma)/(2*kB*temperature));
         
         //node->PrintNode();   
 
@@ -453,7 +458,9 @@ void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int 
     double kB   = 8.617332478E-5; // eV/K
     double hbar = 6.5821192815E-16; // eV*s
     double Pi   = 3.14159265358979323846;
-    
+    double eps0 = 8.85418781762E-12/1.602176565E-19; // e**2/eV/m = 8.85418781762E-12 As/Vm
+    double epsr = 3.0; // relative material permittivity
+        
     double charge_e = -1.0;
     double charge_h = 1.0;
 
@@ -512,8 +519,7 @@ void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int 
         //2->1
         double dG_Site_e21 = node1->site_energy_electron - node2->site_energy_electron;
         double dG_Site_h21 = node1->site_energy_hole - node2->site_energy_hole;
-
-        
+       
         //Site energy difference and field difference for charge carrier hop (internal + external)
         //1->2
         double dG_e12 = dG_Site_e12 - dG_Field_e;
@@ -546,6 +552,7 @@ void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int 
        
     delete stmt;
     
+    //closed circuit - for the return of carriers from the drain to the source 
     for (std::vector< BNode* >::iterator drain_node = drain_nodes_begin() ; drain_node != drain_nodes_end(); ++drain_node){
         
         BNode* drain = GetDrainNode( (*drain_node)->id );
