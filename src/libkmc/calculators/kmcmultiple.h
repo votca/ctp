@@ -1451,7 +1451,7 @@ bool KMCMultiple::EvaluateFrame()
     {
         cout << endl << "Explicit Coulomb Interaction: ON (Partial Charges)." << endl << "[explicitcoulomb=1]" << endl;
         KMCMultiple::InitialRates(node);
-        coulomb = KMCMultiple::LoadCoulomb(node.size());
+        //coulomb = KMCMultiple::LoadCoulomb(node.size());
     }
     else if(_explicitcoulomb == 2)
     {

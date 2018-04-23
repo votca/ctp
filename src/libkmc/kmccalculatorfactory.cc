@@ -29,12 +29,12 @@ namespace votca { namespace kmc {
 void KMCCalculatorFactory::RegisterAll(void)
 {
     Calculators().Register<KMCMultiple>("kmcmultiple"); // multiple charge carriers
-    Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
-    Calculators().Register<Dynamic>("dynamic"); // dynamic creation of events after a move (slow))
+    //Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
+    //Calculators().Register<Dynamic>("dynamic"); // dynamic creation of events after a move (slow))
     Calculators().Register<Static>("static"); // precomputed rates
-    Calculators().Register<Snail>("snail"); // precomputed rates
-    Calculators().Register<Terminal>("terminal"); // source and drain (injection and collection) of carriers
-    Calculators().Register<Excited>("excited"); // excited molecule energy transfer hops depend on distance (foster/dexter)
+    //Calculators().Register<Snail>("snail"); // precomputed rates
+    //Calculators().Register<Terminal>("terminal"); // source and drain (injection and collection) of carriers
+    //Calculators().Register<Excited>("excited"); // excited molecule energy transfer hops depend on distance (foster/dexter)
 }
 
 }}
