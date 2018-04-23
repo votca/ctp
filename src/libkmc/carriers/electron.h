@@ -46,9 +46,15 @@ public:
        
     virtual bool Move( Edge* edge ) {
         
+        //double distance_x = (edge->NodeTo()->position.getX()-edge->NodeFrom()->position.getX())*(edge->NodeTo()->position.getX()-edge->NodeFrom()->position.getX());
+        //double distance_y = (edge->NodeTo()->position.getY()-edge->NodeFrom()->position.getY())*(edge->NodeTo()->position.getY()-edge->NodeFrom()->position.getY());
+        //double distance_z = (edge->NodeTo()->position.getZ()-edge->NodeFrom()->position.getZ())*(edge->NodeTo()->position.getZ()-edge->NodeFrom()->position.getZ());
+        //double hop_distance = sqrt(distance_x+distance_y+distance_z);
         if(votca::tools::globals::verbose){
         std::cout << "Electron " << id() << ": " << edge->NodeFrom()->id << "->" << edge->NodeTo()->id
-                      << " Node_to position: " << edge->NodeTo()->position
+                      << " Node_to position: " << edge->NodeTo()->position                     
+                      //<< " distance "  << edge->NodeTo()->position - edge->NodeFrom()->position
+                      //<< " distance " << hop_distance
                       << " Occupied (e) Nodes: " ;
                       for(auto& node : e_occupiedNodes) { std::cout << node->id << " "; }
                       std::cout << " Total: " << e_occupiedNodes.size();

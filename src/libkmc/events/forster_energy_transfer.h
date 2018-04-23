@@ -15,29 +15,29 @@
  *
  */
 
-#ifndef __VOTCA_KMC_ELECTRONTRANSFER_H
-#define __VOTCA_KMC_ELECTRONTRANSFER_H
+#ifndef __VOTCA_KMC_FORSTERENERGYTRANSFER_H
+#define __VOTCA_KMC_FORSTERENERGYTRANSFER_H
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
-#include "carriers/electron.h"
+#include "carriers/energy.h"
 
 namespace votca { namespace kmc {
     
-class ElectronTransfer : public Event {
+class ForsterEnergyTransfer : public Event {
     
 public:
 
-    std::string Type(){ return "electron transfer"; } ;
+    std::string Type(){ return "forster energy transfer"; } ;
         
-    void Initialize( Electron* _electron, Edge* _edge ) {
-        electron = _electron;
+    void Initialize( Energy* _energy, Edge* _edge ) {
+        energy = _energy;
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
-        SetRate( _edge->Rate_electron() );
+        SetRate( _edge->Rate_forster_energy() );
         //only enable this event if a carrier is provided
         Disable();
-        if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
+        if ( _energy != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
     }
 
@@ -45,16 +45,30 @@ public:
     BNode* NodeTo(){ return edge->NodeTo(); };
     
     // this has to go away eventually
-    void SetElectron( Electron* _electron ){ electron = _electron; };
+    void SetEnergy( Energy* _energy ){ energy = _energy; };
       
+    
     // changes to be made after this event occurs
     virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
 
-        if ( electron->Move(edge) == true ) {
+        if ( energy->Move(edge) == true ) {
 
+            
+            if (energy->move_type=="forster"){state->CountEvent("forster energy transfer");}
+            if (energy->move_type=="fluorescence collect"){
+                //std::cout << " Fluorescence collected at time: " << state->time  << std::endl;
+                state->CountEvent("fluorescence collect");
+            }
+            if (energy->move_type == "phosphorescence collect"){  
+                //std::cout << " Phosphorescence collected at time: " << state->time  << std::endl;
+                state->CountEvent("phosphorescence collect");            
+            }
+            if (energy->move_type == "inject"){state->CountEvent("inject");}
+            
+            
             // disable old events
             for (auto& event: disabled_events ) {   
-                event->Disable();     
+                event->Disable();   
             }
             //check all the events connected to the previous node (node_from)
             for (auto& event: events_to_check) {
@@ -64,8 +78,8 @@ public:
                     //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
 
                     //if a previous unavailable event is now available (no longer occupied) - Enable it
-                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
-                    if ( it_to == electron->e_occupiedNodes.end() ) {
+                    std::vector<BNode*>::iterator it_to   = energy->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == energy->energy_occupiedNodes.end() ) {
                         event->Enable();
                     }
                 } 
@@ -78,61 +92,64 @@ public:
             // enable new events
             for (auto& event: enabled_events ) {
                 parent->AddSubordinate( event );
-                event->SetElectron(electron);
+                event->SetEnergy(energy);
                 event->Enable();
+
             }   
             
-        }        
+        }  
+        
         else 
         { 
             //Event move is unavailable - already occupied           
             Unavailable();
             //Disable this event
             Disable();            
-        }         
+        }
     };
     
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
-            enabled_events.push_back(et_transfer);
+            ForsterEnergyTransfer* fret = dynamic_cast<ForsterEnergyTransfer*>(event);
+            enabled_events.push_back(fret);
         }
     }
         
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
-            ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
-            disabled_events.push_back(et_transfer);
+            ForsterEnergyTransfer* fret = dynamic_cast<ForsterEnergyTransfer*>(event);
+            disabled_events.push_back(fret);
         }
     }
      
     void CheckEventsOnExecute( std::vector<Event*>* events){
         for (auto& event: *events){
-            ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
-            events_to_check.push_back(et_transfer);
+            ForsterEnergyTransfer* fret = dynamic_cast<ForsterEnergyTransfer*>(event);
+            events_to_check.push_back(fret);
         }  
     }
     
     virtual void Print(std::string offset="") {
         std::cout << offset << Type();
         if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
-        if ( electron == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << electron->id(); }
+        if ( energy == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << energy->id(); }
         std::cout 
             << " Node "  << edge->NodeFrom()->id << "->" << edge->NodeTo()->id  
-            << " Disabled: " << disabled_events.size() 
-            << " Enabled: " << enabled_events.size() 
+            << " Disabling: " << disabled_events.size() 
+            << " Enabling: " << enabled_events.size() 
             << " Rate: " << Rate() 
             << " Cumulative rate: " << CumulativeRate() <<  std::endl;
     }
         
 private:
 
-    std::vector<ElectronTransfer*> disabled_events;
-    std::vector<ElectronTransfer*> enabled_events;
-    std::vector<ElectronTransfer*> events_to_check;
+    //std::vector <State*> FRET_count;
+    std::vector<ForsterEnergyTransfer*> disabled_events;
+    std::vector<ForsterEnergyTransfer*> enabled_events;
+    std::vector<ForsterEnergyTransfer*> events_to_check;
     
-    // electron to move
-    Electron* electron;
+    // energy to move
+    Energy* energy;
     Edge* edge;
     votca::tools::vec distance_pbc;
     
@@ -140,4 +157,4 @@ private:
 
 
 }}
-#endif 
+#endif

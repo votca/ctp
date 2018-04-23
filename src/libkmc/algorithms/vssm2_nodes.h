@@ -41,6 +41,49 @@ class VSSM2_NODES : public Algorithm {
     
 public:
     
+void progressbar(double fraction)
+{
+    int totalbars = 50;
+    std::cout << "\r";
+    for(double bars=0; bars<=(totalbars); bars++)
+    {
+        if(bars<=fraction*(totalbars))
+        {
+            std::cout << "|";
+        }
+        else
+        {
+            std::cout << "-";
+        }
+    }
+    std::cout << "  " << int(fraction*1000)/10. <<" %   ";
+    std::cout << std::flush;
+    if(fraction*100 == 100)
+    {
+        std::cout << std::endl;
+    }
+}
+  
+/*void printtime(int seconds_t)
+{
+    int seconds = seconds_t;
+    int minutes = 0;
+    int hours = 0;
+    while(seconds / 60 >= 1)
+    {
+        seconds -= 60;
+        minutes +=  1;
+    }
+    while(minutes / 60 >= 1)
+    {
+        minutes -= 60;
+        hours +=  1;
+    }
+    char buffer [50];
+    int n = sprintf(buffer, "",hours,minutes,seconds);
+    printf("%s",buffer,n);
+}*/
+
 void Initialize ( State* _state, Graph* _graph ) { 
     
     state = _state;
@@ -202,6 +245,8 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
+    //int realtime_start = time(NULL);
+    
     votca::tools::Random2 RandomVariable;
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
@@ -215,9 +260,12 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
     double time = 0.0;
     int step = 0;
     double trajout = 0.0;
+    //progressbar(0.);
+    
     
     if ( runtime != 0 && nsteps == 0 ){ 
         runtime = runtime;
+        //progressbar(time/runtime);
         std::cout << "Specified runtime (s): " << runtime << std::endl; 
     }
     else if ( nsteps != 0 && runtime == 0 ){ 
@@ -234,30 +282,55 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
     state->Trajectory_write(trajout, trajectoryfile);
     
     trajout = outtime;
+    progressbar(0.);
     
     while ( step < nsteps || time < runtime ){  
         
         //head_event.Print();
-             
-        head_event.OnExecute(state, &RandomVariable );         
+           
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
         step++;
+        clock_t snap = clock();
+        //execute the event after the time update - so the elapsed time is calculated with the correct rate (the rate before the event)
+        head_event.OnExecute(state, &RandomVariable );
         //std::cout << "Time: " << time << std::endl;
         
+        if ( runtime != 0 && nsteps == 0 )
+        {
+            progressbar(time/runtime);
+            //printf("Remaining time: %f seconds ", ((double)(snap - begin)*(int(runtime/(time-1))) / CLOCKS_PER_SEC));
+            //std::cout << "   remaining: " << (double (snap-begin)/CLOCKS_PER_SEC) << std::endl;
+            //printf("    Remaining: %f seconds", (int((runtime/sim_time-1) * (double(snap - begin) /CLOCKS_PER_SEC)))); 
+            //printtime(int((runtime/sim_time-1) * (double(snap - begin)))); 
+        }
+        else
+        {
+            progressbar(double(step)/double(nsteps));
+            //std::cout << "   remaining: " << (double (snap-begin))*(double(nsteps)/double(step)-1);
+            //printf("Remaining time: %f seconds ---  %i steps complete", ((double)(snap - begin)*nsteps/(step-1)) / CLOCKS_PER_SEC, step);
+           
+        }
+    
+        
+    
         if (outtime != 0 && trajout < time )
-        { 
+        {
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
 
-    }
+    } 
+        
+    progressbar(1.);
     state->Print_properties(nelectrons, nholes, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
+    //cout << "runtime: ";
+    //printtime (double(end - begin));
      
 }
 

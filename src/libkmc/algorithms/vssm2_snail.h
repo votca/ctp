@@ -23,7 +23,7 @@
 #include <votca/kmc/algorithm.h>
 #include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
-#include "../events/electron_transfer_snail.h"
+#include "events/electron_transfer_snail.h"
 
 //* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
 //          head
@@ -38,7 +38,30 @@ namespace votca { namespace kmc {
 class VSSM2_SNAIL : public Algorithm {
     
 public:
-    
+
+void progressbar(double fraction)
+{
+    int totalbars = 50;
+    std::cout << "\r";
+    for(double bars=0; bars<double(totalbars); bars++)
+    {
+        if(bars<=fraction*double(totalbars))
+        {
+            std::cout << "|";
+        }
+        else
+        {
+            std::cout << "-";
+        }
+    }
+    std::cout << "  " << int(fraction*1000)/10. <<" %   ";
+    std::cout << std::flush;
+    if(fraction*100 == 100)
+    {
+        std::cout << std::endl;
+    }
+}
+
 
 void Initialize ( State* _state, Graph* _graph ) { 
     
@@ -180,7 +203,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
             }        
         }
         
-        head_event.OnExecute(state, &RandomVariable );         
+               
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
@@ -188,6 +211,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
+        head_event.OnExecute(state, &RandomVariable );  
         
         if (outtime != 0 && trajout < time )
         { 

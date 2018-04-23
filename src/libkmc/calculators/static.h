@@ -117,7 +117,7 @@ void Static::RunKMC() {
         graph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
     }
     else {
-        std::cout << "The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::cout;
+        std::cout << "The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::endl;
     }
  
     //graph.Print();
@@ -136,13 +136,13 @@ void Static::RunKMC() {
         std::cout << "The number of carriers exceeds the number of available nodes!" << std::endl;
         return;
     }
-    
+ 
+    srand(_seed);
+    RandomVariable.init(rand(), rand(), rand(), rand());
+    std::cout << std::endl;
+        
     if(_nelectrons != 0){
-        
-        srand(_seed);
-        RandomVariable.init(rand(), rand(), rand(), rand());
-        std::cout << std::endl;
-        
+ 
         for ( int electron = 1; electron <= _nelectrons; ++electron ) {
             
             // Create electrons
@@ -171,10 +171,6 @@ void Static::RunKMC() {
     }
     
     if(_nholes != 0){
-               
-        srand(_seed);        
-        RandomVariable.init(rand(), rand(), rand(), rand());
-        std::cout << std::endl;
         
         for ( int hole = 1; hole <= _nholes; ++hole ) {
             

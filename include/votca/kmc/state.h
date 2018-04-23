@@ -19,6 +19,7 @@
 #define __VOTCA_KMC_STATE_H_
 
 #include <fstream>
+#include <iostream>
 
 //#include <votca/kmc/event.h>
 //#include <votca/kmc/eventfactory.h>
@@ -71,18 +72,34 @@ public:
     bool Load(std::string filename);
     
     Carrier* AddCarrier( std::string type );
+    void CountEvent (std::string type );
+    
     void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
 
+    //void FRET_output_create();
+    //void FRET_output_write();
+    
     void Trajectory_create( std::string trajectoryfile );
     void Trajectory_write( double time, std::string trajectoryfile);
-    void Print_properties(int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ); 
+    void Print_properties(int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ);
+    void Print_excited_properties ();
    
+    //for counting the different energy transfer events
+    std::vector<int> FRET;
+    std::vector<int> Dexter;
+    std::vector<int> Collect_Fluorescence;
+    std::vector<int> Collect_Phosphorescence;
+    std::vector<int> Collect_Dexter;
+    std::vector<int> Inject;
+    
 private:   
     // Allow serialization to access non-public data members
     friend class boost::serialization::access;   
     std::vector< Carrier* > carriers; 
     std::vector< Carrier* > electrons; 
-    std::vector< Carrier* > holes;    
+    std::vector< Carrier* > holes;
+    std::vector< Carrier* > energy; 
+    
     double time;
     //myvec field;
     
@@ -147,9 +164,43 @@ inline Carrier* State::AddCarrier( std::string type ) {
         carriers.push_back( carrier );
         return carrier;
     }  
+    if (carrier->Type() == "energy" ){
+        carrier->SetID(energy.size()+1);
+        //std::cout << "Excitation with: " << carrier->Type() << " " << carrier->id();
+        energy.push_back( carrier );
+        carriers.push_back( carrier );
+        return carrier;
+    }
     
 }
+// counting energy transfer events
+inline void State::CountEvent( std::string type ) {
 
+    if (type == "forster energy transfer" ){
+        int fret = 1;
+        FRET.push_back( fret );  
+    }
+    else if (type == "dexter energy transfer"){
+        int dexter = 1;
+        Dexter.push_back( dexter );
+    }
+    else if (type == "fluorescence collect"){
+        int collect_flu = 1;
+        Collect_Fluorescence.push_back(collect_flu);
+    }
+    else if(type == "phosphorescence collect"){
+        int collect_phos = 1;
+        Collect_Phosphorescence.push_back(collect_phos);
+    }
+    else if (type == "inject"){
+        int inject = 1;
+        Inject.push_back(inject);
+    }
+    else if (type =="dexter collect"){
+        int dexter_collect = 1;
+        Collect_Dexter.push_back(dexter_collect);
+    }
+}   
 
 inline void State::Trajectory_create(std::string trajectoryfile){
     
@@ -201,39 +252,37 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     votca::tools::vec average_e_distance;
     votca::tools::vec average_h_distance;
     
-    std:: cout << std::endl << "   Carrier Distance Travelled (m): " << std::endl;
+    if (energy.size() != 0){std::cout << std::endl << "    Energy Transfer  " << std::endl;}
     
-    for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
-        carrier = *it_carrier;
+    if (electrons.size() != 0){ 
+        std:: cout << std::endl << "   Electron Distance Travelled (m): " << std::endl;
+        for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
+            carrier = *it_carrier;
         
-        std::cout << "       " << carrier->Type() << " " << carrier->id() 
-                << " on node: " << carrier->GetNode()->id  
-                << "  " << carrier->Distance()*1E-9 << std::endl;
+            std::cout << "       " << carrier->Type() << " " << carrier->id() 
+                    << " on node: " << carrier->GetNode()->id  
+                    << "  " << carrier->Distance()*1E-9 << std::endl;
         
-        average_e_distance += (carrier->Distance()*1E-9); 
-    }
-    
-    std::cout << std::endl;
-    
-    for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
-        carrier = *it_carrier;
-        
-        std::cout << "       " << carrier->Type() << " " << carrier->id() 
-                << " on node: " << carrier->GetNode()->id  
-                << "  " << carrier->Distance()*1E-9 << std::endl;
-
-        average_h_distance += (carrier->Distance()*1E-9);                
-    }
-    
-    std::cout << std::endl;
-    
-    if (electrons.size() != 0){
+            average_e_distance += (carrier->Distance()*1E-9); 
+        }
         average_e_distance /= nelectrons;
+        std::cout << std::endl;
         std::cout << "   Average distance travelled by the electrons: " << average_e_distance << " (m) " << std::endl;
     }
-    if (holes.size() != 0 ){
+    
+    if (holes.size() != 0 ){ 
+        std:: cout << std::endl << "   Hole Distance Travelled (m): " << std::endl;
+        for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
+            carrier = *it_carrier;       
+            std::cout << "       " << carrier->Type() << " " << carrier->id() 
+                    << " on node: " << carrier->GetNode()->id  
+                    << "  " << carrier->Distance()*1E-9 << std::endl;
+
+            average_h_distance += (carrier->Distance()*1E-9);                
+        }
         average_h_distance /= nholes;
-        std::cout << "   Average distance travelled by the holes: " << average_h_distance << " (m) " << std::endl;   
+        std::cout << std::endl;
+        std::cout << "   Average distance travelled by the holes: " << average_h_distance << " (m) " << std::endl;    
     }
     
     votca::tools::vec velocity;
@@ -241,32 +290,33 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     votca::tools::vec average_h_velocity;
 
     
-    std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
-    for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
-        carrier = *it_carrier;
-        velocity = (carrier->Distance()*1E-9/time);
-        std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
-               
-    }
     
-    std::cout << std::endl;
     
-    for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
-        carrier = *it_carrier;
-        velocity = (carrier->Distance()*1E-9/time);
-        std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
-        
-    }
-    
-    std::cout << std::endl;
-    
-    if (electrons.size() != 0){
+    //std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
+    if (electrons.size() != 0){ 
+        std:: cout << std::endl << "   Electron Velocity (m/s): " << std::endl;
+        for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
+            carrier = *it_carrier;
+            velocity = (carrier->Distance()*1E-9/time);
+            std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;              
+        }
+        std::cout << std::endl;
         average_e_velocity = average_e_distance/time;
         std::cout << std::scientific << "   Average velocity of the electrons: " << average_e_velocity << " (m/s) " << std::endl;
+        std::cout << std::endl;       
     }
-    if (holes.size() != 0){
+    
+    if (holes.size() != 0 ){ 
+        std:: cout << std::endl << "   Hole Velocity (m/s): " << std::endl;
+        for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
+            carrier = *it_carrier;
+            velocity = (carrier->Distance()*1E-9/time);
+            std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;       
+        }
+        std::cout << std::endl;
         average_h_velocity = average_h_distance/time;
         std::cout << std::scientific << "   Average velocity of the holes: " << average_h_velocity << " (m/s) " << std::endl;
+        std::cout << std::endl;      
     }
     
     double mobility_x, mobility_y, mobility_z;
@@ -278,22 +328,25 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     else if(fieldY != 0 && fieldX==0 && fieldZ==0) {field_direction = "Y"; field = fieldY;}
     else if(fieldZ != 0 && fieldX==0 && fieldY==0) {field_direction = "Z"; field = fieldZ;}
         
-    std::cout << std::endl << "   The external electric field is in the " << field_direction << " direction " << std::endl; 
+    if ( field_direction == "X" || field_direction == "Y" || field_direction == "Z" ) {
+        
+        std::cout << std::endl << "   The external electric field is in the " << field_direction << " direction " << std::endl;
     
-    std::cout << "   Components of the carrier mobility tensor in the " << field_direction << " direction (m^2/Vs): "<<std::endl;
-    for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
-        carrier = *it_carrier;
-        velocity = (carrier->Distance()*1E-9/time);
+         std::cout << "   Components of the carrier mobility tensor in the " << field_direction << " direction (m^2/Vs): "<<std::endl;
+            for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
+                carrier = *it_carrier;
+                velocity = (carrier->Distance()*1E-9/time);
         
-        mobility_x = (velocity.getX()*field)/(absolute_field*absolute_field);
-        mobility_y = (velocity.getY()*field)/(absolute_field*absolute_field);
-        mobility_z = (velocity.getZ()*field)/(absolute_field*absolute_field);
+                mobility_x = (velocity.getX()*field)/(absolute_field*absolute_field);
+                mobility_y = (velocity.getY()*field)/(absolute_field*absolute_field);
+                mobility_z = (velocity.getZ()*field)/(absolute_field*absolute_field);
         
-        std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
+                std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
 
+            }
+         
+        std::cout << std::endl;
     }
-    
-    std::cout << std::endl;
 
     for ( State::iterator it_carrier = holes.begin(); it_carrier != holes.end(); ++it_carrier ) {
         carrier = *it_carrier;
@@ -304,10 +357,8 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         mobility_z = (velocity.getZ()*field)/(absolute_field*absolute_field);
         
         std::cout << "       " << carrier->Type() << " " << carrier->id() << " ["  << mobility_x << "  " << mobility_y << "  " << mobility_z << "]" << std::endl;
-
+        
     }
-    
-    std::cout << std::endl;
     
     double average_e_mobility = 0;
     double average_e_mobility_x, average_e_mobility_y, average_e_mobility_z;
@@ -316,7 +367,7 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     double average_h_mobility_x, average_h_mobility_y, average_h_mobility_z;
     
     if (electrons.size() != 0){
-
+     
         average_e_mobility_x = average_e_velocity.getX()/field;
         average_e_mobility_y = average_e_velocity.getY()/field;
         average_e_mobility_z = average_e_velocity.getZ()/field;
@@ -325,6 +376,7 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         else if(field = fieldY) {average_e_mobility = average_e_mobility_y;}
         else if(field = fieldZ) {average_e_mobility = average_e_mobility_z;}
          
+        std::cout << std::endl;
         std::cout << "   Average electron mobility in the " << field_direction << " direction: " 
                   << average_e_mobility  << " (m^2/Vs)   ( = " << std::scientific << (average_e_mobility*1E4) << " cm^2/Vs )" << std::endl;  
         std::cout << "   Components of the average electron mobility tensor in the " << field_direction << " direction: " << std::endl;
@@ -343,6 +395,7 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         else if(field = fieldY) {average_h_mobility = average_h_mobility_y;}
         else if(field = fieldZ) {average_h_mobility = average_h_mobility_z;}
          
+        std::cout << std::endl;
         std::cout << "   Average hole mobility in the " << field_direction << " direction: " 
                   << average_h_mobility  << " (m^2/Vs)   ( = " << std::scientific << (average_h_mobility*1E4) << " cm^2/Vs )" << std::endl;  
         std::cout << "   Components of the average hole mobility tensor in the " << field_direction << " direction: " << std::endl;
@@ -351,8 +404,28 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
         std::cout << "       Hole_Mobility_Z" << field_direction << " = " << average_h_mobility_z << " (m^2/Vs) " << std::endl;      
     }
     
-    std::cout << std::endl;  
+    std::cout << std::endl; 
+    
 
+}
+
+inline void State::Print_excited_properties(){
+    
+    std::cout << "Time: " << time << " seconds" << std::endl;
+    //Carrier* carrier;
+    
+    if (energy.size() != 0){
+        std::cout << std::endl << " Energy Transfer complete " << std::endl << std::endl;
+    
+        std::cout << "  Energy injected: " << Inject.size() << std::endl;
+        std::cout << "  Förster Energy Transfer events: " << FRET.size() << std::endl;
+        std::cout << "  Dexter Energy Transfer events: " << Dexter.size() << std::endl;
+        std::cout << "  Dexter Collect events: " << Collect_Dexter.size()/2 << std::endl;
+        //counting collect twice - have to revise - divide by 2 for the moment
+        std::cout << "  Phosphorescence collected: " << Collect_Phosphorescence.size()/2 << std::endl;
+        std::cout << "  Fluorescence collected: " << Collect_Fluorescence.size()/2 << std::endl << std::endl;
+               
+    }
 }
 
 }} 

@@ -54,21 +54,9 @@ public:
 
             // disable old events
             for (auto& event: disabled_events ) {   
-                event->Disable();     
-            }
-            //check all the events connected to the previous node (node_from)
-            for (auto& event: events_to_check) {
-
-                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-                if (event->UnivailableEvent()==true){
-                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-
-                    //if a previous unavailable event is now available (no longer occupied) - Enable it
-                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
-                    if ( it_to == electron->e_occupiedNodes.end() ) {
-                        event->Enable();
-                    }
-                } 
+                event->Disable();
+                //the event has to be cleared as being unavailable, the flag is removed but the event remains disabled
+                event->Available();
             }
             
             // update the parent VSSM group
@@ -80,8 +68,31 @@ public:
                 parent->AddSubordinate( event );
                 event->SetElectron(electron);
                 event->Enable();
-            }   
+            } 
             
+            //check all the events connected to the previous node (node_from)
+            for (auto& event: events_to_check) {
+
+                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+                //if (parent->Enabled() && event->UnivailableEvent()==true ){
+                if (event->UnivailableEvent()==true){
+                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+
+                    //if a previous unavailable event is now available (no longer occupied) - Enable it
+                    std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
+                    std::vector<BNode*>::iterator it_from   = electron->NodeOccupation ( event->NodeFrom() ) ;
+                    
+                    //if node to is free and node from has a carrier 
+                    if ( it_to == electron->e_occupiedNodes.end() ) {
+                        event->Enable();
+                        event->Available();
+                        //std::cout << "***********"  << std::endl;
+                        //std::cout << "Event previously unavailable, now available: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << " Rate: " << event->Rate() << std::endl;
+                        //std::cout << "***********"  << std::endl;
+                    }
+                } 
+            }
+   
         }        
         else 
         { 

@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __VOTCA_KMC_TERMINAL_H
-#define	__VOTCA_KMC_TERMINAL_H
+#ifndef __VOTCA_KMC_EXCITED_H
+#define	__VOTCA_KMC_EXCITED_H
 
 #include <votca/kmc/state.h>
 #include <votca/kmc/event.h>
@@ -25,21 +25,25 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-#include "../algorithms/vssm2_terminal.h"
+#include "../algorithms/vssm2_excited.h"
 #include <fstream>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
 namespace votca { namespace kmc {
    
-class Terminal : public KMCCalculator 
+class Excited : public KMCCalculator 
 {
 public:
     
-    Terminal() {};
-   ~Terminal() {};
+    //Excited: excited state energy transfer - hops between triplet-1(D) and triplet-1(A) (DEXTER) or triplet-1(D) and singlet-1(A) (FRET)
+    Excited() {};
+   ~Excited() {};
 
-    string  Identify() {return "terminal"; };
+    string  Identify() {return "excited"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
@@ -53,8 +57,10 @@ private:
     int _nsteps;
     int _seedelectron;
     int _seed;
-    int _nelectrons;
-    int _nholes;
+    //int _nelectrons;
+    //int _nholes;
+    int _nexciteddonor;
+    int _nexcitedacc;
     std::string _injection_name;
     std::string _injection_method;
     double _fieldX;
@@ -65,13 +71,11 @@ private:
     double _outtime;
     std::string _trajectoryfile;
     std::string _rates;
-    std::string _source_electrode;
-    std::string _drain_electrode;
 };
 
-void Terminal::Initialize(Property *options) {
+void Excited::Initialize(Property *options) {
     
-    std::cout << endl << "Initialising KMC terminal" << endl;
+    std::cout << endl << "Initialising KMC excited" << endl;
 
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options );
@@ -82,8 +86,9 @@ void Terminal::Initialize(Property *options) {
     _outtime = options->get(key + ".outtime").as<double>();
     _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
     _seed = options->get(key + ".seed").as<int>();
-    _nelectrons = options->get(key + ".nelectrons").as<int>();
-    _nholes = options->get(key + ".nholes").as<int>();
+    //_nelectrons = options->get(key + ".nelectrons").as<int>();
+    //_nholes = options->get(key + ".nholes").as<int>();
+    _nexciteddonor = options->get(key + ".nexciteddonor").as<int>();
     _injection_name = options->get(key + ".injection").as<string>();
     _fieldX = options->get(key + ".fieldX").as<double>();
     _fieldY = options->get(key + ".fieldY").as<double>();
@@ -91,118 +96,96 @@ void Terminal::Initialize(Property *options) {
     _field = myvec(_fieldX,_fieldY,_fieldZ);
     _temperature = options->get(key + ".temperature").as<double>();
     _rates = options->get(key + ".rates").as<string>();
-    _source_electrode = options->get(key + ".source_electrode").as<string>();
-    _drain_electrode = options->get(key + ".drain_electrode").as<string>();
 
 }
 
-bool Terminal::EvaluateFrame() {
+bool Excited::EvaluateFrame() {
         
     RunKMC();
     return true;
 }
 
-void Terminal::RunKMC() {
+void Excited::RunKMC() {
 
     votca::tools::Random2 RandomVariable;
     
-    std::cout << "Running KMC terminal" << endl;
+    std::cout << "Running KMC excited" << endl;
    
-    TerminalGraph terminalgraph;
+    TerminalGraph graph;
     State state;
      
     std::string filename( "state.sql" );
-
-    //create the source electrode - one source node per carrier id 0 to id (number of carriers)
-    /*std::istringstream iss_source(_source_electrode); // position = "x,y,z" 
-    double source_electrode_x, source_electrode_y, source_electrode_z;
-    char delimiter_source;
-    iss_source >> source_electrode_x >> delimiter_source >> source_electrode_y >> delimiter_source >> source_electrode_z;
-    std::cout << "Source electrode created at position: (" << source_electrode_x  << "," << source_electrode_y << "," << source_electrode_z << ") " << std::endl;
-    terminalgraph.Create_source_electrode( (_nelectrons + _nholes), source_electrode_x, source_electrode_y, source_electrode_z );
-
-     */
     
-    /*string field_direction = "";
-    if(_fieldX != 0 && _fieldY==0 && _fieldZ==0) {field_direction = "X"; }
-    else if(_fieldY != 0 && _fieldX==0 && _fieldZ==0) {field_direction = "Y"; }
-    else if(_fieldZ != 0 && _fieldX==0 && _fieldY==0) {field_direction = "Z"; }
-    */
     
-    terminalgraph.Load_Graph(filename, _temperature);
-        
-    //terminalgraph.Load_injectable_collectable(field_direction);
-  
-    //create the drain electrode - one drain node per carrier
-    /*std::istringstream iss_drain(_drain_electrode); // position = "x,y,z" 
-    double drain_electrode_x, drain_electrode_y, drain_electrode_z;
-    char delimiter_drain;
-    iss_drain >> drain_electrode_x >> delimiter_drain >> drain_electrode_y >> delimiter_drain >> drain_electrode_z;
-    std::cout << "Drain electrode created at position: (" << drain_electrode_x << "," << drain_electrode_y << "," << drain_electrode_z << ") "<< std::endl;
-    terminalgraph.Create_drain_electrode( (_nelectrons + _nholes), drain_electrode_x, drain_electrode_y, drain_electrode_z );
-
-    terminalgraph.Load_Electrode_Neighbours( filename );
-    */
+    graph.Load_Excited_Graph(filename);
+    graph.Create_excited_inject_collect_nodes(_nexciteddonor);
+    graph.Load_Excited_pairs(filename);
+    graph.Excited_energy_transfer_with_inject_collect(filename);
     
-    if (_rates == "read"){
-        std::cout << "Reading rates from " << filename << std::endl;
-        terminalgraph.Load_Rates(filename);
+    /*if (_rates == "read"){
+        std::cout << "Reading pairs from " << filename << std::endl;
+        graph.Load_Excited_pairs_calculate_rates_loop(filename);
     }
     else if ( _rates == "calculate"){
-        terminalgraph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
+        graph.Excited_energy_transfer_rates_and_pairs_calculation(filename);
+    }
+    else if (_rates == "snapshot"){
+        graph.Load_Excited_pairs_calculate_rates_snapshot(filename);
     }
     else {
-        std::cout << "Error: The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::cout;
-    }
-    
-    //terminalgraph.Print();
-    
+        std::cout << "Error: The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::endl;
+    }*/
+
     CarrierFactory::RegisterAll();
     EventFactory::RegisterAll();
     
-    std::cout << std::endl << "Number of nodes: " << terminalgraph.nodes_size() << std::endl;
-    //std::cout << "Number of source nodes (injection): " << terminalgraph.source_nodes_size() <<  std::endl;
-    //std::cout << "Number of drain nodes (collection): " << terminalgraph.drain_nodes_size() <<  std::endl;
-    std::cout << "Number of electrons: " << _nelectrons << std::endl;
-    std::cout << "Number of holes: " << _nholes << std::endl;
+    std::cout << std::endl << "Number of nodes: " << graph.nodes_size() << std::endl;
+    std::cout << "Number of donor molecules: " << graph.donor_nodes_size() <<  std::endl;
+    std::cout << "Number of acceptor molecules: " << graph.acceptor_nodes_size() <<  std::endl;
+    //std::cout << "Number of electrons: " << _nelectrons << std::endl;
+    //std::cout << "Number of holes: " << _nholes << std::endl;
    
-    if(_nelectrons != 0){
-        for ( int electron = 1; electron <= _nelectrons; ++electron ) {
+    
+    //graph.Print();
+    
+    _nexcitedacc = 0;
+    
+    if(_nexciteddonor != 0){
+        
+        //srand(_seed);
+        //RandomVariable.init(rand(), rand(), rand(), rand());
+        std::cout << std::endl;
+        
+        for ( int excited = 1; excited <= _nexciteddonor; ++excited ) {
             
             // Create electrons
-            Carrier* e_carrier =  state.AddCarrier( "electron" );
-            Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
-
-            BNode* node_from = terminalgraph.GetNode(electron);
-            ecarrier->AddNode( node_from );
-            //node_from->PrintNode();  
+            Carrier* eng_carrier =  state.AddCarrier( "energy" );
+            Energy* engcarrier = dynamic_cast<Energy*>(eng_carrier);
+            
+            
+            if (_injection_name == "donor") {
+                
+                //std::cout << " Electron - added TEST " << std::endl;
+                //int node_id = _nexciteddonor;
+                BNode* node_from = graph.GetInjectNode(excited);
+                engcarrier->AddNode( node_from );
+                
+                
+            }  
             
         }
+        
+        std::cout << std::endl;
+        
     }
     
-    std::cout << std::endl;
-    
-    if(_nholes != 0){
-        for ( int hole = 1; hole <= _nholes; ++hole ) {
-            
-            // Create holes
-            Carrier* h_carrier =  state.AddCarrier( "hole" );
-            Hole* hcarrier = dynamic_cast<Hole*>(h_carrier);
-            
-            BNode* node_from = terminalgraph.GetNode(hole);
-            hcarrier->AddNode( node_from );
-            //node_from->PrintNode();  
-            
-        }
-    }
-    
-    VSSM2_TERMINAL vssm2;
-    vssm2.Initialize( &state, &terminalgraph );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    VSSM2_EXCITED vssm2;
+    vssm2.Initialize( &state, &graph );
+    vssm2.Run(_runtime, _nsteps, _seed, _nexciteddonor, _nexcitedacc, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 
 }}
 
 
-#endif	/* __VOTCA_KMC_TERMINAL_H */
+#endif	/* __VOTCA_KMC_EXCITED_H */

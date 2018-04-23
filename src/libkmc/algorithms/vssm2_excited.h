@@ -15,16 +15,16 @@
  *
  */
 
-#ifndef __VOTCA_KMC_VSSM2_NODES_H_
-#define __VOTCA_KMC_VSSM2_NODES_H_
+#ifndef __VOTCA_KMC_VSSM2_EXCITED_H_
+#define __VOTCA_KMC_VSSM2_EXCITED_H_
 
 #include <unordered_map>
 #include <time.h>
-#include <votca/kmc/algorithm.h>
+#include <votca/kmc/terminal_algorithm.h>
 #include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
-#include "events/electron_transfer.h"
-#include "events/hole_transfer.h"
+#include "../events/dexter_energy_transfer.h"
+#include "../events/forster_energy_transfer.h"
 
 
 //* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
@@ -37,120 +37,212 @@
 
 namespace votca { namespace kmc {
   
-class VSSM2_NODES : public Algorithm {
+class VSSM2_EXCITED : public TerminalAlgorithm {
     
 public:
-    
-void Initialize ( State* _state, Graph* _graph ) { 
+  
+void progressbar(double fraction)
+{
+    int totalbars = 50;
+    std::cout << "\r";
+    for(double bars=0; bars<double(totalbars); bars++)
+    {
+        if(bars<=fraction*double(totalbars))
+        {
+            std::cout << "|";
+        }
+        else
+        {
+            std::cout << "-";
+        }
+    }
+    std::cout << "  " << int(fraction*1000)/10. <<" %   ";
+    std::cout << std::flush;
+    if(fraction*100 == 100)
+    {
+        std::cout << std::endl;
+    }
+}
+
+
+void Initialize ( State* _state, TerminalGraph* _graph ) { 
     
     state = _state;
-    graph = _graph;
+    terminalgraph = _graph;
     
     // Map of charge transfer events associated with a particular node
-    std::unordered_map< BNode*, std::vector<Event*> > electron_transfer_map;
-    std::unordered_map< BNode*, std::vector<Event*> > hole_transfer_map;
+    std::unordered_map< BNode*, std::vector<Event*> > dexter_energy_transfer_map;
+    std::unordered_map< BNode*, std::vector<Event*> > forster_energy_transfer_map;
     
     // Vector of all charge transfer events
-    std::vector<ElectronTransfer*> et_events;
-    std::vector<HoleTransfer*> ht_events;
-
+    std::vector<DexterEnergyTransfer*> dexter_events;
+    std::vector<ForsterEnergyTransfer*> fret_events;
+    
+    // Loop over all source nodes - injection events
+    for (TerminalGraph::iterator it_inject_node = _graph->inject_nodes_begin(); it_inject_node != _graph->inject_nodes_end(); ++it_inject_node) {
+        
+        BNode* node_from = *it_inject_node;
+        
+        // create a new key with an empty vector
+        forster_energy_transfer_map.emplace(node_from, vector<Event*>() );
+        dexter_energy_transfer_map.emplace(node_from, vector<Event*>() );
+        
+        // Loop over all neighbours (edges) of the node
+        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+                    
+            Event* event_move_energy = Events().Create("forster_energy_transfer");
+            ForsterEnergyTransfer* forster_energy_transfer = dynamic_cast<ForsterEnergyTransfer*> (event_move_energy);
+            forster_energy_transfer->Initialize(NULL, *it_edge);
+                        
+            // Add a list of hole transfer events to the map, indexed by a node pointer
+            forster_energy_transfer_map.at(node_from).push_back(event_move_energy);
+            
+            // Add an event to the energy transfer events
+            fret_events.push_back(forster_energy_transfer);
+            //std::cout << "Energy transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
+            
+            Event* event_move_dexter_energy = Events().Create("dexter_energy_transfer");
+            DexterEnergyTransfer* dexter_energy_transfer = dynamic_cast<DexterEnergyTransfer*> (event_move_dexter_energy);
+            dexter_energy_transfer->Initialize(NULL, *it_edge);
+                        
+            // Add a list of energy transfer events to the map, indexed by a node pointer
+            dexter_energy_transfer_map.at(node_from).push_back(event_move_dexter_energy);
+            
+            // Add an event to the energy transfer events
+            dexter_events.push_back(dexter_energy_transfer);          
+        }             
+    }
+    
     // Create all possible transfer events and associate them with the nodes
-    for (Graph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+    for (TerminalGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
         
         // create a new key with an empty vector
-        electron_transfer_map.emplace(node_from, vector<Event*>() );
-        hole_transfer_map.emplace(node_from, vector<Event*>() );
+        dexter_energy_transfer_map.emplace(node_from, vector<Event*>() );
+        forster_energy_transfer_map.emplace(node_from, vector<Event*>() );
+        //fret_collect_map.emplace(node_from, vector<Event*>() );
         
         // Loop over all neighbors (edges) of the node 
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
 
             
-            Event* event_move_hole = Events().Create("hole_transfer");
-            HoleTransfer* hole_transfer = dynamic_cast<HoleTransfer*> (event_move_hole);
-            hole_transfer->Initialize(NULL, *it_edge);
+            Event* event_move_energy = Events().Create("forster_energy_transfer");
+            ForsterEnergyTransfer* forster_energy_transfer = dynamic_cast<ForsterEnergyTransfer*> (event_move_energy);
+            forster_energy_transfer->Initialize(NULL, *it_edge);
                         
-            // Add a list of hole transfer events to the map, indexed by a node pointer
-            hole_transfer_map.at(node_from).push_back(event_move_hole);
+            // Add a list of energy transfer events to the map, indexed by a node pointer
+            forster_energy_transfer_map.at(node_from).push_back(event_move_energy);
             
-            // Add an event to the hole transfer events
-            ht_events.push_back(hole_transfer);
-            //std::cout << "Hole transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
+            // Add an event to the energy transfer events
+            fret_events.push_back(forster_energy_transfer);
+            //std::cout << "Energy transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
             
-            Event* event_move_electron = Events().Create("electron_transfer");
-            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move_electron);
-            electron_transfer->Initialize(NULL, *it_edge);
+            Event* event_move_dexter_energy = Events().Create("dexter_energy_transfer");
+            DexterEnergyTransfer* dexter_energy_transfer = dynamic_cast<DexterEnergyTransfer*> (event_move_dexter_energy);
+            dexter_energy_transfer->Initialize(NULL, *it_edge);
                         
-            // Add a list of electron transfer events to the map, indexed by a node pointer
-            electron_transfer_map.at(node_from).push_back(event_move_electron);
+            // Add a list of energy transfer events to the map, indexed by a node pointer
+            dexter_energy_transfer_map.at(node_from).push_back(event_move_dexter_energy);
             
-            // Add an event to the electron transfer events
-            et_events.push_back(electron_transfer);           
-            
+            // Add an event to the energy transfer events
+            dexter_events.push_back(dexter_energy_transfer);        
+         
         }
     }
     
+    //Loop over all drain nodes - collection events and/or return to source events (closed circuit)
+    for (TerminalGraph::iterator it_collect_node = _graph->collect_nodes_begin(); it_collect_node != _graph->collect_nodes_end(); ++it_collect_node) {
+        
+        BNode* node_from = *it_collect_node;
+        
+        dexter_energy_transfer_map.emplace(node_from, vector<Event*>() );
+        forster_energy_transfer_map.emplace(node_from, vector<Event*>() ); 
+        //fret_collect_map.emplace(node_from, vector<Event*>() );
+
+        for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
+            
+            Event* event_move_energy = Events().Create("forster_energy_transfer");
+            ForsterEnergyTransfer* forster_energy_transfer = dynamic_cast<ForsterEnergyTransfer*> (event_move_energy);
+            forster_energy_transfer->Initialize(NULL, *it_edge);
+                        
+            // Add a list of energy transfer events to the map, indexed by a node pointer
+            forster_energy_transfer_map.at(node_from).push_back(event_move_energy);
+            
+            // Add an event to the energy transfer events
+            fret_events.push_back(forster_energy_transfer);
+            //std::cout << "Energy transfer created " << node_from->id << " -> " << (*it_edge)->NodeTo()->id << std::endl;
+            
+            Event* event_move_dexter_energy = Events().Create("dexter_energy_transfer");
+            DexterEnergyTransfer* dexter_energy_transfer = dynamic_cast<DexterEnergyTransfer*> (event_move_dexter_energy);
+            dexter_energy_transfer->Initialize(NULL, *it_edge);
+                        
+            // Add a list of energy transfer events to the map, indexed by a node pointer
+            dexter_energy_transfer_map.at(node_from).push_back(event_move_dexter_energy);
+            
+            // Add an event to the energy transfer events
+            dexter_events.push_back(dexter_energy_transfer);
+
+        }             
+    }
     
     // for every event, add a list of "events-to-enable" after OnExecute
     // and a list of "events-to-disable" after OnExecute
-    for (auto& event: ht_events ) {
+    for (auto& event: fret_events ) {
         BNode* node_from = event->NodeFrom();
         BNode* node_to = event->NodeTo();
         
-        std::vector<Event*> events_to_disable = hole_transfer_map.at(node_from);
-        std::vector<Event*> events_to_enable = hole_transfer_map.at(node_to);
+        std::vector<Event*> events_to_disable = forster_energy_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = forster_energy_transfer_map.at(node_to);
 
         event->AddDisableOnExecute(&events_to_disable);
         event->AddEnableOnExecute(&events_to_enable);
     }
     
-    for (auto& event: et_events ) {
+    for (auto& event:dexter_events ) {
         BNode* node_from = event->NodeFrom();
         BNode* node_to = event->NodeTo();
         
-        std::vector<Event*> events_to_disable = electron_transfer_map.at(node_from);
-        std::vector<Event*> events_to_enable = electron_transfer_map.at(node_to);
+        std::vector<Event*> events_to_disable = dexter_energy_transfer_map.at(node_from);
+        std::vector<Event*> events_to_enable = dexter_energy_transfer_map.at(node_to);
 
         event->AddDisableOnExecute(&events_to_disable);
         event->AddEnableOnExecute(&events_to_enable);
     }
-    
+
     // for every event associated with node_from - create a list of events to check after onExecute
     // Events to check are every event for each node_to
-    for (auto& event: ht_events ) {
+    for (auto& event: fret_events ) {
         
         BNode* node_from = event->NodeFrom();
-        std::vector<Event*> ht_events = hole_transfer_map.at(node_from);
+        std::vector<Event*> fret_events = forster_energy_transfer_map.at(node_from);
         
-        for (std::vector<Event*>::iterator it_event = ht_events.begin(); it_event != ht_events.end(); ++it_event) {          
-            Event* event_move_hole = *it_event;
-            HoleTransfer* hole_transfer = dynamic_cast<HoleTransfer*> (event_move_hole);
+        for (std::vector<Event*>::iterator it_event = fret_events.begin(); it_event != fret_events.end(); ++it_event) {          
+            Event* event_move_energy = *it_event;
+            ForsterEnergyTransfer* forster_energy_transfer = dynamic_cast<ForsterEnergyTransfer*> (event_move_energy);
             
-            BNode* node_to = hole_transfer->NodeTo();
-            std::vector<Event*> events_to_check = hole_transfer_map.at(node_to);
+            BNode* node_to = forster_energy_transfer->NodeTo();
+            std::vector<Event*> events_to_check = forster_energy_transfer_map.at(node_to);
             event->CheckEventsOnExecute(&events_to_check);
             
         }
     }
     
-    for (auto& event: et_events ) {
+    for (auto& event:dexter_events ) {
         
         BNode* node_from = event->NodeFrom();
-        std::vector<Event*> et_events = electron_transfer_map.at(node_from);
+        std::vector<Event*>dexter_events = dexter_energy_transfer_map.at(node_from);
         
-        for (std::vector<Event*>::iterator it_event = et_events.begin(); it_event != et_events.end(); ++it_event) {
-            Event* event_move_electron = *it_event;
-            ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move_electron);
+        for (std::vector<Event*>::iterator it_event =dexter_events.begin(); it_event !=dexter_events.end(); ++it_event) {
+            Event* event_move_dexter_energy = *it_event;
+            DexterEnergyTransfer* dexter_energy_transfer = dynamic_cast<DexterEnergyTransfer*> (event_move_dexter_energy);
             
-            BNode* node_to = electron_transfer->NodeTo();
-            std::vector<Event*> events_to_check = electron_transfer_map.at(node_to);
+            BNode* node_to = dexter_energy_transfer->NodeTo();
+            std::vector<Event*> events_to_check = dexter_energy_transfer_map.at(node_to);
             
             event->CheckEventsOnExecute(&events_to_check);
         }
     }
-
-    //for (auto& event: ct_events ) event->Print();
     
     // organize events in a tree;
     // first level VSSM events (escape event for each carrier))
@@ -165,42 +257,42 @@ void Initialize ( State* _state, Graph* _graph ) {
         carrier_escape->Initialize((*carrier));
         head_event.AddSubordinate( event_escape );
  
-        std::vector<Event*> ht_events = hole_transfer_map.at(node_from);        
-        std::vector<Event*> et_events = electron_transfer_map.at(node_from);
+        std::vector<Event*> fret_events = forster_energy_transfer_map.at(node_from);        
+        std::vector<Event*>dexter_events = dexter_energy_transfer_map.at(node_from);
         
         // Add move events from the map 
-        for (std::vector<Event*>::iterator it_ht_event = ht_events.begin(); it_ht_event != ht_events.end(); ++it_ht_event) {
+        for (std::vector<Event*>::iterator it_fret_event = fret_events.begin(); it_fret_event != fret_events.end(); ++it_fret_event) {
 
-            // New event - hole transfer
-            if ((*carrier)->Type() == "hole"){
-                Event* event_move_hole = *it_ht_event;
-                HoleTransfer* hole_transfer = dynamic_cast<HoleTransfer*> (event_move_hole);
-                Hole* hole = dynamic_cast<Hole*> ((*carrier));
-                hole_transfer->SetHole( hole );
-                hole_transfer->Enable();
-                carrier_escape->AddSubordinate( event_move_hole );  
+            // New event - energy transfer
+            if ((*carrier)->Type() == "energy"){
+                Event* event_move_energy = *it_fret_event;
+                ForsterEnergyTransfer* forster_energy_transfer = dynamic_cast<ForsterEnergyTransfer*> (event_move_energy);
+                Energy* energy = dynamic_cast<Energy*> ((*carrier));
+                forster_energy_transfer->SetEnergy( energy );
+                forster_energy_transfer->Enable();
+                carrier_escape->AddSubordinate( event_move_energy );  
             }
         }
         
-        for (std::vector<Event*>::iterator it_et_event = et_events.begin(); it_et_event != et_events.end(); ++it_et_event) {
+        for (std::vector<Event*>::iterator it_det_event = dexter_events.begin(); it_det_event != dexter_events.end(); ++it_det_event) {
             
-            // New event - electron transfer
-            if ((*carrier)->Type() == "electron"){
-                Event* event_move_electron = *it_et_event;
-                ElectronTransfer* electron_transfer = dynamic_cast<ElectronTransfer*> (event_move_electron);
-                Electron* electron = dynamic_cast<Electron*> ((*carrier));
-                electron_transfer->SetElectron( electron );
-                electron_transfer->Enable();
-                carrier_escape->AddSubordinate( event_move_electron );  
+            // New event - energy transfer
+            if ((*carrier)->Type() == "energy"){
+                Event* event_move_dexter_energy = *it_det_event;
+                DexterEnergyTransfer* dexter_energy_transfer = dynamic_cast<DexterEnergyTransfer*> (event_move_dexter_energy);
+                Energy* energy = dynamic_cast<Energy*> ((*carrier));
+                dexter_energy_transfer->SetEnergy( energy );
+                dexter_energy_transfer->Enable();
+                carrier_escape->AddSubordinate( event_move_dexter_energy );  
             }
-        }   
+        } 
        
     }
     head_event.Enable();
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
+void Run( double runtime, int nsteps, int seed, int nexciteddonor, int nexcitedacc, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
     votca::tools::Random2 RandomVariable;
 
@@ -235,27 +327,35 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
     
     trajout = outtime;
     
+    //int energy_collected = state->Collect_Dexter.size() + state->Collect_Fluorescence.size() + state->Collect_Phosphorescence.size();
     while ( step < nsteps || time < runtime ){  
         
         //head_event.Print();
              
-        head_event.OnExecute(state, &RandomVariable );         
+                
         double u = 1.0 - RandomVariable.rand_uniform();
         while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
+        //std::cout << " u " << u << std::endl;
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
+        //std::cout << " Rate " << head_event.CumulativeRate() << std::endl;
+        //std::cout << " elapsed time " << elapsed_time << std::endl;
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
         step++;
-        //std::cout << "Time: " << time << std::endl;
+        std::cout << "Time: " << time << std::endl;
         
+        head_event.OnExecute(state, &RandomVariable ); 
+        //std::cout << "Time: " << time << std::endl;
+                
         if (outtime != 0 && trajout < time )
         { 
             state->Trajectory_write(trajout, trajectoryfile);
             trajout = time + outtime;
         }
+        
 
     }
-    state->Print_properties(nelectrons, nholes, fieldX, fieldY, fieldZ);
+    state->Print_excited_properties();
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
      
