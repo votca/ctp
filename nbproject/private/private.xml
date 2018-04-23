@@ -12,12 +12,10 @@
         <group>
             <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/calculators/static.h</file>
             <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/state.h</file>
-            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/events/electron_collection.h</file>
-            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/events/recombination.h</file>
-            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/carriers/energy.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/kmccalculatorfactory.cc</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/terminalgraph.h</file>
             <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/algorithms/vssm2_nodes.h</file>
-            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/algorithms/vssm2_carriers.h</file>
-            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/events/electron_transfer_snail.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/event.h</file>
             <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/calculators/kmcmultiple.h</file>
         </group>
     </open-files>

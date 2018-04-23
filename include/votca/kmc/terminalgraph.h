@@ -21,7 +21,6 @@
 #define __VOTCA_KMC_TERMINALGRAPH_H_
 
 #include <votca/kmc/bnode.h>
-//#include "state.h"
 
 namespace votca { namespace kmc {
    
@@ -636,7 +635,7 @@ void TerminalGraph::Create_excited_inject_collect_nodes (int nexciteddonor){
 
     }
     
-    for ( int col_id = 1; col_id <= donor_nodes.size(); ++col_id){       
+    for ( int col_id = 1; col_id <= int(donor_nodes.size()); ++col_id){       
         
         BNode *collect_node = AddCollectNode();
         collect_node->id = col_id;
@@ -778,7 +777,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
             
             votca::tools::vec distanceID(dx_inj, dy_inj, dz_inj);
             
-            if (int(nodes.size()-((inject->id)-1)) == donor->id || nodes.size()-inject->id == donor->id || nodes.size()-(inject->id+1) == donor->id){
+            if (int(nodes.size())-((inject->id)-1) == donor->id || int(nodes.size())-inject->id == donor->id || int(nodes.size())-(inject->id+1) == donor->id){
             //if (inject->id == donor->id){
                 Edge* edge_injection = new Edge(inject, donor, distanceID, cal_rate12e, cal_rate12h, cal_dexter, cal_fret, rate_inj, rate_col, rate_return);
                 inject->AddEdge( edge_injection );
@@ -794,7 +793,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
         BNode* acceptor = (*acc_col_edge);
             
         //collecting events from the acceptors - Phosphorescence
-        for (int collect = 1; collect <= collect_nodes.size(); ++collect){
+        for (int collect = 1; collect <= int(collect_nodes.size()); ++collect){
         
             //int node_c = collect + 3460;
             BNode* collect_node = GetCollectNode(collect);
@@ -826,7 +825,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
         }
         
         //collecting events from the acceptors - after dexter  
-        for (int collect = 1; collect <= collect_nodes.size(); ++collect){
+        for (int collect = 1; collect <= int(collect_nodes.size()); ++collect){
         
             //int node_c = collect + 3460;
             BNode* collect_node = GetCollectNode(collect);
@@ -865,7 +864,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
         BNode* donor = (*collection_edge);
            
         //collecting events from the donors
-        for (int collect = 1; collect <= collect_nodes.size(); ++collect){
+        for (int collect = 1; collect <= int(collect_nodes.size()); ++collect){
         
             //int node_c = collect + 3460;
             BNode* collect_node = GetCollectNode(collect);

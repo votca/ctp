@@ -21,8 +21,8 @@
 #include <unordered_map>
 #include <time.h>
 #include <votca/kmc/algorithm.h>
-#include "events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
+#include "events/carrier_escape.h"
 #include "events/electron_transfer.h"
 #include "events/hole_transfer.h"
 
@@ -41,7 +41,7 @@ class VSSM2_NODES : public Algorithm {
     
 public:
     
-void progressbar(double fraction)
+/*void progressbar(double fraction)
 {
     int totalbars = 50;
     std::cout << "\r";
@@ -62,26 +62,6 @@ void progressbar(double fraction)
     {
         std::cout << std::endl;
     }
-}
-  
-/*void printtime(int seconds_t)
-{
-    int seconds = seconds_t;
-    int minutes = 0;
-    int hours = 0;
-    while(seconds / 60 >= 1)
-    {
-        seconds -= 60;
-        minutes +=  1;
-    }
-    while(minutes / 60 >= 1)
-    {
-        minutes -= 60;
-        hours +=  1;
-    }
-    char buffer [50];
-    int n = sprintf(buffer, "",hours,minutes,seconds);
-    printf("%s",buffer,n);
 }*/
 
 void Initialize ( State* _state, Graph* _graph ) { 
@@ -282,7 +262,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
     state->Trajectory_write(trajout, trajectoryfile);
     
     trajout = outtime;
-    progressbar(0.);
+    //progressbar(0.);
     
     while ( step < nsteps || time < runtime ){  
         
@@ -294,26 +274,23 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
         step++;
-        clock_t snap = clock();
+        //clock_t snap = clock();
         //execute the event after the time update - so the elapsed time is calculated with the correct rate (the rate before the event)
         head_event.OnExecute(state, &RandomVariable );
         //std::cout << "Time: " << time << std::endl;
         
-        if ( runtime != 0 && nsteps == 0 )
+        /*if ( runtime != 0 && nsteps == 0 )
         {
             progressbar(time/runtime);
             //printf("Remaining time: %f seconds ", ((double)(snap - begin)*(int(runtime/(time-1))) / CLOCKS_PER_SEC));
-            //std::cout << "   remaining: " << (double (snap-begin)/CLOCKS_PER_SEC) << std::endl;
-            //printf("    Remaining: %f seconds", (int((runtime/sim_time-1) * (double(snap - begin) /CLOCKS_PER_SEC)))); 
-            //printtime(int((runtime/sim_time-1) * (double(snap - begin)))); 
         }
         else
         {
-            progressbar(double(step)/double(nsteps));
+            //progressbar(double(step)/double(nsteps));
             //std::cout << "   remaining: " << (double (snap-begin))*(double(nsteps)/double(step)-1);
             //printf("Remaining time: %f seconds ---  %i steps complete", ((double)(snap - begin)*nsteps/(step-1)) / CLOCKS_PER_SEC, step);
            
-        }
+        }*/
     
         
     
@@ -325,12 +302,10 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
 
     } 
         
-    progressbar(1.);
+    //progressbar(1.);
     state->Print_properties(nelectrons, nholes, fieldX, fieldY, fieldZ);
     clock_t end = clock();    
     printf("Elapsed: %f seconds after %i steps \n", (double)(end - begin) / CLOCKS_PER_SEC, step);
-    //cout << "runtime: ";
-    //printtime (double(end - begin));
      
 }
 
@@ -338,8 +313,7 @@ private:
     
     // head event, contains all escape events
     CarrierEscape head_event;
-    // logger : move logger.h to tools
-    // Logger log;   
+   
 };
     
 }}

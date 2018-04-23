@@ -39,7 +39,7 @@ class VSSM2 : public Algorithm {
     
 public:
 
-void progressbar(double fraction)
+/*void progressbar(double fraction)
 {
     int totalbars = 50;
     std::cout << "\r";
@@ -60,7 +60,7 @@ void progressbar(double fraction)
     {
         std::cout << std::endl;
     }
-}
+}*/
  
 
 void Initialize ( State* _state, Graph* _graph ) {

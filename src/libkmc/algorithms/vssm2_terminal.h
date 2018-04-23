@@ -42,7 +42,7 @@ class VSSM2_TERMINAL : public TerminalAlgorithm {
 public:
   
     
-void progressbar(double fraction)
+/*void progressbar(double fraction)
 {
     int totalbars = 50;
     std::cout << "\r";
@@ -63,7 +63,7 @@ void progressbar(double fraction)
     {
         std::cout << std::endl;
     }
-}
+}*/
   
 
 void Initialize ( State* _state, TerminalGraph* _graph ) { 

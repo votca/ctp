@@ -171,8 +171,10 @@ inline Carrier* State::AddCarrier( std::string type ) {
         carriers.push_back( carrier );
         return carrier;
     }
-    
+ 
+    return 0;
 }
+
 // counting energy transfer events
 inline void State::CountEvent( std::string type ) {
 
