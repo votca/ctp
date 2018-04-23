@@ -22,7 +22,7 @@
 //#include "calculators/diffusion.h"
 #include "calculators/kmcparallel.h"
 //#include "calculators/kmclight.h"
-#include "calculators/diode.h"
+//#include "calculators/diode.h"
 
 namespace votca { namespace kmc {
 
@@ -33,7 +33,7 @@ void KMCCalculatorFactory::RegisterAll(void)
 //    Calculators().Register<Diffusion>("diffusion"); // single charge carrier in PBC
     Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
     //Calculators().Register<KMCLight>("kmclight"); // fast kmc code (if works))
-    Calculators().Register<Diode>("diode"); // multiple charge types in 2D PBC
+//    Calculators().Register<Diode>("diode"); // multiple charge types in 2D PBC
 }
 
 }}

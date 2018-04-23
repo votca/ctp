@@ -19,10 +19,15 @@ enable_language(CXX)
 include(CheckCXXCompilerFlag)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND CMAKE_VERSION VERSION_LESS "3.6.0")
   message(FATAL_ERROR "Using the intel compiler requires cmake 3.6 or higher")
 endif()
+
+#set(CMAKE_CXX_FLAGS "-O0 -fno-elide-constructors -pedantic-errors -ansi -Wextra -Wall     -Winit-self -Wold-style-cast -Woverloaded-virtual -Wuninitialized -Wmissing-declarations    -Winit-self -std=c++98")
+
+set(CMAKE_CXX_FLAGS "-O0 -fno-elide-constructors -ansi -Wextra -Wall -Winit-self -Wold-style-cast -Woverloaded-virtual -Wuninitialized -Wmissing-declarations -Winit-self -std=c++11")
 
 
 ########################################################################
