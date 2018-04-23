@@ -990,7 +990,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     double nextoutput = outputfrequency;
     unsigned long nextstepoutput = outputstepfrequency;
     double nexttrajoutput = _outputtime;
-    int nextdiffstep = diffusion_stepsize;
+    unsigned int nextdiffstep = diffusion_stepsize;
     
     progressbar(0.);
     vector<int> forbiddennodes;
@@ -1040,7 +1040,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             double escaperate = 0;
             Chargecarrier* do_affectedcarrier;
 
-            double escaperateweight = 0;
+            //double escaperateweight = 0;
             
             double u = 1 - RandomVariable->rand_uniform();
             for(unsigned int i=0; i<numberofcharges; i++)
