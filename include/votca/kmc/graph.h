@@ -151,6 +151,7 @@ void Graph::Load_Rates(std::string filename){
     delete stmt;  
 }
 
+// Calculates rates if they are not read from the state file
 void Graph::Rates_Calculation(std::string filename, int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ, double temperature){
     
     double kB   = 8.617332478E-5; // eV/K
@@ -280,7 +281,7 @@ myvec Graph::Determine_sim_box_size(vector<Node*> nodes) {
         double cal_rate21e = 2*Pi/hbar * Jeff2e/sqrt(4*Pi*reorg_e21*kB*temperature) * exp(-(dG_e21+reorg_e21)*(dG_e21+reorg_e21) / (4*reorg_e21*kB*temperature));
         double cal_rate21h = 2*Pi/hbar * Jeff2h/sqrt(4*Pi*reorg_h21*kB*temperature) * exp(-(dG_h21+reorg_h21)*(dG_h21+reorg_h21) / (4*reorg_h21*kB*temperature));
         
-        //std::cout << "Rate 12e " << cal_rate12e << "   Rate 21e: " << cal_rate21e << std::endl;
+        std::cout << "Rate 12e " << cal_rate12e << "   Rate 21e: " << cal_rate21e << std::endl;
         
         //add the new edge with calculated rate
         Edge* edge12 = new Edge(node1, node2, distance, cal_rate12e, cal_rate12h);
@@ -298,6 +299,7 @@ myvec Graph::Determine_sim_box_size(vector<Node*> nodes) {
     delete stmt;
 }
  */
+
 
 void Graph::Print(){
     
