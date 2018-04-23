@@ -291,6 +291,7 @@ myvec Graph::Determine_sim_box_size(vector<Node*> nodes) {
 
         edges.push_back( edge12 );
         edges.push_back( edge21 );
+        
                   
     }
        
