@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <code-assistance-data xmlns="http://www.netbeans.org/ns/make-project-private/1">
+        <code-model-enabled>true</code-model-enabled>
+    </code-assistance-data>
+    <data xmlns="http://www.netbeans.org/ns/make-project-private/1">
+        <activeConfTypeElem>0</activeConfTypeElem>
+        <activeConfIndexElem>0</activeConfIndexElem>
+    </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/calculators/static.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/state.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/calculators/excited.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/terminalgraph.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/graph.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/algorithms/vssm2_nodes.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/algorithms/vssm2_terminal.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/calculators/kmcmultiple.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/algorithms/vssm2_excited.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/algorithm.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/carriers/energy.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/include/votca/kmc/terminal_algorithm.h</file>
+            <file>file:/home/theorie/paterson/debian9/votca/src/kmc/src/libkmc/algorithms/vssm2_carriers.h</file>
+        </group>
+    </open-files>
+</project-private>
