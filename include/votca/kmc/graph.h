@@ -157,7 +157,6 @@ void Graph::Rates_Calculation(std::string filename, int nelectrons, int nholes, 
     double hbar = 6.5821192815E-16; // eV*s
     double Pi   = 3.14159265358979323846;
     
-    
     double charge_e = -1.0;
     double charge_h = 1.0;
     
