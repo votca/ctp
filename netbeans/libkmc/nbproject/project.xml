@@ -13,6 +13,16 @@
             <sourceRootList>
                 <sourceRootElem>../../../include</sourceRootElem>
                 <sourceRootElem>../../src/libkmc</sourceRootElem>
+                <sourceRootElem>../../../include</sourceRootElem>
+                <sourceRootElem>../../src/libkmc</sourceRootElem>
+                <sourceRootElem>../../../include</sourceRootElem>
+                <sourceRootElem>../../src/libkmc</sourceRootElem>
+                <sourceRootElem>../../../include</sourceRootElem>
+                <sourceRootElem>../../src/libkmc</sourceRootElem>
+                <sourceRootElem>../../../include</sourceRootElem>
+                <sourceRootElem>../../src/libkmc</sourceRootElem>
+                <sourceRootElem>../../../include</sourceRootElem>
+                <sourceRootElem>../../src/libkmc</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

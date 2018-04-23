@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 
 
 enable_language(CXX)
+set (CMAKE_CXX_STANDARD 11)
 
 ######################################################################
 # compiler tests
@@ -27,7 +28,7 @@ endif()
 
 #set(CMAKE_CXX_FLAGS "-O0 -fno-elide-constructors -pedantic-errors -ansi -Wextra -Wall     -Winit-self -Wold-style-cast -Woverloaded-virtual -Wuninitialized -Wmissing-declarations    -Winit-self -std=c++98")
 
-set(CMAKE_CXX_FLAGS "-O0 -Wall -Werror")
+#set(CMAKE_CXX_FLAGS "-O0 -Wall -Werror")
 
 
 ########################################################################

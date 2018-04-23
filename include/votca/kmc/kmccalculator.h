@@ -18,22 +18,34 @@
 #ifndef __VOTCA_KMC_CALCULATOR_H
 #define	__VOTCA_KMC_CALCULATOR_H
 
+#include <votca/tools/calculator.h>
 #include <votca/tools/property.h>
 
 namespace votca { namespace kmc {
 
     using namespace tools;
 
-class KMCCalculator
+class KMCCalculator : public Calculator
 {
 public:
     
     KMCCalculator() {};
     virtual     ~KMCCalculator() {};
-    
+
+    // identifies a calculator (needed for the filename of the xml file with help)
+    virtual std::string  Identify() = 0;    
+    // dummy implementation of the pure virtual function in tools
+    void Initialize(Property *options) = 0;
+    // need to check why this is needed
     virtual void Initialize(const char *filename, Property *options, const char *outputfile) {}
+    // evaluate function every calculator runs
     virtual bool EvaluateFrame() { return true; }
+    // data accumulation at the end of the run
     virtual void EndEvaluate() {}    
+    // default values 
+    void UpdateWithDefaults( votca::tools::Property *options ) {
+         votca::tools::Calculator::UpdateWithDefaults(options, "kmc");
+    }
     
     void         setnThreads(int nThreads) { _nThreads = nThreads; }
     

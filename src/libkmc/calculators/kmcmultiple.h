@@ -28,6 +28,7 @@
 #include <time.h>
 
 #include <votca/tools/vec.h>
+#include <votca/tools/matrix.h>
 #include <votca/tools/statement.h>
 #include <votca/tools/database.h>
 #include <votca/tools/tokenizer.h>
@@ -36,12 +37,21 @@
 
 #include <unordered_map>
 #include <cmath> // needed for abs(double)
-#include "node.h"
+#include <votca/kmc/node.h>
+#include <math.h> // needed for fmod()
+
+using namespace std;
+
+typedef votca::tools::vec myvec;
 
 namespace votca { namespace kmc {
 
 static double kB   = 8.617332478E-5; // eV/K
 static double hbar = 6.5821192815E-16; // eV*s
+
+static double eps0 = 8.85418781762E-12/1.602176565E-19; // e**2/eV/m = 8.85418781762E-12 As/Vm
+static double epsr = 3.0; // relative material permittivity
+
 static double Pi   = 3.14159265358979323846;
 
 typedef unordered_map<unsigned long, double> CoulombMap;
@@ -53,8 +63,10 @@ class Chargecarrier
         int position;
         int id;
         Node *node;
+
         bool forbidden;
         votca::tools::vec dr_travelled;
+        double tof_travelled;
 };
 
 
@@ -88,28 +100,37 @@ public:
     KMCMultiple() {};
    ~KMCMultiple() {};
 
+    std::string  Identify() {return "kmcmultiple"; };
+    
+    void Initialize(Property *options) {}  
+        
     void Initialize(const char *filename, Property *options, const char *outputfile );
     bool EvaluateFrame();
 
 protected:
 	    vector<Node*>  LoadGraph();
-            vector<double> RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable);//, CoulombMap coulomb);
+
+            vector<double> RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable);// CoulombMap coulomb);
             void WriteOcc(vector<double> occP, vector<Node*> node);
             void InitialRates(vector<Node*> node);
+
             void InitBoxSize(vector<Node*> node);
 
             string _injection_name;
             string _injectionmethod;
             int _injectionfree;
             double _runtime;
+            double _maxrealtime;
             int _seed;
             int _numberofcharges;
             int _allowparallel;
             double _fieldX;
             double _fieldY;
             double _fieldZ;
+            myvec _field;
             double _outputtime;
             string _trajectoryfile;
+            string _timefile;
             string _carriertype;
             double _temperature;
             string _filename;
@@ -119,6 +140,10 @@ protected:
             double _boxsizeY;
             double _boxsizeZ;
             string _rates;
+            int    _tof;
+            double _toflength;
+            string _tofdirection;
+            double _coulomboffset;
 };
 
 
@@ -129,6 +154,12 @@ void KMCMultiple::Initialize(const char *filename, Property *options, const char
 	}
 	else {
 	    throw runtime_error("Error in kmcmultiple: total run time is not provided");
+        }
+    	if (options->exists("options.kmcmultiple.maxrealtime")) {
+	    _maxrealtime = options->get("options.kmcmultiple.maxrealtime").as<double>();
+	}
+        else{
+            _maxrealtime = 1E10; // maximal real time in hours
         }
     	if (options->exists("options.kmcmultiple.seed")) {
 	    _seed = options->get("options.kmcmultiple.seed").as<int>();
@@ -183,6 +214,7 @@ void KMCMultiple::Initialize(const char *filename, Property *options, const char
         else {
             _fieldZ = 0;
         }
+        _field = myvec(_fieldX,_fieldY,_fieldZ);
         if (options->exists("options.kmcmultiple.outputtime")) {
 	    _outputtime = options->get("options.kmcmultiple.outputtime").as<double>();
 	}
@@ -197,6 +229,15 @@ void KMCMultiple::Initialize(const char *filename, Property *options, const char
         }
         if (_trajectoryfile == "") {
             _trajectoryfile = "trajectory.csv";
+        }
+        if (options->exists("options.kmcmultiple.timefile")) {
+	    _timefile = options->get("options.kmcmultiple.timefile").as<string>();
+	}
+        else {
+            _timefile = "timedependence.csv";
+        }
+        if (_timefile == "") {
+            _timefile = "timedependence.csv";
         }
         if (options->exists("options.kmcmultiple.carriertype")) {
 	    _carriertype = options->get("options.kmcmultiple.carriertype").as<string>();
@@ -238,6 +279,37 @@ void KMCMultiple::Initialize(const char *filename, Property *options, const char
 	    cout << "WARNING in kmcmultiple: Invalid option rates. Valid options are 'statefile' or 'calculate'. Setting it to 'statefile'." << endl;
             _rates = "statefile";
         }
+
+
+        if (options->exists("options.kmcmultiple.tofdirection")) {
+	    _tofdirection = options->get("options.kmcmultiple.tofdirection").as<string>();
+	}
+        if (_tofdirection != "x" && _tofdirection != "y" && _tofdirection != "z"  ) {
+	    _tofdirection = "y";
+	}
+        if (options->exists("options.kmcmultiple.tof")) {
+	    _tof = options->get("options.kmcmultiple.tof").as<int>();
+	}
+        if(_tof == 1){
+            cout << "Time of flight experiment: ON" << endl;
+            cout << "direction for TOF condition: " << _tofdirection << endl;
+        }
+        else{
+            cout << "Time of flight experiment: OFF (bulk mode)" << endl;
+        }
+        if (options->exists("options.kmcmultiple.toflength")) {
+	    _toflength = options->get("options.kmcmultiple.toflength").as<double>() * 1E-9;
+            cout << "Sample length for TOF experiment: " << _toflength*1E9 << " nm" << endl;
+	}
+        else{
+            if(_tof==1){
+                cout << "WARNING: time-of-flight mode one, but no sample length (option toflength) defined. Setting it to 50 nm" << endl;
+                _toflength = 50.0E-9;
+            }
+        }
+  
+
+        
         
 
         _filename = filename;
@@ -307,6 +379,7 @@ vector<Node*> KMCMultiple::LoadGraph()
         double rate12 = stmt->Column<double>(2);
 
         votca::tools::vec dr = votca::tools::vec(stmt->Column<double>(3)*1E-9, stmt->Column<double>(4)*1E-9, stmt->Column<double>(5)*1E-9); // converted from nm to m
+
         double Jeff2 = stmt->Column<double>(6);
         double reorg_out = stmt->Column<double>(7); 
         node[seg1]->AddEvent(seg2,rate12,dr,Jeff2,reorg_out);
@@ -327,12 +400,20 @@ vector<Node*> KMCMultiple::LoadGraph()
 
 /*CoulombMap KMCMultiple::LoadCoulomb(int numberofnodes)
 {
-    // Load Coulomb energies
-    CoulombMap coulomb;
+    // Load minimum coulomb energy
     votca::tools::Database db;
     db.Open( _filename );
+    votca::tools::Statement *stmt1 = db.Prepare("SELECT MIN(coulomb_"+_carriertype+_carriertype+") FROM coulomb;");
+    stmt1->Step();
+    double mincoulomb = stmt1->Column<double>(0);
+    
+    cout << "Minimum Coulomb energy of " << mincoulomb << " eV chosen as offset." << endl;
+    
+    
+    // Load Coulomb energies
+    CoulombMap coulomb;
     cout << "Loading Coulomb energies from database file " << _filename << endl;
-    votca::tools::Statement *stmt = db.Prepare("SELECT seg1-1 AS 'segment1', seg2-1 AS 'segment2', coulombenergy FROM coulomb UNION SELECT seg2-1 AS 'segment1', seg1-1 AS 'segment2', coulombenergy FROM coulomb ORDER BY segment1;");
+    votca::tools::Statement *stmt = db.Prepare("SELECT seg1-1 AS 'segment1', seg2-1 AS 'segment2', coulomb_"+_carriertype+_carriertype+" FROM coulomb UNION SELECT seg2-1 AS 'segment1', seg1-1 AS 'segment2', coulomb_"+_carriertype+_carriertype+" FROM coulomb ORDER BY segment1;");
 
     int numberofinteractions = 0;
     while (stmt->Step() != SQLITE_DONE)
@@ -340,7 +421,7 @@ vector<Node*> KMCMultiple::LoadGraph()
 
         int seg1 = stmt->Column<int>(0);
         int seg2 = stmt->Column<int>(1);
-        double coulombenergy = stmt->Column<double>(2);
+        double coulombenergy = stmt->Column<double>(2) - mincoulomb;
         coulomb[seg1+numberofnodes*seg2] = coulombenergy;
         numberofinteractions ++;
     }
@@ -374,7 +455,7 @@ int Forbidden(int id, vector<int> forbiddenlist)
     return forbidden;
 }
 
-int ForbiddenEvents(int id, vector<Event> forbiddenevent)
+int ForbiddenEvents(int id, vector<Event_OLD> forbiddenevent)
 {
     // cout << "forbidden list has " << forbiddenlist.size() << " entries" << endl;
     int forbidden = 0;
@@ -389,7 +470,6 @@ int ForbiddenEvents(int id, vector<Event> forbiddenevent)
     }
     return forbidden;
 }
-
 
 int Surrounded(Node* node, vector<int> forbiddendests)
 {
@@ -432,7 +512,7 @@ void printtime(int seconds_t)
     }
     char buffer [50];
     int n = sprintf(buffer, "%d:%02d:%02d",hours,minutes,seconds);
-    printf("%s %i",buffer,n);
+    printf("%s%d",buffer,n);
 }
 
 
@@ -464,14 +544,23 @@ void KMCMultiple::InitBoxSize(vector<Node*> node)
             if(node[i]->event[j].dr.x() < mindX && node[i]->event[j].dr.x() > 0) mindX = node[i]->event[j].dr.x();
             if(node[i]->event[j].dr.y() < mindY && node[i]->event[j].dr.y() > 0) mindY = node[i]->event[j].dr.y();
             if(node[i]->event[j].dr.z() < mindZ && node[i]->event[j].dr.z() > 0) mindZ = node[i]->event[j].dr.z();
-        }
+        }   
     }
     _boxsizeX = maxX-minX + mindX;
     _boxsizeY = maxY-minY + mindY;
     _boxsizeZ = maxZ-minZ + mindZ;
-    cout << "lattice constants (X,Y,Z): " << mindX << ", " << mindY << ", " << mindZ << endl;
-    cout << "cell dimensions: " << _boxsizeX << " x " << _boxsizeY << " x " << _boxsizeZ << endl;
+    
+    double maxdist = _boxsizeX;
+    if(_boxsizeY > maxdist) maxdist = _boxsizeY;
+    if(_boxsizeZ > maxdist) maxdist = _boxsizeZ;
+    maxdist = maxdist /2;
+    
+    // cout << "lattice constants (X,Y,Z): " << mindX << ", " << mindY << ", " << mindZ << endl;
+    cout << "cell dimensions: " << _boxsizeX*1E9 << " x " << _boxsizeY*1E9 << " x " << _boxsizeZ*1E9 << "nm^3" << endl;
     cout << "spatial electron density: " << _numberofcharges/_boxsizeX/_boxsizeY/_boxsizeZ << " m^-3" << endl;
+    _coulomboffset = 1.4399644850445791e-09 / maxdist; 
+    cout << "Coulomb energy offset: " << _coulomboffset << " eV (for the maximal distance " << maxdist*1E9 << " nm)." << endl;
+    
 }
 
 void KMCMultiple::InitialRates(vector<Node*> node)
@@ -545,7 +634,167 @@ void KMCMultiple::InitialRates(vector<Node*> node)
     }
 }
 
-vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable)//, CoulombMap coulomb)
+
+/*void KMCMultiple::RateUpdateCoulomb(vector<Node*> &node,  vector< Chargecarrier* > &carrier, CoulombMap &coulomb)
+{
+    // Calculate new rates for all possible events, i.e. for the possible hoppings of all occupied nodes
+    //cout << "Updating Coulomb interaction part of rates." << endl;
+    //#pragma omp parallel for
+    for(unsigned int cindex=0; cindex<carrier.size(); cindex++)
+    {
+        //cout << "  carrier no. "<< cindex+1 << endl;
+        Node *node_i = carrier[cindex]->node;
+        double escaperate = 0;
+        //#pragma omp parallel for
+        for(unsigned int destindex=0; destindex<node_i->event.size(); destindex++)
+        {
+            int destid = node_i->event[destindex].destination;
+            Node *node_j = node[destid];
+            if(node_j->occupied == 1)
+            {  // in principal shouldn't be needed:
+               node_i->event[destindex].rate = 0;
+               // escaperate += node_i->event[destindex].rate;
+            }
+            else
+            {
+                //cout << "    event i->j: " << node_i->id+1 << " -> " << node_j->id+1 << endl;
+                // getting the correction factor for the rate i->j (node_i -> node_j)
+                // now calculating the contribution for all neighbouring charges
+                double coulombsum = 0;
+                
+                int dimension = node.size();
+                //#pragma omp parallel for reduction(+:coulombsum)
+                for(unsigned int ncindex=0; ncindex<carrier.size(); ncindex++)
+                {
+                    if(_explicitcoulomb == 2) // raw Coulomb
+                    {
+                        if(ncindex != cindex)
+                        {
+                            // - E_ik
+                            myvec distancevec = carrier[ncindex]->node->position - node_i->position;
+                            double epsR = 1;
+                            double dX = std::abs(distancevec.x());
+                            double dY = std::abs(distancevec.y());
+                            double dZ = std::abs(distancevec.z());
+                            if (dX > _boxsizeX/2)
+                            {
+                                dX = _boxsizeX - dX;
+                            }
+                            if (dY > _boxsizeY/2)
+                            {
+                                dY = _boxsizeY - dY;
+                            }
+                            if (dZ > _boxsizeZ/2)
+                            {
+                                dZ = _boxsizeZ - dZ;
+                            }
+                            double distance = sqrt(dX*dX+dY*dY+dZ*dZ);
+                            double rawcoulombcontribution = 1.4399644850445791e-09 / epsR / distance - _coulomboffset;
+                            coulombsum -= rawcoulombcontribution;
+                        
+                            // + E_jk
+                            distancevec = carrier[ncindex]->node->position - node_j->position;
+                            dX = std::abs(distancevec.x());
+                            dY = std::abs(distancevec.y());
+                            dZ = std::abs(distancevec.z());
+                            if (dX > _boxsizeX/2)
+                            {
+                                dX = _boxsizeX - dX;
+                            }
+                            if (dY > _boxsizeY/2)
+                            {
+                                dY = _boxsizeY - dY;
+                            }
+                            if (dZ > _boxsizeZ/2)
+                            {
+                                dZ = _boxsizeZ - dZ;
+                            }
+                            distance = sqrt(dX*dX+dY*dY+dZ*dZ);
+                            rawcoulombcontribution = 1.4399644850445791e-09 / epsR / distance - _coulomboffset;
+                            coulombsum += rawcoulombcontribution;
+                        }
+                    }
+                    
+                    else // _explicitcoulomb==1 (partial charges)
+                    {
+                        CoulombIt coul_iterator;
+                        Node *node_k = carrier[ncindex]->node;
+                        if(ncindex != cindex) // charge doesn't have Coulomb interaction with itself
+                        {
+                            // - E_ik
+                            // check if there is an entry for this interaction
+                            unsigned long key = node_i->id + dimension * carrier[ncindex]->node->id;
+                            
+                            
+                            coul_iterator = coulomb.find(key);
+                            int additionmade = 0;
+                            int substractionmade = 0;
+                            double contribution = 0;
+                            if( coul_iterator != coulomb.end() )
+                            {
+                                // if there is an entry, add it to the Coulomb sum
+                                //cout << "substracted " << coul_iterator->second << endl;
+                                contribution -= coul_iterator->second;
+                                substractionmade = 1;
+                            }
+                            
+                            // + E_jk
+                            key = node_j->id + dimension * carrier[ncindex]->node->id;
+                            coul_iterator = coulomb.find(key);
+                            if( coul_iterator != coulomb.end() && substractionmade == 1)
+                            {
+                                // if there is an entry, add it to the Coulomb sum
+                                //cout << "added " << coul_iterator->second << endl;
+                                contribution += coul_iterator->second;
+                                // cout << " - "<< coul_iterator->second;
+                                additionmade = 1;
+                            }
+                            if(additionmade == 1 && substractionmade == 1)
+                            {  // makes sure not to create cutoff-caused unbalanced additions/substractions
+                                coulombsum += contribution;
+                                // cout << " = "<< contribution << endl;
+                            }
+                        }
+                    // end else mode=partialcharges
+                    }
+
+                }
+                double dX =  node_i->event[destindex].dr.x();
+                double dY =  node_i->event[destindex].dr.y();
+                double dZ =  node_i->event[destindex].dr.z();
+                double dG_Field = _q * (dX*_fieldX +  dY*_fieldY + dZ*_fieldZ);
+                double reorg = node_i->reorg_intorig + node_j->reorg_intdest + node_i->event[destindex].reorg_out;
+                double dG_Site = node_j->siteenergy - node_i->siteenergy;
+                double dG = dG_Site - dG_Field;
+                double coulombfactor = exp(-(2*(dG_Site+reorg) * coulombsum + coulombsum*coulombsum) / (4*reorg*kB*_temperature) );
+                //if (coulombsum != 0) {
+                //cout << "coulombsum = " << coulombsum << endl;
+                //cout << "coulombfactor = " << coulombfactor << endl;
+                //}
+            
+                // multiply rates by coulomb factor
+                double newrate = node_i->event[destindex].initialrate * coulombfactor;
+                // cout << "initial rate: " << node_i->event[destindex].initialrate << endl;
+                // cout << "reorg: " << reorg << endl;
+                // cout << "dG_Site: " << dG_Site << endl;
+                // cout << "dG_Field: " << dG_Field << endl;
+                // cout << "coulombsum: " << coulombsum << endl;
+                // cout << "coulombfactor: " << coulombfactor << endl;
+                // cout << "distance: " << sqrt(dX*dX+dY*dY+dZ*dZ) << endl;
+                // cout << "full Coulomb rate: " << newrate << endl << endl;
+                // cout << "changed from " << node_i->event[destindex].rate << " to " << newrate << endl;
+                node_i->event[destindex].rate = newrate;
+            
+                escaperate += newrate;
+            }
+        }
+        node_i->escaperate = escaperate;
+        
+        
+    }
+}*/
+
+vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned int numberofcharges, votca::tools::Random2 *RandomVariable) // CoulombMap coulomb)
 {
 
     int realtime_start = time(NULL);
@@ -554,6 +803,11 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << "number of nodes: " << node.size() << endl;
     string stopcondition;
     unsigned long maxsteps = 0;
+    
+    int diffusionsteps = 0;
+    int diffusion_stepsize = 10000;
+    matrix avgdiffusiontensor;
+    
     if(runtime > 100)
     {
         stopcondition = "steps";
@@ -736,6 +990,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     double nextoutput = outputfrequency;
     unsigned long nextstepoutput = outputstepfrequency;
     double nexttrajoutput = _outputtime;
+    int nextdiffstep = diffusion_stepsize;
     
     progressbar(0.);
     vector<int> forbiddennodes;
@@ -784,7 +1039,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             Node* do_newnode;
             double escaperate = 0;
             Chargecarrier* do_affectedcarrier;
-            //double escaperateweight = 0;
+
+            double escaperateweight = 0;
             
             double u = 1 - RandomVariable->rand_uniform();
             for(unsigned int i=0; i<numberofcharges; i++)
@@ -924,9 +1180,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                         {
                             // Removes the ForbiddenEvent and adjust the escape rate
                             node[do_oldnode->event[j].destination]->RemoveForbiddenEvent(do_oldnode->id);
-                            //node[do_oldnode->event[j].destination]->ClearForbiddenevents();
                             //node[do_oldnode->event[j].destination]->escaperate= node[do_oldnode->event[j].destination]->initialescaperate;
-                            
+                            //(node[do_oldnode->event[j].destination])->ClearForbiddenevents();
                         }
                     }
                     if(votca::tools::globals::verbose) {cout << "Charge has jumped to segment: " << do_newnode->id+1 << "." << endl;}
@@ -938,6 +1193,15 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             }
         // END LEVEL 1
         }    
+        if(step > nextdiffstep)       
+        {
+            nextdiffstep += diffusion_stepsize;
+            for(unsigned int i=0; i<numberofcharges; i++) 
+            {
+                diffusionsteps  += 1;
+                avgdiffusiontensor += (startposition[i]+carrier[i]->dr_travelled)|(startposition[i]+carrier[i]->dr_travelled);
+            }
+        }
         
         if(_outputtime != 0 && simtime > nexttrajoutput)       
         {
@@ -994,6 +1258,8 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     cout << "runtime: ";
     printtime(time(NULL) - realtime_start); 
     votca::tools::vec dr_travelled = votca::tools::vec (0,0,0);
+    votca::tools::vec avgvelocity = myvec(0,0,0);
+
     cout << endl << "Average velocities (m/s): " << endl;
     for(unsigned int i=0; i<numberofcharges; i++)
     {
@@ -1002,14 +1268,45 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         dr_travelled += carrier[i]->dr_travelled;
     }
     dr_travelled /= numberofcharges;
+    avgvelocity = dr_travelled/simtime; 
     //cout << std::scientific << "  Overall average velocity (m/s): " << dr_travelled/simtime*1e-9 << endl;
-    cout << std::scientific << "  Overall average velocity (m/s): " << dr_travelled/simtime << endl;
+    cout << std::scientific << "  Overall average velocity (m/s): " << avgvelocity << endl;
 
     cout << endl << "Distances travelled (m): " << endl;
     for(unsigned int i=0; i<numberofcharges; i++)
     {
         cout << std::scientific << "    charge " << i+1 << ": " << carrier[i]->dr_travelled << endl;
     }
+    
+    
+    // calculate diffusion tensor
+    avgdiffusiontensor /= (diffusionsteps*2*simtime*numberofcharges);
+    cout<<endl<<"Diffusion tensor averaged over all carriers (m^2):" << endl << avgdiffusiontensor << endl;
+
+    matrix::eigensystem_t diff_tensor_eigensystem;
+    cout<<endl<<"Eigenvalues: "<<endl<<endl;
+    avgdiffusiontensor.SolveEigensystem(diff_tensor_eigensystem);
+    for(int i=0; i<=2; i++)
+    {
+        cout<<"Eigenvalue: "<<diff_tensor_eigensystem.eigenvalues[i]<<endl<<"Eigenvector: ";
+               
+        cout<<diff_tensor_eigensystem.eigenvecs[i].x()<<"   ";
+        cout<<diff_tensor_eigensystem.eigenvecs[i].y()<<"   ";
+        cout<<diff_tensor_eigensystem.eigenvecs[i].z()<<endl<<endl;
+    }
+    
+    double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
+    
+    // calculate average mobility from the Einstein relation
+    if (absolute_field == 0)
+    {
+        //myvec average_mobility = myvec (0.0,0.0,0.0);
+        cout << "The following value is calculated using the Einstein relation and assuming an isotropic medium" << endl;
+        double avgD  = 1./3. * (diff_tensor_eigensystem.eigenvalues[0] + diff_tensor_eigensystem.eigenvalues[1] + diff_tensor_eigensystem.eigenvalues[2] );
+        double average_mobility = std::abs(avgD / kB / _temperature);
+        cout << std::scientific << "  Overall average mobility <mu>=" << average_mobility << " m^2/Vs (= " << average_mobility*1E4 << "cm^2/Vs)\n\n" << endl;
+    }
+    
     
     // calculate mobilities
     //double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
@@ -1020,6 +1317,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     {
         votca::tools::vec average_mobility = votca::tools::vec (0.0,0.0,0.0);
         votca::tools::vec fieldfactors = votca::tools::vec (0.0, 0.0, 0.0);
+        
         if (_fieldX != 0)
         {
             fieldfactors.setX(1.0E4/_fieldX);
@@ -1039,6 +1337,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         {
             votca::tools::vec velocity = carrier[i]->dr_travelled/simtime;
             votca::tools::vec mobility = elementwiseproduct(velocity, fieldfactors);
+
             average_mobility += mobility;
             cout << std::scientific << "    charge " << i+1 << ": ";
             if (_fieldX != 0)
@@ -1056,7 +1355,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             cout << endl;
         }
         if (numberofcharges != 0){
-            cout << std::scientific << "  Overall average mobilities ";
+            cout << std::scientific << "  Overall average mobility ";
             average_mobility /= numberofcharges;
             if (_fieldX != 0)
             {
@@ -1073,11 +1372,27 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
             cout << endl;
         }
         cout << endl;
+
+        
+        string direction = "";
+        double field = 0;
+        if(_fieldX != 0 && _fieldY == 0 && _fieldZ == 0) {direction = "x"; field = _fieldX;}
+        else if(_fieldX == 0 && _fieldY != 0 && _fieldZ == 0) {direction = "y"; field = _fieldY;}
+        else if(_fieldX == 0 && _fieldY == 0 && _fieldZ != 0) {direction = "z"; field = _fieldZ;}
+        if(direction != "")
+        {
+            cout << "components of the mobility tensor in " << direction << " direction (cm^2/Vs):" << endl;
+            double mu1 = avgvelocity.getX()/field;
+            double mu2 = avgvelocity.getY()/field;
+            double mu3 = avgvelocity.getZ()/field;
+            cout << "mu_x" << direction << " = " << mu1*1.0E4 << endl;
+            cout << "mu_y" << direction << " = " << mu2*1.0E4 << endl;
+            cout << "mu_z" << direction << " = " << mu3*1.0E4 << endl;
+        }
     }
     
     return occP;
 }
-
 
 void KMCMultiple::WriteOcc(vector<double> occP, vector<Node*> node)
 {
@@ -1116,7 +1431,7 @@ bool KMCMultiple::EvaluateFrame()
     {
         cout << endl << "Explicit Coulomb Interaction: ON (Partial Charges)." << endl << "[explicitcoulomb=1]" << endl;
         KMCMultiple::InitialRates(node);
-        coulomb = KMCMultiple::LoadCoulomb(node.size());
+        //coulomb = KMCMultiple::LoadCoulomb(node.size());
     }
     else if(_explicitcoulomb == 2)
     {
@@ -1139,7 +1454,7 @@ bool KMCMultiple::EvaluateFrame()
     //}
     vector<double> occP(node.size(),0.);
 
-    occP = KMCMultiple::RunVSSM(node, _runtime, _numberofcharges, RandomVariable);//, coulomb);
+    occP = KMCMultiple::RunVSSM(node, _runtime, _numberofcharges, RandomVariable);
     
     // write occupation probabilites
     KMCMultiple::WriteOcc(occP, node);

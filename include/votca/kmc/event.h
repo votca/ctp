@@ -15,233 +15,132 @@
  *
  */
 
+#include <votca/kmc/state.h>
+#include <votca/tools/random2.h>
+
 #ifndef __VOTCA_KMC_EVENT_H_
 #define __VOTCA_KMC_EVENT_H_
 
-#include <votca/kmc/state.h>
-#include <votca/kmc/graph.h>
-#include <votca/kmc/globaleventinfo.h>
-
 namespace votca { namespace kmc {
   
-using namespace std;
-
-enum From_step_event {Fromtransfer, Injection, Fromnotinbox};
-enum To_step_event {Totransfer, Recombination, Collection, Blocking, Tonotinbox};
-
-/*
- * Abstract base class for all events  
- */
 class Event {
     
 public:
+    
+   Event(){ enabled = false; expired = false; has_expired_subordinates = false; };
+   virtual ~Event(){};     
 
-    From_step_event fromtype;
-    To_step_event totype;
-    double rate;
-    Graph* graph;
+   virtual std::string Type() = 0;
+   virtual void OnExecute( State* state, votca::tools::Random2 *RandomVariable ) = 0;
+   
+   void Expire() { expired = true; parent->has_expired_subordinates = true; }  
+   bool Expired(){ return expired; };
+   
+   // Disables the event (its rate is removed from the Cumulative Rate of the parent)
+   void Disable(){ enabled = false; };
+   // Enables the event (its rate is added to the Cumulative Rate of the parent)
+   void Enable(){  enabled = true;  };
+   bool Enabled(){ return enabled; };
     
-    Carrier* carrier;
-    int tonode_ID;    
+   void Unavailable() { unavailable = true; }; //enabled = false;};
+   void Available() { unavailable = false;};//enabled = true;};
+   bool UnivailableEvent() { return unavailable;};
+
+   double Rate() { return rate; };
+   void SetRate( double _rate ) { rate = _rate; };
+   
+   Event* GetParent(){ return parent; };
+   void SetParent( Event* _parent ){ parent = _parent; };
+   
+   void AddSubordinate( Event* _event ) { 
+       _event->SetParent( this );
+       subordinate.push_back( _event ); 
+   };
     
-    Node* electrode;
-    CarrierType inject_cartype;
+   // marks all subordinate events as expired
+   void ExpireSubordinates(){
+       for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ++it ) {
+           (*it)->Expire();
+       }
+       //std::cout << "Expired " << subordinate.size() << " subordinate events" << std::endl;
+   }
+   
+   void RemoveExpired() {
+       if ( has_expired_subordinates ) {
+            Event* event;
+            int count = 0;
+            for ( std::vector< Event* >::iterator it = subordinate.begin(); it != subordinate.end(); ) {
+                event = *it;
+                if ( event->Expired() ) {
+                    count++;
+                    delete event;
+                    subordinate.erase( it );
+                } else {
+                    ++it;
+                }
+            }
+          //std::cout << "Removing expired events: " << count << " deleted" << std::endl;
+           has_expired_subordinates = false;
+       }
+   }
+        
+   void ClearSubordinate() { subordinate.clear(); };
+   
+    // iterator over subordinate events
+    typedef std::vector< Event* >::iterator iterator;
+    typedef const std::vector< Event* >::iterator const_iterator;
     
-    void Set_injection_event(Node* electrode, int injectnode_ID, CarrierType carrier_type,
-                                 double from_longrange, double to_longrange, Globaleventinfo* globevent);
-    void Set_non_injection_event(vector<Node*> nodes, Carrier* carrier, int jump_ID,
-                                 double from_longrange, double to_longrange, Globaleventinfo* globevent);
+    iterator begin() { return subordinate.begin(); }
+    iterator end() { return subordinate.end(); }    
+
+    // sum of all rates of enabled subordinate events
+    double CumulativeRate() {
+
+        if ( subordinate.empty() ) {return rate;}
+        
+        else
+        {
+            double rate_ = 0.0;
+            for ( Event::iterator event = begin(); event != end(); ++event  ) {
+                if ( (*event)->Enabled() ) { rate_ += (*event)->CumulativeRate(); }
+            }
+            rate = rate_;
+            return rate;
+            }        
+    }
+   
+    virtual void Print(std::string offset="") {
+        std::cout << offset << Type(); 
+                if (enabled) { std::cout << " enabled"; } else { std::cout << " disabled"; };
+                std::cout << " subordinates: " << subordinate.size() 
+                << " rate: " << rate 
+                << " cumulative rate: " << CumulativeRate() <<  std::endl;
+        offset += "-- "; 
+        for(auto& event:  subordinate ) {
+            event->Print(offset);
+        }
+    }
+
     
 private:
-    From_step_event Determine_non_injection_from_event_type(Carrier* carrier);
-    To_step_event Determine_non_injection_to_event_type(Carrier* carrier, int jumpID, Node* carriernode);
-    To_step_event Determine_injection_to_event_type(CarrierType carrier_type, Node* electrode, int inject_nodeID);
-
-    double Compute_event_rate(Node* fromnode, int jump_ID, CarrierType carrier_type,
-                            From_step_event from_event_type, To_step_event to_event_type,
-                            double from_shortrange, double to_shortrange, double from_longrange, double to_longrange,
-                            Globaleventinfo* globaleventinfo);
+    // if true, the rate of this event will be added to the Cumulative Rate of the parent node
+    bool enabled;
+    // if true, OnExecute of the parent node will remove this event after calling its OnExecute
+    bool expired;
+    //If true, the node to is already occupied - only for event move events
+    bool unavailable;
+    // if the event has expired subordinates
+    bool has_expired_subordinates;
+    // Fixed rate in case the event does not have subordinate events
+    double rate;
     
+    // parent event
+    Event* parent;
+    
+    // subordinate events
+    std::vector< Event* > subordinate;
 };
-
-void Event::Set_injection_event(Node* electrode, int injectnode_ID, CarrierType carrier_type,
-                              double from_longrange, double to_longrange, Globaleventinfo* globevent) {
-    
-    fromtype = Injection;
-    totype = Determine_injection_to_event_type(carrier_type, electrode, injectnode_ID);
-    rate = Compute_event_rate(electrode, injectnode_ID, carrier_type, fromtype, totype,
-                              0, 0.0, from_longrange, to_longrange, globevent);
-       
-}
-
-void Event::Set_non_injection_event(vector<Node*> nodes, Carrier* carrier, int jump_ID,
-                                 double from_longrange, double to_longrange, Globaleventinfo* globaleventinfo) {
-    
-    fromtype = Determine_non_injection_from_event_type(carrier);
-    totype = Determine_non_injection_to_event_type(carrier, jump_ID, nodes[carrier->carrier_node_ID]);
-    rate = Compute_event_rate(nodes[carrier->carrier_node_ID], jump_ID, carrier->carrier_type, fromtype, totype,
-                                     carrier->srfrom, carrier->srto[jump_ID], from_longrange, to_longrange,
-                                     globaleventinfo);    
-}
-
-double Event::Compute_event_rate(Node* fromnode, int jump_ID, CarrierType carrier_type,
-                                     From_step_event from_event_type, To_step_event to_event_type,
-                                     double from_shortrange, double to_shortrange, double from_longrange, double to_longrange,
-                                     Globaleventinfo* globevent){
-
-    Node* jumptonode = fromnode->pairing_nodes[jump_ID];
-
-    double prefactor = 1.0;
-    double charge;
-    double static_node_energy_from;
-    double static_node_energy_to;
-    
-    if(carrier_type == Electron) {
-        charge = 1.0;
-        prefactor *= globevent->electron_prefactor;
-        static_node_energy_from = fromnode->static_electron_node_energy;
-        static_node_energy_to = jumptonode->static_electron_node_energy; 
-    }
-    else {
-        charge = -1.0;
-        prefactor *= globevent->hole_prefactor;
-        static_node_energy_from = fromnode->static_hole_node_energy;
-        static_node_energy_to = jumptonode->static_hole_node_energy;
-    }
-    
-    //first calculate quantum mechanical wavefunction overlap
-    myvec distancevector = fromnode->static_event_info[jump_ID].distance;
-    double distance = abs(distancevector);
-    
-    double distancefactor = exp(-1.0*globevent->alpha*distance);
-  
-    //second, calculate boltzmann factor (Coulomb interaction still have to be implemented)
-   
-    double init_energy;
-    double final_energy;
-    double selfimpot_from = fromnode->self_image_potential;
-    double selfimpot_to = jumptonode->self_image_potential;
-    double fromtype_energy = 0.0;
-    double totype_energy = 0.0;
-    
-    if(from_event_type == Injection) {
-        fromtype_energy -= globevent->injection_barrier;
-        prefactor *= globevent->injection_prefactor;
-    }
-    if(to_event_type == Recombination) {
-        totype_energy -= globevent->binding_energy;
-        prefactor *= globevent->recombination_prefactor;
-    }
-    if(to_event_type == Collection) {
-        totype_energy -= globevent->injection_barrier;
-        prefactor *= globevent->collection_prefactor;
-    }
-    
-    double coulomb_from;
-    double coulomb_to;
-    
-    if ((from_event_type != Injection)) { 
-        coulomb_from = globevent->coulomb_strength*(from_shortrange+charge*from_longrange);
-        coulomb_to = globevent->coulomb_strength*(to_shortrange+charge*to_longrange);
-    }
-    else {// if(from_event_type == Injection){
-        coulomb_from = 0.0;
-        coulomb_to = charge*globevent->coulomb_strength*(jumptonode->injection_potential+to_longrange);
-    }
-      
-    init_energy = static_node_energy_from + selfimpot_from + coulomb_from;
-    final_energy = static_node_energy_to + selfimpot_to + coulomb_to;
-    
-    double energycontrib;
-    double energyfactor;
-    
-    if (globevent->formalism == "Miller") {
-        if(to_event_type == Blocking) {
-            energyfactor = 0.0; // Keep this here for eventual simulation of bipolaron formation for example
-        }
-        else if((from_event_type == Fromnotinbox)&&(to_event_type == Tonotinbox)) {
-            energyfactor = 0.0; // Keep this here for eventual simulation of one-site events (on-node generation)
-        }
-        else {
-            energycontrib = final_energy - init_energy -charge*globevent->efield*distancevector.x();
-            if (energycontrib>0.0) {
-                energyfactor = exp(-1.0*globevent->beta*energycontrib);
-            }
-            else {
-                energyfactor = 1.0;
-            }
-        }
-    } else {
-      throw runtime_error("for globevent->formalism != Miller, energyfactor is undefined");
-    }
-    
-    double jump_rate = prefactor*distancefactor*energyfactor;
-    return jump_rate;    
-}
-
-From_step_event Event::Determine_non_injection_from_event_type(Carrier* carrier){
-    
-    From_step_event from_type;
-    
-    if(!carrier->is_in_sim_box){
-        from_type = Fromnotinbox;
-    }
-    else {
-        from_type = Fromtransfer;
-    }
-    
-    return from_type;
-    
-}
-
-To_step_event Event::Determine_non_injection_to_event_type(Carrier* carrier, int jumpID, Node* carriernode){
-    
-    To_step_event to_type;
-    
-    if(!carrier->is_in_sim_box){
-        to_type = Tonotinbox;
-    }
-    else {
-        int node_degree = carriernode->pairing_nodes.size();
-        if(jumpID < node_degree) { // hopping event exists in graph
-            Node* jumpnode = carriernode->pairing_nodes[jumpID];
-            if(jumpnode->carriers_on_node.empty()){
-                to_type = Totransfer;
-            }
-            else if(jumpnode->carriers_on_node[0]->carrier_type == carrier->carrier_type) {
-                to_type = Blocking;
-            }
-            else{// if(jumpnode->carriers_on_node[0]->carrier_type != carrier->carrier_type) {
-                to_type = Recombination;
-            }
-        }
-        else {
-            to_type = Tonotinbox;
-        }
-    }
-    
-    return to_type;
-}
-
-To_step_event Event::Determine_injection_to_event_type(CarrierType carrier_type, Node* electrode, int inject_nodeID){
-    
-    Node* injectnode = electrode->pairing_nodes[inject_nodeID];
-    if(injectnode->carriers_on_node.empty()){
-        totype = Totransfer;
-    }
-    else if(injectnode->carriers_on_node[0]->carrier_type == carrier_type) {
-        totype = Blocking;
-    }
-    else if(injectnode->carriers_on_node[0]->carrier_type != carrier_type) {
-        totype = Recombination;
-    }
-    
-    return totype;
-}
-
-
 
 }} 
 
 #endif
-

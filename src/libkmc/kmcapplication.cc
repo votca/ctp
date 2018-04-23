@@ -62,7 +62,7 @@ void KMCApplication::ShowHelpText(std::ostream &out)
 
 // check if required options are provided
 bool KMCApplication::EvaluateOptions() {
-
+    
            if(OptionsMap().count("list")) {
             cout << "Available calculators: \n";
             for(KMCCalculatorFactory::assoc_map::const_iterator iter=Calculators().getObjects().begin();
@@ -107,19 +107,15 @@ bool KMCApplication::EvaluateOptions() {
         CheckRequired("file", "no database file specified");
         
         string _outputfile = "";
-        //if(OptionsMap()["textfile"] == NULL)
-        //{cout << "Mist!";}
+
         if(OptionsMap().count("textfile")) 
         {
             _outputfile = OptionsMap()["textfile"].as<string > ();
         }
         if(_outputfile != "")
         {
-            //char char_outputfile[1024] = {_outputfile}; // max. 1024 characters for filename
-            //char_outputfile = _outputfile;
             cout << "Output into file: " << _outputfile.c_str() << "." << endl;
-            //freopen(_outputfile.c_str(),"w",stdout);   
-            //cout << "hier ist output" << endl;
+            freopen(_outputfile.c_str(),"w",stdout);   
         }
         else
         {
@@ -127,7 +123,7 @@ bool KMCApplication::EvaluateOptions() {
         }
         
         _filename = OptionsMap()["file"].as<string > ();
-        cout << " Database file: " << _filename << endl;        
+        cout << " Database file: " << _filename << endl;     
         return true;
 }
         
@@ -149,6 +145,7 @@ void KMCApplication::Run()
 void KMCApplication::BeginEvaluate(){
     list<KMCCalculator *>::iterator iter;
     for (iter = _calculators.begin(); iter != _calculators.end(); ++iter){
+        (*iter)->Initialize(&_options);
         (*iter)->Initialize(_filename.c_str(), &_options, _outputfile.c_str());
     }
 }

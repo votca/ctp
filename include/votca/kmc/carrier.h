@@ -19,29 +19,93 @@
 #define __VOTCA_KMC_CARRIER_H_
 
 #include <votca/tools/vec.h>
+#include "bnode.h"
+#include "link.h"
 
-typedef votca::tools::vec myvec;
+// Text archive that defines boost::archive::text_oarchive
+// and boost::archive::text_iarchive
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
+// XML archive that defines boost::archive::xml_oarchive
+// and boost::archive::xml_iarchive
+//#include <boost/archive/xml_oarchive.hpp>
+//#include <boost/archive/xml_iarchive.hpp>
+
+// XML archive which uses wide characters (use for UTF-8 output ),
+// defines boost::archive::xml_woarchive
+// and boost::archive::xml_wiarchive
+//#include <boost/archive/xml_woarchive.hpp>
+//#include <boost/archive/xml_wiarchive.hpp>
+
+// Binary archive that defines boost::archive::binary_oarchive
+// and boost::archive::binary_iarchive
+//#include <boost/archive/binary_oarchive.hpp>
+//#include <boost/archive/binary_iarchive.hpp>
+
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/version.hpp>
 
 namespace votca { namespace kmc {
   
-using namespace std;
-
-enum CarrierType{ Electron, Hole};
-
 class Carrier {
 
-public:
+public: 
     
-    CarrierType carrier_type;
-    int carrier_node_ID;
-    int carrier_ID;
-    bool is_in_sim_box;
-    myvec carrier_distance;
-    double srfrom;
-    vector<double> srto;
+   Carrier(){};
+   virtual ~Carrier(){};     
+
+   virtual std::string Type() = 0;
+   
+   int id(){ return ID; };
+   void SetID( int _id ) { ID = _id; }
+   
+   void SetNode( BNode* _node ) { node = _node; };
+   BNode* GetNode() { return node; };
+   
+   votca::tools::vec Position() { return node->position; }; 
+  
+   // move the electron if possible
+   virtual bool Move( Edge* edge ) = 0;
+      
+   votca::tools::vec Distance(){ return distance; };
+   
+protected:
+    // distance travelled
+    votca::tools::vec distance;    
+    // node on which it resides
+    BNode* node;
+   
+private:
+    
+    int ID;
+
+    // position
+    votca::tools::vec position;
+ 
+    friend class boost::serialization::access;
+     
+    
+    template<typename Archive> 
+    void serialize(Archive& ar, const unsigned int version) {        
+        
+        //version-specific serialization
+        if(version == 0)  
+        {
+            ar & id;
+            ar & node->id;
+
+        }
+    }  
+        
 };
 
 }} 
+
+BOOST_CLASS_VERSION(votca::kmc::Carrier, 0)
+//BOOST_SERIALIZATION_ASSUME_ABSTRACT( Carrier );
 
 #endif
 

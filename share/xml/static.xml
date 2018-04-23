@@ -1,0 +1,24 @@
+<options>
+
+<static help="Kinetic Monte Carlo simulations using binary tree" label="calc:binary" section="sec:kmc">
+
+        <runtime help="Simulated time" unit="seconds" default="0">1E-6</runtime>
+	<nsteps help="Number of simulation steps" unit="steps" default="1">1000000</nsteps>
+        <outtime help="Time difference between outputs into the trajectory file." unit="seconds" default="1E-8">1E-10</outtime>
+        <trajectoryfile help="Name of the trajectory file" default="trajectory.csv">statictrajectory.csv</trajectoryfile>
+	<seedelectron help="Integer to initialise the random number generator for electron injection" unit="integer" default="123">123456</seedelectron>
+	<seedhole help="Integer to initialise the random number generator for hole injection" unit="integer" default="456">45678</seedhole>
+        <seed help="Integer to initialise the random number generator for events" unit="integer" default="123">123456</seed>
+        <injection help="Name pattern that specifies on which sites to inject." default="*">*</injection>
+	<injectionmethod help="Random or uniform injection of the carriers." default="random">random</injectionmethod>
+        <nelectrons help="Number of electrons in the simulation box" unit="integer" default="1">10</nelectrons>
+	<nholes help="Number of holes in the simulation box" unit="integer" default="0">0</nholes>
+        <fieldX help="x component of the external electric field" unit="V/m" default="0">0</fieldX>
+        <fieldY help="y component of the external electric field" unit="V/m" default="0">0</fieldY>
+        <fieldZ help="z component of the external electric field" unit="V/m" default="1E6">1E6</fieldZ>
+	<temperature help="Temperature of the system for rate calculation" unit="K" default="300">300</temperature>
+	<rates help="Method of rate input: read (from file) or calculate (in KMC)" default="read">read</rates>		
+
+</static>
+
+</options>

@@ -1,4 +1,5 @@
-/*
+/* 
+ *
  * Copyright 2009-2013 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,104 +7,126 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * Pascal Kordt and Timo Pulch
  */
 
-#ifndef __VOTCA_KMC_NODE_H_
-#define	__VOTCA_KMC_NODE_H_
-
-#include <vector>
+#ifndef NODE_NEW_H
+#define	NODE_NEW_H
 #include <votca/tools/vec.h>
-#include <votca/kmc/carrier.h>
 
-typedef votca::tools::vec myvec;
+using namespace votca::kmc;
 
 namespace votca { namespace kmc {
-  
-using namespace std;
 
-enum NodeType{Normal, LeftElectrode, RightElectrode};
-
-class Node {
+struct Event_OLD
+{
+    int destination;
+    double rate;
+    votca::tools::vec dr;
     
-public:
+    // stuff for Coulomb interaction
+    double Jeff2;
+    double reorg_out;
+    double initialrate;
+};
 
-    void setPair(Node* pairing_node) {pairing_nodes.push_back(pairing_node);}
-    void setStaticeventinfo(Node* pairnode, myvec dr, double rate12e, double rate12h, double Jeff2e, double Jeff2h, double reorg_oute, double reorg_outh);    
 
-    void removePair(int pairing_node_index);
+class Node
+{
+    public:
+        int id;
+        int occupied;
+        int injectable;
+        double escaperate;
+        double initialescaperate;
+        double occupationtime;
+        votca::tools::vec position;
+        vector<Event_OLD> event;
+        vector<Event_OLD> forbiddenevent;
+        // stuff for Coulomb interaction:
+        double siteenergy;
+        double reorg_intorig; // UnCnN
+        double reorg_intdest; // UcNcC
     
-    struct Static_event_info {
-        Node* pairnode;
-        myvec distance; //distance vector from start to destination node
-        double rate12e;
-        double rate12h;
-        double Jeff2e;
-        double Jeff2h;
-        double reorg_oute;
-        double reorg_outh;
-    };     
-
-    int node_ID;
-    NodeType node_type;
-    myvec node_position;
-    vector<Node*> pairing_nodes;
-    vector<Static_event_info> static_event_info;
-    vector<Carrier*> carriers_on_node;
-    
-    int layer_index;
-    
-    //static energies
-    double reorg_intorig_hole;
-    double reorg_intorig_electron;
-    double reorg_intdest_hole;
-    double reorg_intdest_electron;
+        double EscapeRate();
         
-    double eAnion;
-    double eNeutral;
-    double eCation;
-        
-    double internal_energy_electron;
-    double internal_energy_hole;
-        
-    double static_electron_node_energy;
-    double static_hole_node_energy;
-    
-    double self_image_potential;
-    
-    //for injection
-    
-    int left_injector_ID;
-    int right_injector_ID;
-    double injection_potential;
+        void AddEvent(int seg2, double rate12, votca::tools::vec dr, double Jeff2, double reorg_out);
+        void InitEscapeRate();
+        void AddForbiddenEvent(int seg2, double rate12);
+        void ClearForbiddenevents();
+        void RemoveForbiddenEvent(int seg2);
+};
+
+
+void Node::AddEvent(int seg2, double rate12, votca::tools::vec dr, double Jeff2, double reorg_out)
+{
+    Event_OLD newEvent;
+    newEvent.destination = seg2;
+    newEvent.rate = rate12;
+    newEvent.initialrate = rate12;
+    newEvent.dr = dr;
+    newEvent.Jeff2 = Jeff2;
+    newEvent.reorg_out = reorg_out;
+    this->event.push_back(newEvent);
+};
+
+void Node::AddForbiddenEvent(int seg2, double rate12)
+{
+    Event_OLD newEvent;
+    newEvent.destination = seg2;
+    newEvent.rate = rate12;
+    newEvent.initialrate = rate12;
+    newEvent.dr = {0,0,0};
+    newEvent.Jeff2 = 0;
+    newEvent.reorg_out = 0;
+    this->forbiddenevent.push_back(newEvent);
+};
+
+
+void Node::InitEscapeRate()
+{
+    double newEscapeRate = 0;
+    for(unsigned int i=0; i<this->event.size();i++)
+    {
+        newEscapeRate += this->event[i].rate;
+    }
+    this->escaperate = newEscapeRate;
+    //EDITED
+    this->initialescaperate = newEscapeRate;
+    // cout << "Escape rate for segment " << this->id << " was set to " << newEscapeRate << endl;
+};
+
+void Node::RemoveForbiddenEvent(int seg2)
+{
+    for(unsigned int i=0; i<this->forbiddenevent.size();i++){
+        if (this->forbiddenevent[i].destination ==seg2){
+            this->escaperate = this->escaperate+this->forbiddenevent[i].rate;
+            this->forbiddenevent.erase(forbiddenevent.begin()+i);
+        }
+    }
     
 };
 
-void Node::setStaticeventinfo(Node* pairnode, myvec dr, double rate12e, double rate12h, double Jeff2e, double Jeff2h, double reorg_oute, double reorg_outh) {
-    Static_event_info newStatic;
-    newStatic.pairnode = pairnode;
-    newStatic.distance = dr;
-    newStatic.rate12e = rate12e;
-    newStatic.rate12h = rate12h;
-    newStatic.Jeff2e = Jeff2e;
-    newStatic.Jeff2h = Jeff2h;
-    newStatic.reorg_oute = reorg_oute;
-    newStatic.reorg_outh = reorg_outh;
-    static_event_info.push_back(newStatic);
+void Node::ClearForbiddenevents()
+{
+    this->forbiddenevent = {};
 }
 
-void Node::removePair(int pairing_node_index) {
-    pairing_nodes.erase(pairing_nodes.begin()+pairing_node_index);
-    static_event_info.erase(static_event_info.begin()+pairing_node_index);
-}
-        
-}} 
+double Node::EscapeRate()
+{
+    return escaperate;
+};
+// END KMCMULTIPLE PART //
 
-#endif
+
+}}
+
+#endif	/* NODE_NEW_H */
 

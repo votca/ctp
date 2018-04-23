@@ -15,23 +15,132 @@
  *
  */
 
-#ifndef __VOTCA_KMC_HoleTransfer_H_
-#define __VOTCA_KMC_HoleTransfer_H_
+#ifndef __VOTCA_KMC_HOLETRANSFER_H
+#define __VOTCA_KMC_HOLETRANSFER_H
 
 #include <votca/kmc/event.h>
+#include <votca/kmc/edge.h>
+#include "carriers/hole.h"
 
 namespace votca { namespace kmc {
     
 class HoleTransfer : public Event {
-public:
     
-    void onExecute() { 
-        cout << "Hole transfer executed" << endl; 
+public:
+
+    std::string Type(){ return "hole transfer"; } ;
+        
+    void Initialize( Hole* _hole, Edge* _edge ) {
+        hole = _hole;
+        edge = _edge;
+        distance_pbc = _edge->DistancePBC();
+        SetRate( _edge->Rate_hole() );
+        //only enable this event if a carrier is provided
+        Disable();
+        if ( _hole != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
+        
     }
-    // TODO updating the state
-   
+
+    BNode* NodeFrom(){ return edge->NodeFrom(); };
+    BNode* NodeTo(){ return edge->NodeTo(); };
+    
+    // this has to go away eventually
+    void SetHole( Hole* _hole ){ hole = _hole; };
+      
+    // changes to be made after this event occurs
+    virtual void OnExecute(  State* state, votca::tools::Random2 *RandomVariable ) {
+
+        if ( hole->Move(edge) == true ) {
+
+            // disable old events
+            for (auto& event: disabled_events ) {   
+                event->Disable();     
+            }
+            //check all the events connected to the previous node (node_from)
+            for (auto& event: events_to_check) {
+
+                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+                if (event->UnivailableEvent()==true){
+                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+
+                    //if a previous unavailable event is now available (no longer occupied) - Enable it
+                    std::vector<BNode*>::iterator it_to   = hole->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == hole->h_occupiedNodes.end() ) {
+                        event->Enable();
+                    }
+                } 
+            }
+            
+            // update the parent VSSM group
+            Event* parent = GetParent();
+            parent->ClearSubordinate();
+            
+            // enable new events
+            for (auto& event: enabled_events ) {
+                parent->AddSubordinate( event );
+                event->SetHole(hole);
+                event->Enable();
+            }   
+            
+        }        
+        else 
+        { 
+            //Event move is unavailable - already occupied           
+            Unavailable();
+            //Disable this event
+            Disable();            
+        }         
+    };
+    
+    void AddEnableOnExecute( std::vector< Event* >* events ) {
+        for (auto& event: *events ) {
+            HoleTransfer* ht_transfer = dynamic_cast<HoleTransfer*>(event);
+            enabled_events.push_back(ht_transfer);
+        }
+    }
+        
+    void AddDisableOnExecute( std::vector< Event* >* events ) {
+        for (auto& event: *events ) {
+            HoleTransfer* ht_transfer = dynamic_cast<HoleTransfer*>(event);
+            disabled_events.push_back(ht_transfer);
+        }
+    }
+     
+    void CheckEventsOnExecute( std::vector<Event*>* events){
+        for (auto& event: *events){
+            HoleTransfer* ht_transfer = dynamic_cast<HoleTransfer*>(event);
+            events_to_check.push_back(ht_transfer);
+        }  
+    }
+    
+    virtual void Print(std::string offset="") {
+        std::cout << offset << Type();
+        if ( Enabled() ) { std::cout << ": enabled"; } else { std::cout << ": disabled"; };                
+        if ( hole == NULL ) { std:: cout << " no carrier "; } else { std::cout << " Carrier: "  << hole->id(); }
+        std::cout 
+            << " Node "  << edge->NodeFrom()->id << "->" << edge->NodeTo()->id  
+            << " Disabled: " << disabled_events.size() 
+            << " Enabled: " << enabled_events.size() 
+            << " Rate: " << Rate() 
+            << " Cumulative rate: " << CumulativeRate() <<  std::endl;
+    }
+        
+private:
+
+    std::vector<HoleTransfer*> disabled_events;
+    std::vector<HoleTransfer*> enabled_events;
+    std::vector<HoleTransfer*> events_to_check;
+    
+    // hole to move
+    Hole* hole;
+    Edge* edge;
+    votca::tools::vec distance_pbc;
+    
 };
 
-}}
 
-#endif
+}}
+#endif 
+
+
+

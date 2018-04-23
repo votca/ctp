@@ -24,7 +24,7 @@
 
 namespace votca { namespace kmc {
 
-class KMCApplication : public Application
+class KMCApplication : public votca::tools::Application
 {
 public:
     /// constructor

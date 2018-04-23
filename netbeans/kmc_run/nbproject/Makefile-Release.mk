@@ -62,7 +62,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/kmc_run: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/kmc_run ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/2aac7050/kmc_run.o: nbproject/Makefile-${CND_CONF}.mk ../../src/tools/kmc_run.cc 
+${OBJECTDIR}/_ext/2aac7050/kmc_run.o: ../../src/tools/kmc_run.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/2aac7050
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2aac7050/kmc_run.o ../../src/tools/kmc_run.cc
@@ -73,7 +73,6 @@ ${OBJECTDIR}/_ext/2aac7050/kmc_run.o: nbproject/Makefile-${CND_CONF}.mk ../../sr
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/kmc_run
 
 # Subprojects
 .clean-subprojects:
