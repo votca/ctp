@@ -400,8 +400,8 @@ void TerminalGraph::Load_Rates(std::string filename) {
         double rate12h = stmt->Column<double>(7); // 1 -> 2
         double rate21h = stmt->Column<double>(8); // 2 -> 1
    
-        double Jeff2e = stmt->Column<double>(9);
-        double Jeff2h = stmt->Column<double>(10); 
+        //double Jeff2e = stmt->Column<double>(9);
+        //double Jeff2h = stmt->Column<double>(10); 
         
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
  
@@ -453,8 +453,8 @@ void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int 
     double kB   = 8.617332478E-5; // eV/K
     double hbar = 6.5821192815E-16; // eV*s
     double Pi   = 3.14159265358979323846;
-    double eps0 = 8.85418781762E-12/1.602176565E-19; // e**2/eV/m = 8.85418781762E-12 As/Vm
-    double epsr = 3.0; // relative material permittivity
+    //double eps0 = 8.85418781762E-12/1.602176565E-19; // e**2/eV/m = 8.85418781762E-12 As/Vm
+    //double epsr = 3.0; // relative material permittivity
         
     double charge_e = -1.0;
     double charge_h = 1.0;
@@ -778,7 +778,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
             
             votca::tools::vec distanceID(dx_inj, dy_inj, dz_inj);
             
-            if ((nodes.size()-((inject->id)-1)) == donor->id || nodes.size()-inject->id == donor->id || nodes.size()-(inject->id+1) == donor->id){
+            if (int(nodes.size()-((inject->id)-1)) == donor->id || nodes.size()-inject->id == donor->id || nodes.size()-(inject->id+1) == donor->id){
             //if (inject->id == donor->id){
                 Edge* edge_injection = new Edge(inject, donor, distanceID, cal_rate12e, cal_rate12h, cal_dexter, cal_fret, rate_inj, rate_col, rate_return);
                 inject->AddEdge( edge_injection );
@@ -887,7 +887,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
             double rate_col = 2;
             double rate_return = 0.00;
                   
-            if (donor->id == (nodes.size()-(collect_node->id-1))){
+            if (donor->id == int(nodes.size()-(collect_node->id-1))){
                 Edge* edgeDC = new Edge(donor, collect_node, distance_DC, cal_rate12e, cal_rate12h, cal_dexter, cal_fret, rate_inj, rate_col, rate_return); 
                 donor->AddEdge(edgeDC);
                 edges.push_back( edgeDC );

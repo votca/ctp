@@ -209,54 +209,6 @@ void Graph::Rates_Calculation(std::string filename, int nelectrons, int nholes, 
         double reorg_e21 = node2->reorg_intorig_electron + node1->reorg_intdest_electron + reorg_out_e;
         double reorg_h21 = node2->reorg_intorig_hole + node1->reorg_intdest_hole + reorg_out_h;
         
-    }
-}    
-
-/*
-double Graph::Determine_hopping_distance(vector<Node*> nodes) {
-    
-    //Determination of hopping distance
-    
-    double hopdistance = 0.0;
-    
-    for(unsigned int inode=0; inode < nodes.size(); inode++) {
-        for(unsigned int ipair=0;ipair<nodes[inode]->static_event_info.size();ipair++) {
-            
-            myvec pairdistancevec = nodes[inode]->static_event_info[ipair].distance;
-            double pairdistance = abs(pairdistancevec);
-            if(pairdistance>hopdistance) {hopdistance = pairdistance;}
-        }
-    }
-    
-    return hopdistance;
-}
-
-*/
-/*
-myvec Graph::Determine_sim_box_size(vector<Node*> nodes) {
-    
-    //Determination of simulation box size
-    //To do this, we first need to find a node with position vector a and pairing node with position vector b, such that
-    //|a-b|>hopping distance
-    //Note that it is possible that none of the pairs pass the simulation box boundaries
-    //In this special case, we must determine the node with max x/y/z coordinate and min x/y/z coordinate
-    
-    bool bndcrosspairXfound = false;
-    bool bndcrosspairYfound = false;
-    bool bndcrosspairZfound = false;
-    
-    double sim_box_sizeX = 0.0;
-    double sim_box_sizeY = 0.0;
-    double sim_box_sizeZ = 0.0;
-    
-    double maxX = nodes[0]->node_position.x(); //initial values
-    double maxY = nodes[0]->node_position.y();
-    double maxZ = nodes[0]->node_position.z();
-    double minX = nodes[0]->node_position.x(); //initial values
-    double minY = nodes[0]->node_position.y();
-    double minZ = nodes[0]->node_position.z();
-    
-    for(unsigned int inode=0;inode<nodes.size();inode++) {
         //Site energy difference for nodes 1 and 2 (for electrons and holes)
         //1->2
         double dG_Site_e12 = node2->site_energy_electron - node1->site_energy_electron;
@@ -298,7 +250,6 @@ myvec Graph::Determine_sim_box_size(vector<Node*> nodes) {
        
     delete stmt;
 }
- */
 
 
 void Graph::Print(){
