@@ -27,7 +27,7 @@ endif()
 
 #set(CMAKE_CXX_FLAGS "-O0 -fno-elide-constructors -pedantic-errors -ansi -Wextra -Wall     -Winit-self -Wold-style-cast -Woverloaded-virtual -Wuninitialized -Wmissing-declarations    -Winit-self -std=c++98")
 
-set(CMAKE_CXX_FLAGS "-O0 -fno-elide-constructors -ansi -Wextra -Wall -Winit-self -Wold-style-cast -Woverloaded-virtual -Wuninitialized -Wmissing-declarations -Winit-self -std=c++11")
+set(CMAKE_CXX_FLAGS "-O0 -Wall -Werror")
 
 
 ########################################################################
