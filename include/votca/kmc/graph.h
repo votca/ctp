@@ -243,6 +243,7 @@ void Graph::Rates_Calculation(std::string filename, int nelectrons, int nholes, 
 
         edges.push_back( edge12 );
         edges.push_back( edge21 );
+        
                   
     }
        
