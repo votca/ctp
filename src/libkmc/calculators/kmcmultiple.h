@@ -93,7 +93,14 @@ void progressbar(double fraction)
     }
 }
 
-
+/**
+ * \brief Kinetic Monte Carlo implementation using indeces
+ * @param option sile, state file
+ *
+ * Kinetic Monte Carlo implementation with disabled events and exclusions 
+ * (no double occupation)
+ * 
+*/
 class KMCMultiple : public KMCCalculator 
 {
 public:
