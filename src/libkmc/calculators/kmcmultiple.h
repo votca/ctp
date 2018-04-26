@@ -46,13 +46,11 @@ typedef votca::tools::vec myvec;
 
 namespace votca { namespace kmc {
 
-static double kB   = 8.617332478E-5; // eV/K
-static double hbar = 6.5821192815E-16; // eV*s
+const double kB = votca::tools::globals::constants::kB;
+const double hbar = votca::tools::globals::constants::hbar;
 
-//static double eps0 = 8.85418781762E-12/1.602176565E-19; // e**2/eV/m = 8.85418781762E-12 As/Vm
-//static double epsr = 3.0; // relative material permittivity
 
-static double Pi   = 3.14159265358979323846;
+static double Pi=votca::tools::globals::constants::pi;
 
 typedef unordered_map<unsigned long, double> CoulombMap;
 typedef CoulombMap::const_iterator CoulombIt;
@@ -1109,7 +1107,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                 if(do_newnode == NULL)
                 {
                     if(votca::tools::globals::verbose) {cout << endl << "Node " << do_oldnode->id+1  << " is SURROUNDED by forbidden destinations and zero rates. Adding it to the list of forbidden nodes. After that: selection of a new escape node." << endl; }
-                    AddForbidden(do_oldnode->id+1, forbiddennodes);
+                    AddForbidden(do_oldnode->id, forbiddennodes);
                     //cout << " Enter newnode = NULL" <<  endl;
                     //int nothing=0;
                     break; // select new escape node (ends level 2 but without setting level1step to 1)
@@ -1150,7 +1148,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                     
                     //AddForbidden(do_newnode->id, forbiddendests);
                     //EDITED node[seg1]->AddEvent(seg2,rate12,dr,Jeff2,reorg_out);
-                    do_oldnode->AddForbiddenEvent(do_newnode->id+1,do_oldnode->event[counter].rate);
+                    do_oldnode->AddForbiddenEvent(do_newnode->id,do_oldnode->event[counter].rate);
                     
                     //cout<< " 2:Escaperate before: "<< escaperate << "Counter: " << counter << endl;
                     escaperate = (escaperate-do_oldnode->event[counter].rate);
@@ -1176,10 +1174,10 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                     level1step = 1;
                     for(unsigned int j=0; j<do_oldnode->event.size(); j++)
                     {
-                        if (ForbiddenEvents(do_oldnode->id+1,(node[do_oldnode->event[j].destination])->forbiddenevent)==1)
+                        if (ForbiddenEvents(do_oldnode->id,(node[do_oldnode->event[j].destination])->forbiddenevent)==1)
                         {
                             // Removes the ForbiddenEvent and adjust the escape rate
-                            node[do_oldnode->event[j].destination]->RemoveForbiddenEvent(do_oldnode->id+1);
+                            node[do_oldnode->event[j].destination]->RemoveForbiddenEvent(do_oldnode->id);
                             //node[do_oldnode->event[j].destination]->escaperate= node[do_oldnode->event[j].destination]->initialescaperate;
                             //(node[do_oldnode->event[j].destination])->ClearForbiddenevents();
                         }
