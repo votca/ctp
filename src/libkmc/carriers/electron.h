@@ -30,6 +30,7 @@ public:
     
     std::string Type(){ return "electron"; } ;
 
+    //carrier injected to a node if the node is free
     virtual bool AddNode( BNode* _node ) { 
         node = _node;
         std::vector<BNode*>::iterator it_node  = NodeOccupation ( node ) ;
@@ -43,7 +44,8 @@ public:
             return false; 
         } 
     };  
-       
+    
+    //electron transfer move event - if the node to is free (if not the node to is disabled)
     virtual bool Move( Edge* edge ) {
         
         if(votca::tools::globals::verbose){
@@ -61,6 +63,7 @@ public:
 
             if(votca::tools::globals::verbose){std::cout << " --- MOVING. " << std::endl;}
             
+            //if move allowed, add distance travelled to total distance and move
             distance += edge->DistancePBC();
             node = edge->NodeTo();
     

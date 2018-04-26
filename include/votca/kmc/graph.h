@@ -25,6 +25,8 @@ namespace votca { namespace kmc {
 class Graph {
 public:
     
+    // Graph for electron/hole transfer events 
+    
     // iterator over carriers
     typedef std::vector< BNode* >::iterator iterator;
     typedef const std::vector< BNode* >::iterator const_iterator;
@@ -58,7 +60,7 @@ private:
     
 };
 
-
+//Loading graph from the state file
 void Graph::Load_Graph(std::string filename) {
     
     std::cout << "Loading the graph from " << filename << std::endl;
@@ -73,9 +75,10 @@ void Graph::Load_Graph(std::string filename) {
     {
         BNode *node = AddNode();
         int id = stmt->Column<int>(0);
+        //used so node id starts at 1
         node->id = id+1;
         
-        // position in nm
+        // position in nm (converted to m for the final output in state.h)
         double x = stmt->Column<double>(1);
         double y = stmt->Column<double>(2);
         double z = stmt->Column<double>(3);
@@ -83,10 +86,13 @@ void Graph::Load_Graph(std::string filename) {
         myvec position = myvec(x, y, z); 
         node->position = position;
         
+        //node has all energetic information read from state file (for rate calculation if required)
         //Energies for each node - for electron and hole
+        //UnCnNe & UnCnNh
         node->reorg_intorig_electron =  stmt->Column<double>(4);
         node->reorg_intorig_hole =  stmt->Column<double>(5);
         
+        //UcNcCe & UcNcCh
         node->reorg_intdest_electron =  stmt->Column<double>(6);
         node->reorg_intdest_hole =  stmt->Column<double>(7);
         
@@ -94,6 +100,7 @@ void Graph::Load_Graph(std::string filename) {
         node->eNeutral = stmt->Column<double>(9);
         node->eCation = stmt->Column<double>(10);
         
+        //UcCnNe & UcCnNh
         node->internal_energy_electron = stmt->Column<double>(11);
         node->internal_energy_hole = stmt->Column<double>(12);
         
@@ -106,6 +113,7 @@ void Graph::Load_Graph(std::string filename) {
     delete stmt;
 }
 
+//Load rates from state file
 void Graph::Load_Rates(std::string filename){
     
     votca::tools::Database db;
@@ -134,7 +142,7 @@ void Graph::Load_Rates(std::string filename){
         double rate21h = stmt->Column<double>(8); // 2 -> 1
        
         //std::cout << "seg1: " << seg1 << " seg2: " << seg2 << " rate12 " << rate12e << std::endl;
-        
+
         votca::tools::vec distance_pbc(dx_pbc, dy_pbc, dz_pbc);
         Edge* edge12 = new Edge(node1, node2, distance_pbc, rate12e, rate12h); 
         Edge* edge21 = new Edge(node2, node1, -distance_pbc, rate21e, rate21h);
@@ -233,9 +241,9 @@ void Graph::Rates_Calculation(std::string filename, int nelectrons, int nholes, 
         double cal_rate21e = 2*Pi/hbar * Jeff2e/sqrt(4*Pi*reorg_e21*kB*temperature) * exp(-(dG_e21+reorg_e21)*(dG_e21+reorg_e21) / (4*reorg_e21*kB*temperature));
         double cal_rate21h = 2*Pi/hbar * Jeff2h/sqrt(4*Pi*reorg_h21*kB*temperature) * exp(-(dG_h21+reorg_h21)*(dG_h21+reorg_h21) / (4*reorg_h21*kB*temperature));
         
-        std::cout << "Rate 12e " << cal_rate12e << "   Rate 21e: " << cal_rate21e << std::endl;
+        //std::cout << "Rate 12e " << cal_rate12e << "   Rate 21e: " << cal_rate21e << std::endl;
         
-        //add the new edge with calculated rate
+        //add the new edge with calculated rate, to 1->2 and from 2->1
         Edge* edge12 = new Edge(node1, node2, distance, cal_rate12e, cal_rate12h);
         Edge* edge21 = new Edge(node2, node1, -distance, cal_rate21e, cal_rate21h);
  

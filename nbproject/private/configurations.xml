@@ -251,6 +251,7 @@
           </df>
           <in>carrierfactory.cc</in>
           <in>eventfactory.cc</in>
+          <in>gitversion.h</in>
           <in>hgversion.h</in>
           <in>kmcapplication.cc</in>
           <in>kmccalculatorfactory.cc</in>

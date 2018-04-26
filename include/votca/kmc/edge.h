@@ -30,6 +30,7 @@ class Edge {
 
 public:
     
+    //Edge object (node -> neighbour node) contains distances & all rates for all possible events - if not listed then set to zero
     Edge(BNode* _node_from, BNode* _node_to, votca::tools::vec _distance_pbc, double _rate_e = 0.0, 
             double _rate_h = 0.0, double _rate_dexter = 0.0, double _rate_forster = 0.0, 
             double _rate_inject = 0.00, double _rate_collect = 0.0, double _rate_return = 0.0) 

@@ -292,17 +292,17 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nexciteddonor, int nexcitedacc, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
+void Run( double runtime, int nsteps, votca::tools::Random2 *RandomVariable, int nexciteddonor, int nexcitedacc, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
-    votca::tools::Random2 RandomVariable;
+    //votca::tools::Random2 RandomVariable;
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
    
     clock_t begin = clock();
 
     // Initialise random number generator
-    srand(seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
+    //srand(seed);
+    //RandomVariable.init(rand(), rand(), rand(), rand());
     
     double time = 0.0;
     int step = 0;
@@ -333,8 +333,8 @@ void Run( double runtime, int nsteps, int seed, int nexciteddonor, int nexciteda
         //head_event.Print();
              
                 
-        double u = 1.0 - RandomVariable.rand_uniform();
-        while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
+        double u = 1.0 - RandomVariable->rand_uniform();
+        while(u == 0.0){ u = 1.0 - RandomVariable->rand_uniform();}
         //std::cout << " u " << u << std::endl;
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         //std::cout << " Rate " << head_event.CumulativeRate() << std::endl;
@@ -344,7 +344,7 @@ void Run( double runtime, int nsteps, int seed, int nexciteddonor, int nexciteda
         step++;
         std::cout << "Time: " << time << std::endl;
         
-        head_event.OnExecute(state, &RandomVariable ); 
+        head_event.OnExecute(state, RandomVariable ); 
         //std::cout << "Time: " << time << std::endl;
                 
         if (outtime != 0 && trajout < time )

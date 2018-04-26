@@ -25,6 +25,9 @@
 #include <votca/kmc/bnode.h>
 #include "events/electron_transfer_snail.h"
 
+//VSSM2 snail runs over all occupied nodes at each step, to enable and disable events
+//slow algorithm used to validate the results of VSSM2 nodes & carriers 
+
 /* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
 //          head
 //        /  |  \
@@ -136,17 +139,17 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 }
         
-void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
+void Run( double runtime, int nsteps, votca::tools::Random2 *RandomVariable, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
-    votca::tools::Random2 RandomVariable;
+    //votca::tools::Random2 RandomVariable;
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
     
     clock_t begin = clock();
 
     // Initialise random number generator
-    srand(seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
+    //srand(seed);
+    //RandomVariable.init(rand(), rand(), rand(), rand());
     
     double time = 0.0;
     int step = 0;
@@ -204,14 +207,14 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
         }
         
                
-        double u = 1.0 - RandomVariable.rand_uniform();
-        while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
+        double u = 1.0 - RandomVariable->rand_uniform();
+        while(u == 0.0){ u = 1.0 - RandomVariable->rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
-        head_event.OnExecute(state, &RandomVariable );  
+        head_event.OnExecute(state, RandomVariable );  
         
         if (outtime != 0 && trajout < time )
         { 

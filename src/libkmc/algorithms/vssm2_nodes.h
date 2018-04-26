@@ -27,7 +27,7 @@
 #include "events/hole_transfer.h"
 
 
-/* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level
+/* Two-level VSSM algorithm with nodes on level 1 and events on level 2
 //          head
 //        /  |  \
 //  node_1      node_n   
@@ -86,7 +86,7 @@ void Initialize ( State* _state, Graph* _graph ) {
         electron_transfer_map.emplace(node_from, vector<Event*>() );
         hole_transfer_map.emplace(node_from, vector<Event*>() );
         
-        // Loop over all neighbors (edges) of the node 
+        // Loop over all neighbours (edges) of the node 
         for (BNode::EdgeIterator it_edge = node_from->EdgesBegin(); it_edge != node_from->EdgesEnd(); ++it_edge) {
 
             
@@ -141,6 +141,8 @@ void Initialize ( State* _state, Graph* _graph ) {
     
     // for every event associated with node_from - create a list of events to check after onExecute
     // Events to check are every event for each node_to
+    
+    //hole transfer events to check
     for (auto& event: ht_events ) {
         
         BNode* node_from = event->NodeFrom();
@@ -157,6 +159,7 @@ void Initialize ( State* _state, Graph* _graph ) {
         }
     }
     
+    //electron transfer check events 
     for (auto& event: et_events ) {
         
         BNode* node_from = event->NodeFrom();
@@ -223,19 +226,11 @@ void Initialize ( State* _state, Graph* _graph ) {
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
-
-    //int realtime_start = time(NULL);
-    
-    votca::tools::Random2 RandomVariable;
+void Run( double runtime, int nsteps, votca::tools::Random2 *RandomVariable, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
    
     clock_t begin = clock();
-
-    // Initialise random number generator
-    srand(seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
     
     double time = 0.0;
     int step = 0;
@@ -268,17 +263,19 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
         
         //head_event.Print();
            
-        double u = 1.0 - RandomVariable.rand_uniform();
-        while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
+        double u = 1.0 - RandomVariable->rand_uniform();
+        while(u == 0.0){ u = 1.0 - RandomVariable->rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
         step++;
         //clock_t snap = clock();
+        
         //execute the event after the time update - so the elapsed time is calculated with the correct rate (the rate before the event)
-        head_event.OnExecute(state, &RandomVariable );
+        head_event.OnExecute(state, RandomVariable );
         //std::cout << "Time: " << time << std::endl;
         
+        //include if the progress bar is required 
         /*if ( runtime != 0 && nsteps == 0 )
         {
             progressbar(time/runtime);
@@ -293,7 +290,7 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
         }*/
     
         
-    
+        //write to the trajectory file at every outtime (specified in the options file)
         if (outtime != 0 && trajout < time )
         {
             state->Trajectory_write(trajout, trajectoryfile);

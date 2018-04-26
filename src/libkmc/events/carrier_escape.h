@@ -32,6 +32,7 @@ public:
     // carrier to move
     Carrier* carrier;
     
+    //carrier escape is enabled when a carrier is present
     void Initialize( Carrier* _carrier) {
         carrier = _carrier;
         Enable();
@@ -47,8 +48,10 @@ public:
         Event* subordinate;
         Event* last_enabled;
         
+        //loop over all subordinates
         for( Event::iterator it_subordinate = begin(); it_subordinate != end() ; ++it_subordinate ) {
             subordinate = (*it_subordinate);
+            //only if a subordinate is enabled is the rate added to the cumulative rate
             if ( subordinate->Enabled() ) { 
                 u -= subordinate->CumulativeRate()/cumulative_rate;
                 last_enabled = subordinate;

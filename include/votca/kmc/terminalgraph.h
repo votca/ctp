@@ -909,11 +909,10 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
             double dz_return = 0.0;
 
             // rate: inject_node -> donor 
-            //double rate_inject_hole = 10E17;
             double cal_rate12e = 0.00;
             double cal_rate12h = 0.00;
-            double cal_dexter = 0.00;
-            double cal_fret = 0.00;
+            double cal_dexter = 1E6;
+            double cal_fret = 1E6;
             double rate_inj = 0.00;
             double rate_col = 0.00;
             double rate_return = 1E6;

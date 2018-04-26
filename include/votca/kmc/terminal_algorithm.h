@@ -31,7 +31,7 @@ public:
  
     double Time(){ return time; }
     
-    virtual void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) = 0;
+    virtual void Run( double runtime, int nsteps, votca::tools::Random2 *RandomVariable, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) = 0;
        
     //virtual void progressbar(double fraction) = 0;
     

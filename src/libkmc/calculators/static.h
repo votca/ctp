@@ -54,7 +54,7 @@ private:
     int _seed;
     int _nelectrons;
     int _nholes;
-    std::string _injection_name;
+    //std::string _injection_name;
     std::string _injection_method;
     double _fieldX;
     double _fieldY;
@@ -70,7 +70,7 @@ void Static::Initialize(Property *options) {
     
     std::cout << endl << "Initialising KMC static" << endl;
 
-    // update options with the VOTCASHARE defaults   
+    // update options with the VOTCA SHARE defaults - xml   
     UpdateWithDefaults( options );
     string key = "options." + Identify();
     
@@ -79,7 +79,7 @@ void Static::Initialize(Property *options) {
     _seed = options->get(key + ".seed").as<int>();
     _nelectrons = options->get(key + ".nelectrons").as<int>();
     _nholes = options->get(key + ".nholes").as<int>();
-    _injection_name = options->get(key + ".injection").as<string>();
+    //_injection_name = options->get(key + ".injection").as<string>();
     _injection_method = options->get(key + ".injectionmethod").as<string>();
     _fieldX = options->get(key + ".fieldX").as<double>();
     _fieldY = options->get(key + ".fieldY").as<double>();
@@ -100,16 +100,17 @@ bool Static::EvaluateFrame() {
 
 void Static::RunKMC() {
 
-    votca::tools::Random2 RandomVariable;
     
-    std::cout << "Running KMC static" << endl;
+    std::cout << "Running KMC static" << std::endl;
    
     Graph graph;
     State state;
  
+    //Load the graph from the state file
     std::string filename( "state.sql" );
     graph.Load_Graph( filename );
     
+    //option to read the rates from the state file or calculate
     if (_rates == "read"){
         graph.Load_Rates(filename);
     }
@@ -122,7 +123,6 @@ void Static::RunKMC() {
  
     //graph.Print();
     CarrierFactory::RegisterAll();
-
     EventFactory::RegisterAll();
     
     std::cout << "Number of Nodes: " << graph.nodes_size() << std::endl;
@@ -136,11 +136,15 @@ void Static::RunKMC() {
         std::cout << "The number of carriers exceeds the number of available nodes!" << std::endl;
         return;
     }
- 
+    
+    // use the seed to initialise the random number generator srand
     srand(_seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
+    votca::tools::Random2 *RandomVariable = new votca::tools::Random2();
+    RandomVariable->init(rand(), rand(), rand(), rand());
+    
     std::cout << std::endl;
-        
+       
+    //create electrons and place on nodes of the graph
     if(_nelectrons != 0){
  
         for ( int electron = 1; electron <= _nelectrons; ++electron ) {
@@ -149,17 +153,20 @@ void Static::RunKMC() {
             Carrier* e_carrier =  state.AddCarrier( "electron" );
             Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
             
+            //randomly inject to a node in the graph
             if (_injection_method == "random"){ 
-                int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                int node_id = RandomVariable->rand_uniform_int(graph.nodes_size());
                 BNode* node_from = graph.GetNode(node_id + 1);
+                //carrier can only be placed if the node is free, else find a new node
                 while (ecarrier->AddNode(node_from)==false){
-                        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                        int node_id = RandomVariable->rand_uniform_int(graph.nodes_size());
                         node_from = graph.GetNode(node_id + 1);
                     } 
                 if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
             }
             
-            else if (_injection_method == "electrode") {
+            //inject to the first nodes of the graph to have an ordered placement of electrons 
+            else if (_injection_method == "uniform") {
                 BNode* node_from = graph.GetNode(electron);
                 ecarrier->AddNode( node_from );
                 //node_from->PrintNode();  
@@ -178,17 +185,20 @@ void Static::RunKMC() {
             Carrier* h_carrier =  state.AddCarrier( "hole" );
             Hole* hcarrier = dynamic_cast<Hole*>(h_carrier);
             
+            //randomly inject to a node in the graph
             if (_injection_method == "random"){ 
-                int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                int node_id = RandomVariable->rand_uniform_int(graph.nodes_size());
                 BNode* node_from = graph.GetNode(node_id + 2);
+                //only place the carrier if the node is free, otherwise find a new node
                 while (hcarrier->AddNode(node_from)==false){
-                        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                        int node_id = RandomVariable->rand_uniform_int(graph.nodes_size());
                         node_from = graph.GetNode(node_id + 2);
                     } 
                 if (hcarrier->AddNode(node_from)==true){ hcarrier->AddNode( node_from );}
             }
             
-            else if (_injection_method == "electrode") {
+            //inject to the first nodes of the graph
+            else if (_injection_method == "uniform") {
                 BNode* node_from = graph.GetNode(hole);
                 hcarrier->AddNode( node_from );
                 //node_from->PrintNode();  
@@ -199,10 +209,13 @@ void Static::RunKMC() {
         std::cout << std::endl;
     }
       
+    //use vssm2_nodes to organise all the nodes and events 
     VSSM2_NODES vssm2;
+    //initialise with the state and the graph 
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    // run the algorithm
+    vssm2.Run(_runtime, _nsteps, RandomVariable, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 
