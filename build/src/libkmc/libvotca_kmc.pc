@@ -1,12 +1,10 @@
-prefix=
-prefix=/home/theorie/paterson/debian9/votca
-libdir=${prefix}/lib
-includedir=${prefix}/include
+libdir=/usr/local/lib
+includedir=/usr/local/include
 
 Name: libvotca_kmc
 Description: kinetic monte carlo of the votca package
 URL: http://www.votca.org
-Version: 
+Version: 1.5-dev
 Requires: libvotca_tools 
 Libs: -L${libdir} -lvotca_kmc
 Libs.private: -lm

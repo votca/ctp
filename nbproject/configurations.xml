@@ -33,6 +33,9 @@
       </df>
       <df name="src">
         <df name="libkmc">
+          <df name="calculators">
+            <in>kmcmultiple.cc</in>
+          </df>
           <df name="CMakeFiles">
             <df name="3.7.2">
               <df name="CompilerIdC">
@@ -141,6 +144,11 @@
       <item path="src/libkmc/CMakeFiles/feature_tests.cxx"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/libkmc/calculators/kmcmultiple.cc"
+            ex="false"
+            tool="0"
             flavor2="0">
       </item>
       <item path="src/libkmc/carrierfactory.cc" ex="false" tool="1" flavor2="0">
