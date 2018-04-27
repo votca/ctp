@@ -276,7 +276,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
 
 }
 
-void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
+void Run( double runtime, int nsteps, votca::tools::Random2 *RandomVariable, int nelectrons, int nholes, string trajectoryfile, double outtime, double fieldX, double fieldY, double fieldZ) {
 
 
     std::cout << std::endl << "Starting the KMC loop" << std::endl;
@@ -284,9 +284,9 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
     clock_t begin = clock();
 
     // Initialise random number generator
-    votca::tools::Random2 RandomVariable;
-    srand(seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
+    //votca::tools::Random2 RandomVariable;
+    //srand(seed);
+    //RandomVariable.init(rand(), rand(), rand(), rand());
     
     double time = 0.0;
     int step = 0;
@@ -315,14 +315,14 @@ void Run( double runtime, int nsteps, int seed, int nelectrons, int nholes, stri
      
         //head_event.Print();
                
-        double u = 1.0 - RandomVariable.rand_uniform();
-        while(u == 0.0){ u = 1.0 - RandomVariable.rand_uniform();}
+        double u = 1.0 - RandomVariable->rand_uniform();
+        while(u == 0.0){ u = 1.0 - RandomVariable->rand_uniform();}
         double elapsed_time = -1.0 / head_event.CumulativeRate() * log(u);
         state->AdvanceClock(elapsed_time);
         time += elapsed_time;
         step++;
         //std::cout << "Time: " << time << std::endl;
-        head_event.OnExecute(state, &RandomVariable );  
+        head_event.OnExecute(state, RandomVariable );  
         
         if (outtime != 0 && trajout < time )
         { 

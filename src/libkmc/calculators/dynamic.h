@@ -15,7 +15,7 @@
  *
  */
 
-#ifndef __VOTCA_KMC_DYNAMIC_H
+/*#ifndef __VOTCA_KMC_DYNAMIC_H
 #define	__VOTCA_KMC_DYNAMIC_H
 
 #include <votca/kmc/state.h>
@@ -129,4 +129,4 @@ void Dynamic::RunKMC() {
 }}
 
 
-#endif	/* __VOTCA_KMC_BINARY_H */
+#endif	 __VOTCA_KMC_BINARY_H */

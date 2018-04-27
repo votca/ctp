@@ -37,7 +37,8 @@ public:
     EdgeIterator EdgesEnd() { return edges.end(); }
     
     
-   void AddEdge( Edge* edge ) {
+    //Add edge (neighbour)
+    void AddEdge( Edge* edge ) {
         edges.push_back(edge);
     };
        

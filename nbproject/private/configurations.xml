@@ -174,6 +174,91 @@
               <df name="calculators">
               </df>
             </df>
+          </df>
+          <df name="share">
+            <df name="CMakeFiles">
+            </df>
+            <df name="xml">
+              <df name="CMakeFiles">
+              </df>
+            </df>
+          </df>
+          <df name="src">
+            <df name="libkmc">
+              <df name="CMakeFiles">
+                <df name="hgversion.dir">
+                </df>
+                <df name="votca_kmc.dir">
+                </df>
+              </df>
+              <in>votca_config.h</in>
+            </df>
+            <df name="tools">
+              <df name="CMakeFiles">
+                <df name="kmc_run.dir">
+                </df>
+                <df name="kmc_run_manpage.dir">
+                </df>
+              </df>
+            </df>
+          </df>
+          <in>carrierfactory.cc</in>
+          <in>eventfactory.cc</in>
+          <in>gitversion.h</in>
+          <in>hgversion.h</in>
+          <in>kmcapplication.cc</in>
+          <in>kmccalculatorfactory.cc</in>
+          <in>version.cc</in>
+          <in>version_nb.cc</in>
+          <in>votca_config.h</in>
+        </df>
+        <df name="libkmc.bak">
+          <df name="algorithms">
+            <in>vssm2_carriers.h</in>
+            <in>vssm2_excited.h</in>
+            <in>vssm2_nodes.h</in>
+            <in>vssm2_snail.h</in>
+            <in>vssm2_terminal.h</in>
+          </df>
+          <df name="calculators">
+            <in>diffusion.h</in>
+            <in>diode.h</in>
+            <in>dynamic.h</in>
+            <in>excited.h</in>
+            <in>kmclight.h</in>
+            <in>kmcmultiple.h</in>
+            <in>kmcparallel.h</in>
+            <in>kmcsingle.h</in>
+            <in>snail.h</in>
+            <in>static.h</in>
+            <in>terminal.h</in>
+          </df>
+          <df name="carriers">
+            <in>electron.h</in>
+            <in>energy.h</in>
+            <in>hole.h</in>
+          </df>
+          <df name="CMakeFiles">
+            <df name="3.7.2">
+              <df name="CompilerIdC">
+                <in>CMakeCCompilerId.c</in>
+              </df>
+              <df name="CompilerIdCXX">
+                <in>CMakeCXXCompilerId.cpp</in>
+              </df>
+            </df>
+            <df name="CMakeTmp">
+            </df>
+            <df name="gitversion-kmc.dir">
+            </df>
+            <df name="hgversion.dir">
+            </df>
+            <df name="manpages.dir">
+            </df>
+            <df name="Progress">
+            </df>
+            <df name="votca_kmc.dir">
+            </df>
             <in>feature_tests.c</in>
             <in>feature_tests.cxx</in>
           </df>

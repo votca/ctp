@@ -107,7 +107,10 @@ bool Excited::EvaluateFrame() {
 
 void Excited::RunKMC() {
 
-    votca::tools::Random2 RandomVariable;
+    //votca::tools::Random2 RandomVariable;
+    srand(_seed); 
+    votca::tools::Random2 *RandomVariable = new votca::tools::Random2();
+    RandomVariable->init(rand(), rand(), rand(), rand());
     
     std::cout << "Running KMC excited" << endl;
    
@@ -181,7 +184,7 @@ void Excited::RunKMC() {
     
     VSSM2_EXCITED vssm2;
     vssm2.Initialize( &state, &graph );
-    vssm2.Run(_runtime, _nsteps, _seed, _nexciteddonor, _nexcitedacc, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, RandomVariable, _nexciteddonor, _nexcitedacc, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

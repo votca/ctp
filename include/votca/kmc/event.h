@@ -127,7 +127,8 @@ private:
     bool enabled;
     // if true, OnExecute of the parent node will remove this event after calling its OnExecute
     bool expired;
-    //If true, the node to is already occupied - only for event move events
+    //If true, the node to is already occupied - only for event move events 
+    // used to check which events are still unavailable, after a carrier moves 
     bool unavailable;
     // if the event has expired subordinates
     bool has_expired_subordinates;

@@ -35,16 +35,18 @@ public:
         edge = _edge;
         distance_pbc = _edge->DistancePBC();
         SetRate( _edge->Rate_electron() );
-        //only enable this event if a carrier is provided
+        //only enable this event if a carrier is provided - parent event (carrier escape) is enabled)
+        //default is disable 
         Disable();
         if ( _electron != NULL )  { Enable(); std::cout << "ENABLED" << std::endl; }
         
     }
 
+    //node where the carrier starts
     BNode* NodeFrom(){ return edge->NodeFrom(); };
+    // node where the carrier hops to
     BNode* NodeTo(){ return edge->NodeTo(); };
-    
-    // this has to go away eventually
+
     void SetElectron( Electron* _electron ){ electron = _electron; };
       
     // changes to be made after this event occurs
@@ -56,6 +58,7 @@ public:
             for (auto& event: disabled_events ) {   
                 event->Disable();
                 //the event has to be cleared as being unavailable, the flag is removed but the event remains disabled
+                //events can only be unavailable if a carrier is present
                 event->Available();
             }
             
@@ -71,24 +74,22 @@ public:
             } 
             
             //check all the events connected to the previous node (node_from)
+            //This checks if any connected events have now became available 
+            //eg. node i and j are occupied, event i->j is disabled, now carrier moves and j becomes free (all events j-> are disabled) 
+            //but there still has to be a check that event i->j is now available to i 
             for (auto& event: events_to_check) {
+                
+                if (event->UnivailableEvent()==true){                    
 
-                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-                //if (parent->Enabled() && event->UnivailableEvent()==true ){
-                if (event->UnivailableEvent()==true){
-                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-
-                    //if a previous unavailable event is now available (no longer occupied) - Enable it
+                    //iterate over all previous nodes to
                     std::vector<BNode*>::iterator it_to   = electron->NodeOccupation ( event->NodeTo() ) ;
-                    //std::vector<BNode*>::iterator it_from   = electron->NodeOccupation ( event->NodeFrom() ) ;
                     
                     //if node to is free and node from has a carrier 
                     if ( it_to == electron->e_occupiedNodes.end() ) {
+                        //if a previous unavailable event is now available (no longer occupied node to) - Enable it
                         event->Enable();
+                        //remove the unavailable flag
                         event->Available();
-                        //std::cout << "***********"  << std::endl;
-                        //std::cout << "Event previously unavailable, now available: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << " Rate: " << event->Rate() << std::endl;
-                        //std::cout << "***********"  << std::endl;
                     }
                 } 
             }
@@ -103,13 +104,15 @@ public:
         }         
     };
     
+    //events that will be enabled after hop
     void AddEnableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
             ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
             enabled_events.push_back(et_transfer);
         }
     }
-        
+     
+    //events that will be diabled after a hop
     void AddDisableOnExecute( std::vector< Event* >* events ) {
         for (auto& event: *events ) {
             ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);
@@ -117,6 +120,7 @@ public:
         }
     }
      
+    //events that need to be checked after a hop
     void CheckEventsOnExecute( std::vector<Event*>* events){
         for (auto& event: *events){
             ElectronTransfer* et_transfer = dynamic_cast<ElectronTransfer*>(event);

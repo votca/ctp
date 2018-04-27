@@ -54,23 +54,12 @@ public:
 
             // disable old events
             for (auto& event: disabled_events ) {   
-                event->Disable();     
+                event->Disable();
+                //the event has to be cleared as being unavailable, the flag is removed but the event remains disabled
+                //events can only be unavailable if a carrier is present
+                event->Available();
             }
-            //check all the events connected to the previous node (node_from)
-            for (auto& event: events_to_check) {
-
-                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-                if (event->UnivailableEvent()==true){
-                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
-
-                    //if a previous unavailable event is now available (no longer occupied) - Enable it
-                    std::vector<BNode*>::iterator it_to   = hole->NodeOccupation ( event->NodeTo() ) ;
-                    if ( it_to == hole->h_occupiedNodes.end() ) {
-                        event->Enable();
-                    }
-                } 
-            }
-            
+                                  
             // update the parent VSSM group
             Event* parent = GetParent();
             parent->ClearSubordinate();
@@ -80,7 +69,23 @@ public:
                 parent->AddSubordinate( event );
                 event->SetHole(hole);
                 event->Enable();
-            }   
+            } 
+            
+            //check all the events connected to the previous node (node_from)
+            for (auto& event: events_to_check) {
+
+                //std::cout << " Events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+                if (event->UnivailableEvent()==true){
+                    //std::cout << " Unavailable events to check: " << event->NodeFrom()->id << "->" << event->NodeTo()->id << std::endl;
+
+                    //if a previous unavailable event is now available (no longer occupied) - Enable it & remove unavailable flag
+                    std::vector<BNode*>::iterator it_to   = hole->NodeOccupation ( event->NodeTo() ) ;
+                    if ( it_to == hole->h_occupiedNodes.end() ) {
+                        event->Enable();
+                        event->Available();
+                    }
+                } 
+            }  
             
         }        
         else 

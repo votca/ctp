@@ -63,13 +63,13 @@ class Chargecarrier;
 
 
 /**
-* \brief Kinetic Monte Carlo with exclusion Principle
+* \brief Kinetic Monte Carlo with exclusion principle
 *
-* Evaluates of electron/hole mobilities for multiple carriers in specified in 
-* the options file.Requieres state.sql and options.xml file.
+* Evaluates of electron/hole mobilities for one carrier type  
+* Requires state.sql and options.xml file.
 * 
 * 
-* Callname: run_kmc
+* Executable: kmc_run
 */
 
 class KMCMultiple : public KMCCalculator 

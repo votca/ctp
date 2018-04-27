@@ -104,7 +104,9 @@ bool Terminal::EvaluateFrame() {
 
 void Terminal::RunKMC() {
 
-    votca::tools::Random2 RandomVariable;
+    srand(_seed); 
+    votca::tools::Random2 *RandomVariable = new votca::tools::Random2();
+    RandomVariable->init(rand(), rand(), rand(), rand());
     
     std::cout << "Running KMC terminal" << endl;
    
@@ -198,7 +200,7 @@ void Terminal::RunKMC() {
     
     VSSM2_TERMINAL vssm2;
     vssm2.Initialize( &state, &terminalgraph );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, RandomVariable, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 

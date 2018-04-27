@@ -21,29 +21,10 @@
 #include <fstream>
 #include <iostream>
 
-//#include <votca/kmc/event.h>
-//#include <votca/kmc/eventfactory.h>
-
 // Text archive that defines boost::archive::text_oarchive
 // and boost::archive::text_iarchive
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-
-// XML archive that defines boost::archive::xml_oarchive
-// and boost::archive::xml_iarchive
-//#include <boost/archive/xml_oarchive.hpp>
-//#include <boost/archive/xml_iarchive.hpp>
-
-// XML archive which uses wide characters (use for UTF-8 output ),
-// defines boost::archive::xml_woarchive
-// and boost::archive::xml_wiarchive
-//#include <boost/archive/xml_woarchive.hpp>
-//#include <boost/archive/xml_wiarchive.hpp>
-
-// Binary archive that defines boost::archive::binary_oarchive
-// and boost::archive::binary_iarchive
-//#include <boost/archive/binary_oarchive.hpp>
-//#include <boost/archive/binary_iarchive.hpp>
 
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/map.hpp>
@@ -75,16 +56,13 @@ public:
     void CountEvent (std::string type );
     
     void AdvanceClock( double elapsed_time ) { time += elapsed_time; };
-
-    //void FRET_output_create();
-    //void FRET_output_write();
     
     void Trajectory_create( std::string trajectoryfile );
     void Trajectory_write( double time, std::string trajectoryfile);
     void Print_properties(int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ);
     void Print_excited_properties ();
    
-    //for counting the different energy transfer events
+    //for counting the different energy transfer events - used in excited - events(public))
     std::vector<int> FRET;
     std::vector<int> Dexter;
     std::vector<int> Collect_Fluorescence;
@@ -92,7 +70,8 @@ public:
     std::vector<int> Collect_Dexter;
     std::vector<int> Inject;
     
-private:   
+private:  
+    
     // Allow serialization to access non-public data members
     friend class boost::serialization::access;   
     std::vector< Carrier* > carriers; 
@@ -164,6 +143,7 @@ inline Carrier* State::AddCarrier( std::string type ) {
         carriers.push_back( carrier );
         return carrier;
     }  
+    //for energy transfer events - excited 
     if (carrier->Type() == "energy" ){
         carrier->SetID(energy.size()+1);
         //std::cout << "Excitation with: " << carrier->Type() << " " << carrier->id();
@@ -182,23 +162,23 @@ inline void State::CountEvent( std::string type ) {
         int fret = 1;
         FRET.push_back( fret );  
     }
-    else if (type == "dexter energy transfer"){
+    if (type == "dexter energy transfer"){
         int dexter = 1;
         Dexter.push_back( dexter );
     }
-    else if (type == "fluorescence collect"){
+    if (type == "fluorescence collect"){
         int collect_flu = 1;
         Collect_Fluorescence.push_back(collect_flu);
     }
-    else if(type == "phosphorescence collect"){
+    if(type == "phosphorescence collect"){
         int collect_phos = 1;
         Collect_Phosphorescence.push_back(collect_phos);
     }
-    else if (type == "inject"){
+    if (type == "inject"){
         int inject = 1;
         Inject.push_back(inject);
     }
-    else if (type =="dexter collect"){
+    if (type =="dexter collect"){
         int dexter_collect = 1;
         Collect_Dexter.push_back(dexter_collect);
     }
@@ -244,6 +224,7 @@ inline void State::Trajectory_write(double time, std::string trajectoryfile){
     trajectory.close();
 }
 
+//used to print the overall properties of the system - at the end of the vssm run
 inline void State::Print_properties(int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ){
         
     //std::cout << "State has " << carriers.size() << " carriers"<< std::endl;
@@ -254,8 +235,6 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     votca::tools::vec average_e_distance;
     votca::tools::vec average_h_distance;
     
-    if (energy.size() != 0){std::cout << std::endl << "    Energy Transfer  " << std::endl;}
-    
     if (electrons.size() != 0){ 
         std:: cout << std::endl << "   Electron Distance Travelled (m): " << std::endl;
         for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
@@ -265,6 +244,7 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
                     << " on node: " << carrier->GetNode()->id  
                     << "  " << carrier->Distance()*1E-9 << std::endl;
         
+            //converted nm->m
             average_e_distance += (carrier->Distance()*1E-9); 
         }
         average_e_distance /= nelectrons;
@@ -280,6 +260,7 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
                     << " on node: " << carrier->GetNode()->id  
                     << "  " << carrier->Distance()*1E-9 << std::endl;
 
+            //converted nm->m
             average_h_distance += (carrier->Distance()*1E-9);                
         }
         average_h_distance /= nholes;
@@ -292,20 +273,18 @@ inline void State::Print_properties(int nelectrons, int nholes, double fieldX, d
     votca::tools::vec average_h_velocity;
 
     
-    
-    
     //std:: cout << std::endl << "   Carrier Velocity (m/s): " << std::endl;
     if (electrons.size() != 0){ 
         std:: cout << std::endl << "   Electron Velocity (m/s): " << std::endl;
         for ( State::iterator it_carrier = electrons.begin(); it_carrier != electrons.end(); ++it_carrier ) {
             carrier = *it_carrier;
             velocity = (carrier->Distance()*1E-9/time);
-            std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;              
+            std::cout << std::scientific << "       " << carrier->Type() << " " << carrier->id() << " " << velocity << std::endl;
         }
         std::cout << std::endl;
         average_e_velocity = average_e_distance/time;
         std::cout << std::scientific << "   Average velocity of the electrons: " << average_e_velocity << " (m/s) " << std::endl;
-        std::cout << std::endl;       
+        std::cout << std::endl;    
     }
     
     if (holes.size() != 0 ){ 

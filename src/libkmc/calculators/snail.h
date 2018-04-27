@@ -98,7 +98,7 @@ bool Snail::EvaluateFrame() {
 
 void Snail::RunKMC() {
 
-    votca::tools::Random2 RandomVariable;
+    //votca::tools::Random2 RandomVariable;
     
     std::cout << "Running KMC snail" << endl;
    
@@ -119,11 +119,11 @@ void Snail::RunKMC() {
     std::cout << "Number of holes: " << _nholes << std::endl;
     std::cout << "Method of carrier injection: " << _injection_method << std::endl;
     
-    if (_injection_method == "random"){
+    /*if (_injection_method == "random"){
         //For the random injection of electrons - independent from random events    
         srand(_seedelectron);
         RandomVariable.init(rand(), rand(), rand(), rand());
-    }
+    }*/
     
     std::cout << std::endl;
     
@@ -132,8 +132,11 @@ void Snail::RunKMC() {
         return;
     }
  
-    srand(_seed);
-    RandomVariable.init(rand(), rand(), rand(), rand());
+    //srand(_seed);
+    //RandomVariable.init(rand(), rand(), rand(), rand());
+    srand(_seed); // srand expects any integer in order to initialise the random number generator
+    votca::tools::Random2 *RandomVariable = new votca::tools::Random2();
+    RandomVariable->init(rand(), rand(), rand(), rand());
     std::cout << std::endl;
         
     if(_nelectrons != 0){
@@ -145,10 +148,10 @@ void Snail::RunKMC() {
             Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
             
             if (_injection_method == "random"){ 
-                int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                int node_id = RandomVariable->rand_uniform_int(graph.nodes_size());
                 BNode* node_from = graph.GetNode(node_id + 1);
                 while (ecarrier->AddNode(node_from)==false){
-                        int node_id = RandomVariable.rand_uniform_int(graph.nodes_size());
+                        int node_id = RandomVariable->rand_uniform_int(graph.nodes_size());
                         node_from = graph.GetNode(node_id + 1);
                     } 
                 if (ecarrier->AddNode(node_from)==true){ ecarrier->AddNode( node_from );}
@@ -193,7 +196,7 @@ void Snail::RunKMC() {
     VSSM2_SNAIL vssm2;
     vssm2.Initialize( &state, &graph );
     //vssm2.AttachObserver(Observer, _nsteps );
-    vssm2.Run(_runtime, _nsteps, _seed, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
+    vssm2.Run(_runtime, _nsteps, RandomVariable, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
 
