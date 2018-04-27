@@ -1,5 +1,5 @@
-libdir=/usr/local/lib
-includedir=/usr/local/include
+libdir=/home/theorie/andrienk/votca/lib
+includedir=/home/theorie/andrienk/votca/include
 
 Name: libvotca_kmc
 Description: kinetic monte carlo of the votca package

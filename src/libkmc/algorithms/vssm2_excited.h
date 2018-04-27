@@ -21,10 +21,10 @@
 #include <unordered_map>
 #include <time.h>
 #include <votca/kmc/terminal_algorithm.h>
-#include "events/carrier_escape.h"
+#include "../events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
-#include "events/dexter_energy_transfer.h"
-#include "events/forster_energy_transfer.h"
+#include "../events/dexter_energy_transfer.h"
+#include "../events/forster_energy_transfer.h"
 
 
 /* Two-level VSSM algorithm with nodes at the top level and reactions at the bottom level

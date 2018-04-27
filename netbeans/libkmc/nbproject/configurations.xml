@@ -33,12 +33,14 @@
     </logicalFolder>
     <logicalFolder name="f3" displayName="Events" projectFiles="true">
       <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
+      <itemPath>../../src/libkmc/events/dexter_energy_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer_snail.h</itemPath>
       <itemPath>../../include/votca/kmc/event.h</itemPath>
       <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
       <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
+      <itemPath>../../src/libkmc/events/forster_energy_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/hole_transfer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
@@ -357,6 +359,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/libkmc/events/dexter_energy_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/libkmc/events/electron_transfer.h"
             ex="false"
             tool="3"
@@ -368,6 +375,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/forster_energy_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -600,6 +612,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/libkmc/events/dexter_energy_transfer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/libkmc/events/electron_transfer.h"
             ex="false"
             tool="3"
@@ -611,6 +628,11 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer_snail.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/events/forster_energy_transfer.h"
             ex="false"
             tool="3"
             flavor2="0">

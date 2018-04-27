@@ -24,8 +24,14 @@
 
 using namespace std;
 
+typedef votca::tools::vec myvec;
+
+
 namespace votca { namespace kmc {
 
+const double kB = votca::tools::globals::constants::kB;
+const double hbar = votca::tools::globals::constants::hbar;
+const double Pi=votca::tools::globals::constants::pi;
 
 
 /** 

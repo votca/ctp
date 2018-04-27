@@ -20,7 +20,7 @@
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
-#include "carriers/energy.h"
+#include "../carriers/energy.h"
 
 namespace votca { namespace kmc {
     

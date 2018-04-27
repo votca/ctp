@@ -21,7 +21,9 @@
 #include <votca/kmc/bnode.h>
 
 namespace votca { namespace kmc {
-  
+
+typedef votca::tools::vec myvec;    
+    
 class Graph {
 public:
     

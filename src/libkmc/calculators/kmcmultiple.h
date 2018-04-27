@@ -1,5 +1,5 @@
  /*
- * Copyright 2009-2013 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2018 The VOTCA Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,54 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * Pascal Kordt and Timo Pulch
  */
 
 #ifndef __VOTCA_KMC_MULTIPLE_H
 #define	__VOTCA_KMC_MULTIPLE_H
 
-#include <vector>
-#include <map>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
 #include <votca/tools/vec.h>
-#include <votca/tools/matrix.h>
-#include <votca/tools/statement.h>
-#include <votca/tools/database.h>
-#include <votca/tools/tokenizer.h>
-#include <votca/tools/globals.h>
 #include <votca/tools/random2.h>
 #include <votca/kmc/kmccalculator.h>
 
-#include <unordered_map>
-#include <cmath> // needed for abs(double)
-//#include <votca/kmc/node.h>
-#include <math.h> // needed for fmod()
-
-//using namespace std;
-
-typedef votca::tools::vec myvec;
 
 namespace votca { namespace kmc {
     
-
-
-const double kB = votca::tools::globals::constants::kB;
-const double hbar = votca::tools::globals::constants::hbar;
-
-
-static double Pi=votca::tools::globals::constants::pi;
-
-typedef std::unordered_map<unsigned long, double> CoulombMap;
-typedef CoulombMap::const_iterator CoulombIt;
-
+// forward declaration used only in this calculator and implemented in the .cc file
 class Node;
-class Chargecarrier;
-
 
 /**
 * \brief Kinetic Monte Carlo with exclusion principle
@@ -71,7 +38,6 @@ class Chargecarrier;
 * 
 * Executable: kmc_run
 */
-
 class KMCMultiple : public KMCCalculator 
 {
 public:
@@ -105,7 +71,7 @@ protected:
             double _fieldX;
             double _fieldY;
             double _fieldZ;
-            myvec _field;
+            votca::tools::vec _field;
             double _outputtime;
             string _trajectoryfile;
             string _timefile;

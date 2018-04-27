@@ -21,9 +21,9 @@
 #include <unordered_map>
 #include <time.h>
 #include <votca/kmc/algorithm.h>
-#include "events/carrier_escape.h"
+#include "../events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
-#include "events/electron_transfer_snail.h"
+#include "../events/electron_transfer_snail.h"
 
 //VSSM2 snail runs over all occupied nodes at each step, to enable and disable events
 //slow algorithm used to validate the results of VSSM2 nodes & carriers 

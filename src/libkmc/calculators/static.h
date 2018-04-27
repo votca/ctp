@@ -25,7 +25,7 @@
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-#include "algorithms/vssm2_nodes.h"
+#include "../algorithms/vssm2_nodes.h"
 #include <fstream>
 
 using namespace std;

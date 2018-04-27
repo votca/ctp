@@ -20,9 +20,11 @@
 
 #include <votca/kmc/event.h>
 #include <votca/kmc/edge.h>
-#include "carriers/hole.h"
+#include "../carriers/hole.h"
 
 namespace votca { namespace kmc {
+
+class Hole;
     
 class HoleTransfer : public Event {
     
