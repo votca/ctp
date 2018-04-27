@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/76eaba69/kmcmultiple.o \
 	${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o \
 	${OBJECTDIR}/_ext/1ce05ac7/eventfactory.o \
 	${OBJECTDIR}/_ext/1ce05ac7/kmcapplication.o \
@@ -68,6 +69,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a: ${OBJECTFILES}
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibkmc.a
+
+${OBJECTDIR}/_ext/76eaba69/kmcmultiple.o: ../../src/libkmc/calculators/kmcmultiple.cc nbproject/Makefile-${CND_CONF}.mk
+	${MKDIR} -p ${OBJECTDIR}/_ext/76eaba69
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I../../include -I../../include/votca/kmc -I../../../include/votca/tools -I../../../include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/76eaba69/kmcmultiple.o ../../src/libkmc/calculators/kmcmultiple.cc
 
 ${OBJECTDIR}/_ext/1ce05ac7/carrierfactory.o: ../../src/libkmc/carrierfactory.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce05ac7

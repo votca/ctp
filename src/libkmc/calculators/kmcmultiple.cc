@@ -11,7 +11,6 @@
 
 #include <unordered_map>
 #include <cmath> // needed for abs(double)
-#include <votca/kmc/node.h>
 #include <math.h> // needed for fmod()
 
 
@@ -26,6 +25,37 @@
 using namespace std;
 
 namespace votca { namespace kmc {
+
+
+
+/** 
+* \brief Progressbar
+* 
+* visualize progress in the terminal
+*/
+void progressbar(double fraction)
+{
+    int totalbars = 50;
+    std::cout << "\r";
+    for(double bars=0; bars<double(totalbars); bars++)
+    {
+        if(bars<=fraction*double(totalbars))
+        {
+            std::cout << "|";
+        }
+        else
+        {
+            std::cout << "-";
+        }
+    }
+    std::cout << "  " << int(fraction*1000)/10. <<" %   ";
+    std::cout << std::flush;
+    if(fraction*100 == 100)
+    {
+        std::cout << std::endl;
+    }
+}
+
     
 struct Event
 {
@@ -126,6 +156,24 @@ double Node::EscapeRate()
 {
     return escaperate;
 }
+
+/** 
+* \brief Charge carrier
+* 
+* either electrons or  holes which are injected on segements(nodes)
+*/
+class Chargecarrier
+{
+    public:
+        int position;
+        int id;
+        Node *node;
+
+        bool forbidden;
+        votca::tools::vec dr_travelled;
+        double tof_travelled;
+};
+
 
 /**
 * \brief Initialize 
@@ -440,7 +488,7 @@ int Forbidden(int id, vector<int> forbiddenlist)
 /**
 * \brief Forbidden: Check if the event is in the forbiddenlist of a node (eventlist)
 */
-int ForbiddenEvents(int id, vector<Event_OLD> forbiddenevent)
+int ForbiddenEvents(int id, vector<Event> forbiddenevent)
 {
     // cout << "forbidden list has " << forbiddenlist.size() << " entries" << endl;
     int forbidden = 0;

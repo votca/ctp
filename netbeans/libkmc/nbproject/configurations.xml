@@ -15,6 +15,8 @@
       <itemPath>../../src/libkmc/calculators/diode.h</itemPath>
       <itemPath>../../src/libkmc/calculators/dynamic.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmclight.h</itemPath>
+      <itemPath>../../src/libkmc/calculators/kmcmultiple.cc</itemPath>
+      <itemPath>../../src/libkmc/calculators/kmcmultiple.cc.not</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcmultiple.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcparallel.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcsingle.h</itemPath>
@@ -299,6 +301,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/libkmc/calculators/kmcmultiple.cc"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/kmcmultiple.cc.not"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/libkmc/calculators/kmcmultiple.h"
             ex="false"
             tool="3"
@@ -528,6 +540,16 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmclight.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/kmcmultiple.cc"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/libkmc/calculators/kmcmultiple.cc.not"
             ex="false"
             tool="3"
             flavor2="0">
