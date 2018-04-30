@@ -15,14 +15,14 @@
  *
  */
 
-#ifndef __VOTCA_KMC_VSSM2_TERMINAL_H_
-#define __VOTCA_KMC_VSSM2_TERMINAL_H_
+#ifndef __VOTCA_KMC_VSSM2_ELECTRODE_H_
+#define __VOTCA_KMC_VSSM2_ELECTRODE_H_
 
 #include <unordered_map>
 #include <time.h>
-#include <votca/kmc/terminal_algorithm.h>
-#include "../events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
+#include <votca/kmc/slab_algorithm.h>
+#include "../events/carrier_escape.h"
 #include "../events/electron_transfer.h"
 #include "../events/hole_transfer.h"
 
@@ -37,7 +37,7 @@
 
 namespace votca { namespace kmc {
   
-class VSSM2_TERMINAL : public TerminalAlgorithm {
+class VSSM2_ELECTRODE : public SlabAlgorithm {
     
 public:
   
@@ -66,10 +66,10 @@ public:
 }*/
   
 
-void Initialize ( State* _state, TerminalGraph* _graph ) { 
+void Initialize ( State* _state, SlabGraph* _graph ) { 
     
     state = _state;
-    terminalgraph = _graph;
+    slabgraph = _graph;
     
     // Map of charge transfer events (electron and hole) associated with a particular node
     std::unordered_map< BNode*, std::vector<Event*> > electron_transfer_map;
@@ -81,7 +81,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     std::vector<HoleTransfer*> ht_events;
          
     // Loop over all source nodes - injection events
-    /*for (TerminalGraph::iterator it_source_node = _graph->source_nodes_begin(); it_source_node != _graph->source_nodes_end(); ++it_source_node) {
+    /*for (SlabGraph::iterator it_source_node = _graph->source_nodes_begin(); it_source_node != _graph->source_nodes_end(); ++it_source_node) {
         
         BNode* node_from = *it_source_node;
         
@@ -116,7 +116,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     }*/
     
     //Loop over all lattice nodes - carrier move events
-    for (TerminalGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+    for (SlabGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
         electron_transfer_map.emplace(node_from, vector<Event*>() );
@@ -143,7 +143,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     }
     
     //Loop over all drain nodes - collection events and/or return to source events (closed circuit)
-    /*for (TerminalGraph::iterator it_drain_node = _graph->drain_nodes_begin(); it_drain_node != _graph->drain_nodes_end(); ++it_drain_node) {
+    /*for (SlabGraph::iterator it_drain_node = _graph->drain_nodes_begin(); it_drain_node != _graph->drain_nodes_end(); ++it_drain_node) {
         
         BNode* node_from = *it_drain_node;
         

@@ -17,7 +17,6 @@
 
 #include <votca/kmc/eventfactory.h>
 #include "events/electron_transfer.h"
-#include "events/electron_transfer_snail.h"
 #include "events/carrier_escape.h"
 #include "events/hole_transfer.h"
 #include "events/dexter_energy_transfer.h"
@@ -28,7 +27,6 @@ namespace votca { namespace kmc {
 void EventFactory::RegisterAll(void)
 {
     Events().Register<ElectronTransfer>("electron_transfer");
-    Events().Register<ElectronTransferSnail>("electron_transfer_snail");
     Events().Register<CarrierEscape>("carrier_escape");
     Events().Register<HoleTransfer>("hole_transfer");
     Events().Register<DexterEnergyTransfer>("dexter_energy_transfer");

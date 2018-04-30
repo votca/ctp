@@ -1,6 +1,6 @@
 <options>
 
-<static help="Kinetic Monte Carlo simulations using binary tree" label="calc:binary" section="sec:kmc">
+<pbc help="Kinetic Monte Carlo simulation for multiple carriers in PBC" label="calc:binary" section="sec:kmc">
 
         <runtime help="Simulated time" unit="seconds" default="0">0</runtime>
 	<nsteps help="Number of simulation steps" unit="steps" default="1">1000000</nsteps>
@@ -16,6 +16,6 @@
 	<temperature help="Temperature of the system for rate calculation" unit="K" default="300">300</temperature>
 	<rates help="Method of rate input: read (from file) or calculate (in KMC)" default="read">read</rates>		
 
-</static>
+</pbc>
 
 </options>

@@ -17,26 +17,23 @@
 
 #include <votca/kmc/kmccalculatorfactory.h>
 #include "calculators/kmcmultiple.h"
-#include "calculators/kmcparallel.h"
-#include "calculators/dynamic.h"
-#include "calculators/static.h"
-#include "calculators/snail.h"
-#include "calculators/terminal.h"
+#include "calculators/pbc.h"
+#include "calculators/slab.h"
 #include "calculators/excited.h"
+//#include "calculators/kmcparallel.h"
 
 namespace votca { namespace kmc {
 
 void KMCCalculatorFactory::RegisterAll(void)
 {
     Calculators().Register<KMCMultiple>("kmcmultiple"); // multiple charge carriers
-    Calculators().Register<Static>("static"); // precomputed rates
+    Calculators().Register<PBC>("pbc"); // precomputed rates for multiple carriers in PBC
+    //Calculators().Register<Slab>("slab"); // multiple charge carriers with electrodes 
+    //Calculators().Register<Excited>("excited"); // excited molecule energy transfer hops depend on distance (foster/dexter)   
     //Calculators().Register<Diffusion>("diffusion"); // single charge carrier in PBC
     //Calculators().Register<Diode>("diode"); // multiple charge types in 2D PBC
     //Calculators().Register<KMCParallel>("kmcparallel"); // single charge carrier threaded
-    //Calculators().Register<Dynamic>("dynamic"); // dynamic creation of events after a move (slow))
-    //Calculators().Register<Snail>("snail"); // precomputed rates
-    //Calculators().Register<Terminal>("terminal"); // source and drain (injection and collection) of carriers
-    Calculators().Register<Excited>("excited"); // excited molecule energy transfer hops depend on distance (foster/dexter)
+
 }
 
 }}

@@ -15,19 +15,19 @@
  *
  */
 
-#ifndef __VOTCA_KMC_TERMINAL_ALGORITHM_H_
-#define __VOTCA_KMC_TERMINAL_ALGORITHM_H_
+#ifndef __VOTCA_KMC_SLAB_ALGORITHM_H_
+#define __VOTCA_KMC_SLAB_ALGORITHM_H_
 
 #include <votca/kmc/event.h>
 
 namespace votca { namespace kmc {
   
-class TerminalAlgorithm {
+class SlabAlgorithm {
 public:
     
-    TerminalAlgorithm(){};
+    SlabAlgorithm(){};
     
-    virtual void Initialize(State* _state, TerminalGraph* _graph) = 0;
+    virtual void Initialize(State* _state, SlabGraph* _graph) = 0;
  
     double Time(){ return time; }
     
@@ -41,7 +41,7 @@ protected:
     
     State* state;
     
-    TerminalGraph* terminalgraph;
+    SlabGraph* slabgraph;
 };
 
     

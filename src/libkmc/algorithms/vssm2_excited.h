@@ -20,7 +20,7 @@
 
 #include <unordered_map>
 #include <time.h>
-#include <votca/kmc/terminal_algorithm.h>
+#include <votca/kmc/slab_algorithm.h>
 #include "../events/carrier_escape.h"
 #include <votca/kmc/bnode.h>
 #include "../events/dexter_energy_transfer.h"
@@ -37,7 +37,7 @@
 
 namespace votca { namespace kmc {
   
-class VSSM2_EXCITED : public TerminalAlgorithm {
+class VSSM2_EXCITED : public SlabAlgorithm {
     
 public:
   
@@ -65,10 +65,10 @@ public:
 }*/
 
 
-void Initialize ( State* _state, TerminalGraph* _graph ) { 
+void Initialize ( State* _state, SlabGraph* _graph ) { 
     
     state = _state;
-    terminalgraph = _graph;
+    slabgraph = _graph;
     
     // Map of charge transfer events associated with a particular node
     std::unordered_map< BNode*, std::vector<Event*> > dexter_energy_transfer_map;
@@ -79,7 +79,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     std::vector<ForsterEnergyTransfer*> fret_events;
     
     // Loop over all source nodes - injection events
-    for (TerminalGraph::iterator it_inject_node = _graph->inject_nodes_begin(); it_inject_node != _graph->inject_nodes_end(); ++it_inject_node) {
+    for (SlabGraph::iterator it_inject_node = _graph->inject_nodes_begin(); it_inject_node != _graph->inject_nodes_end(); ++it_inject_node) {
         
         BNode* node_from = *it_inject_node;
         
@@ -114,7 +114,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     }
     
     // Create all possible transfer events and associate them with the nodes
-    for (TerminalGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
+    for (SlabGraph::iterator it_node = _graph->nodes_begin(); it_node != _graph->nodes_end(); ++it_node) {
         
         BNode* node_from = *it_node;
         
@@ -152,7 +152,7 @@ void Initialize ( State* _state, TerminalGraph* _graph ) {
     }
     
     //Loop over all drain nodes - collection events and/or return to source events (closed circuit)
-    for (TerminalGraph::iterator it_collect_node = _graph->collect_nodes_begin(); it_collect_node != _graph->collect_nodes_end(); ++it_collect_node) {
+    for (SlabGraph::iterator it_collect_node = _graph->collect_nodes_begin(); it_collect_node != _graph->collect_nodes_end(); ++it_collect_node) {
         
         BNode* node_from = *it_collect_node;
         

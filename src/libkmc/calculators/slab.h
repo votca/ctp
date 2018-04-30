@@ -15,31 +15,31 @@
  *
  */
 
-#ifndef __VOTCA_KMC_TERMINAL_H
-#define	__VOTCA_KMC_TERMINAL_H
+#ifndef __VOTCA_KMC_SLAB_H
+#define	__VOTCA_KMC_SLAB_H
 
 #include <votca/kmc/state.h>
 #include <votca/kmc/event.h>
-#include <votca/kmc/terminalgraph.h>
+#include <votca/kmc/slabgraph.h>
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
 #include <votca/kmc/eventfactory.h>
-#include "../algorithms/vssm2_terminal.h"
+#include "../algorithms/vssm2_electrode.h"
 #include <fstream>
 
 using namespace std;
 
 namespace votca { namespace kmc {
    
-class Terminal : public KMCCalculator 
+class Slab : public KMCCalculator 
 {
 public:
     
-    Terminal() {};
-   ~Terminal() {};
+    Slab() {};
+   ~Slab() {};
 
-    string  Identify() {return "terminal"; };
+    string  Identify() {return "slab"; };
     using KMCCalculator::Initialize;
     void Initialize(Property *options);
     bool EvaluateFrame();
@@ -69,9 +69,9 @@ private:
     std::string _drain_electrode;
 };
 
-void Terminal::Initialize(Property *options) {
+void Slab::Initialize(Property *options) {
     
-    std::cout << endl << "Initialising KMC terminal" << endl;
+    std::cout << endl << "Initialising KMC slab" << endl;
 
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options );
@@ -96,21 +96,21 @@ void Terminal::Initialize(Property *options) {
 
 }
 
-bool Terminal::EvaluateFrame() {
+bool Slab::EvaluateFrame() {
         
     RunKMC();
     return true;
 }
 
-void Terminal::RunKMC() {
+void Slab::RunKMC() {
 
     srand(_seed); 
     votca::tools::Random2 *RandomVariable = new votca::tools::Random2();
     RandomVariable->init(rand(), rand(), rand(), rand());
     
-    std::cout << "Running KMC terminal" << endl;
+    std::cout << "Running KMC slab" << endl;
    
-    TerminalGraph terminalgraph;
+    SlabGraph slabgraph;
     State state;
      
     std::string filename( "state.sql" );
@@ -121,7 +121,7 @@ void Terminal::RunKMC() {
     char delimiter_source;
     iss_source >> source_electrode_x >> delimiter_source >> source_electrode_y >> delimiter_source >> source_electrode_z;
     std::cout << "Source electrode created at position: (" << source_electrode_x  << "," << source_electrode_y << "," << source_electrode_z << ") " << std::endl;
-    terminalgraph.Create_source_electrode( (_nelectrons + _nholes), source_electrode_x, source_electrode_y, source_electrode_z );
+    slabgraph.Create_source_electrode( (_nelectrons + _nholes), source_electrode_x, source_electrode_y, source_electrode_z );
 
      */
     
@@ -131,9 +131,9 @@ void Terminal::RunKMC() {
     else if(_fieldZ != 0 && _fieldX==0 && _fieldY==0) {field_direction = "Z"; }
     */
     
-    terminalgraph.Load_Graph(filename, _temperature);
+    slabgraph.Load_Graph(filename, _temperature);
         
-    //terminalgraph.Load_injectable_collectable(field_direction);
+    //slabgraph.Load_injectable_collectable(field_direction);
   
     //create the drain electrode - one drain node per carrier
     /*std::istringstream iss_drain(_drain_electrode); // position = "x,y,z" 
@@ -141,30 +141,30 @@ void Terminal::RunKMC() {
     char delimiter_drain;
     iss_drain >> drain_electrode_x >> delimiter_drain >> drain_electrode_y >> delimiter_drain >> drain_electrode_z;
     std::cout << "Drain electrode created at position: (" << drain_electrode_x << "," << drain_electrode_y << "," << drain_electrode_z << ") "<< std::endl;
-    terminalgraph.Create_drain_electrode( (_nelectrons + _nholes), drain_electrode_x, drain_electrode_y, drain_electrode_z );
+    slabgraph.Create_drain_electrode( (_nelectrons + _nholes), drain_electrode_x, drain_electrode_y, drain_electrode_z );
 
-    terminalgraph.Load_Electrode_Neighbours( filename );
+    slabgraph.Load_Electrode_Neighbours( filename );
     */
     
     if (_rates == "read"){
         std::cout << "Reading rates from " << filename << std::endl;
-        terminalgraph.Load_Rates(filename);
+        slabgraph.Load_Rates(filename);
     }
     else if ( _rates == "calculate"){
-        terminalgraph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
+        slabgraph.Rates_Calculation(filename, _nelectrons, _nholes, _fieldX, _fieldY, _fieldZ, _temperature);
     }
     else {
         std::cout << "Error: The option for rates was incorrectly specified. Please choose to 'read' rates or 'calculate' rates. " << std::endl;
     }
     
-    //terminalgraph.Print();
+    //slabgraph.Print();
     
     CarrierFactory::RegisterAll();
     EventFactory::RegisterAll();
     
-    std::cout << std::endl << "Number of nodes: " << terminalgraph.nodes_size() << std::endl;
-    //std::cout << "Number of source nodes (injection): " << terminalgraph.source_nodes_size() <<  std::endl;
-    //std::cout << "Number of drain nodes (collection): " << terminalgraph.drain_nodes_size() <<  std::endl;
+    std::cout << std::endl << "Number of nodes: " << slabgraph.nodes_size() << std::endl;
+    //std::cout << "Number of source nodes (injection): " << slabgraph.source_nodes_size() <<  std::endl;
+    //std::cout << "Number of drain nodes (collection): " << slabgraph.drain_nodes_size() <<  std::endl;
     std::cout << "Number of electrons: " << _nelectrons << std::endl;
     std::cout << "Number of holes: " << _nholes << std::endl;
    
@@ -175,7 +175,7 @@ void Terminal::RunKMC() {
             Carrier* e_carrier =  state.AddCarrier( "electron" );
             Electron* ecarrier = dynamic_cast<Electron*>(e_carrier);
 
-            BNode* node_from = terminalgraph.GetNode(electron);
+            BNode* node_from = slabgraph.GetNode(electron);
             ecarrier->AddNode( node_from );
             //node_from->PrintNode();  
             
@@ -191,15 +191,15 @@ void Terminal::RunKMC() {
             Carrier* h_carrier =  state.AddCarrier( "hole" );
             Hole* hcarrier = dynamic_cast<Hole*>(h_carrier);
             
-            BNode* node_from = terminalgraph.GetNode(hole);
+            BNode* node_from = slabgraph.GetNode(hole);
             hcarrier->AddNode( node_from );
             //node_from->PrintNode();  
             
         }
     }
     
-    VSSM2_TERMINAL vssm2;
-    vssm2.Initialize( &state, &terminalgraph );
+    VSSM2_ELECTRODE vssm2;
+    vssm2.Initialize( &state, &slabgraph );
     vssm2.Run(_runtime, _nsteps, RandomVariable, _nelectrons, _nholes, _trajectoryfile, _outtime, _fieldX, _fieldY, _fieldZ);
     
 }
@@ -207,4 +207,4 @@ void Terminal::RunKMC() {
 }}
 
 
-#endif	/* __VOTCA_KMC_TERMINAL_H */
+#endif	/* __VOTCA_KMC_SLAB_H */

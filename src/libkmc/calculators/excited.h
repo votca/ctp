@@ -20,7 +20,7 @@
 
 #include <votca/kmc/state.h>
 #include <votca/kmc/event.h>
-#include <votca/kmc/terminalgraph.h>
+#include <votca/kmc/slabgraph.h>
 #include <votca/kmc/carrier.h>
 #include <votca/kmc/bnode.h>
 #include <votca/kmc/carrierfactory.h>
@@ -114,7 +114,7 @@ void Excited::RunKMC() {
     
     std::cout << "Running KMC excited" << endl;
    
-    TerminalGraph graph;
+    SlabGraph graph;
     State state;
      
     std::string filename( "state.sql" );

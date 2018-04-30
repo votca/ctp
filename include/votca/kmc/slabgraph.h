@@ -15,16 +15,16 @@
  *
  */
 
-//Terminal Graph can create injection and collection of carriers, via a "source" and a "drain" set of nodes
+//Slab Graph can create injection and collection of carriers, via a "source" and a "drain" set of nodes
 
-#ifndef __VOTCA_KMC_TERMINALGRAPH_H_
-#define __VOTCA_KMC_TERMINALGRAPH_H_
+#ifndef __VOTCA_KMC_SLABGRAPH_H_
+#define __VOTCA_KMC_SLABGRAPH_H_
 
 #include <votca/kmc/bnode.h>
 
 namespace votca { namespace kmc {
    
-class TerminalGraph {
+class SlabGraph {
 public:
 
     // iterator over carriers
@@ -113,7 +113,7 @@ private:
     std::vector < BNode* > collect_nodes;
 }; 
 
-/*void TerminalGraph::Create_source_electrode (int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z){
+/*void SlabGraph::Create_source_electrode (int ncarriers, double source_electrode_x, double source_electrode_y, double source_electrode_z){
     
     //Add the injection node - Source (in front of the face of injectable nodes)     
     for ( int carrier = 1; carrier <= ncarriers; ++carrier ) {  
@@ -129,8 +129,8 @@ private:
 }  
 */
 
-//void TerminalGraph::Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z) {
-void TerminalGraph::Load_Graph(std::string filename, double temperature) {   
+//void SlabGraph::Load_Graph(std::string filename, double inject_x, double inject_y, double inject_z, double collect_x, double collect_y, double collect_z) {
+void SlabGraph::Load_Graph(std::string filename, double temperature) {   
  
     double kB   = 8.617332478E-5; // eV/K
     double sigma = 0.1; // energetic disorder ----> should be read in
@@ -197,7 +197,7 @@ void TerminalGraph::Load_Graph(std::string filename, double temperature) {
     delete stmt;
 }
 
-/*void TerminalGraph::Load_injectable_collectable(std::string field_direction){
+/*void SlabGraph::Load_injectable_collectable(std::string field_direction){
     
     //Start with the first node - use it's position as the initial minimum position
     BNode* node1 = GetLatticeNode( 1 );
@@ -277,7 +277,7 @@ void TerminalGraph::Load_Graph(std::string filename, double temperature) {
 }
 */
 
-/*void TerminalGraph::Create_drain_electrode (int ncarriers, double drain_electrode_x, double drain_electrode_y, double drain_electrode_z){
+/*void SlabGraph::Create_drain_electrode (int ncarriers, double drain_electrode_x, double drain_electrode_y, double drain_electrode_z){
     
     //Add the collection nodes - Drain (behind the face of collectable nodes)
     //has to be done after the graph is loaded - drain id should continue after final graph node id
@@ -294,7 +294,7 @@ void TerminalGraph::Load_Graph(std::string filename, double temperature) {
 }
 */
 
-/*void TerminalGraph::Load_Electrode_Neighbours(std::string filename) {
+/*void SlabGraph::Load_Electrode_Neighbours(std::string filename) {
     
     for (std::vector< BNode* >::iterator source_node = source_nodes_begin() ; source_node != source_nodes_end(); ++source_node){
 
@@ -371,7 +371,7 @@ void TerminalGraph::Load_Graph(std::string filename, double temperature) {
 }
 */
 
-void TerminalGraph::Load_Rates(std::string filename) {
+void SlabGraph::Load_Rates(std::string filename) {
     
     // initialising the database file
     votca::tools::Database db;
@@ -447,7 +447,7 @@ void TerminalGraph::Load_Rates(std::string filename) {
 
 }
 
-void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ, double temperature){
+void SlabGraph::Rates_Calculation(std::string filename, int nelectrons, int nholes, double fieldX, double fieldY, double fieldZ, double temperature){
     
     double kB   = 8.617332478E-5; // eV/K
     double hbar = 6.5821192815E-16; // eV*s
@@ -577,7 +577,7 @@ void TerminalGraph::Rates_Calculation(std::string filename, int nelectrons, int 
     }
 }
 
-void TerminalGraph::Load_Excited_Graph(std::string filename) {
+void SlabGraph::Load_Excited_Graph(std::string filename) {
     
     std::cout << "Loading the graph from " << filename << std::endl;
     
@@ -618,7 +618,7 @@ void TerminalGraph::Load_Excited_Graph(std::string filename) {
     delete stmt; 
 }
 
-void TerminalGraph::Create_excited_inject_collect_nodes (int nexciteddonor){
+void SlabGraph::Create_excited_inject_collect_nodes (int nexciteddonor){
     
     //Add the injection nodes    
     for ( int energy = 1; energy <= nexciteddonor; ++energy ) {  
@@ -649,7 +649,7 @@ void TerminalGraph::Create_excited_inject_collect_nodes (int nexciteddonor){
     }
 } 
 
-void TerminalGraph::Load_Excited_pairs(std::string filename){
+void SlabGraph::Load_Excited_pairs(std::string filename){
     
     votca::tools::Database db;
     db.Open( filename );
@@ -743,7 +743,7 @@ void TerminalGraph::Load_Excited_pairs(std::string filename){
     
 }
 
-void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string filename){
+void SlabGraph::Excited_energy_transfer_with_inject_collect(std::string filename){
     
     //std::cout << "Calculating excited energy transfer rates." << std::endl;
 
@@ -1182,7 +1182,7 @@ void TerminalGraph::Excited_energy_transfer_with_inject_collect(std::string file
     
 }
 
-void TerminalGraph::Print(){
+void SlabGraph::Print(){
     
     for (std::vector< BNode* >::iterator node = nodes.begin() ; node != nodes.end(); ++node) {
             (*node)->PrintNode();

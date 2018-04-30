@@ -20,6 +20,14 @@
 
 #include <votca/kmc/bnode.h>
 
+#include <vector>
+#include <map>
+#include <iostream>
+#include <votca/tools/vec.h>
+#include <votca/tools/database.h>
+#include <votca/tools/statement.h>
+
+
 namespace votca { namespace kmc {
 
 typedef votca::tools::vec myvec;    
