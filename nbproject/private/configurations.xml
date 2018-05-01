@@ -49,6 +49,7 @@
                 </df>
               </df>
             </df>
+            <in>gitversion.h</in>
             <in>votca_config.h</in>
           </df>
           <df name="tools">
@@ -107,9 +108,9 @@
             <in>ratecalculator.h</in>
             <in>rates.h</in>
             <in>slab_algorithm.h</in>
+            <in>slabgraph.h</in>
             <in>state.h</in>
             <in>store.h</in>
-            <in>terminalgraph.h</in>
             <in>version.h</in>
             <in>vssmgroup.h</in>
           </df>

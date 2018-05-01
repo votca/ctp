@@ -64,6 +64,7 @@ private:
     double _outtime;
     std::string _trajectoryfile;
     std::string _rates;
+    std::string _interaction;
 };
 
 void PBC::Initialize(Property *options) {
@@ -89,6 +90,7 @@ void PBC::Initialize(Property *options) {
     _outtime = options->get(key + ".outtime").as<double>();
     _trajectoryfile = options->get(key + ".trajectoryfile").as<string>();
     _rates = options->get(key + ".rates").as<string>();
+    _interaction = options->get(key + ".interaction").as<string>();
 
 }
 
@@ -101,7 +103,7 @@ bool PBC::EvaluateFrame() {
 void PBC::RunKMC() {
 
     
-    std::cout << "Running KMC-PBC" << std::endl;
+    std::cout << "Running KMC-PBC: " << std::endl;
    
     Graph graph;
     State state;
@@ -109,6 +111,14 @@ void PBC::RunKMC() {
     //Load the graph from the state file
     std::string filename( "state.sql" );
     graph.Load_Graph( filename );
+    
+    //Interaction still to be implemented - only Pauli exclusion available right now
+    if (_interaction == "Pauli"){
+        std::cout << "Pauli exclusion principal used as method of interaction for like charges (no double occupation)" << std::endl;
+    }
+    /*else if (_interaction == "Coulomb"){
+        std::cout << "  Coulomb electrostatic interaction between like charges included " << std::endl;
+    }*/
     
     //option to read the rates from the state file or calculate
     if (_rates == "read"){

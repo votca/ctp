@@ -14,7 +14,8 @@
         <fieldY help="y component of the external electric field" unit="V/m" default="0">0</fieldY>
         <fieldZ help="z component of the external electric field" unit="V/m" default="1E6">1E6</fieldZ>
 	<temperature help="Temperature of the system for rate calculation" unit="K" default="300">300</temperature>
-	<rates help="Method of rate input: read (from file) or calculate (in KMC)" default="read">read</rates>		
+	<rates help="Method of rate input: read (from file) or calculate (in KMC)" default="read">read</rates>	
+	<interaction help="Method of interaction between like charge carriers (Pauli or Coulomb)" default="Pauli">Pauli</interaction>	
 
 </pbc>
 
