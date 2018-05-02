@@ -1,3 +1,5 @@
 add_subdirectory(xml)
 add_subdirectory(doc)
+add_subdirectory(moo)
+add_subdirectory(kmc)
 add_subdirectory(qmpackages)
