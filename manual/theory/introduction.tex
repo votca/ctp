@@ -17,21 +17,27 @@ In the following \sect{theory}, we summarize the \slink{sec:theory}{theoretical 
 
 
 
-\tikzstyle{decision} = [diamond, draw, fill=mygray]
+\tikzstyle{decision} = [diamond, draw, fill=white]
 \tikzstyle{line} = [draw, -stealth, thick]
-\tikzstyle{block} = [draw, rectangle, fill=mygray, text width=0.5\linewidth]
-\tikzstyle{smallblock} = [draw, rectangle, fill=mygray, text width=0.4\linewidth]
+\tikzstyle{block} = [draw, rectangle, fill=white, text width=0.6\linewidth]
+\tikzstyle{smallblock} = [draw, rectangle, fill=white, text width=0.4\linewidth]
 \tikzstyle{info} = [text width=0.35\linewidth]
 \tikzstyle{smallinfo} = [text width=0.25\linewidth]
 \tikzstyle{biginfo} = [text width=0.9\linewidth]
+
 \begin{figure}
 \centering
 \newcommand{\vgap}{0.5cm}
 \begin{scriptsize}
 \noindent\begin{tikzpicture}
-\node [block] (mapping) {{\bf Mapping}\\Converts and partitions atomistic \gromacs trajectory \vskip 0.1cm
-{\noindent  \cmdmap}
-\vskip 0.1cm};
+
+\node [block] (mapping) {
+{\bf Mapping, generation of the sql database}\\
+Converts and partitions atomistic \gromacs trajectory \vskip 0.1cm
+{\noindent  \cmdmap} \\
+Useful tools: \pdb2map
+
+\vskip 0.1cm };
 
 \node[smallinfo, left=0.0 of mapping] (input) {{\bf Input files:}\\\texttt{conf.gro}\\\,\hskip 0.1cm\gromacs trajectory\\\texttt{topol.tpr}\\\hskip0.1cm\gromacs topology\\\texttt{\xmlcsg}\\\hskip0.1cm mapping and energies\\\texttt{options.xml}\\\hskip0.1cm options for \slink{sec:calculators}{calculators}\vskip 0.2cm {\bf Output files:}\\\texttt{\sqlstate}\\\hskip0.1cm \sqlite database file for\\\hskip0.1cm data transfer between\\\hskip0.1cm modules};
 
