@@ -13,16 +13,11 @@
     <logicalFolder name="calculators" displayName="Calculators" projectFiles="true">
       <itemPath>../../src/libkmc/calculators/diffusion.h</itemPath>
       <itemPath>../../src/libkmc/calculators/diode.h</itemPath>
-      <itemPath>../../src/libkmc/calculators/dynamic.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmclight.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcmultiple.cc</itemPath>
-      <itemPath>../../src/libkmc/calculators/kmcmultiple.cc.not</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcmultiple.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcparallel.h</itemPath>
       <itemPath>../../src/libkmc/calculators/kmcsingle.h</itemPath>
-      <itemPath>../../src/libkmc/calculators/snail.h</itemPath>
-      <itemPath>../../src/libkmc/calculators/static.h</itemPath>
-      <itemPath>../../src/libkmc/calculators/terminal.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Carriers" projectFiles="true">
       <itemPath>../../include/votca/kmc/carrier.h</itemPath>
@@ -35,8 +30,6 @@
       <itemPath>../../src/libkmc/events/carrier_escape.h</itemPath>
       <itemPath>../../src/libkmc/events/dexter_energy_transfer.h</itemPath>
       <itemPath>../../src/libkmc/events/electron_transfer.h</itemPath>
-      <itemPath>../../src/libkmc/events/electron_transfer_dynamic.h</itemPath>
-      <itemPath>../../src/libkmc/events/electron_transfer_snail.h</itemPath>
       <itemPath>../../include/votca/kmc/event.h</itemPath>
       <itemPath>../../src/libkmc/eventfactory.cc</itemPath>
       <itemPath>../../include/votca/kmc/eventfactory.h</itemPath>
@@ -293,11 +286,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/calculators/dynamic.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../src/libkmc/calculators/kmclight.h"
             ex="false"
             tool="3"
@@ -306,11 +294,6 @@
       <item path="../../src/libkmc/calculators/kmcmultiple.cc"
             ex="false"
             tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/kmcmultiple.cc.not"
-            ex="false"
-            tool="3"
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmcmultiple.h"
@@ -324,21 +307,6 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmcsingle.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/snail.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/static.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/terminal.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -365,16 +333,6 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/electron_transfer_dynamic.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/electron_transfer_snail.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -546,11 +504,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/libkmc/calculators/dynamic.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../src/libkmc/calculators/kmclight.h"
             ex="false"
             tool="3"
@@ -559,11 +512,6 @@
       <item path="../../src/libkmc/calculators/kmcmultiple.cc"
             ex="false"
             tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/kmcmultiple.cc.not"
-            ex="false"
-            tool="3"
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmcmultiple.h"
@@ -577,21 +525,6 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/calculators/kmcsingle.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/snail.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/static.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/calculators/terminal.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -618,16 +551,6 @@
             flavor2="0">
       </item>
       <item path="../../src/libkmc/events/electron_transfer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/electron_transfer_dynamic.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/libkmc/events/electron_transfer_snail.h"
             ex="false"
             tool="3"
             flavor2="0">
