@@ -1,5 +1,5 @@
 set(CTP_PROGS)
-foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
+foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap kmc_run)
   file(GLOB ${PROG}_SOURCES ${PROG}*.cc)
 
   if( ${PROG} STREQUAL "ctp_map" )
@@ -9,6 +9,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
   endif()
 
   target_link_libraries(${PROG} votca_ctp ${BOOST_LIBRARIES})
+  target_link_libraries(${PROG} votca_kmc ${VOTCA_TOOLS_LIBRARIES}  ${BOOST_LIBRARIES})
 
   install(TARGETS ${PROG} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -25,7 +26,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap)
 
   if(ENABLE_TESTING)
     add_test(${PROG}Help ${PROG} --help)
-    set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;csg;ctp;votca")
+    set_tests_properties(${PROG}Help PROPERTIES LABELS "tools;csg;ctp;kmc;votca")
   endif(ENABLE_TESTING)
 endforeach(PROG)
 set(CTP_PROGS "${CTP_PROGS}" PARENT_SCOPE)
