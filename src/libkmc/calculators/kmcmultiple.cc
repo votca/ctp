@@ -936,7 +936,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
                escaperate = carrier[i]->node->EscapeRate();
             }
 
-            votca::tools::vec dr;
+            votca::tools::vec dr = 0;
             if(votca::tools::globals::verbose) {cout << "Charge number " << do_affectedcarrier->id+1 << " which is sitting on segment " << do_oldnode->id+1 << " will escape!" << endl ;}
             
             // determine where it will jump to
