@@ -95,7 +95,7 @@ private:
         if(version == 0)  
         {
             ar & id();
-            ar & node->id();
+            ar & node->id;
 
         }
     }  
