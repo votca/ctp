@@ -94,8 +94,8 @@ private:
         //version-specific serialization
         if(version == 0)  
         {
-            ar & id;
-            ar & node->id;
+            ar & id();
+            ar & node->id();
 
         }
     }  
