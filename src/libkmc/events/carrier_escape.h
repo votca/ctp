@@ -46,7 +46,7 @@ public:
         //std::cout << "[" << u  << "]" << std::endl;
         // find a subordinate event to execute
         Event* subordinate;
-        Event* last_enabled;
+        Event* last_enabled = NULL;
         
         //loop over all subordinates
         for( Event::iterator it_subordinate = begin(); it_subordinate != end() ; ++it_subordinate ) {
