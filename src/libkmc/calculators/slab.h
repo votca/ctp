@@ -51,7 +51,7 @@ private:
     
     double _runtime;
     int _nsteps;
-    int _seedelectron;
+    //int _seedelectron;
     int _seed;
     int _nelectrons;
     int _nholes;

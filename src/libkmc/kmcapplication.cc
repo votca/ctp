@@ -115,7 +115,7 @@ bool KMCApplication::EvaluateOptions() {
         if(_outputfile != "")
         {
             cout << "Output into file: " << _outputfile.c_str() << "." << endl;
-            freopen(_outputfile.c_str(),"w",stdout);   
+            //freopen(_outputfile.c_str(),"w",stdout);   
         }
         else
         {

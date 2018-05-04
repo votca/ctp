@@ -293,15 +293,16 @@ void Run( double runtime, int nsteps, votca::tools::Random2 *RandomVariable, int
     double trajout = 0.0;
     
     if ( runtime != 0 && nsteps == 0 ){ 
-        runtime = runtime;
+        //runtime = runtime;
         std::cout << "Specified runtime (s): " << runtime << std::endl; 
     }
     else if ( nsteps != 0 && runtime == 0 ){ 
-        nsteps = nsteps; 
+        //nsteps = nsteps; 
         std::cout << "Specified number of simulation steps: " << nsteps << std::endl;
     }
     else if ( runtime !=0 && nsteps !=0 ){ 
-        nsteps = nsteps; runtime = 0.0; 
+        //nsteps = nsteps;
+	runtime = 0.0; 
         std::cout << "Specified both the number of simulation steps and the runtime -> number of steps will be used. " << std::endl; 
         std::cout << "Specified number of simulation steps: " << nsteps << std::endl;
     }
