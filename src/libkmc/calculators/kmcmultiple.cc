@@ -63,7 +63,7 @@ void progressbar(double fraction)
 }
 
     
-struct Event
+struct Event_Multiple
 {
     int destination;
     double rate;
@@ -86,16 +86,14 @@ class Node
         double initialescaperate;
         double occupationtime;
         myvec position;
-        vector<Event> event;
-        vector<Event> forbiddenevent;
+        vector<Event_Multiple> event;
+        vector<Event_Multiple> forbiddenevent;
         // stuff for Coulomb interaction:
         double siteenergy;
         double reorg_intorig; // UnCnN
         double reorg_intdest; // UcNcC
     
         double EscapeRate();
-        //EDITED
-        
         void AddEvent(int seg2, double rate12, myvec dr, double Jeff2, double reorg_out);
         void InitEscapeRate();
         void AddForbiddenEvent(int seg2, double rate12);
@@ -106,7 +104,7 @@ class Node
 
 void Node::AddEvent(int seg2, double rate12, myvec dr, double Jeff2, double reorg_out)
 {
-    Event newEvent;
+    Event_Multiple newEvent;
     newEvent.destination = seg2;
     newEvent.rate = rate12;
     newEvent.initialrate = rate12;
@@ -118,7 +116,7 @@ void Node::AddEvent(int seg2, double rate12, myvec dr, double Jeff2, double reor
 
 void Node::AddForbiddenEvent(int seg2, double rate12)
 {
-    Event newEvent;
+    Event_Multiple newEvent;
     newEvent.destination = seg2;
     newEvent.rate = rate12;
     newEvent.initialrate = rate12;
@@ -494,7 +492,7 @@ int Forbidden(int id, vector<int> forbiddenlist)
 /**
 * \brief Forbidden: Check if the event is in the forbiddenlist of a node (eventlist)
 */
-int ForbiddenEvents(int id, vector<Event> forbiddenevent)
+int ForbiddenEvents(int id, vector<Event_Multiple> forbiddenevent)
 {
     // cout << "forbidden list has " << forbiddenlist.size() << " entries" << endl;
     int forbidden = 0;
