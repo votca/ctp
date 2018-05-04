@@ -94,8 +94,6 @@ class Node
         double reorg_intdest; // UcNcC
     
         double EscapeRate();
-        //EDITED
-        
         void AddEvent(int seg2, double rate12, myvec dr, double Jeff2, double reorg_out);
         void InitEscapeRate();
         void AddForbiddenEvent(int seg2, double rate12);
