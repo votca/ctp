@@ -872,7 +872,7 @@ void PDB2Map::topMdQm2xml(){
     
 //    cout << endl << setlevel(1) << XML << record;
         
-    ofstream outfile( _output_xml.c_str() );
+    std::ofstream outfile( _output_xml.c_str() );
     
     PropertyIOManipulator XML(PropertyIOManipulator::XML,1,""); 
     outfile << XML << record;

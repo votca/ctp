@@ -354,7 +354,7 @@ void WRITE_JOBS< vector<Job*>, Job*, Job::JobResult >(vector<Job*> &jobs,
     
     vector<Job*> ::iterator it;
     
-    ofstream ofs;    
+    std::ofstream ofs;
     ofs.open(job_file.c_str(), ofstream::out);
     if (!ofs.is_open()) {
         throw runtime_error("Bad file handle: " + job_file);

@@ -58,12 +58,12 @@ public:
     };
 
     void Reset();
-    void ToStream(ofstream &ofs, string fileformat);
+    void ToStream(std::ofstream &ofs, string fileformat);
     void UpdateFrom(Job *ext);
     void SaveResults(JobResult *res);
    
     int getId() const { return _id; }
-    string getTag() const { return _tag; }
+    std::string getTag() const { return _tag; }
     Property &getInput() { return _input; }    
     const JobStatus &getStatus() const { return _status; }
     string getStatusStr() const { return ConvertStatus(_status); }

@@ -88,7 +88,7 @@ void DMA::Initialize(Property *options) {
 void DMA::WriteJobFile(Topology *top) {
 
     cout << endl << "... ... Writing job file: " << flush;
-    ofstream ofs;
+    std::ofstream ofs;
     ofs.open(_jobfile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("\nERROR: bad file handle: " + _jobfile);
  

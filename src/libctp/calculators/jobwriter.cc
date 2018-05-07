@@ -64,7 +64,7 @@ bool JobWriter::EvaluateFrame(Topology *top) {
 void JobWriter::mps_chrg(Topology *top) {
     
     // SET UP FILE STREAM
-    ofstream ofs;
+    std::ofstream ofs;
     string jobFile = "jobwriter.mps.chrg.xml";
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);
@@ -124,7 +124,7 @@ void JobWriter::mps_kmc(Topology *top) {
     double cutoff = _options->get("options.jobwriter.kmc_cutoff").as<double>();
     
     // SET UP FILE STREAM
-    ofstream ofs;
+    std::ofstream ofs;
     string jobFile = "jobwriter.mps.kmc.xml";    
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);
@@ -192,7 +192,7 @@ void JobWriter::mps_kmc(Topology *top) {
 void JobWriter::mps_ct(Topology *top) {
 
     // SET UP FILE STREAM
-    ofstream ofs;
+    std::ofstream ofs;
     string jobFile = "jobwriter.mps.ct.xml";
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);
@@ -253,7 +253,7 @@ void JobWriter::mps_ct(Topology *top) {
 
 void JobWriter::mps_background(Topology *top) {
     
-    ofstream ofs;
+    std::ofstream ofs;
     string tabFile = "jobwriter.mps.background.tab";
     ofs.open(tabFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + tabFile);
@@ -276,7 +276,7 @@ void JobWriter::mps_background(Topology *top) {
 void JobWriter::mps_single(Topology *top) {
     
     // SET UP FILE STREAM
-    ofstream ofs;
+    std::ofstream ofs;
     string jobFile = "jobwriter.mps.single.xml";
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);
@@ -339,7 +339,7 @@ void JobWriter::edft(Topology *top) {
     
     string jobFile = "edft.jobs";   
     
-    ofstream ofs;
+    std::ofstream ofs;
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);
  
@@ -403,7 +403,7 @@ void JobWriter::idft(Topology *top) {
     throw std::invalid_argument( "Jobwriter for idft is not supported anymore. Use ctp_parallel -e idft -j write" );
 
     string jobFile = "idft.jobs";   
-    ofstream ofs;
+    std::ofstream ofs;
 
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);

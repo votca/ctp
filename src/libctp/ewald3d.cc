@@ -71,7 +71,7 @@ EWD::triple<> Ewald3D3D::ConvergeReciprocalSpaceSum(vector<PolarSeg*> &target) {
         if (kit == ks.end()) break;
     }
 //    for (int i = 0; i < shell_ks.size(); ++i) {
-//        ofstream ofs;
+//        std::ofstream ofs;
 //        string outfile = (format("shell_%1$d.out") % (i+1)).str();
 //        ofs.open(outfile.c_str(), ofstream::out);
 //        for (kit = shell_ks[i].begin(); kit < shell_ks[i].end(); ++kit) {

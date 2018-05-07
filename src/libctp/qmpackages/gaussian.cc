@@ -130,7 +130,7 @@ bool Gaussian::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gu
     //[-Wunused-variable]
     //int qmatoms = 0;
 
-    ofstream _com_file;
+    std::ofstream _com_file;
     
     string _com_file_name_full = _run_dir + "/" + _input_file_name;
     
@@ -248,7 +248,7 @@ bool Gaussian::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gu
 }
 
 bool Gaussian::WriteShellScript() {
-    ofstream _shell_file;
+    std::ofstream _shell_file;
     
     string _shell_file_name_full = _run_dir + "/" + _shell_file_name;
             

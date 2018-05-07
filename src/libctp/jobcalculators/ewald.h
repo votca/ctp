@@ -126,7 +126,7 @@ void Ewald<EwaldMethod>::WriteJobFile(Topology *top) {
     
     
     // SET UP FILE STREAM
-    ofstream ofs;
+    std::ofstream ofs;
     string jobFile = "ewald_jobs.xml";
     ofs.open(jobFile.c_str(), ofstream::out);
     if (!ofs.is_open()) throw runtime_error("Bad file handle: " + jobFile);

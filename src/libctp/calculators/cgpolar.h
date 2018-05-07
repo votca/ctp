@@ -116,7 +116,7 @@ bool CgPolar::EvaluateFrame(Topology *top) {
     // VERIFY INPUT: PDB, PTOP, XML
     if (_pdb_check) ptop.PrintPDB("cgpolar.fine.pdb");
     ptop.SaveToDrive("cgpolar.fine.ptop");    
-    ofstream ofs;    
+    std::ofstream ofs;
     ofs.open("cgpolar.fine.xml", ofstream::out);
     for (vector<PolarSeg*>::iterator sit = bgn.begin();
         sit < bgn.end(); ++sit) {

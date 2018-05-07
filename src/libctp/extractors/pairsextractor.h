@@ -79,7 +79,7 @@ bool PairsExtractor::EvaluateFrame(Topology *top) {
         }
     }
     
-    ofstream ofs;    
+    std::ofstream ofs;
     ofs.open(xmlfile.c_str(), ofstream::out);
     if (!ofs.is_open()) {
         throw runtime_error("Bad file handle: " + xmlfile);

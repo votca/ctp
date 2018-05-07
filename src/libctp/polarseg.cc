@@ -175,7 +175,7 @@ void PolarSeg::PrintPolarNbPDB(string outfile) {
 
 
 void PolarSeg::WriteMPS(string mpsfile, string tag) {    
-    ofstream ofs;    
+    std::ofstream ofs;
     ofs.open(mpsfile.c_str(), ofstream::out);
     if (!ofs.is_open()) {
         throw runtime_error("Bad file handle: " + mpsfile);

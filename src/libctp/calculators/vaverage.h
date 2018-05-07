@@ -95,7 +95,7 @@ bool VAverage::EvaluateFrame(Topology *top) {
         
         // Output
         string tabfile = (boost::format("vaverage.state_%1$+d.tab") % state).str();
-        ofstream ofs;    
+        std::ofstream ofs;
         ofs.open(tabfile.c_str(), ofstream::out);
         if (!ofs.is_open()) {
             throw runtime_error("Bad file handle: " + tabfile);

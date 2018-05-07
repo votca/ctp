@@ -111,7 +111,7 @@ bool NWChem::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gues
     //[-Wunused-variable]
     //int qmatoms = 0;
     string temp_suffix = "/id";
-    ofstream _com_file;
+    std::ofstream _com_file;
     
     string _com_file_name_full = _run_dir + "/" + _input_file_name;
     
@@ -181,7 +181,7 @@ bool NWChem::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gues
         if ( orbitals_guess == NULL ) {
             throw std::runtime_error( "A guess for dimer orbitals has not been prepared.");
         } else {
-            ofstream _orb_file;
+            std::ofstream _orb_file;
             string _orb_file_name_full = _run_dir + "/" + _orb_file_name;
             // get name of temporary ascii file and open it
             boost::algorithm::split(results, _orb_file_name, boost::is_any_of("."), boost::algorithm::token_compress_on);
@@ -271,7 +271,7 @@ bool NWChem::WriteInputFile( vector<Segment* > segments, Orbitals* orbitals_gues
 }
 
 bool NWChem::WriteShellScript() {
-    ofstream _shell_file;
+    std::ofstream _shell_file;
     
     string _shell_file_name_full = _run_dir + "/" + _shell_file_name;
             
