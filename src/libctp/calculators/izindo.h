@@ -216,7 +216,7 @@ void IZindo::EvalPair(Topology *top, QMPair *qmpair, PairOperator *opThread) {
         pair_has_e = _seg_has_e.at(segName1) && _seg_has_e.at(segName2);
         pair_has_h = _seg_has_h.at(segName1) && _seg_has_h.at(segName2);
     }
-    catch (out_of_range) {
+    catch (out_of_range&) {
         this->LockCout();
         cout << endl << "... ... WARNING: No orbital information for pair ["
                      << segName1 << ", " << segName2 << "]. "

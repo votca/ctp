@@ -32,7 +32,7 @@ public:
         try {
             pol = _polar_table.at(elem);
         }
-        catch(out_of_range) {
+        catch(out_of_range&) {
             cout << endl << "QMMInterface - no default polarizability given "
                 << "for element type '" << elem << "'. Defaulting to 1A**3" << flush;
             pol = 1e-3;

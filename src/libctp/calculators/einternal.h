@@ -187,7 +187,7 @@ bool EInternal::EvaluateFrame(Topology *top) {
         try {
             //bool has_seg = _has_seg.at(segName);
         }
-        catch (out_of_range) {
+        catch (out_of_range&) {
             cout << endl << "... ... WARNING: No energy information for seg ["
                          << segName << "]. Skipping... ";
             continue;

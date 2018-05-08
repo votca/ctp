@@ -174,7 +174,7 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                         cutoff = _cutoffs.at(seg1->getName())
                                          .at(seg2->getName());
                     }
-                    catch (out_of_range) {
+                    catch (out_of_range&) {
                         cout << "ERROR: No cut-off specified for segment pair "
                              << seg1->getName() << " | " << seg2->getName() 
                              << ". " << endl;
