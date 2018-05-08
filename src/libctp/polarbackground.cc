@@ -284,7 +284,6 @@ void PolarBackground::Polarize(int n_threads = 1) {
     
     vector<PolarSeg*>::iterator sit1; 
     vector<APolarSite*> ::iterator pit1;
-    vector<PolarSeg*>::iterator sit2; 
     vector<APolarSite*> ::iterator pit2;
     
     /*

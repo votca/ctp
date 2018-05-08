@@ -115,7 +115,6 @@ void PEwald3D3D::GenerateKVectors(vector<PolarSeg*> &ps1, vector<PolarSeg*> &ps2
     CTP_LOG(logINFO,*_log)
         << "  o K-planes through origin: Applying K resonances" << flush;
     
-    vector< EWD::KVector >::iterator kvit;
     int kx, ky, kz;
     kx = 0;
     for (ky = -_NB_max; ky < _NB_max+1; ++ky) {
@@ -252,8 +251,6 @@ void PEwald3D3D::ScanCutoff() {
     vector<APolarSite*> ::iterator pit1;
     vector<PolarSeg*>::iterator sit2; 
     vector<APolarSite*> ::iterator pit2;
-    vector<PolarNb*>::iterator nit;
-    vector< vector<PolarSeg*> > ::iterator vsit;
     
     double R_factor = 1.;
     double dR_shell = 0.5;
@@ -484,7 +481,6 @@ EWD::triple<> PEwald3D3D::ConvergeRealSpaceSum(vector<PolarSeg*> &target) {
     vector<PolarSeg*>::iterator sit2; 
     vector<APolarSite*> ::iterator pit2;
     vector<PolarNb*>::iterator nit;
-    vector< vector<PolarSeg*> > ::iterator vsit;
     
     // ENERGY - REUSE NEIGHBOURS ?
     if (_did_field_pin_R_shell) {
@@ -1233,7 +1229,6 @@ void PEwald3D3D::Potential_ConvergeRealSpaceSum(vector<PolarSeg*> &target) {
     vector<PolarSeg*>::iterator sit2; 
     vector<APolarSite*> ::iterator pit2;
     vector<PolarNb*>::iterator nit;
-    vector< vector<PolarSeg*> > ::iterator vsit;
     
     bool neighbours_stored = false;
     for (sit1 = target.begin(); sit1 < target.end(); ++sit1) {

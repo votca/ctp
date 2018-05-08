@@ -661,7 +661,6 @@ void Ewald3DnD::SetupMidground(double R_co) {
     // CLEAR ANY EXTANT MIDGROUND
     vector<PolarSeg*>::iterator sit;
     vector<PolarSeg*>::iterator sit2;
-    vector<APolarSite*> ::iterator pit;
     for (sit = _mg_N.begin(); sit < _mg_N.end(); ++sit)
         delete (*sit);
     _mg_N.clear();
@@ -811,8 +810,6 @@ void Ewald3DnD::WriteDensitiesPtop(string fg, string mg, string bg) {
     
 
     vector<PolarSeg*>::iterator sit;
-    vector<PolarSeg*>::iterator sit2;
-    vector<APolarSite*> ::iterator pit;
     assert(_fg_N.size() == _fg_C.size());
     
     std::ofstream ofs;
@@ -1049,7 +1046,7 @@ void Ewald3DnD::WriteInductionStateTable() {
         std::ofstream ofs;
         ofs.open(tabfile.c_str(), ofstream::out);
         vector<PolarSeg*>::iterator sit, sit1, sit2;
-        PolarSeg::iterator pit, pit1, pit2;
+        PolarSeg::iterator pit1, pit2;
         for (sit = _bg_P.begin(); sit < _bg_P.end(); ++sit) {
             PolarSeg *pseg = *sit;
             // Periodic images

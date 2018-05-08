@@ -57,8 +57,8 @@ public:
     {
     public:
 
-        InteractorMod(Topology *top, EOutersphere *eo) : _top(top), _eo(eo) {};
-        InteractorMod() : _top(NULL), _eo(NULL) {};
+        InteractorMod(Topology *top, EOutersphere *eo) : _top(top) {};
+        InteractorMod() : _top(NULL) {};
        ~InteractorMod() {};
 
         // UNITS IN INPUT FILES
@@ -85,10 +85,6 @@ public:
     private:
 
         vec    e12  = 0.0;     //  |
-
-        double dDx = 0.0;     //  |
-        double dDy = 0.0;     //  |<- Electric displ. fields D_initial - D_final
-        double dDz = 0.0;     //  |
 
         double R  = 0.0;      //  |
         double R2 = 0.0;      //  |
@@ -192,7 +188,6 @@ public:
         inline double T22s_22c() { return R5 * 0.5 * (35*rbx*rbx*rax*ray - 35*rby*rby*rax*ray + 10*rbx*rax*cyx + 10*rbx*ray*cxx - 10*rby*rax*cyy - 10*rby*ray*cxy + 2*cxx*cyx - 2*cxy*cyy); }
 
         Topology        *_top;
-        EOutersphere   *_eo;
 
     };
 

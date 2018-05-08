@@ -3106,9 +3106,6 @@ double EMultipole::SiteOpMultipole::EnergyStatic(int state) {
     double E_Tot = 0.0;
 
     vector< Segment* > ::iterator seg1;
-    vector< Segment* > ::iterator seg2;
-    vector< vector<PolarSite*> > ::iterator sit1;
-    vector< vector<PolarSite*> > ::iterator sit2;
     vector< PolarSite* > ::iterator pit1;
     vector< PolarSite* > ::iterator pit2;
 

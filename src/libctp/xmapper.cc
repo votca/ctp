@@ -876,7 +876,6 @@ void XMpsMap::Gen_BGN(Topology *top, PolarTop *new_ptop, QMThread *thread) {
     
     // DECLARE TARGET CONTAINERS
     vector<PolarSeg*> bgN;
-    vector<PolarSeg*>::iterator psit;
     vector<Segment*> segs_bgN;
     vector<Segment*>::iterator sit;
     
@@ -919,7 +918,6 @@ void XMpsMap::Gen_FGC_FGN_BGN(Topology *top, XJob *job, QMThread *thread) {
     vector<PolarSeg*> fgC;
     vector<PolarSeg*> fgN;
     vector<PolarSeg*> bgN;
-    vector<PolarSeg*>::iterator psit;    
     vector<Segment*> segs_fgC;
     vector<Segment*> segs_fgN;
     vector<Segment*> segs_bgN;
@@ -1106,7 +1104,6 @@ void XMpsMap::Gen_QM_MM1_MM2(Topology *top, XJob *job, double co1, double co2, Q
     vector<PolarSeg*> qm0;
     vector<PolarSeg*> mm1;
     vector<PolarSeg*> mm2;
-    vector<PolarSeg*> ::iterator psit;
     
     vector<Segment*> segs_qm0;
     vector<Segment*> segs_mm1;

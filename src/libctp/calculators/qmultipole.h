@@ -2649,9 +2649,6 @@ double QMultipole::SiteOpQMultipole::EnergyStatic(int state) {
     double E_Tot = 0.0;
 
     vector< Segment* > ::iterator seg1;
-    vector< Segment* > ::iterator seg2;
-    vector< vector<APolarSite*> > ::iterator sit1;
-    vector< vector<APolarSite*> > ::iterator sit2;
     vector< APolarSite* > ::iterator pit1;
     vector< APolarSite* > ::iterator pit2;
 

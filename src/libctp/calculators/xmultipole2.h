@@ -3038,9 +3038,6 @@ double XMP::JobXMP::EnergyStatic(int state, XJob *job) {
     double E_Pair_Sph2 = 0.0;
 
     vector< Segment* >              ::iterator      seg1;
-    vector< Segment* >              ::iterator      seg2;
-    vector< vector<PolarSite*> >    ::iterator      sit1;
-    vector< vector<PolarSite*> >    ::iterator      sit2;
     vector< PolarSite* >            ::iterator      pit1;
     vector< PolarSite* >            ::iterator      pit2;
 

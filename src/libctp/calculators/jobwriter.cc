@@ -284,7 +284,6 @@ void JobWriter::mps_single(Topology *top) {
     ofs << "<jobs>" << endl;
     
     int jobCount = 0;    
-    vector<Segment*>::iterator sit1;
     
     // DEFINE PAIR CHARGE STATES
     vector<string > states;
