@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f4"
-                   displayName="Applications"
-                   projectFiles="true"
-                   kind="ROOT">
+    <logicalFolder name="f4" displayName="Applications" projectFiles="true">
       <logicalFolder name="f4" displayName="ctp_dump" projectFiles="true">
         <itemPath>../../src/tools/ctp_dump.cc</itemPath>
         <itemPath>../../src/libctp/extractorfactory.cc</itemPath>
       </logicalFolder>
-      <logicalFolder name="f6" displayName="ctp_map" projectFiles="true" kind="ROOT">
+      <logicalFolder name="f6" displayName="ctp_map" projectFiles="true">
         <itemPath>../../src/tools/ctp_map.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="ctp_parallel" projectFiles="true">
@@ -232,8 +229,8 @@
       <itemPath>../../include/votca/ctp/xjob.h</itemPath>
       <itemPath>../../include/votca/ctp/xmapper.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f5" displayName="Manual" projectFiles="true" kind="ROOT">
-      <logicalFolder name="f1" displayName="theory" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f5" displayName="Manual" projectFiles="true">
+      <logicalFolder name="f1" displayName="theory" projectFiles="true">
         <itemPath>../../manual/theory/CMakeLists.txt</itemPath>
         <itemPath>../../manual/theory/analysis.tex</itemPath>
         <itemPath>../../manual/theory/correlations.tex</itemPath>

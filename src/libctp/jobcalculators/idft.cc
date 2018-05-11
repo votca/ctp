@@ -153,7 +153,7 @@ Job::JobResult IDFT::EvalJob(Topology *top, Job *job, QMThread *opThread) {
     int LUMO_B;
     Orbitals _orbitalsA, _orbitalsB;
     Overlap _overlap; 
-
+   
     Property _job_summary;
     Property *_job_output = &_job_summary.add("output","");
 
