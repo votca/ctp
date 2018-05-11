@@ -112,6 +112,7 @@ void Job::Reset() {
 void Job::ToStream(std::ofstream &ofs, string fileformat) {
 
     votca::tools::PropertyIOManipulator iomXML(votca::tools::PropertyIOManipulator::XML, 0, "\t\t");
+    //votca::tools::PropertyIOManipulator iomTXT(votca::tools::PropertyIOManipulator::TXT, 0, "\t\t");
     
     if (fileformat == "xml") {
         string tab = "\t";
@@ -147,9 +148,16 @@ void Job::ToStream(std::ofstream &ofs, string fileformat) {
         string host = _host;
         if (!_has_host) host = "__:__";
         string status = ConvertStatus(_status);
+        
+        std::stringstream input;
+        std::stringstream output;
+        
+        input << iomXML << _input;
+        output << iomXML << _output;
+        
         ofs << (format("%4$10s %5$20s %6$10s %1$5d %2$10s %3$30s %7$s %8$s\n")
-            % _id % _tag % _input % status % host
-            % time % _error % _output).str();
+            % _id % _tag % input.str() % status % host
+            % time % _error % output.str() ).str();
     }
     else {
         assert(false);
