@@ -17,17 +17,11 @@
  *
  */
 
-// Overload of uBLAS prod function with MKL/GSL implementations
-#include <votca/tools/linalg.h>
+
 
 #include <votca/ctp/overlap.h>
-#include <votca/tools/linalg.h>
+#include <votca/ctp/linalg.h>
 
-#include <boost/numeric/ublas/operation.hpp>
-#include <boost/numeric/ublas/banded.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/vector_proxy.hpp>
-#include <boost/numeric/ublas/symmetric.hpp>
 #include <votca/tools/constants.h>
 #include <boost/format.hpp>
 #include <boost/progress.hpp>
@@ -57,7 +51,7 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
     _eigenvectors.resize( _size, _size );
     //convert from symmatrix to matrix for faster evaluation
     ub::matrix<double> temp=S;
-    votca::tools::linalg_eigenvalues(temp, _eigenvalues, _eigenvectors);
+    linalg_eigenvalues(temp, _eigenvalues, _eigenvectors);
     
     // compute inverse sqrt of all eigenvalues
     std::transform(_eigenvalues.begin(), _eigenvalues.end(), _eigenvalues.begin(),  _inv_sqrt );
