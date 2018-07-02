@@ -28,6 +28,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 
 using namespace std;
 
