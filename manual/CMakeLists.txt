@@ -21,11 +21,7 @@ add_custom_target(ctp-gitid COMMAND ${CMAKE_COMMAND}
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitid.tex)
 add_custom_command(OUTPUT gitid.tex DEPENDS ctp-gitid)
 
-include(theory/CMakeLists.txt)        # manual_SOURCES
-include(fig/CMakeLists.txt)           # manual_FIGURES
-include(input/CMakeLists.txt)         # manual_XML
-
-foreach(prog votca_property)
+foreach(prog votca_property inkscape dvipdf)
   string(TOUPPER "${prog}" PROG)
   if(TARGET ${prog})
     set(${PROG} $<TARGET_FILE:${prog}>)
@@ -36,6 +32,11 @@ foreach(prog votca_property)
     message(FATAL_ERROR "Could not find ${prog}")
   endif()
 endforeach()
+
+include(theory/CMakeLists.txt)        # manual_SOURCES
+include(fig/CMakeLists.txt)           # manual_FIGURES
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fig)
+include(input/CMakeLists.txt)         # manual_XML
 
 set(CTP_PROGS_FULL)
 foreach(prog ${CTP_PROGS})
@@ -84,14 +85,16 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
             ${manual_SOURCES} 
             ${manual_PROGRAMS}
             ${manual_XML}
-            ${manual_FIGURES}
-    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex
+    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex ${manual_FIGURES}
     TARGET_NAME ctp-manual
-    IMAGE_DIRS fig
     BIBFILES manual.bib
     USE_INDEX
-    FORCE_PDF
+    FORCE_DVI
 )
 
-#add_custom_target(ctp-manual_pdf ALL DEPENDS ctp-manual.pdf)
+add_custom_command(OUTPUT ctp-manual.pdf
+  COMMAND ${DVIPDF} ctp-manual.dvi ctp-manual.pdf
+  DEPENDS ctp-manual_dvi
+)
+add_custom_target(ctp-manual_pdf ALL DEPENDS ctp-manual.pdf)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ctp-manual.pdf DESTINATION ${CMAKE_INSTALL_DOCDIR})
