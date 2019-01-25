@@ -271,20 +271,16 @@ void PDB2Map::readPDB(){
     Topology * _topPtr = 0;
     _topPtr = &_MDtop;
     
-    Molecule * _molPtr = 0;
-    // direct
-    _molPtr = _topPtr->AddMolecule("M1");
+    Molecule *_molPtr = _topPtr->AddMolecule("M1");
               // inverse
-              _molPtr->setTopology(_topPtr);
+              // WHAT IS THIS? _molPtr->setTopology(_topPtr);
     
-    Segment  * _segPtr  = 0;
-    // direct
-    _segPtr = _topPtr->AddSegment("S1");
+    Segment *_segPtr = _topPtr->AddSegment("S1");
               _molPtr->AddSegment(_segPtr);
               // inverse
-              _segPtr->setTopology(_topPtr);
+              //_segPtr->setTopology(_topPtr);
               _segPtr->setMolecule(_molPtr);
-
+              
     // try: read PDB file
     std::ifstream _file( _input_pdb.c_str());
     if (_file.fail()) {
@@ -300,8 +296,10 @@ void PDB2Map::readPDB(){
     // read PDB line by line
     string _line;
     
-    // counters for loops
-    int _newResNum = 0;
+    // counters for loops. it is -1 because some users managed to provide residue number 0
+    // which then does not create the first residue and core-dumps
+    int _newResNum = -1; 
+    
     bool warning_showed = false;
 
     while ( std::getline(_file, _line,'\n') ){
@@ -319,7 +317,14 @@ void PDB2Map::readPDB(){
                                "(hands+pdb format)";                   
                warning_showed = true;
             }
-            std::cout << "The size of str is " << _line.size() << " bytes.\n";
+            
+            if ( _line.size()  < 80 ) {
+                std::cout << "... ... The length of the pdb line is " << _line.size() << 
+                    " bytes. \n... ... Extending with blanks to expected 80 symbols\n";
+                _line.resize(80);
+            }
+            
+            
             //      according to PDB format
             string _recType    (_line,( 1-1),6); // str,  "ATOM", "HETATM"
             string _atNum      (_line,( 7-1),6); // int,  Atom serial number
@@ -355,7 +360,6 @@ void PDB2Map::readPDB(){
             ba::trim(_atElement);
             ba::trim(_atCharge);
             
-
             
             double _xd(0),_yd(0),_zd(0);
             int _resNumInt(0); 
@@ -376,11 +380,9 @@ void PDB2Map::readPDB(){
             
             vec r(_xd , _yd , _zd);
 
-            // set fragment
-            // reconnect to topology, molecule, segment
+            // set fragment and  link it to topology, molecule, segment
             Fragment * _fragPtr = 0;
-            // make new frag for new res number
-            // otherwise use last created
+            // make new frag for new res number otherwise use last created
             if ( _newResNum != _resNumInt ){
 
                 _newResNum = _resNumInt;
@@ -390,35 +392,35 @@ void PDB2Map::readPDB(){
                 _fragPtr = _topPtr->AddFragment(_newResName);
                            _molPtr->AddFragment(_fragPtr);
                            _segPtr->AddFragment(_fragPtr);
-                          // inverse
-                          _fragPtr->setTopology(_topPtr);
-                          _fragPtr->setMolecule(_molPtr);
-                          _fragPtr->setSegment(_segPtr);        
+                //          // inverse
+                //          _fragPtr->setTopology(_topPtr);
+                //          _fragPtr->setMolecule(_molPtr);
+                //          _fragPtr->setSegment(_segPtr);        
             }
             else{
                 _fragPtr = _topPtr->Fragments().back();
             }
+            
             if (_fragPtr==0) {error1("Zero pointer in GRO reader. Why?");}
-                        
-            // set atom
-            // reconnect to topology, molecule, segment, fragment
-            Atom * _atmPtr = 0;
-            // direct
-            _atmPtr = _topPtr->AddAtom(_atName);
+            
+            // set atom and link it to topology, molecule, segment, fragment          
+            Atom * _atmPtr = _topPtr->AddAtom(_atName);
                       _molPtr->AddAtom(_atmPtr);
                       _segPtr->AddAtom(_atmPtr);
                      _fragPtr->AddAtom(_atmPtr);
                       // inverse
-                      _atmPtr->setTopology(_topPtr);
-                      _atmPtr->setMolecule(_molPtr);        
-                      _atmPtr->setSegment(_segPtr);
-                      _atmPtr->setFragment(_fragPtr);
+                      //_atmPtr->setTopology(_topPtr);
+                      //_atmPtr->setMolecule(_molPtr);        
+                      //_atmPtr->setSegment(_segPtr);
+                      //_atmPtr->setFragment(_fragPtr);
                       
             _atmPtr->setResnr        (_resNumInt);
             _atmPtr->setResname      (_resName);
             _atmPtr->setPos          (r);
         }
     }
+
+    _topPtr->PrintInfo(std::cout);
     
     // if all was read OK and
     // no XYZ file mentioned for QM top
