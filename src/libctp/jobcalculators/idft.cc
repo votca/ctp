@@ -97,11 +97,9 @@ void IDFT::ParseOptionsXML( votca::tools::Property *options ) {
          cout << "WARNING: Are you sure you do not want to trim your orbitals, enable trimming by adding ""trim"" to tasks, default for trimming is -1 e.g. trimming to HOMO/LUMO respectively "  << endl;; 
         }
     }
-    
-    
-    string _package_xml = options->get(key+".dftpackage").as<string> ();
-    //cout << endl << "... ... Parsing " << _package_xml << endl ;
-
+       
+    string _package_xml = options->get(key+".package").as<string> ();
+ 
     load_property_from_xml( _package_options, _package_xml.c_str() );    
     
      key = "package";

@@ -331,6 +331,7 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>../../CHANGELOG.md</itemPath>
+      <itemPath>../../CMakeLists.txt</itemPath>
       <itemPath>Makefile</itemPath>
       <itemPath>../../README.md</itemPath>
     </logicalFolder>
