@@ -7,6 +7,7 @@ list(APPEND manual_SOURCES
     "theory/introduction.tex"
     "theory/electronic_couplings.tex"
     "theory/energetic_disorder.tex"
+    "theory/ewald.tex"
     "theory/fragments.tex"
     "theory/gdma.tex"
     "theory/kmc.tex"

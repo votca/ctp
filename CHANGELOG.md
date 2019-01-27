@@ -3,7 +3,7 @@ For more detailed information about the changes see the history of the [reposito
 ## Version 1.5 rc1 (released XX.XX.19)
 * Updated manual: EWALD3D documentation
 * Moved kinetic Monte Carl to votca-ctp
-* KMC runs now with multipole charges 
+* KMC now supports more than one charge 
 * fixes in pdb2map
 
 ## Version 1.4 rc1 (released 01.01.18)

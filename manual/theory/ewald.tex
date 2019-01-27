@@ -1,0 +1,220 @@
+\subsection{Long-range Coulomb iteractions}
+\label{sec:ewald}
+\index{Long-range interactions}
+\index{site energy!Ewald}
+
+This section is a practical guide for doing electrostatic calculations in slabs using aperiodic Ewald scheme described in \cite{poelking_long-range_2016}.
+
+First, you will need to generate the required quantum mechanical reference, comprising molecular charge density and polarizability for all charge states (neutral, cationic, anionic). For example, you can use  GAUSSIAN to do this:
+ \begin{verbatim}
+...
+#p b3lyp/6-31+g(d,p) pop(full,chelpg) polar(dipole) nosymm test
+...
+ \end{verbatim}
+
+Afterwords, you have to generate all required {\em mps}-files with distributed multipoles and polarizabilities.  The options file should point to the QM {\em log}-files, as well as contain the target molecular polarizability tensor in upper-diagonal order $xx$ $xy$ $xz$ $yy$ $yz$ $zz$ in units of \AA$^3$.
+\begin{verbatim}
+$ ctp_tools -e log2mps -o options.xml
+$ ctp_tools -e molpol -o options.xml
+
+<options>
+    <log2mps>
+        <package>gaussian</package>
+        <logfile>input.log</logfile>
+        <mpsfile></mpsfile>
+    </log2mps>
+    <molpol>
+        <mpsfiles>
+            <input>input.mps</input>
+            <output>output.mps</output>
+            <polar>output.xml</polar>
+        </mpsfiles>
+        <induction>
+            <expdamp>0.39000</expdamp>
+            <wSOR>0.30000</wSOR>
+            <maxiter>1024</maxiter>
+            <tolerance>0.00001</tolerance>
+        </induction>
+        <target>
+            <optimize>true</optimize>
+            <molpol>77 0 0 77 0 77</molpol>
+            <tolerance>0.00001</tolerance>
+        </target>
+    </molpol>
+</options>
+  \end{verbatim}
+ 
+Next, generate the {\it mps} table, which relates the state of the molecule (neutral, cation, anion) with a corresponding electrostatic representation. This  is provided by the {\em stateserver}. The resulting output file has the default name ``mps.tab'':
+\begin{verbatim}
+$ ctp_run -e stateserver -o options.xml -f state.sql
+
+<options>
+    <stateserver>
+        <keys>mps</keys>
+    </stateserver>
+</options>
+\end{verbatim}
+
+Next, generate the job file. This job file lists the electrostatic configurations that are to be investigated. It can either be composed by hand or generated automatically from the {\em sql} file via the {\em jobwriter}, which at present takes either ``mps.chrg'', ``mps.single'' or ``mps.ct'' as key, where the latter resorts to a neighbor list. The resulting {\em xml}-file has the default name ``jobwriter.mps.chrg.xml''.
+\begin{verbatim}
+$ ctp_run -e jobwriter -o options.xml -f state.sql
+
+<options>
+    <jobwriter>
+        <keys>mps.chrg</keys>
+	 <single_id>10</single_id>
+	 <cutoff>3</cutoff>
+    </jobwriter>
+</options> 
+\end{verbatim}
+
+The input string in the job file for the long-range corrected calculators has the same format as for the {\em xqmultipole} calculator, ``id1:name1:mps1 id2:name2:mps2 ...''. See sample below.
+\begin{verbatim}
+ <jobs>
+    <job>
+        <id>1</id>
+        <tag>1e:2h</tag>
+        <input>1:spl:MP_FILES/spl_e.mps 2:spl:MP_FILES/spl_h.mps</input>
+        <status>AVAILABLE</status>
+    </job>
+    <job>
+        ...
+    </job>
+    ...
+</jobs>
+\end{verbatim}
+
+Next, generate the {\em ptop}-file that stores the induction state of the neutral {\em background}. The responsible {\em ewdbgpol} calculator can be run in a threaded fashion, depending on system size. The resulting {\em ptop}-file has the default name ``bgp\_main.ptop''. 
+\begin{verbatim}
+$ ctp_run -e ewdbgpol -o options.xml -f state.sql -t 8
+
+<options>
+    <ewdbgpol>
+        <multipoles>system.xml</multipoles>
+        <control>
+            <mps_table>mps.tab</mps_table>
+            <pdb_check>1</pdb_check>
+        </control>
+        <coulombmethod>
+            <method>ewald</method>
+            <cutoff>6</cutoff>
+            <shape>xyslab</shape>
+        </coulombmethod>
+        <polarmethod>
+            <method>thole</method>
+            <wSOR_N>0.350</wSOR_N>
+            <aDamp>0.390</aDamp>
+        </polarmethod>
+        <convergence>
+            <energy>1e-05</energy>
+            <kfactor>100</kfactor>
+            <rfactor>6</rfactor>
+        </convergence>
+    </ewdbgpol>
+</options>
+\end{verbatim}
+
+Finally, run the energy computation using {\em pewald3d}. This job calculator is wrapped by the ctp\_parallel executable, which allows for communication between different processes via the job and state file. Unfortunately, communication, though guarded by a file lock, may fail on some architectures in the event of frequent accesses to the job file. This frequency can be controlled by the -c/--cache argument, which defines the number of jobs that are loaded in {\em one} batch by a specific process/node.
+\begin{verbatim}
+$ ctp_parallel -e pewald3d -o options.xml -f /absolute/path/to/state.sql -s 0 -t 8 -c 40
+
+<options>
+    <ewald>
+        <jobcontrol>
+            <job_file>/absolute/path/to/jobs.xml</job_file>
+        </jobcontrol>
+        <multipoles>
+            <mapping>system.xml</mapping>
+            <mps_table>mps.tab</mps_table>
+            <polar_bg>bgp_main.ptop</polar_bg>
+            <pdb_check>0</pdb_check>
+        </multipoles>
+        <coulombmethod>
+            <method>ewald</method>
+            <cutoff>8</cutoff>
+            <shape>xyslab</shape>
+            <save_nblist>false</save_nblist>
+        </coulombmethod>
+        <polarmethod>
+            <method>thole</method>
+            <induce>1</induce>
+            <cutoff>4</cutoff>
+            <tolerance>0.001</tolerance>
+            <radial_dielectric>4.0</radial_dielectric>
+        </polarmethod>
+        <tasks>
+            <calculate_fields>true</calculate_fields>
+            <polarize_fg>true</polarize_fg>
+            <evaluate_energy>true</evaluate_energy>
+            <apply_radial>false</apply_radial>
+        </tasks>
+        <coarsegrain>
+            <cg_background>false</cg_background>
+            <cg_foreground>false</cg_foreground>
+            <cg_radius>3</cg_radius>
+            <cg_anisotropic>true</cg_anisotropic>
+        </coarsegrain>
+        <convergence>
+            <energy>1e-05</energy>
+            <kfactor>100</kfactor>
+            <rfactor>6</rfactor>
+        </convergence>
+    </ewald>
+</options>
+\end{verbatim}
+
+Parse the output. The results from the computation are stored in the same job file that was supplied to the calculator. The key data is provided in the {\em output/summary} section and consists of the electrostatic and induction contributions {\em output/summary/eindu} and {\em output/summary/estat}. Note that only configuration energy {\em differences} carry meaning. The parsing is best done by script, as the ``-j/--jobs read'' option for pewald3d is not yet implemented.
+
+\begin{verbatim}
+ <jobs>
+    <job>
+        <id>1</id>
+        <tag>1e:2h</tag>
+        <input>1:spl:MP_FILES/spl_e.mps 2:spl:MP_FILES/spl_h.mps</input>
+        <status>COMPLETE</status>
+        <host>thop76:5476</host>
+        <time>17:22:56</time>
+        <output>
+            <summary>
+                <type>neutral</type>
+                <xyz unit="nm">-0.1750000 -0.1750000 -5.4250000</xyz>
+                <total unit="eV">-3.2112834</total>
+                <estat unit="eV">-2.3753255</estat>
+                <eindu unit="eV">-0.8359579</eindu>
+            </summary>
+            <terms_i>
+                <F-00-01-11>-3.32999e+00 -3.32481e-01 +4.06829e-02</F-00-01-11>
+                <M-00-11--->+1.33689e-01 +4.74490e-01</M-00-11--->
+                <E-PP-PU-UU>-2.37533e+00 -7.37812e-01 -2.73212e-18</E-PP-PU-UU>
+            </terms_i>
+            <terms_o>
+                <R-pp-pu-uu>-1.89357e-01 = +2.69583e-08 ...</R-pp-pu-uu>
+                <K-pp-pu-uu>-7.31703e-03 = -2.69583e-08 ...</K-pp-pu-uu>
+                <O-pp-pu-uu>+0.00000e+00 = +0.00000e+00 ...</O-pp-pu-uu>
+                <J-pp-pu-uu>+5.14048e-04 = -2.99187e-17 ...</J-pp-pu-uu>
+                <C-pp-pu-uu>+1.51186e-03 = +0.00000e+00 ...</C-pp-pu-uu>
+                <Q-pp-pu-uu>+0.00000e+00 = +0.00000e+00 ...</Q-pp-pu-uu>
+            </terms_o>
+            <shells>
+                <FGC>1874</FGC>
+                <FGN>1874</FGN>
+                <MGN>54429</MGN>
+                <BGN>36</BGN>
+                <BGP>52</BGP>
+                <QM0>2</QM0>
+                <MM1>1872</MM1>
+                <MM2>0</MM2>
+            </shells>
+            <timing>
+                <t_total unit="min">5.29</t_total>
+                <t_wload unit="min">0.00 2.24 0.88 2.18</t_wload>
+            </timing>
+        </output>
+    </job>
+    <job>
+	     ...
+    </job>
+	 ...
+</jobs>
+    
+\end{verbatim}
