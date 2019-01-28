@@ -91,6 +91,23 @@ pdfpagemode=UseNone]{hyperref}
   mathescape=false
 }
 
+% Remove Chapter, just have titles.
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter
+        \Huge\bfseries\space\thechapter.\space
+      \fi
+    \fi
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+
+
 \setlength\parindent{15pt}
 \frontmatter
 \include{titlepage}
@@ -105,6 +122,9 @@ pdfpagemode=UseNone]{hyperref}
 \vfill
 
 \linenumbers
+
+\renewcommand{\thechapter}{}
+\renewcommand{\chaptername}{}
 
 \input{theory/introduction}
 

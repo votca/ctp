@@ -85,11 +85,6 @@ find_package(VOTCA_CSG REQUIRED)
 include_directories(${VOTCA_CSG_INCLUDE_DIRS})
 
 ########################################################################
-# Checks what linear algebra packages are installed                    #
-########################################################################
-
-
-########################################################################
 # Basic system tests (standard libraries, headers, functions, types)   #
 ########################################################################
 include(CheckIncludeFile)
