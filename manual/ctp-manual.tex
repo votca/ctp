@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{book}
+\documentclass[a4paper,11pt]{book}
 
 \usepackage[usenames]{color}
 \usepackage{bm}
@@ -14,7 +14,7 @@
 \usepackage{longtable}
 \usepackage{paralist}
 %\usepackage{fancyvrb}
-\usepackage{listings}
+%\usepackage{listings}
 \usepackage{array}
 \usepackage[table]{xcolor}
 \usepackage{units}
@@ -24,6 +24,7 @@
 \usepackage{palatino}
 \usepackage{sidecap}
 \usepackage{epstopdf} 
+
 
 \usepackage[tikz]{bclogo}
 % \usepackage[framemethod=tikz]{mdframed}
@@ -51,7 +52,7 @@ pdfpagemode=UseNone]{hyperref}
 %\usepackage{times}
 \usepackage{type1cm}
 %\usepackage{showidx}
-\usepackage[draft,color,notref,notcite]{showkeys}
+%\usepackage[draft,color,notref,notcite]{showkeys}
 
 \usepackage{braket}
 \usepackage{amssymb}
@@ -67,18 +68,35 @@ pdfpagemode=UseNone]{hyperref}
 \definecolor{invisiblegray}{rgb}{.97,0.97,0.97}
 \definecolor{mygray}{rgb}{0.86,0.86,0.86}
 
-\makeindex
+%\makeindex
 
 \input{newcommands}
 \input{gitid}
 
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\bfseries}{}{0pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{5.5ex plus 1ex minus .2ex}{10pt}
+
+\usepackage[
+   a4paper,
+   twoside,
+   bindingoffset=1cm,
+   inner=2.5cm,
+   outer=2.5cm,
+   top=2.5cm,
+   bottom=2.5cm,
+   headsep=1.2cm
+]{geometry}
+
+
+
 \begin{document}
 
-\addtolength{\oddsidemargin}{0cm}
-\addtolength{\evensidemargin}{0cm}
-\addtolength{\textwidth}{0cm}
-\addtolength{\topmargin}{0cm}
-\addtolength{\textheight}{0cm}
+%\addtolength{\oddsidemargin}{0cm}
+%\addtolength{\evensidemargin}{0cm}
+%\addtolength{\textwidth}{0cm}
+%\addtolength{\topmargin}{0cm}
+%\addtolength{\textheight}{0cm}
 
 \lstset{
   language=XML,
@@ -91,22 +109,6 @@ pdfpagemode=UseNone]{hyperref}
   mathescape=false
 }
 
-% Remove Chapter, just have titles.
-\makeatletter
-\def\@makechapterhead#1{%
-  \vspace*{50\p@}%
-  {\parindent \z@ \raggedright \normalfont
-    \ifnum \c@secnumdepth >\m@ne
-      \if@mainmatter
-        \Huge\bfseries\space\thechapter.\space
-      \fi
-    \fi
-    \interlinepenalty\@M
-    \Huge \bfseries #1\par\nobreak
-    \vskip 40\p@
-  }}
-\makeatother
-
 
 \setlength\parindent{15pt}
 \frontmatter
@@ -114,24 +116,18 @@ pdfpagemode=UseNone]{hyperref}
 \thispagestyle{empty}
 \cleardoublepage
 
-\tableofcontents
+{\small \tableofcontents }
 \cleardoublepage
 \mainmatter
 
-\printindex
-\vfill
+%{\small \printindex }
+%\vfill
 
-\linenumbers
-
-\renewcommand{\thechapter}{}
-\renewcommand{\chaptername}{}
+%\linenumbers
 
 \input{theory/introduction}
-
-\chapter{Theoretical background}
-\label{sec:theory}
-
 \input{theory/workflow}	
+
 \input{theory/morphology}
 \input{theory/fragments}
 \input{theory/neighborlist}
@@ -146,7 +142,6 @@ pdfpagemode=UseNone]{hyperref}
 \input{theory/nondispersive}
 \input{theory/analysis}
 \input{theory/correlations}
-\input{theory/dft}
 
 \chapter{Input and output files}
 \label{sec:io}

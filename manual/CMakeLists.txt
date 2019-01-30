@@ -6,7 +6,6 @@ latex_get_output_path(CMAKE_BUILD_DIR)
 
 MESSAGE( STATUS "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR} ) 
 MESSAGE( STATUS "CMAKE_MODULE_PATH: " ${CMAKE_MODULE_PATH} ) 
-MESSAGE( STATUS "MANUAL_SOURCES: " ${manual_SOURCES} ) 
 MESSAGE( STATUS "OUTPUT_PATH: " ${CMAKE_BUILD_DIR} ) 
 
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
@@ -37,6 +36,7 @@ include(theory/CMakeLists.txt)        # manual_SOURCES
 include(fig/CMakeLists.txt)           # manual_FIGURES
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fig)
 include(input/CMakeLists.txt)         # manual_XML
+MESSAGE( STATUS "MANUAL_SOURCES: " ${manual_SOURCES} )
 
 set(CTP_PROGS_FULL)
 foreach(prog ${CTP_PROGS})
@@ -85,7 +85,7 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
             ${manual_SOURCES} 
             ${manual_PROGRAMS}
             ${manual_XML}
-    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex ${manual_FIGURES}
+    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex ${manual_FIGURES} 
     TARGET_NAME ctp-manual
     BIBFILES manual.bib
     USE_INDEX
