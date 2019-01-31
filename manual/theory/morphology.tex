@@ -9,14 +9,6 @@ Self-assembling materials, such as soluble oligomers, discotic liquid crystals, 
 
 Here we assume that the topology and the coordinates of all atoms are known. \votcactp can read standard \gromacs topology files. Custom definitions of \slink{sec:atomistic}{atomistic topology} via \xml files are also possible.
 
-\section{Conjugated segments and rigid fragments}
-\label{sec:segments}
-
-\begin{figure}
-\includegraphics[width=\linewidth]{fig/fragment_segment}
-\caption{The concept of conjugated segments and rigid fragments. Dashed lines indicate conjugated segments while colors denote rigid fragments. (a) Hexabenzocoronene: the $\pi$-conjugated system is both a rigid fragment and a conjugated segment. (b) \Alq: the Al atom and each ligand are rigid fragments while the whole molecule is a conjugated segment. (c) Polythiophene: each repeat unit is a rigid fragment. A conjugated segment consists of one or more rigid fragments. One molecule can have several conjugated segments.}
-\label{fig:segment}
-\end{figure}
 
 \section{Conjugated segments and rigid fragments}
 \label{sec:segments}
@@ -37,7 +29,71 @@ In the case of a conjugated polymer, one molecule can consist of several conjuga
 
 After partitioning, an additional step is often required to remove bond length fluctuations introduced by molecular dynamics simulations, since they are already integrated out in the derivation of the rate expression. This is achieved by substituting respective molecular fragments with  rigid, planar $\pi$-systems\index{rigid fragment} optimized using first-principles methods. Centers of mass and gyration tensors are used to align rigid fragments, though a custom definition of local axes is also possible. Such a procedure also minimizes discrepancies between the force-field and first-principles-based ground state geometries of conjugated segments, which might be important for calculations of electronic couplings, reorganization energies, and intramolecular driving forces. 
 
-\section{Partitioning the system}
+\section{Atomistic simulations}
+\label{sec:atomistic}
+Already at the stage of preparing input files for the atomistic simulations, we can specify how molecules are split onto conjugated segments and rigid fragments. The easiest way to do this is to prepare a sopecial pdb file for every conjugated segment. In such a pdb file, which is shown for \dcvt in listing~\ref{list:pdb}, residue names and numbers are different for different rigid fragments. The structure of \dcvt, together with atom type definitions, is shown in fig.~\ref{fig:dcv2t}. \dcvt has two thiophene (THI) and two dicyanovinyl (NIT) residues, and will be partitioned onto four rigid fragments.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{./fig/dcv2t}
+\caption{\small (a) \dcvt with atoms labelled according to \texttt{residue\_number:residue\_name:atom\_name}. 
+There are four residues and two residue types: thiophene (THI) and dicyanovinyl (NIT). The corresponding pdb file is shown in listing~\ref{list:pdb}. Atom numbering is used to split conjugated segments on rigid fragments and to link atomistic ((b) from GROMACS topology) and quantum descriptions (c).}
+\label{fig:dcv2t}
+\end{figure}
+
+\lstinputlisting[
+  language=XML,
+  basicstyle=\ttfamily\footnotesize,
+  stringstyle=\ttfamily\footnotesize,
+  showstringspaces=false,
+  frame=lines,
+  label=list:pdb, 
+  morekeywords={HETATM,THI,NIT},
+  caption={ pdb file of \dcvt.}]%
+{./input/dcv2t/dcv2t.pdb}
+%\vfill
+
+The pdb files can then be used to generate gromacs topologies, with the help of the \calc{pdb2top} tool,  as well as the mapping file using \calc{pdb2map} the tool. 
+
+\section{Mapping file}
+\label{sec:xmlmap}
+The mapping file (referred here as \xmlcsg) is used by the program \ctpmap to convert an atomistic configuration to a configuration with conjugated segments and rigid fragments. This trajectory is stored in a \slink{statefile}{state file} and contains positions, names, types of atoms belonging to rigid fragments. The description of the mapping options is given in table \ref{tab:map}. An example of \xmlcsg for a \dcvt molecule is shown in listing~\ref{list:map}.  The structure of \dcvt, together with atom type definitions, is shown in fig.~\ref{fig:dcv2t}. \dcvt has two thiophene (THI) and two dicyanovinyl (NIT) residues. The pdb file which contains residue types, residue numbering, atom names, atom types, and atom coordinates is shown in listing~\ref{list:pdb}.
+
+The file \xmlcsg contains the whole electrostatic information about the molecules as well as the structural information. 
+%
+\begin{table}[h]
+\label{tab:map}
+\caption{Description of the \xml mapping file (\xmlcsg).}
+%\rowcolors{1}{invisiblegray}{white} {\footnotesize \input{reference/xml/map.xml}}
+\end{table}
+%
+% Define new language for listings.
+\lstdefinelanguage{MXML} {
+   basicstyle=\ttfamily\scriptsize,
+   sensitive=true,
+   morecomment=[s][\color{gray}\rmfamily\itshape]{<!--}{-->}, 
+   showstringspaces=false,
+   numberstyle=\scriptsize,
+   numberblanklines=true,
+   showspaces=false,
+   breaklines=true,
+   showtabs=false,
+   alsoletter={:},
+   keywords = [1]
+   { topology,molecules,molecule,name,mdname,segments,segment,fragments,fragment,mdatoms,qmatoms,localframe,weights},
+   keywordstyle={[1]\color{blue}},
+}
+
+\lstinputlisting[
+ language=MXML,
+ label=list:map,
+ caption={Examle of \xmlcsg for \dcvt. Each rigid fragment (coarse-grained bead) is defined by a list of atoms. Atom numbers, names, and residue names should correspond to those used in \gromacs topology (see the corresponing listing \ref{list:pdb} of the pdb file).}]%
+{./input/dcv2t/map.xml}
+
+The \tool{pdb2map} creates a \xmlcsg from a pdb file and is a good starting point for further refinement: 
+\votcacommand{Creating a \xmlcg from a pdb file}{\small \ctptool \sql \sqlstate \exe \calc{pdb2map} }
+
+
 To partition the system on hopping sites and substitute rigid fragments with the corresponding ground-state geometries \ctpmap program is used:
 \votcacommand{Mapping the \gromacs trajectory}{\cmdmap}
 It reads in the \gromacs topology (\topology) and trajectory (\trajectory) files, definitions of conjugated segments and rigid fragments (\xmlcsg) and outputs coordinates of conjugated segments (hopping sites) and rigid fragments (as provided in the MD trajectory and after rigidification) to the  state file (\sqlstate). In order to do this, a mapping file \xmlcsg has to be provided, which specifies the corresponding atoms in the different representations. After this step, all information (frame number, dimensions of the simulation box, etc) are stored in the \slink{statefile}{state file} and only this file is used for further calculations.
