@@ -3,7 +3,7 @@ build/*
 
 libvotca*.pc
 libvotca*.a
-libvotca*.so
+libvotca*.so*
 
 share/doc/html
 share/doc/Doxyfile
@@ -12,6 +12,8 @@ src/libctp/votca_config.h
 src/libctp/gitversion.h
 src/libmoo/votca_config.h
 src/libmoo/gitversion.h
+src/libkmc/votca_config.h
+src/libkmc/gitversion.h
 
 src/tools/ctp_dump
 src/tools/ctp_parallel
@@ -19,6 +21,7 @@ src/tools/ctp_map
 src/tools/ctp_run
 src/tools/ctp_tools
 src/tools/moo_overlap
+src/tools/kmc_run
 src/dipro/*.mod
 src/dipro/*.x
 src/tools/*.man

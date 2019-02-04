@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{book}
+\documentclass[a4paper,oneside,11pt]{book}
 
 \usepackage[usenames]{color}
 \usepackage{bm}
@@ -78,14 +78,14 @@ pdfpagemode=UseNone]{hyperref}
 \titlespacing*{\chapter}{0pt}{5.5ex plus 1ex minus .2ex}{10pt}
 
 \usepackage[
-   a4paper,
-   twoside,
-   bindingoffset=1cm,
-   inner=2.5cm,
-   outer=2.5cm,
+%   a4paper,
+   bindingoffset=0cm,
+   margin=1.5cm,
+%   inner=1.0cm,
+%   outer=1.0cm,
    top=2.5cm,
    bottom=2.5cm,
-   headsep=1.2cm
+%   headsep=1.2cm
 ]{geometry}
 
 \setcounter{secnumdepth}{1} % levels under \section are not numbered
@@ -125,15 +125,19 @@ pdfpagemode=UseNone]{hyperref}
 %\vfill
 
 %\linenumbers
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 
 \input{theory/introduction}
 \input{theory/workflow}	
 
 % MORPHOLOGY PARTITIONING
 \input{theory/morphology}
-\input{input/topology_atomistic}
-\input{input/topology_coarsegrained}
-\input{input/topology_conjseg}
+%\input{input/topology_atomistic}
+%\input{input/topology_coarsegrained}
+%\input{input/topology_conjseg}
+
+% NEIGHBOURLIST
 \input{theory/neighborlist}
 
 % REORGANIZATION ENERGY
