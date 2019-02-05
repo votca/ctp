@@ -101,18 +101,20 @@ Both files need further refinement, but this procedure helps to avoid typos and 
 
 
 \section{Validating the mapping}
-% CHECKS
-In order to visually check the mapping one can use either the \calc{tdump} \calculator or the programm \ctpdump with the calculator \calc{trajectory2pdb}.
-
 \label{sec:ctp_dump}
+% CHECKS
+In order to visually check the mapping one can use calculator \calc{trajectory2pdb} of the \ctpdump program.
+%
 \votcacommand{Writing a mapped trajectroy with \ctpdump}{\small \ctpdump \sql \sqlstate \exe \calc{trajectory2pdb} }
+%
+\ctpdump reads in the state file created by \ctpmap and outputs two trajectory files corresponding to the original and rigidified atom coordinates. To check the mapping, you can superimpose the three outputs: original atomistic, atomistic stored in the state file, and rigidified according to the ground state geometries. This can be done with, e.g., {\tt VMD}. Note that \ctpdump can also output the list of segments, 
+\votcacommand{List of conjugated segments}{\small \ctpdump \sql \sqlstate \exe \calc{segments2xml} }
 
-It reads in the state file created by \ctpmap and outputs two trajectory files corresponding to the original and rigidified atom coordinates. To check the mapping, it is useful to superimpose the three outputs (original atomistic, atomistic stored in the state file, and rigidified according to ground state geometries), e.g., with {\tt VMD}.
-
+Alternatively, \calc{tdump} of \ctprun reads in the state file and appends the coordinates to QM.pdb and MD.pdb. Make sure to delete old QM.pdb and MD.pdb if you want to create a new image.
 \label{sec:tdump}
-\votcacommand{Writing a mapped trajectroy with \calc{tdump} }{\small \ctprun \sql \sqlstate \opt \xmloptions \exe \calc{tdump} }
+\votcacommand{Writing a mapped trajectory with \calc{tdump} }{\small \ctprun \sql \sqlstate \opt \xmloptions \exe \calc{tdump} }
 
-It also reads in the state file but appends the coordinates to a pdb. file. So make sure to delete old QM.pdb and MD.pdb if you want to create a new image.
+
 
 
 \section{Custom topologies}
