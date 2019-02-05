@@ -33,11 +33,11 @@
     <logicalFolder name="f1" displayName="Calculators" projectFiles="true">
       <logicalFolder name="f5" displayName="cgpolar" projectFiles="true">
         <itemPath>../../src/libctp/calculators/cgpolar.h</itemPath>
-        <itemPath>../../share/xml/cgpolar.xml</itemPath>
+        <itemPath>../../share/ctp/xml/cgpolar.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="coupling" projectFiles="true">
         <itemPath>../../src/libctp/tools/coupling.h</itemPath>
-        <itemPath>../../share/xml/coupling.xml</itemPath>
+        <itemPath>../../share/ctp/xml/coupling.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="eanalyze" projectFiles="true">
         <itemPath>../../src/libctp/calculators/eanalyze.h</itemPath>
