@@ -54,7 +54,7 @@ endforeach()
 
 
 set(VOTCASHARE ${CMAKE_CURRENT_SOURCE_DIR}/../share)
-# generates tex refernce for all calculators 
+# generates tex reference for all calculators 
 add_custom_command(OUTPUT ${CMAKE_BUILD_DIR}/reference/calculators.tex
     COMMAND VOTCASHARE=${VOTCASHARE} VOTCA_PROPERTY=${VOTCA_PROPERTY}
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_calculators.sh
