@@ -14,16 +14,16 @@ shift
 for package in ctp_tools ctp_run ctp_parallel ctp_dump kmc_run; do
 
 	exe=$(echo "$@" | xargs -n1 echo | grep "$package")
-	xml=$(echo ${package} | sed -ne 's/\(.*\)_.*/\1/p')
+	lib=$(echo ${package} | sed -ne 's/\(.*\)_.*/\1/p')
     calculators="$(${exe} --list | sed -ne 's/^\s\+\([a-z,0-9]*\)\s*\(.*\)/\1/p')"
  
     ${exe} --list
     
-    echo ${xml} ${exe} ${calculators}
+    echo ${lib} ${exe} ${calculators}
 
 	# loop over all calculators
 	for calculator in ${calculators}; do
-		xmlfile=${VOTCASHARE}/${xml}/xml/${calculator}.xml
+		xmlfile=${VOTCASHARE}/${lib}/xml/${calculator}.xml
 		echo $calculator
 		echo $xmlfile
 		if [ ! -f "$xmlfile" ]; then 
