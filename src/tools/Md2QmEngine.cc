@@ -231,7 +231,7 @@ void Md2QmEngine::Initialize(const string &xmlfile) {
                }
                
                // Mapping weight
-               double weight = boost::lexical_cast<double>(*it_atom_weight);
+               double weight = stod(*it_atom_weight);
                if (!hasQMPart && weight != 0) {
                    cout << "ERROR: "
                         << "Atom " << md_atom_name << " in residue "
@@ -574,9 +574,9 @@ void Md2QmEngine::getIntCoords(string &file,
             // Interesting information written here: e.g. 'C 0.000 0.000 0.000'
             atomCount++;
             string element = split[0];
-            double x = boost::lexical_cast<double>( split[1] ) / 10.; //°A to NM
-            double y = boost::lexical_cast<double>( split[2] ) / 10.;
-            double z = boost::lexical_cast<double>( split[3] ) / 10.;
+            double x = stod( split[1] ) / 10.; //°A to NM
+            double y = stod( split[2] ) / 10.;
+            double z = stod( split[3] ) / 10.;
             vec qmPos = vec(x,y,z);
 
             pair<string, vec> qmTypePos(element, qmPos);
