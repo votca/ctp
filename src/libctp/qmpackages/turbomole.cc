@@ -28,6 +28,7 @@
 #include <boost/filesystem.hpp>
 
 #include <stdio.h>
+#include <string>
 #include <iomanip>
 #include <sys/stat.h>
 
@@ -368,7 +369,7 @@ bool Turbomole::ParseOrbitalsFile( Orbitals* _orbitals )
             
             _level = boost::lexical_cast<int>(results.front());
             boost::replace_first(results[3], "D", "e");
-            _energies[ _level ] = stod( results[3] );            
+            _energies[ _level ] = std::stod( results[3] );            
             _levels++;
 
         } else if ( dollar_pos == std::string::npos ) {
@@ -378,7 +379,7 @@ bool Turbomole::ParseOrbitalsFile( Orbitals* _orbitals )
                 _coefficient.assign( _line, 0, 20 );
                 boost::trim( _coefficient );
                 boost::replace_first( _coefficient, "D", "e" );
-                double coefficient = stod( _coefficient );
+                double coefficient = std::stod( _coefficient );
                 _coefficients[ _level ].push_back( coefficient );
                 _line.erase(0, 20);
             }
@@ -611,10 +612,10 @@ bool Turbomole::ParseLogFile( Orbitals* _orbitals ) {
                     //cout << "  " << *it << endl;
                             
                     boost::trim( *it );
-                    double _coefficient = stod( *it );
+                    double _coefficient = std::stod( *it );
                     //cout << _i_index << ":" << _j_index << ":" << _coefficient << endl;
                     
-                    _orbitals->_overlap( _i_index , _j_index ) = stod( _coefficient );
+                    _orbitals->_overlap( _i_index , _j_index ) = ( _coefficient );
                     
                     _j_index++;
                     if ( _j_index > _i_index ) {
