@@ -112,7 +112,7 @@
       </logicalFolder>
       <logicalFolder name="f14" displayName="neighborlist" projectFiles="true">
         <itemPath>../../src/libctp/calculators/neighborlist.h</itemPath>
-        <itemPath>../../share/xml/neighborlist.xml</itemPath>
+        <itemPath>../../share/ctp/xml/neighborlist.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="Obsolete" projectFiles="true">
         <itemPath>../../src/libctp/calculators/ecoulomb.h</itemPath>
@@ -614,9 +614,10 @@
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/coupling.xml" ex="false" tool="3" flavor2="0">
+      <item path="../../share/ctp/xml/neighborlist.xml"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -653,8 +654,6 @@
       <item path="../../share/xml/map.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/molpol.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/neighborlist.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/occupations2xml.xml"
             ex="false"
@@ -1353,9 +1352,10 @@
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../share/xml/cgpolar.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/coupling.xml" ex="false" tool="3" flavor2="0">
+      <item path="../../share/ctp/xml/neighborlist.xml"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1392,8 +1392,6 @@
       <item path="../../share/xml/map.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/molpol.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/neighborlist.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/occupations2xml.xml"
             ex="false"

@@ -54,9 +54,8 @@ private:
     map< string, map<string,double> > _cutoffs;
     bool                              _useConstantCutoff;
     double                            _constantCutoff;
-    string                            _generate_from;
+    string                            _file_name;
     bool                              _generate_from_file;
-    bool                              _generate_unsafe;
     
     std::list<QMNBList::SuperExchangeType*>        _superexchange;
 
@@ -101,21 +100,13 @@ void Neighborlist::Initialize(Property *options) {
     else {
         _useConstantCutoff = false;
     }
-    if (options->exists(key+".generate_from")) {
-        _generate_from_file = true;
-        _generate_from = options->get(key+".generate_from").as< string >();
+
+    _generate_from_file = false;    
+    if (options->exists(key+".file")) {
+        _file_name = options->get(key+".file").as< string >();
+        if ( _file_name.size() ! = 0 ) _generate_from_file = true;
     }
-    else {
-        _generate_from_file = false;
-        _generate_from = "nofile";
-    }
-    if (options->exists(key+".generate_unsafe")) {
-        _generate_unsafe = true;
-    }
-    else {
-        _generate_unsafe = false;
-    }
-    
+
     // if superexchange is given
     if (options->exists(key + ".superexchange")) {
         list< Property* > _se = options->Select(key + ".superexchange");
@@ -134,10 +125,9 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
 
     top->NBList().Cleanup();
 
-    if (_generate_from_file) {        
-        this->GenerateFromFile(top, _generate_from);        
+    if (_generate_from_file) { 
+        this->GenerateFromFile(top, _file_name); 
     }
-    
     else {        
 
         vector< Segment* > ::iterator segit1;
@@ -274,10 +264,6 @@ void Neighborlist::GenerateFromFile(Topology *top, string filename) {
     std::ifstream intt;
     intt.open(filename.c_str());
     
-    if (_generate_unsafe) {
-        cout << endl << "... ... Generate unsafe = true ..." << flush;
-    }
-
     if (intt.is_open() ) {
         while ( intt.good() ) {
 
@@ -296,29 +282,19 @@ void Neighborlist::GenerateFromFile(Topology *top, string filename) {
             Segment* seg1 = top->getSegment(seg1id);
             Segment* seg2 = top->getSegment(seg2id);
             
-            if (not _generate_unsafe) {
-                string seg1name     = boost::lexical_cast<string>(split[7]);
-                string seg2name     = boost::lexical_cast<string>(split[8]);
-                assert(seg1->getName() == seg1name);
-                assert(seg2->getName() == seg2name);
-            }        
-            
-            //QMPair* pair12 = 
+            string seg1name     = boost::lexical_cast<string>(split[3]);
+            string seg2name     = boost::lexical_cast<string>(split[4]);
+            assert(seg1->getName() == seg1name);
+            assert(seg2->getName() == seg2name);
+
 	    (void)top->NBList().Add(seg1,seg2);
             
     
-     /*       
-     1  1000 1010 2.4292699e-03 1.61313482160154 -1.05173043628102 0.759048038980236 DCV DCV
-     2  1000 1020 1.0551418e-03 1.4977782788484 -0.466982612402543 0.876438986736797 DCV DCV
-     3  1000 1023 5.9645622e-03 1.51684342052626 0.189056522949882 0.763447935684869 DCV DCV
-     4  1000 1027 2.1161184e-02 -0.121730375289917 0.483095637611721 0.078926185939622 DCV DCV
-     5  1000 1034 1.5198626e-03 0.586534707442574 -1.59841490776642 0.695082730832308 DCV DCV
-     6  1000 1048 1.0121481e-03 -0.296308693678482 -1.02535652660805 0.347373638982358 DCV DCV
-     7  1000 1050 9.3073820e-04 1.34660870303278 -1.49037826725322 0.571647867949114 DCV DCV
-     8  1000 1052 1.0803526e-03 -0.337469581935717 -0.853313051455695 0.592304403885553 DCV DCV
-     9  1000 1065 4.6567327e-04 0.45481307817542 -1.44727391982856 1.05151722120202 DCV DCV
-    10  1000 1073 5.7739082e-03 -0.388582683646161 -0.221439142589984 0.731973764170771 DCV DCV
-    */            
+     /* input example
+     1  1 2 DCV DCV
+     2  1 3 DCV DCV
+     3  2 3 DCV DCV
+     */            
 
 
         } /* Exit loop over lines */

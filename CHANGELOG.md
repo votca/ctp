@@ -1,6 +1,7 @@
 For more detailed information about the changes see the history of the [repository](https://github.com/votca/ctp/commits/master).
 
 ## Version 1.6-dev
+* Updated manual
 
 ## Version 1.5 (released 28.01.19)
 * Updated manual: EWALD3D documentation
