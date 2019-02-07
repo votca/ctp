@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2018 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -21,6 +21,7 @@
 #ifndef __VOTCA_CTP_NEIGHBORLIST_H
 #define __VOTCA_CTP_NEIGHBORLIST_H
 
+#include <votca/ctp/logger.h>
 #include <votca/tools/globals.h>
 #include <votca/ctp/qmcalculator.h>
 #include <votca/ctp/qmpair.h>
@@ -51,13 +52,17 @@ public:
 
 private:
 
-    map< string, map<string,double> > _cutoffs;
-    bool                              _useConstantCutoff;
-    double                            _constantCutoff;
-    string                            _file_name;
-    bool                              _generate_from_file;
+    std::map< std::string, std::map<std::string, double> > _cutoffs;
+    bool                                   _use_active_fragments;
+    std::map< std::string, std::map<std::string, std::string> > _active_fragments;
+    bool                                   _useConstantCutoff;
+    double                                 _constantCutoff;
+    std::string                            _file_name;
+    bool                                   _generate_from_file;
     
     std::list<QMNBList::SuperExchangeType*>        _superexchange;
+    
+    Logger                                 _log;
 
 };
     
@@ -67,29 +72,58 @@ void Neighborlist::Initialize(Property *options) {
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options,"ctp" );
     std::string key = "options." + Identify();
+
+    _log.setPreface(logINFO,    "\n... ...");
+    _log.setPreface(logERROR,   "\n... ...");
+    _log.setPreface(logWARNING, "\n... ...");
+    _log.setPreface(logDEBUG,   "\n... ...");  
     
     list< Property* > segs = options->Select(key+".segments");
     list< Property* > ::iterator segsIt;
 
-    for (segsIt = segs.begin();
-         segsIt != segs.end();
-         segsIt++) {
-
-        string types = (*segsIt)->get("type").as<string>();
+    for (segsIt = segs.begin(); segsIt != segs.end(); segsIt++) {
+      
         double cutoff = (*segsIt)->get("cutoff").as<double>();
 
+        // get pairs of segment types 
+        string types = (*segsIt)->get("type").as<string>();
+        
         Tokenizer tok(types, " ");
         vector< string > names;
         tok.ToVector(names);
 
         if (names.size() != 2) {
-            cout << "ERROR: Faulty pair definition for cut-off's: "
-                 << "Need two segment names separated by a space" << endl;
+            CTP_LOG(logERROR,_log) << "Faulty pair definition for cut-off's: "
+                 << "Need two segment names separated by a space" << std::flush;
             throw std::runtime_error("Error in options file.");
         }
 
         _cutoffs[names[0]][names[1]] = cutoff;
         _cutoffs[names[1]][names[0]] = cutoff;
+        
+        // get active fragments for each pair of segments
+        
+        std::string fragments;
+        _use_active_fragments = false;
+        if ((*segsIt)->exists("fragments")) {
+            // if * is provided, do not use fragments filtering
+            fragments = (*segsIt)->get("fragments").as<string>();
+
+            std::size_t found = fragments.find("*");
+            if (found == std::string::npos) {
+                _use_active_fragments = true;
+                CTP_LOG(logWARNING,_log) << "Using filtering by fragments: " 
+                        << fragments << std::flush; 
+            }
+            
+        } else {
+            CTP_LOG(logWARNING,_log) 
+                    << "From v1.6 you can use a list of fragments (or '*')." 
+                    << std::flush;
+        }
+        
+        _active_fragments[names[0]][names[1]] = fragments;
+        _active_fragments[names[1]][names[0]] = fragments;
 
     }
 
@@ -118,6 +152,15 @@ void Neighborlist::Initialize(Property *options) {
             _superexchange.push_back(_su); 
         }
     }
+         
+
+    
+    if (TOOLS::globals::verbose) {
+        _log.setReportLevel( logDEBUG ); 
+    } else {
+        _log.setReportLevel( logINFO ); 
+    }
+
             
 }
 
@@ -136,21 +179,17 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
         vector< Fragment* > ::iterator fragit2;
 
         double cutoff;
-        vec r1;
-        vec r2;
+        std::string fragment_list;
         
-        if (TOOLS::globals::verbose) {
-            cout << endl <<  "... ..." << flush;
-        }        
+        vec r1;
+        vec r2;    
         
         for (segit1 = top->Segments().begin();
                 segit1 < top->Segments().end();
                 segit1++) {
 
                 Segment *seg1 = *segit1;
-                if (TOOLS::globals::verbose) {
-                    cout << "\r ... ... NB List Seg " << seg1->getId() << flush;
-                }
+                CTP_LOG(logDEBUG,_log) << "NB List Seg " << seg1->getId() << std::flush;
 
             for (segit2 = segit1 + 1;
                     segit2 < top->Segments().end();
@@ -163,11 +202,14 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                     try {
                         cutoff = _cutoffs.at(seg1->getName())
                                          .at(seg2->getName());
+                        
+                        fragment_list = _active_fragments.at(seg1->getName())
+                                                         .at(seg2->getName());
                     }
                     catch (out_of_range&) {
-                        cout << "ERROR: No cut-off specified for segment pair "
+                        CTP_LOG(logERROR,_log) << "ERROR: No cut-off specified for segment pair "
                              << seg1->getName() << " | " << seg2->getName() 
-                             << ". " << endl;
+                             << ". " << std::flush;
                         throw std::runtime_error("Missing input in options.");
                     }
                 }
@@ -180,12 +222,21 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                         fragit1 < seg1->Fragments().end();
                         fragit1 ++) {
 
+                    // check if this fragment is active
+                    std::string _frag1name = (*fragit1)->getName();
+                    std::size_t found1 = fragment_list.find(_frag1name);
+                    if ( _use_active_fragments && found1 == std::string::npos) { continue; }
+                    
                     if (stopLoop) { break; }
 
                     for (fragit2 = seg2->Fragments().begin();
                             fragit2 < seg2->Fragments().end();
                             fragit2++) {
 
+                        // check if this fragment is active
+                        std::string _frag2name = (*fragit1)->getName();
+                        std::size_t found2 = fragment_list.find(_frag2name);
+                        if (_use_active_fragments && found2 == std::string::npos) { continue; }
 
                         r1 = (*fragit1)->getPos();
                         r2 = (*fragit2)->getPos();
@@ -207,12 +258,22 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
 
     }
 
-    cout << endl << " ... ... Created " << top->NBList().size() << " direct pairs.";
-
     // add superexchange pairs
     top->NBList().setSuperExchangeTypes(_superexchange);
     top->NBList().GenerateSuperExchange();
-  
+
+    // short summary at the end
+    std::map<int, int> npairs;
+    for ( QMNBList::iterator pit = top->NBList().begin(); pit != top->NBList().end(); pit++ ) {
+        QMPair *pair = (*pit);
+        npairs[pair->getType()] += 1;
+    }
+    
+    CTP_LOG(logINFO,_log) <<  "Created " << top->NBList().size() << " pairs." << std::flush;
+    CTP_LOG(logINFO,_log) <<  "Hopping only pairs: " << npairs[QMPair::Hopping] << std::flush;
+    CTP_LOG(logINFO,_log) <<  "Superexchange pairs: " << npairs[QMPair::SuperExchange] << std::flush;
+    CTP_LOG(logINFO,_log) <<  "Superexchange and hopping pairs: " << npairs[QMPair::SuperExchangeAndHopping] << std::flush;
+      
     // DEBUG output
     if (votca::tools::globals::verbose) {
 
@@ -254,6 +315,7 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
         //cout << bridges_summary;
     }
 
+    std::cout << _log;
     return true;        
 }
 

@@ -7,6 +7,7 @@
 	<segments help="A pair of segment types">
 		<type help="Types of two segments. For types A and B this can be A A, A B or B B">c60 c60</type>
 		<cutoff help="Cutoff radius for centers of mass of rigid fragments" unit="nm">1.0</cutoff>
+                <fragments help="list of active fragments" default="*">*</fragments>
 	</segments>
         
         <file help="File with the pair list: pairID seg1ID seg2ID seg1Type seg2Type " default="">
