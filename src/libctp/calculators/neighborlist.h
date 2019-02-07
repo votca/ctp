@@ -104,7 +104,7 @@ void Neighborlist::Initialize(Property *options) {
     _generate_from_file = false;    
     if (options->exists(key+".file")) {
         _file_name = options->get(key+".file").as< string >();
-        if ( _file_name.size() ! = 0 ) _generate_from_file = true;
+        if ( _file_name.size() != 0 ) _generate_from_file = true;
     }
 
     // if superexchange is given
