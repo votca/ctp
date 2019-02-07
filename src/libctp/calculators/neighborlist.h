@@ -52,17 +52,19 @@ public:
 
 private:
 
+    bool _useConstantCutoff;
+    double _constantCutoff;
     std::map< std::string, std::map<std::string, double> > _cutoffs;
-    bool                                   _use_active_fragments;
+
+    bool _use_active_fragments;
     std::map< std::string, std::map<std::string, std::string> > _active_fragments;
-    bool                                   _useConstantCutoff;
-    double                                 _constantCutoff;
-    std::string                            _file_name;
-    bool                                   _generate_from_file;
     
-    std::list<QMNBList::SuperExchangeType*>        _superexchange;
-    
-    Logger                                 _log;
+    bool _generate_from_file;
+    std::string _file_name;
+
+    std::list<QMNBList::SuperExchangeType*> _superexchange;
+
+    Logger _log;
 
 };
     
@@ -73,10 +75,17 @@ void Neighborlist::Initialize(Property *options) {
     UpdateWithDefaults( options,"ctp" );
     std::string key = "options." + Identify();
 
+    // properties of the logger
     _log.setPreface(logINFO,    "\n... ...");
     _log.setPreface(logERROR,   "\n... ...");
     _log.setPreface(logWARNING, "\n... ...");
     _log.setPreface(logDEBUG,   "\n... ...");  
+         
+    if (TOOLS::globals::verbose) {
+        _log.setReportLevel( logDEBUG ); 
+    } else {
+        _log.setReportLevel( logINFO ); 
+    }
     
     list< Property* > segs = options->Select(key+".segments");
     list< Property* > ::iterator segsIt;
@@ -152,15 +161,6 @@ void Neighborlist::Initialize(Property *options) {
             _superexchange.push_back(_su); 
         }
     }
-         
-
-    
-    if (TOOLS::globals::verbose) {
-        _log.setReportLevel( logDEBUG ); 
-    } else {
-        _log.setReportLevel( logINFO ); 
-    }
-
             
 }
 
@@ -280,18 +280,18 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
 	Property bridges_summary;
         Property *_bridges = &bridges_summary.add("bridges","");
 
-        cout << "Bridged Pairs \n [idA:idB] com distance" << endl;
+        CTP_LOG(logDEBUG,_log) << "Bridged Pairs \n [idA:idB] com distance" << std::flush;
         for (QMNBList::iterator ipair = top->NBList().begin(); ipair != top->NBList().end(); ++ipair) {
                 QMPair *pair = *ipair;
                 Segment* segment1 = pair->Seg1PbCopy();
                 Segment* segment2 = pair->Seg2PbCopy();
                 
-                cout << " [" << segment1->getId() << ":" << segment2->getId()<< "] " 
+                CTP_LOG(logDEBUG,_log) << " [" << segment1->getId() << ":" << segment2->getId()<< "] " 
                              << pair->Dist()<< " bridges: " 
                              << (pair->getBridgingSegments()).size() 
                              << " type: " 
                              << pair->getType() 
-                             << " | " << flush;
+                             << " | " << std::flush;
                 
                 vector<Segment*> bsegments = pair->getBridgingSegments();
  
@@ -306,20 +306,23 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                 Property *_bridge_property = &_pair_property->add("bridge","");
 
                 for ( vector<Segment*>::iterator itb = bsegments.begin(); itb != bsegments.end(); itb++ ) {
-                    cout << (*itb)->getId() << " " ;
+                    CTP_LOG(logDEBUG,_log) << (*itb)->getId() << " " ;
                     _bridge_property->setAttribute("id", (*itb)->getId());
                 }        
                 
-                cout << endl;
+                CTP_LOG(logDEBUG,_log) << std::flush;
         }
-        //cout << bridges_summary;
     }
 
     std::cout << _log;
     return true;        
 }
 
-
+/* input example
+ * 1  1 2 DCV DCV  
+ * 2  1 3 DCV DCV     
+ * 3  2 3 DCV DCV
+ */ 
 void Neighborlist::GenerateFromFile(Topology *top, string filename) {
     
     std::string line;
@@ -351,19 +354,12 @@ void Neighborlist::GenerateFromFile(Topology *top, string filename) {
 
 	    (void)top->NBList().Add(seg1,seg2);
             
-    
-     /* input example
-     1  1 2 DCV DCV
-     2  1 3 DCV DCV
-     3  2 3 DCV DCV
-     */            
-
-
         } /* Exit loop over lines */
     }
-    else { cout << endl << "ERROR: No such file " << filename << endl;
-           throw std::runtime_error("Supply input file."); }
-    
+    else { 
+        CTP_LOG(logERROR,_log) << "ERROR: No such file " << filename << std::flush;
+        throw std::runtime_error("Supply input file."); 
+    }    
 }
 
 
