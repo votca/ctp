@@ -39,7 +39,7 @@ CtpApplication::CtpApplication() {
  */
 void CtpApplication::Initialize(void) {
 
-     AddProgramOptions() ("options,o", boost::program_options::value<string>(),
+     AddProgramOptions() ("options,o", boost::program_options::value<std::string>(),
         "  calculator options");
 }
 
@@ -50,12 +50,11 @@ bool CtpApplication::EvaluateOptions(void) {
 
 
 void CtpApplication::ShowHelpText(std::ostream &out) {
-    string name = ProgramName();
+    std::string name = ProgramName();
     if (VersionString() != "") name = name + ", version " + VersionString();
     votca::ctp::HelpTextHeader(name);
     HelpText(out);
-    out << "\n\n" << VisibleOptions() << endl;
-    //out << "\n\n" << OptionsDesc() << endl;
+    out << "\n\n" << VisibleOptions() << std::endl;
 }
 
 

@@ -16,7 +16,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;    
 // ========================================================================== //
 // QMPackage base class for wrappers of TURBOMOLE, GAUSSIAN, etc              //
 // ========================================================================== //

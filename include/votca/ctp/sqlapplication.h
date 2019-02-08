@@ -30,8 +30,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;
-
 class SqlApplication : public CtpApplication
 {
 public:

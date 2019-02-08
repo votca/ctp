@@ -25,8 +25,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;
-
 class QMPackageFactory : public ObjectFactory<std::string, QMPackage>
 {
 private:

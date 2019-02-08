@@ -89,7 +89,7 @@
       <logicalFolder name="f22" displayName="idft" projectFiles="true">
         <itemPath>../../src/libctp/jobcalculators/idft.cc</itemPath>
         <itemPath>../../src/libctp/jobcalculators/idft.h</itemPath>
-        <itemPath>../../share/xml/idft.xml</itemPath>
+        <itemPath>../../share/ctp/xml/idft.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f12" displayName="iimport" projectFiles="true">
         <itemPath>../../src/libctp/calculators/iimport.h</itemPath>
@@ -128,7 +128,11 @@
       </logicalFolder>
       <logicalFolder name="f27" displayName="pdb2map" projectFiles="true">
         <itemPath>../../src/libctp/tools/pdb2map.h</itemPath>
-        <itemPath>../../share/xml/pdb2map.xml</itemPath>
+        <itemPath>../../share/ctp/xml/pdb2map.xml</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f29" displayName="pdb2top" projectFiles="true">
+        <itemPath>../../src/libctp/tools/pdb2top.h</itemPath>
+        <itemPath>../../share/ctp/xml/pdb2top.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f16" displayName="profile" projectFiles="true">
         <itemPath>../../src/libctp/calculators/profile.h</itemPath>
@@ -614,10 +618,16 @@
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../share/ctp/xml/idft.xml" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../share/ctp/xml/neighborlist.xml"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -638,8 +648,6 @@
       <item path="../../share/xml/ewdbgpol.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/ianalyze.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/idft.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/iimport.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -665,8 +673,6 @@
       <item path="../../share/xml/pairdump.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pairs2xml.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1049,6 +1055,8 @@
       </item>
       <item path="../../src/libctp/tools/pdb2map.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../src/libctp/tools/pdb2top.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../src/libctp/tools/qmanalyze.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/tools/qmsandbox.h" ex="false" tool="3" flavor2="0">
@@ -1352,10 +1360,16 @@
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../share/ctp/xml/idft.xml" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../share/ctp/xml/neighborlist.xml"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1376,8 +1390,6 @@
       <item path="../../share/xml/ewdbgpol.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/ianalyze.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/idft.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/iimport.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1403,8 +1415,6 @@
       <item path="../../share/xml/pairdump.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pairs2xml.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1786,6 +1796,8 @@
       <item path="../../src/libctp/tools/molpol.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/tools/pdb2map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/libctp/tools/pdb2top.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/tools/qmanalyze.h" ex="false" tool="3" flavor2="0">
       </item>

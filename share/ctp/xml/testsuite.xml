@@ -138,14 +138,6 @@
 		<output>extract.rates.xml</output>
 	</test>
 	<test>
-		<name>kmcsingle</name>
-		<description>Simulates the drift-diffusion of a single carrier</description>
-		<execute>{kmc_run} -e {name} -o {name}.xml -f {sql}</execute>
-		<requires>rates</requires>
-		<verify>{ctp_state} -f {sql} -e occupations2xml</verify>
-		<output>extract.occupations.xml</output>
-	</test>
-	<test>
 		<name>kmcmultiple</name>
 		<description>Simulates drift-diffusion of multiple charge carriers</description>
 		<execute>{kmc_run} -e {name} -o {name}.xml -f {sql}</execute>

@@ -10,7 +10,6 @@
 #include <boost/interprocess/sync/file_lock.hpp>
 #include <boost/program_options.hpp>
 
-using namespace std;
 
 namespace votca { namespace ctp {
     

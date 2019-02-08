@@ -26,8 +26,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;
-
 class Calculatorfactory
 : public ObjectFactory<std::string, QMCalculator>
 {
