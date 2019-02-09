@@ -412,7 +412,7 @@ bool Gaussian::ParseOrbitalsFile( Orbitals* _orbitals )
             
             _level = boost::lexical_cast<int>(results.front());
             boost::replace_first(results.back(), "D", "e");
-            _energies[ _level ] = boost::lexical_cast<double>( results.back() );            
+            _energies[ _level ] = stod( results.back() );            
             _levels++;
 
         } else {
@@ -422,7 +422,7 @@ bool Gaussian::ParseOrbitalsFile( Orbitals* _orbitals )
                 _coefficient.assign( _line, 0, 15 );
                 boost::trim( _coefficient );
                 boost::replace_first( _coefficient, "D", "e" );
-                double coefficient = boost::lexical_cast<double>( _coefficient );
+                double coefficient = stod( _coefficient );
                 _coefficients[ _level ].push_back( coefficient );
                 _line.erase(0, 15);
             }
@@ -579,7 +579,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
         /*std::string::size_type HFX_pos = _line.find("ScaHFX=");
          if (HFX_pos != std::string::npos) {
              boost::algorithm::split(results, _line, boost::is_any_of("\t "), boost::algorithm::token_compress_on);
-             double _ScaHFX = boost::lexical_cast<double>(results.back()) ;
+             double _ScaHFX = stod(results.back()) ;
              _orbitals->setScaHFX( _ScaHFX );
              CTP_LOG(logDEBUG,*_pLog) << "DFT with " << _ScaHFX << " of HF exchange!" << flush ;
          } */
@@ -728,11 +728,11 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
                         string  _coefficient = *iter;
                        
                         boost::replace_first( _coefficient, "D", "e" );
-                        //cout << boost::lexical_cast<double>( _coefficient ) << endl;
+                        //cout << stod( _coefficient ) << endl;
                         
                         int _j_index = *_j_iter;                                
-                        //_overlap( _i_index-1 , _j_index-1 ) = boost::lexical_cast<double>( _coefficient );
-                        overlap( _i_index-1 , _j_index-1 ) = boost::lexical_cast<double>( _coefficient );
+                        //_overlap( _i_index-1 , _j_index-1 ) = stod( _coefficient );
+                        overlap( _i_index-1 , _j_index-1 ) = stod( _coefficient );
                         _j_iter++;
                         
                     }
@@ -836,9 +836,9 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
                 
                 vector<string>::iterator it_atom;
                 it_atom = atom.end();
-                double _z =  boost::lexical_cast<double>( *(--it_atom) );
-                double _y =  boost::lexical_cast<double>( *(--it_atom) );
-                double _x =  boost::lexical_cast<double>( *(--it_atom) );
+                double _z =  stod( *(--it_atom) );
+                double _y =  stod( *(--it_atom) );
+                double _x =  stod( *(--it_atom) );
                 
                 if ( _has_atoms == false ) {
                         _orbitals->AddAtom( _atom_type, _x, _y, _z );
@@ -859,7 +859,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
             vector<string> energy;
             boost::algorithm::split(block, *coord_block, boost::is_any_of("\\"), boost::algorithm::token_compress_on);
             //boost::algorithm::split(energy, block[1], boost::is_any_of("="), boost::algorithm::token_compress_on);
-            //_orbitals->setQMEnergy( _conv_Hrt_eV * boost::lexical_cast<double> ( energy[1] ) );
+            //_orbitals->setQMEnergy( _conv_Hrt_eV * stod( energy[1] ) );
             map<string,string> properties;
             vector<string>::iterator block_it;
             for (block_it = block.begin(); block_it != block.end(); ++block_it) {
@@ -872,7 +872,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
             //_orbitals->_has_atoms = true;
             //_orbitals->_has_qm_energy = true;
             if (properties.count("HF") > 0) {
-                double energy_hartree = boost::lexical_cast<double>(properties["HF"]);
+                double energy_hartree = stod(properties["HF"]);
                 //_orbitals->setQMEnergy(_has_qm_energy = true;
                 _orbitals-> setQMEnergy( _conv_Hrt_eV * energy_hartree );
                 CTP_LOG(logDEBUG, *_pLog) << "QM energy " << _orbitals->_qm_energy <<  flush;
@@ -884,7 +884,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
             
 //            boost::algorithm::split(energy, block[1], boost::is_any_of("="), boost::algorithm::token_compress_on);
 //            cout << endl << energy[1] << endl;
-//            _orbitals->_qm_energy = _conv_Hrt_eV * boost::lexical_cast<double> ( energy[1] );
+//            _orbitals->_qm_energy = _conv_Hrt_eV * stod( energy[1] );
 //            
 //            CTP_LOG(logDEBUG, *_pLog) << "QM energy " << _orbitals->_qm_energy <<  flush;
 //            _has_qm_energy = true;
@@ -904,7 +904,7 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
             boost::algorithm::split(energy, block[1], boost::is_any_of("\t "), boost::algorithm::token_compress_on);
             
             // _orbitals->_has_self_energy = true;
-            _orbitals->setSelfEnergy( _conv_Hrt_eV * boost::lexical_cast<double> ( energy[1] ) );
+            _orbitals->setSelfEnergy( _conv_Hrt_eV * stod( energy[1] ) );
             
             CTP_LOG(logDEBUG, *_pLog) << "Self energy = " << _orbitals->getSelfEnergy() <<  flush;
 
@@ -962,8 +962,8 @@ bool Gaussian::ParseLogFile( Orbitals* _orbitals ) {
                 
            int _i_index = boost::lexical_cast<int>(  _row[0]  ); 
            int _j_index = boost::lexical_cast<int>(  _row[1]  );
-           //cout << "Vxc element [" << _i_index << ":" << _j_index << "] " << boost::lexical_cast<double>( _row[2] ) << endl;
-           _vxc( _i_index-1 , _j_index-1 ) = boost::lexical_cast<double>( _row[2] );
+           //cout << "Vxc element [" << _i_index << ":" << _j_index << "] " << stod( _row[2] ) << endl;
+           _vxc( _i_index-1 , _j_index-1 ) = stod( _row[2] );
         }
         
         CTP_LOG(logDEBUG,*_pLog) << "Done parsing" << flush;

@@ -192,7 +192,7 @@ void IImport::List2PairsTI(Topology *top, string &ti_file) {
             }            
 
             int e_h_1 = (split[2] == "e") ? -1 : +1;
-            double j2_1 = boost::lexical_cast<double>(split[3]);
+            double j2_1 = stod(split[3]);
 
             if (split.size() == 6) {
 
@@ -201,7 +201,7 @@ void IImport::List2PairsTI(Topology *top, string &ti_file) {
                     cout << endl << "... ... Invalid line: " << line << flush;
                     continue;
                 }
-                double j2_2 = boost::lexical_cast<double>(split[5]);
+                double j2_2 = stod(split[5]);
 
                 qmp->setJeff2(j2_2, e_h_2);
                 qmp->setIsPathCarrier(true, e_h_2);
@@ -295,9 +295,9 @@ void IImport::StochasticTI(Topology *top, string &filename, int state) {
                       split[0] == "!"   ||
                       split[0].substr(0,1) == "!" ) { continue; }
              
-                double distance          = boost::lexical_cast<double>(split[0]);
-                double mean              = boost::lexical_cast<double>(split[1]);
-                double sigma             = boost::lexical_cast<double>(split[2]);
+                double distance          = stod(split[0]);
+                double mean              = stod(split[1]);
+                double sigma             = stod(split[2]);
                 cout << "        " << distance << " nm:   " << mean << " +/- " << sigma << endl;
                 distances.push_back(distance);
                 means.push_back(mean);
@@ -384,14 +384,14 @@ void IImport::XML2PairTI(QMPair *qmpair, string &xmlDirFile) {
                 assert(TRANSPORT == "electron" || TRANSPORT == "hole");
                 STATE = (TRANSPORT == "electron") ? -1 : +1;
                 if (_TI_tag == "J" || _TI_tag == "T_00") {
-                    double J = boost::lexical_cast<double>(split[1]);
+                    double J = stod(split[1]);
                     qmpair->setJeff2(J*J, STATE);
                     qmpair->setIsPathCarrier(1, STATE);
                     printf("\n... ... ... J2(State = %+1d) = %4.7e",
                             STATE, qmpair->getJeff2(STATE));
                 }
                 else if (_TI_tag == "J_sq_degen" || _TI_tag == "J_sq_boltz") {
-                    double J2 = boost::lexical_cast<double>(split[1]);
+                    double J2 = stod(split[1]);
                     qmpair->setJeff2(J2, STATE);
                     qmpair->setIsPathCarrier(1, STATE);
                     printf("\n... ... ... J2(State = %+1d) = %4.7e",
