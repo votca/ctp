@@ -111,8 +111,8 @@ bool EImport::EvaluateFrame(Topology *top) {
                     assert(state_N == 0);
                     assert(state_C*state_C == 1);
 
-                    double e_N = boost::lexical_cast<double>(split[3]);
-                    double e_C = boost::lexical_cast<double>(split[5]);
+                    double e_N = stod(split[3]);
+                    double e_C = stod(split[5]);
 
                     seg->setEMpoles(state_N, e_N);
                     seg->setEMpoles(state_C, e_C);
@@ -128,9 +128,9 @@ bool EImport::EvaluateFrame(Topology *top) {
                     assert(state_A == -1);
                     assert(state_C == +1);
 
-                    double e_N = boost::lexical_cast<double>(split[3]);
-                    double e_A = boost::lexical_cast<double>(split[5]);
-                    double e_C = boost::lexical_cast<double>(split[7]);
+                    double e_N = stod(split[3]);
+                    double e_A = stod(split[5]);
+                    double e_C = stod(split[7]);
 
                     seg->setEMpoles(state_N, e_N);
                     seg->setEMpoles(state_A, e_A);
