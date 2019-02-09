@@ -671,7 +671,7 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
             boost::algorithm::split(results, _line, boost::is_any_of("="), boost::algorithm::token_compress_on);
             string _energy = results.back();
             boost::trim( _energy );
-            _orbitals->setQMEnergy ( _conv_Hrt_eV * boost::lexical_cast<double>(_energy) );
+            _orbitals->setQMEnergy ( _conv_Hrt_eV * stod(_energy) );
             CTP_LOG(logDEBUG, *_pLog) << "QM energy " << _orbitals->getQMEnergy() <<  flush;
             _has_qm_energy = true;
             // _orbitals->_has_qm_energy = true;
@@ -727,7 +727,7 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
                         string  _coefficient = *iter;
                        
                         int _j_index = *_j_iter;                                
-                        _orbitals->_overlap( _i_index-1 , _j_index-1 ) = boost::lexical_cast<double>( _coefficient );
+                        _orbitals->_overlap( _i_index-1 , _j_index-1 ) = stod( _coefficient );
                         _j_iter++;
                         
                     }
@@ -829,9 +829,9 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
                 //int atom_number = boost::lexical_cast< int >( _row.at(0) );
                 
                 string _atom_type = _row.at(1);
-                double _x =  boost::lexical_cast<double>( _row.at(3) );
-                double _y =  boost::lexical_cast<double>( _row.at(4) );
-                double _z =  boost::lexical_cast<double>( _row.at(5) );
+                double _x =  stod( _row.at(3) );
+                double _y =  stod( _row.at(4) );
+                double _z =  stod( _row.at(5) );
                 //if ( tools::globals::verbose ) cout << "... ... " << atom_id << " " << atom_type << " " << atom_charge << endl;
                 getline(_input_file, _line);
                 boost::trim( _line );
@@ -868,7 +868,7 @@ bool NWChem::ParseLogFile( Orbitals* _orbitals ) {
             boost::algorithm::split(energy, block[1], boost::is_any_of("\t "), boost::algorithm::token_compress_on);
             
             // _orbitals->_has_self_energy = true;
-            _orbitals->setSelfEnergy( _conv_Hrt_eV * boost::lexical_cast<double> ( energy[1] ) );
+            _orbitals->setSelfEnergy( _conv_Hrt_eV * stod( energy[1] ) );
             
             CTP_LOG(logDEBUG, *_pLog) << "Self energy " << _orbitals->getSelfEnergy() <<  flush;
 

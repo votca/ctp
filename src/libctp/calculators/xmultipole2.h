@@ -1963,14 +1963,14 @@ vector<PolarSite*> XMP::Parse_GDMA(string filename, int state) {
                 double x, y, z;
 
                 if (units == "bohr") {
-                    x = BOHR2NM * boost::lexical_cast<double>(split[1]);
-                    y = BOHR2NM * boost::lexical_cast<double>(split[2]);
-                    z = BOHR2NM * boost::lexical_cast<double>(split[3]);
+                    x = BOHR2NM * stod(split[1]);
+                    y = BOHR2NM * stod(split[2]);
+                    z = BOHR2NM * stod(split[3]);
                 }
                 else if (units == "angstrom") {
-                    x = ANGSTROM2NM * boost::lexical_cast<double>(split[1]);
-                    y = ANGSTROM2NM * boost::lexical_cast<double>(split[2]);
-                    z = ANGSTROM2NM * boost::lexical_cast<double>(split[3]);
+                    x = ANGSTROM2NM * stod(split[1]);
+                    y = ANGSTROM2NM * stod(split[2]);
+                    z = ANGSTROM2NM * stod(split[3]);
                 }
                 else {
                     throw std::runtime_error( "Unit " + units + " in file "
@@ -1991,7 +1991,7 @@ vector<PolarSite*> XMP::Parse_GDMA(string filename, int state) {
 
             // 'P', dipole polarizability
             else if ( split[0] == "P" && split.size() == 2 ) {
-                P1 = 1e-3 * boost::lexical_cast<double>(split[1]);
+                P1 = 1e-3 * stod(split[1]);
                 thisPole->setPs(P1, state);
                 useDefaultPs = false;
             }
@@ -2002,12 +2002,12 @@ vector<PolarSite*> XMP::Parse_GDMA(string filename, int state) {
                 int lineRank = int( sqrt(thisPole->getQs(state).size()) + 0.5 );
 
                 if (lineRank == 0) {
-                    Q0_total += boost::lexical_cast<double>(split[0]);
+                    Q0_total += stod(split[0]);
                 }
 
                 for (unsigned int i = 0; i < split.size(); i++) {
 
-                    double qXYZ = boost::lexical_cast<double>(split[i]);
+                    double qXYZ = stod(split[i]);
 
                     // Convert e*(a_0)^k to e*(nm)^k where k = rank
                     double BOHR2NM = 0.0529189379;
