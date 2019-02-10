@@ -87,12 +87,12 @@ void fock::SetParameters(){
     vector<string>::iterator it= Mutok.begin();
     for (; it != Mutok.end();++it)
     {
-        Mu.push_back(boost::lexical_cast<double>(*it));
+        Mu.push_back(stod(*it));
     }
      it= Betatok.begin();
     for (; it != Betatok.end();++it)
     {
-        Beta.push_back(boost::lexical_cast<double>(*it));
+        Beta.push_back(stod(*it));
     }
 }
 

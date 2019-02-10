@@ -938,9 +938,9 @@ vector<vec> ZMultipole::ParseCubeFileHeader(string filename) {
             if (lineCount == 3) {
 
                 assert( split.size() == 4 );
-                double ox = boost::lexical_cast<double>( split[1] );
-                double oy = boost::lexical_cast<double>( split[2] );
-                double oz = boost::lexical_cast<double>( split[3] );
+                double ox = stod( split[1] );
+                double oy = stod( split[2] );
+                double oz = stod( split[3] );
 
                 cube[0] = vec(ox, oy, oz);
             }
@@ -967,12 +967,12 @@ vector<vec> ZMultipole::ParseCubeFileHeader(string filename) {
             if (lineCount == 4) {
 
                 assert( split.size() == 4 );
-                Nx = boost::lexical_cast<double>( split[0] );
+                Nx = stod( split[0] );
                 ext2nm = (Nx > 0) ? BOHR2NM : ANGSTROM2NM;
                 Nx = (Nx >= 0) ? Nx : -Nx;
-                double xx = ext2nm * boost::lexical_cast<double>( split[1] );
-                double xy = ext2nm * boost::lexical_cast<double>( split[2] );
-                double xz = ext2nm * boost::lexical_cast<double>( split[3] );
+                double xx = ext2nm * stod( split[1] );
+                double xy = ext2nm * stod( split[2] );
+                double xz = ext2nm * stod( split[3] );
 
                 cube[2] = vec(xx, xy, xz);
             }
@@ -980,12 +980,12 @@ vector<vec> ZMultipole::ParseCubeFileHeader(string filename) {
             if (lineCount == 5) {
 
                 assert( split.size() == 4 );
-                Ny = boost::lexical_cast<double>( split[0] );
+                Ny = stod( split[0] );
                 ext2nm = (Ny > 0) ? BOHR2NM : ANGSTROM2NM;
                 Ny = (Ny >= 0) ? Ny : -Ny;
-                double yx = ext2nm * boost::lexical_cast<double>( split[1] );
-                double yy = ext2nm * boost::lexical_cast<double>( split[2] );
-                double yz = ext2nm * boost::lexical_cast<double>( split[3] );
+                double yx = ext2nm * stod( split[1] );
+                double yy = ext2nm * stod( split[2] );
+                double yz = ext2nm * stod( split[3] );
 
                 cube[3] = vec(yx, yy, yz);
             }
@@ -993,12 +993,12 @@ vector<vec> ZMultipole::ParseCubeFileHeader(string filename) {
             if (lineCount == 6) {
 
                 assert( split.size() == 4 );
-                Nz = boost::lexical_cast<double>( split[0] );
+                Nz = stod( split[0] );
                 ext2nm = (Nz > 0) ? BOHR2NM : ANGSTROM2NM;
                 Nz = (Nz >= 0) ? Nz : -Nz;
-                double zx = ext2nm * boost::lexical_cast<double>( split[1] );
-                double zy = ext2nm * boost::lexical_cast<double>( split[2] );
-                double zz = ext2nm * boost::lexical_cast<double>( split[3] );
+                double zx = ext2nm * stod( split[1] );
+                double zy = ext2nm * stod( split[2] );
+                double zz = ext2nm * stod( split[3] );
 
                 cube[4] = vec(zx, zy, zz);
                 cube[1] = vec(Nx, Ny, Nz);
@@ -1322,9 +1322,9 @@ void ZMultipole::CalculateESF(Topology *top) {
 
             else {
 
-                double x = CONVERT2NM * boost::lexical_cast<double>(split[0]);
-                double y = CONVERT2NM * boost::lexical_cast<double>(split[1]);
-                double z = CONVERT2NM * boost::lexical_cast<double>(split[2]);
+                double x = CONVERT2NM * stod(split[0]);
+                double y = CONVERT2NM * stod(split[1]);
+                double z = CONVERT2NM * stod(split[2]);
 
                 gridPoints.push_back(vec(x,y,z));
             }
