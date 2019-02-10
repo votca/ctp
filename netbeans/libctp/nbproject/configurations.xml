@@ -164,11 +164,11 @@
       </logicalFolder>
       <logicalFolder name="f25" displayName="xqmultipole" projectFiles="true">
         <itemPath>../../src/libctp/jobcalculators/xqmultipole.h</itemPath>
-        <itemPath>../../share/xml/xqmultipole.xml</itemPath>
+        <itemPath>../../share/ctp/xml/xqmultipole.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f19" displayName="zmultipole" projectFiles="true">
         <itemPath>../../src/libctp/calculators/zmultipole.h</itemPath>
-        <itemPath>../../share/xml/zmultipole.xml</itemPath>
+        <itemPath>../../share/ctp/xml/zmultipole.xml</itemPath>
       </logicalFolder>
       <itemPath>../../src/libctp/tools/qmsandbox.h</itemPath>
       <itemPath>../../src/libctp/calculators/sandbox.h</itemPath>
@@ -635,6 +635,13 @@
       </item>
       <item path="../../share/ctp/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../share/ctp/xml/xqmultipole.xml"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/zmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/edft.xml" ex="false" tool="3" flavor2="0">
@@ -709,10 +716,6 @@
       <item path="../../share/xml/vaverage.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/xmultipole.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/xqmultipole.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/zmultipole.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/apolarsite.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -1377,6 +1380,13 @@
       </item>
       <item path="../../share/ctp/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../share/ctp/xml/xqmultipole.xml"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/zmultipole.xml" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/edft.xml" ex="false" tool="3" flavor2="0">
@@ -1451,10 +1461,6 @@
       <item path="../../share/xml/vaverage.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/xmultipole.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/xqmultipole.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/zmultipole.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/apolarsite.cc" ex="false" tool="1" flavor2="0">
       </item>
