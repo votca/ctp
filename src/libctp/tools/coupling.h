@@ -214,7 +214,9 @@ bool Coupling::Evaluate() {
                 
         // LUMO-LUMO coupling
         JAB = _overlap.getCouplingElement(_degAH+1, _degBH+1 , &_orbitalsA, &_orbitalsB, &_JAB, _degeneracy);
-        _overlap_summary = &_pair_summary->add("overlap", boost::lexical_cast<string>(JAB));
+        std::stringstream JAB_strstr;
+        JAB_strstr << std::fixed << std::setprecision( 4 ) << JAB;
+        _overlap_summary = &_pair_summary->add("overlap", JAB_strstr.str() );
         energyA = _orbitalsA.getEnergy(_degAH +1);
         energyB = _orbitalsB.getEnergy(_degBH +1);
         _overlap_summary->setAttribute("orbA", LUMO_A);
@@ -228,7 +230,9 @@ bool Coupling::Evaluate() {
         for (int levelA = HOMO_A - _levA +1; levelA <= LUMO_A + _levA - 1; ++levelA ) {
             for (int levelB = HOMO_B - _levB + 1; levelB <= LUMO_B + _levB -1 ; ++levelB ) {        
                 double JAB = _overlap.getCouplingElement( levelA , levelB, &_orbitalsA, &_orbitalsB, &_JAB, _degeneracy );
-                Property *_overlap_summary = &_pair_summary->add("overlap", boost::lexical_cast<string>(JAB)); 
+                std::stringstream JAB_strstr;
+                JAB_strstr << std::fixed << std::setprecision( 4 ) << JAB;
+                Property *_overlap_summary = &_pair_summary->add("overlap", JAB_strstr.str() ); 
                 double energyA = _orbitalsA.getEnergy( levelA );
                 double energyB = _orbitalsB.getEnergy( levelB );
                 _overlap_summary->setAttribute("orbA", levelA);
