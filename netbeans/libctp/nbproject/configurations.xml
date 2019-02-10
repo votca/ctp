@@ -66,8 +66,8 @@
       </logicalFolder>
       <logicalFolder name="f23" displayName="ewald" projectFiles="true">
         <itemPath>../../src/libctp/jobcalculators/ewald.h</itemPath>
-        <itemPath>../../share/xml/ewald.xml</itemPath>
-        <itemPath>../../share/xml/pewald3d.xml</itemPath>
+        <itemPath>../../share/ctp/xml/ewald.xml</itemPath>
+        <itemPath>../../share/ctp/xml/pewald3d.xml</itemPath>
       </logicalFolder>
       <logicalFolder name="f11" displayName="ewdbgpol" projectFiles="true">
         <itemPath>../../src/libctp/calculators/ewdbgpol.h</itemPath>
@@ -618,6 +618,8 @@
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../share/ctp/xml/ewald.xml" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../share/ctp/xml/idft.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/ctp/xml/jobwriter.xml" ex="false" tool="3" flavor2="0">
@@ -630,6 +632,8 @@
       <item path="../../share/ctp/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/ctp/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -644,8 +648,6 @@
       <item path="../../share/xml/energy2xml.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eoutersphere.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/ewald.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/ewdbgpol.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -675,8 +677,6 @@
       <item path="../../share/xml/pairs2xml.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pmultipole.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1360,6 +1360,8 @@
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../share/ctp/xml/ewald.xml" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../share/ctp/xml/idft.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/ctp/xml/jobwriter.xml" ex="false" tool="3" flavor2="0">
@@ -1372,6 +1374,8 @@
       <item path="../../share/ctp/xml/pdb2map.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/ctp/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../share/ctp/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1386,8 +1390,6 @@
       <item path="../../share/xml/energy2xml.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/eoutersphere.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/ewald.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/ewdbgpol.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1417,8 +1419,6 @@
       <item path="../../share/xml/pairs2xml.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pdb2top.xml" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../share/xml/pewald3d.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/xml/pmultipole.xml" ex="false" tool="3" flavor2="0">
       </item>

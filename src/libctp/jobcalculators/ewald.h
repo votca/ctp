@@ -115,7 +115,8 @@ void Ewald<EwaldMethod>::PreProcess(Topology *top) {
 
 
 template<class EwaldMethod>
-void Ewald<EwaldMethod>::ReadJobFile(Topology *top) {    
+void Ewald<EwaldMethod>::ReadJobFile(Topology *top) { 
+    std::cout << "I AM ABOUT TO READ IN THE XML FILE" <<  _jobfile << std::endl;
     assert(false && "<::ReadJobFile> NOT IMPLEMENTED");    
     return;
 }
