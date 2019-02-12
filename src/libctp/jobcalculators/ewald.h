@@ -136,7 +136,7 @@ void Ewald<EwaldMethod>::ReadJobFile(Topology *top) {
         _log.setReportLevel( logINFO ); 
     }
     
-    CTP_LOG(logDEBUG, _log) << "Reading energies from " << _jobfile << std::flush;
+    CTP_LOG_SAVE(logDEBUG, _log) << "Reading energies from " << _jobfile << std::flush;
     
     // load the xml job file into the property object
     
@@ -165,28 +165,28 @@ void Ewald<EwaldMethod>::ReadJobFile(Topology *top) {
             
             Segment *seg = top->getSegment(segId);
             if ( seg->getName() != segName ) {
-                CTP_LOG(logERROR, _log) << "Segment name " 
+                CTP_LOG_SAVE(logERROR, _log) << "Segment name " 
                         << segName << " in the job file is different from " 
                         << seg->getName() << " in the topology" 
                         << std::flush; 
                 throw std::runtime_error("Input does not match topology.");
             } else {
                 Property poutput  = (*it)->get("output.summary");
-                double estat  = poutput.get("estat").as<double>();
-                double eindu  = poutput.get("eindu").as<double>();
+                //double estat  = poutput.get("estat").as<double>();
+                //double eindu  = poutput.get("eindu").as<double>();
                 double etotal = poutput.get("total").as<double>();
                 seg->setEMpoles(state.at(segState), etotal);
             } 
             
         } else { // output not found, job failed - report - throw an exception in the future
             _incomplete_jobs++;
-            CTP_LOG(logINFO, _log) << "Job " << (*it)->get( "id" ).as<string>() 
+            CTP_LOG_SAVE(logINFO, _log) << "Job " << (*it)->get( "id" ).as<string>() 
                     << " status is: " << (*it)->get( "status" ).as<string>() << endl;
         }
     }
         
  
-    CTP_LOG(logDEBUG, _log) << "Done with the import of " 
+    CTP_LOG_SAVE(logDEBUG, _log) << "Done with the import of " 
             << _number_of_completed_jobs << " jobs" 
             << std::flush 
             << "Incomplete jobs: " << _incomplete_jobs << std::flush; 
