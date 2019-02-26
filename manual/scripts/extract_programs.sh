@@ -9,7 +9,7 @@ export VOTCASHARE
 texfile=$1
 shift
 
-programs="ctp_map ctp_dump ctp_tools ctp_run ctp_parallel moo_overlap"
+programs="ctp_map ctp_dump ctp_tools ctp_run ctp_parallel moo_overlap kmc_run"
 rm -f $texfile; touch $texfile
 
 for program in $programs; do

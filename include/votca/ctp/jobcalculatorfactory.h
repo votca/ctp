@@ -26,8 +26,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;
-
 class JobCalculatorfactory
 : public ObjectFactory<std::string, JobCalculator>
 {

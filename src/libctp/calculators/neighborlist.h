@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2018 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -21,6 +21,7 @@
 #ifndef __VOTCA_CTP_NEIGHBORLIST_H
 #define __VOTCA_CTP_NEIGHBORLIST_H
 
+#include <votca/ctp/logger.h>
 #include <votca/tools/globals.h>
 #include <votca/ctp/qmcalculator.h>
 #include <votca/ctp/qmpair.h>
@@ -51,14 +52,19 @@ public:
 
 private:
 
-    map< string, map<string,double> > _cutoffs;
-    bool                              _useConstantCutoff;
-    double                            _constantCutoff;
-    string                            _generate_from;
-    bool                              _generate_from_file;
-    bool                              _generate_unsafe;
+    bool _useConstantCutoff;
+    double _constantCutoff;
+    std::map< std::string, std::map<std::string, double> > _cutoffs;
+
+    bool _use_active_fragments;
+    std::map< std::string, std::map<std::string, std::string> > _active_fragments;
     
-    std::list<QMNBList::SuperExchangeType*>        _superexchange;
+    bool _generate_from_file;
+    std::string _file_name;
+
+    std::list<QMNBList::SuperExchangeType*> _superexchange;
+
+    Logger _log;
 
 };
     
@@ -68,29 +74,65 @@ void Neighborlist::Initialize(Property *options) {
     // update options with the VOTCASHARE defaults   
     UpdateWithDefaults( options,"ctp" );
     std::string key = "options." + Identify();
+
+    // properties of the logger
+    _log.setPreface(logINFO,    "\n... ...");
+    _log.setPreface(logERROR,   "\n... ...");
+    _log.setPreface(logWARNING, "\n... ...");
+    _log.setPreface(logDEBUG,   "\n... ...");  
+         
+    if (TOOLS::globals::verbose) {
+        _log.setReportLevel( logDEBUG ); 
+    } else {
+        _log.setReportLevel( logINFO ); 
+    }
     
     list< Property* > segs = options->Select(key+".segments");
     list< Property* > ::iterator segsIt;
 
-    for (segsIt = segs.begin();
-         segsIt != segs.end();
-         segsIt++) {
-
-        string types = (*segsIt)->get("type").as<string>();
+    for (segsIt = segs.begin(); segsIt != segs.end(); segsIt++) {
+      
         double cutoff = (*segsIt)->get("cutoff").as<double>();
 
+        // get pairs of segment types 
+        string types = (*segsIt)->get("type").as<string>();
+        
         Tokenizer tok(types, " ");
         vector< string > names;
         tok.ToVector(names);
 
         if (names.size() != 2) {
-            cout << "ERROR: Faulty pair definition for cut-off's: "
-                 << "Need two segment names separated by a space" << endl;
+            CTP_LOG(logERROR,_log) << "Faulty pair definition for cut-off's: "
+                 << "Need two segment names separated by a space" << std::flush;
             throw std::runtime_error("Error in options file.");
         }
 
         _cutoffs[names[0]][names[1]] = cutoff;
         _cutoffs[names[1]][names[0]] = cutoff;
+        
+        // get active fragments for each pair of segments
+        
+        std::string fragments;
+        _use_active_fragments = false;
+        if ((*segsIt)->exists("fragments")) {
+            // if * is provided, do not use fragments filtering
+            fragments = (*segsIt)->get("fragments").as<string>();
+
+            std::size_t found = fragments.find("*");
+            if (found == std::string::npos) {
+                _use_active_fragments = true;
+                CTP_LOG(logWARNING,_log) << "Using filtering by fragments: " 
+                        << fragments << std::flush; 
+            }
+            
+        } else {
+            CTP_LOG(logWARNING,_log) 
+                    << "From v1.6 you can use a list of fragments (or '*')." 
+                    << std::flush;
+        }
+        
+        _active_fragments[names[0]][names[1]] = fragments;
+        _active_fragments[names[1]][names[0]] = fragments;
 
     }
 
@@ -101,21 +143,13 @@ void Neighborlist::Initialize(Property *options) {
     else {
         _useConstantCutoff = false;
     }
-    if (options->exists(key+".generate_from")) {
-        _generate_from_file = true;
-        _generate_from = options->get(key+".generate_from").as< string >();
+
+    _generate_from_file = false;    
+    if (options->exists(key+".file")) {
+        _file_name = options->get(key+".file").as< string >();
+        if ( _file_name.size() != 0 ) _generate_from_file = true;
     }
-    else {
-        _generate_from_file = false;
-        _generate_from = "nofile";
-    }
-    if (options->exists(key+".generate_unsafe")) {
-        _generate_unsafe = true;
-    }
-    else {
-        _generate_unsafe = false;
-    }
-    
+
     // if superexchange is given
     if (options->exists(key + ".superexchange")) {
         list< Property* > _se = options->Select(key + ".superexchange");
@@ -134,10 +168,9 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
 
     top->NBList().Cleanup();
 
-    if (_generate_from_file) {        
-        this->GenerateFromFile(top, _generate_from);        
+    if (_generate_from_file) { 
+        this->GenerateFromFile(top, _file_name); 
     }
-    
     else {        
 
         vector< Segment* > ::iterator segit1;
@@ -146,21 +179,17 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
         vector< Fragment* > ::iterator fragit2;
 
         double cutoff;
-        vec r1;
-        vec r2;
+        std::string fragment_list;
         
-        if (TOOLS::globals::verbose) {
-            cout << endl <<  "... ..." << flush;
-        }        
+        vec r1;
+        vec r2;    
         
         for (segit1 = top->Segments().begin();
                 segit1 < top->Segments().end();
                 segit1++) {
 
                 Segment *seg1 = *segit1;
-                if (TOOLS::globals::verbose) {
-                    cout << "\r ... ... NB List Seg " << seg1->getId() << flush;
-                }
+                CTP_LOG(logDEBUG,_log) << "NB List Seg " << seg1->getId() << std::flush;
 
             for (segit2 = segit1 + 1;
                     segit2 < top->Segments().end();
@@ -173,11 +202,14 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                     try {
                         cutoff = _cutoffs.at(seg1->getName())
                                          .at(seg2->getName());
+                        
+                        fragment_list = _active_fragments.at(seg1->getName())
+                                                         .at(seg2->getName());
                     }
                     catch (out_of_range&) {
-                        cout << "ERROR: No cut-off specified for segment pair "
+                        CTP_LOG(logERROR,_log) << "ERROR: No cut-off specified for segment pair "
                              << seg1->getName() << " | " << seg2->getName() 
-                             << ". " << endl;
+                             << ". " << std::flush;
                         throw std::runtime_error("Missing input in options.");
                     }
                 }
@@ -190,12 +222,21 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                         fragit1 < seg1->Fragments().end();
                         fragit1 ++) {
 
+                    // check if this fragment is active
+                    std::string _frag1name = (*fragit1)->getName();
+                    std::size_t found1 = fragment_list.find(_frag1name);
+                    if ( _use_active_fragments && found1 == std::string::npos) { continue; }
+                    
                     if (stopLoop) { break; }
 
                     for (fragit2 = seg2->Fragments().begin();
                             fragit2 < seg2->Fragments().end();
                             fragit2++) {
 
+                        // check if this fragment is active
+                        std::string _frag2name = (*fragit1)->getName();
+                        std::size_t found2 = fragment_list.find(_frag2name);
+                        if (_use_active_fragments && found2 == std::string::npos) { continue; }
 
                         r1 = (*fragit1)->getPos();
                         r2 = (*fragit2)->getPos();
@@ -217,30 +258,40 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
 
     }
 
-    cout << endl << " ... ... Created " << top->NBList().size() << " direct pairs.";
-
     // add superexchange pairs
     top->NBList().setSuperExchangeTypes(_superexchange);
     top->NBList().GenerateSuperExchange();
-  
+
+    // short summary at the end
+    std::map<int, int> npairs;
+    for ( QMNBList::iterator pit = top->NBList().begin(); pit != top->NBList().end(); pit++ ) {
+        QMPair *pair = (*pit);
+        npairs[pair->getType()] += 1;
+    }
+    
+    CTP_LOG(logINFO,_log) <<  "Created " << top->NBList().size() << " pairs." << std::flush;
+    CTP_LOG(logINFO,_log) <<  "Hopping only pairs: " << npairs[QMPair::Hopping] << std::flush;
+    CTP_LOG(logINFO,_log) <<  "Superexchange pairs: " << npairs[QMPair::SuperExchange] << std::flush;
+    CTP_LOG(logINFO,_log) <<  "Superexchange and hopping pairs: " << npairs[QMPair::SuperExchangeAndHopping] << std::flush;
+      
     // DEBUG output
     if (votca::tools::globals::verbose) {
 
 	Property bridges_summary;
         Property *_bridges = &bridges_summary.add("bridges","");
 
-        cout << "Bridged Pairs \n [idA:idB] com distance" << endl;
+        CTP_LOG(logDEBUG,_log) << "Bridged Pairs \n [idA:idB] com distance" << std::flush;
         for (QMNBList::iterator ipair = top->NBList().begin(); ipair != top->NBList().end(); ++ipair) {
                 QMPair *pair = *ipair;
                 Segment* segment1 = pair->Seg1PbCopy();
                 Segment* segment2 = pair->Seg2PbCopy();
                 
-                cout << " [" << segment1->getId() << ":" << segment2->getId()<< "] " 
+                CTP_LOG(logDEBUG,_log) << " [" << segment1->getId() << ":" << segment2->getId()<< "] " 
                              << pair->Dist()<< " bridges: " 
                              << (pair->getBridgingSegments()).size() 
                              << " type: " 
                              << pair->getType() 
-                             << " | " << flush;
+                             << " | " << std::flush;
                 
                 vector<Segment*> bsegments = pair->getBridgingSegments();
  
@@ -255,29 +306,29 @@ bool Neighborlist::EvaluateFrame(Topology *top) {
                 Property *_bridge_property = &_pair_property->add("bridge","");
 
                 for ( vector<Segment*>::iterator itb = bsegments.begin(); itb != bsegments.end(); itb++ ) {
-                    cout << (*itb)->getId() << " " ;
+                    CTP_LOG(logDEBUG,_log) << (*itb)->getId() << " " ;
                     _bridge_property->setAttribute("id", (*itb)->getId());
                 }        
                 
-                cout << endl;
+                CTP_LOG(logDEBUG,_log) << std::flush;
         }
-        //cout << bridges_summary;
     }
 
+    std::cout << _log;
     return true;        
 }
 
-
+/* input example
+ * 1  1 2 DCV DCV  
+ * 2  1 3 DCV DCV     
+ * 3  2 3 DCV DCV
+ */ 
 void Neighborlist::GenerateFromFile(Topology *top, string filename) {
     
     std::string line;
     std::ifstream intt;
     intt.open(filename.c_str());
     
-    if (_generate_unsafe) {
-        cout << endl << "... ... Generate unsafe = true ..." << flush;
-    }
-
     if (intt.is_open() ) {
         while ( intt.good() ) {
 
@@ -296,36 +347,19 @@ void Neighborlist::GenerateFromFile(Topology *top, string filename) {
             Segment* seg1 = top->getSegment(seg1id);
             Segment* seg2 = top->getSegment(seg2id);
             
-            if (not _generate_unsafe) {
-                string seg1name     = boost::lexical_cast<string>(split[7]);
-                string seg2name     = boost::lexical_cast<string>(split[8]);
-                assert(seg1->getName() == seg1name);
-                assert(seg2->getName() == seg2name);
-            }        
-            
-            //QMPair* pair12 = 
+            string seg1name     = boost::lexical_cast<string>(split[3]);
+            string seg2name     = boost::lexical_cast<string>(split[4]);
+            assert(seg1->getName() == seg1name);
+            assert(seg2->getName() == seg2name);
+
 	    (void)top->NBList().Add(seg1,seg2);
             
-    
-     /*       
-     1  1000 1010 2.4292699e-03 1.61313482160154 -1.05173043628102 0.759048038980236 DCV DCV
-     2  1000 1020 1.0551418e-03 1.4977782788484 -0.466982612402543 0.876438986736797 DCV DCV
-     3  1000 1023 5.9645622e-03 1.51684342052626 0.189056522949882 0.763447935684869 DCV DCV
-     4  1000 1027 2.1161184e-02 -0.121730375289917 0.483095637611721 0.078926185939622 DCV DCV
-     5  1000 1034 1.5198626e-03 0.586534707442574 -1.59841490776642 0.695082730832308 DCV DCV
-     6  1000 1048 1.0121481e-03 -0.296308693678482 -1.02535652660805 0.347373638982358 DCV DCV
-     7  1000 1050 9.3073820e-04 1.34660870303278 -1.49037826725322 0.571647867949114 DCV DCV
-     8  1000 1052 1.0803526e-03 -0.337469581935717 -0.853313051455695 0.592304403885553 DCV DCV
-     9  1000 1065 4.6567327e-04 0.45481307817542 -1.44727391982856 1.05151722120202 DCV DCV
-    10  1000 1073 5.7739082e-03 -0.388582683646161 -0.221439142589984 0.731973764170771 DCV DCV
-    */            
-
-
         } /* Exit loop over lines */
     }
-    else { cout << endl << "ERROR: No such file " << filename << endl;
-           throw std::runtime_error("Supply input file."); }
-    
+    else { 
+        CTP_LOG(logERROR,_log) << "ERROR: No such file " << filename << std::flush;
+        throw std::runtime_error("Supply input file."); 
+    }    
 }
 
 

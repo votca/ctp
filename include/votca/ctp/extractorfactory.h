@@ -26,8 +26,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;
-
 class ExtractorFactory
 : public ObjectFactory<std::string, QMCalculator>
 {

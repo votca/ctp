@@ -1,11 +1,20 @@
 For more detailed information about the changes see the history of the [repository](https://github.com/votca/ctp/commits/master).
 
-## Version 1.4 rc1 (released XX.XX.18)
+## Version 1.6-dev
+* Updated manual
+
+## Version 1.5 (released 28.01.19)
+* Updated manual: EWALD3D documentation
+* Moved kinetic Monte Carl to votca-ctp
+* KMC now supports more than one charge 
+* fixes in pdb2map
+
+## Version 1.4 rc1 (released 01.01.18)
 * jobwriter functionality moved to the parallel calculators
 * splitting of the jobfile for cluster runs 
 * incorporation of the molecular orbital overlap code
 
-## Version 1.3 (released XX.09.15)
+## Version 1.3 (released 01.09.15)
 * new executables: ctp_tools, ctp_dump, ctp_parallel, ctp_testsuite, ctp_update
 * ctp_tools wraps light-weight tools that assist e.g. in generating the system mapping file
 * ctp_dump extracts information from the state file to human-readable format

@@ -115,8 +115,85 @@ void Ewald<EwaldMethod>::PreProcess(Topology *top) {
 
 
 template<class EwaldMethod>
-void Ewald<EwaldMethod>::ReadJobFile(Topology *top) {    
-    assert(false && "<::ReadJobFile> NOT IMPLEMENTED");    
+void Ewald<EwaldMethod>::ReadJobFile(Topology *top) { 
+    Property xml;
+
+    const std::map<std::string, int> state = { {"e", -1}, {"n", 0}, {"h", 1} };
+
+    Logger _log;    
+    int _incomplete_jobs = 0;
+    int _number_of_completed_jobs = 0;
+    
+    // properties of the logger
+    _log.setPreface(logINFO,    "\n... ...");
+    _log.setPreface(logERROR,   "\n... ...");
+    _log.setPreface(logWARNING, "\n... ...");
+    _log.setPreface(logDEBUG,   "\n... ...");  
+         
+    if (TOOLS::globals::verbose) {
+        _log.setReportLevel( logDEBUG ); 
+    } else {
+        _log.setReportLevel( logINFO ); 
+    }
+    
+    CTP_LOG_SAVE(logDEBUG, _log) << "Reading energies from " << _jobfile << std::flush;
+    
+    // load the xml job file into the property object
+    
+    load_property_from_xml(xml, _jobfile);
+    
+    list<Property*> jobProps = xml.Select("jobs.job");
+
+    list<Property*> ::iterator it;
+
+    for (it = jobProps.begin(); it != jobProps.end(); ++it) {
+ 
+        // check if this job has output, otherwise complain
+        if ( (*it)->exists("output") && (*it)->exists("output.summary") ) {
+            
+            _number_of_completed_jobs++;
+            
+            // get the segment ID, type, and state
+            std::string id_segtype_segstate = (*it)->get("tag").as<std::string>();
+            vector<string> split_id_segtype_segstate;
+            Tokenizer tok(id_segtype_segstate, ":");
+            tok.ToVector(split_id_segtype_segstate);
+
+            int segId = boost::lexical_cast<int>(split_id_segtype_segstate[0]);
+            std::string segName  = split_id_segtype_segstate[1];
+            std::string segState = split_id_segtype_segstate[2];
+            
+            Segment *seg = top->getSegment(segId);
+            if ( seg->getName() != segName ) {
+                CTP_LOG_SAVE(logERROR, _log) << "Segment name " 
+                        << segName << " in the job file is different from " 
+                        << seg->getName() << " in the topology" 
+                        << std::flush; 
+                throw std::runtime_error("Input does not match topology.");
+            } else {
+                Property poutput  = (*it)->get("output.summary");
+                //double estat  = poutput.get("estat").as<double>();
+                //double eindu  = poutput.get("eindu").as<double>();
+                double etotal = poutput.get("total").as<double>();
+                seg->setEMpoles(state.at(segState), etotal);
+            } 
+            
+        } else { // output not found, job failed - report - throw an exception in the future
+            _incomplete_jobs++;
+            CTP_LOG_SAVE(logINFO, _log) << "Job " << (*it)->get( "id" ).as<string>() 
+                    << " status is: " << (*it)->get( "status" ).as<string>() << endl;
+        }
+    }
+        
+ 
+    CTP_LOG_SAVE(logDEBUG, _log) << "Done with the import of " 
+            << _number_of_completed_jobs << " jobs" 
+            << std::flush 
+            << "Incomplete jobs: " << _incomplete_jobs << std::flush; 
+   
+    std::cout << _log;
+    
+    //assert(false && "<::ReadJobFile> NOT IMPLEMENTED");    
     return;
 }
 

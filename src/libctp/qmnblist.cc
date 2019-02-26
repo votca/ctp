@@ -134,7 +134,7 @@ void QMNBList::GenerateSuperExchange() {
             } // end of if this is a bridged pair
         } // end of the loop of all segments
         
-        cout << "Added " << _bridged_pairs + _bridged_and_direct_pairs << " superexchange with " << _bridged_and_direct_pairs << " mixed pairs" << endl;     
+        //cout << "Added " << _bridged_pairs + _bridged_and_direct_pairs << " superexchange with " << _bridged_and_direct_pairs << " mixed pairs" << endl;     
        
     } // end of the loop over donor/acceptor types
 
@@ -144,9 +144,9 @@ void QMNBList::GenerateSuperExchange() {
         npairs[pair->getType()] += 1;
     }
     
-    cout << "Hopping only pairs: " << npairs[QMPair::Hopping] << endl;
-    cout << "Superexchange pairs: " << npairs[QMPair::SuperExchange] << endl;
-    cout << "Superexchange and hopping pairs: " << npairs[QMPair::SuperExchangeAndHopping] << endl;    
+    //cout << "Hopping only pairs: " << npairs[QMPair::Hopping] << endl;
+    //cout << "Superexchange pairs: " << npairs[QMPair::SuperExchange] << endl;
+    //cout << "Superexchange and hopping pairs: " << npairs[QMPair::SuperExchangeAndHopping] << endl;    
     
     return;
 }

@@ -17,7 +17,6 @@ using boost::io::group;
 
 namespace votca { namespace ctp {
     namespace ba = boost::algorithm;
-    using namespace std;
     
 class PDB2Top : public QMTool
 {
@@ -26,7 +25,7 @@ public:
     PDB2Top() { };
    ~PDB2Top() { };
    
-    string Identify() { return "pdb2top"; }
+    std::string Identify() { return "pdb2top"; }
     // run sequence
     void   Initialize(Property *options);
     bool   Evaluate();
@@ -39,12 +38,12 @@ public:
     void top2txt();
     
     // error formating function
-    void error1(string line){ cout << endl; throw runtime_error(line); }
+    void error1(std::string line){ std::cout << std::endl; throw runtime_error(line); }
     
 private:
-    string      _input_pdb;
-    string      _input_gro;
-    string      _out_top;
+    std::string      _input_pdb;
+    std::string      _input_gro;
+    std::string      _out_top;
     
     bool        _has_pdb;
     bool        _has_gro;
@@ -56,7 +55,7 @@ private:
 
 void PDB2Top::Initialize(Property* options) {
     // read options    
-    string key = "options.pdb2top.";
+    std::string key = "options.pdb2top.";
 
     // set boolean constants to false
     _has_pdb = false;
@@ -64,14 +63,14 @@ void PDB2Top::Initialize(Property* options) {
     
     // find PDB, then GRO, then error
     if ( options->exists(key+"pdb") ){
-        _input_pdb      = options->get(key+"pdb").as<string> ();
+        _input_pdb      = options->get(key+"pdb").as<std::string> ();
         _has_pdb        = true;
-        cout << endl << "... ... PDB file: \t" << _input_pdb;
+        std::cout << std::endl << "... ... PDB file: \t" << _input_pdb;
     }
     else if ( options->exists(key+"gro") ){
-        _input_gro      = options->get(key+"gro").as<string> ();
+        _input_gro      = options->get(key+"gro").as<std::string> ();
         _has_gro        = true;
-        cout << endl << "... ... GRO file: \t" << _input_gro;
+        std::cout << std::endl << "... ... GRO file: \t" << _input_gro;
     }
     else{
         error1( "... ... Error. Unsupported input file format. \n"
@@ -79,20 +78,20 @@ void PDB2Top::Initialize(Property* options) {
     }
 
     if ( options->exists(key+"top") ){
-        _out_top = options->get(key+"top").as<string> ();
-        cout << "\n" "... ... User defined top file: \t" << _numMol;
+        _out_top = options->get(key+"top").as<std::string> ();
+        std::cout << "\n" "... ... User defined top file: \t" << _numMol;
     }
     else{
         _out_top = "topol.top"; 
-        cout <<"\n" "... ... Default top file: topol.top \n";
+        std::cout <<"\n" "... ... Default top file: topol.top \n";
     }
 
     
     if ( options->exists(key+"num") ){
         _numMol = options->get(key+"num").as<int> ();
-        cout << "\n" "... ... User defined num of mols: \t" << _numMol;
+        std::cout << "\n" "... ... User defined num of mols: \t" << _numMol;
     }
-    else{_numMol = 1; cout <<"\n" "... ... Default num of mols: 1 \n";}
+    else{_numMol = 1; std::cout <<"\n" "... ... Default num of mols: 1 \n";}
 }
 
 bool PDB2Top::Evaluate() {
@@ -116,9 +115,9 @@ void PDB2Top::top2txt(){
     Topology * _topPtr = &_top;
 
     // preps
-    stringstream ss, sbody, stype;
+    std::stringstream ss, sbody, stype;
     
-    string weight("1.000"), charge("0.000"), resref("-1"), 
+    std::string weight("1.000"), charge("0.000"), resref("-1"), 
            sigma ("0.00000e+00"), eps ("0.00000e+00");
     
     vector <char> atTypesLst;
@@ -135,7 +134,7 @@ void PDB2Top::top2txt(){
         vector <Atom*>::iterator _atIt;
         
         // print name as comment
-        sbody << "; res " << _frag->getName() << endl;
+        sbody << "; res " << _frag->getName() << std::endl;
         
         for (_atIt = _atsPtr.begin(); _atIt!=_atsPtr.end(); _atIt++){
             
@@ -223,7 +222,7 @@ void PDB2Top::top2txt(){
 }
 
 void PDB2Top::readPDB(){
-   cout << endl << "... ... Assuming: PDB";
+   std::cout << std::endl << "... ... Assuming: PDB";
     
     // set molecule >> segment >> fragment
     // reconnect them all
@@ -251,13 +250,13 @@ void PDB2Top::readPDB(){
                 "... ... Does it exist? Is it correct file name?\n");
     }
     else{
-        cout << endl << 
+        std::cout << std::endl << 
                 ("... ... File " + _input_pdb + ""
                  " was opened successfully.\n");
     }
 
     // read PDB line by line
-    string _line;
+    std::string _line;
     
     // counters for loops
 //    int _atom_id = 0;
@@ -269,22 +268,22 @@ void PDB2Top::readPDB(){
                 ){
             
             //      according to PDB format
-            string _recType    (_line,( 1-1),6); // str,  "ATOM", "HETATM"
-            string _atNum      (_line,( 7-1),6); // int,  Atom serial number
-            string _atName     (_line,(13-1),4); // str,  Atom name
-            string _atAltLoc   (_line,(17-1),1); // char, Alternate location indicator
-            string _resName    (_line,(18-1),4); // str,  Residue name
-            string _chainID    (_line,(22-1),1); // char, Chain identifier
-            string _resNum     (_line,(23-1),4); // int,  Residue sequence number
-            string _atICode    (_line,(27-1),1); // char, Code for insertion of res
-            string _x          (_line,(31-1),8); // float 8.3 ,x
-            string _y          (_line,(39-1),8); // float 8.3 ,y
-            string _z          (_line,(47-1),8); // float 8.3 ,z
-            string _atOccup    (_line,(55-1),6); // float  6.2, Occupancy
-            string _atTFactor  (_line,(61-1),6); // float  6.2, Temperature factor
-            string _segID      (_line,(73-1),4); // str, Segment identifier
-            string _atElement  (_line,(77-1),2); // str, Element symbol
-            string _atCharge   (_line,(79-1),2); // str, Charge on the atom
+            std::string _recType    (_line,( 1-1),6); // str,  "ATOM", "HETATM"
+            std::string _atNum      (_line,( 7-1),6); // int,  Atom serial number
+            std::string _atName     (_line,(13-1),4); // str,  Atom name
+            std::string _atAltLoc   (_line,(17-1),1); // char, Alternate location indicator
+            std::string _resName    (_line,(18-1),4); // str,  Residue name
+            std::string _chainID    (_line,(22-1),1); // char, Chain identifier
+            std::string _resNum     (_line,(23-1),4); // int,  Residue sequence number
+            std::string _atICode    (_line,(27-1),1); // char, Code for insertion of res
+            std::string _x          (_line,(31-1),8); // float 8.3 ,x
+            std::string _y          (_line,(39-1),8); // float 8.3 ,y
+            std::string _z          (_line,(47-1),8); // float 8.3 ,z
+            std::string _atOccup    (_line,(55-1),6); // float  6.2, Occupancy
+            std::string _atTFactor  (_line,(61-1),6); // float  6.2, Temperature factor
+            std::string _segID      (_line,(73-1),4); // str, Segment identifier
+            std::string _atElement  (_line,(77-1),2); // str, Element symbol
+            std::string _atCharge   (_line,(79-1),2); // str, Charge on the atom
 
             ba::trim(_recType);
             ba::trim(_atNum);
@@ -308,9 +307,9 @@ void PDB2Top::readPDB(){
             
             try
             {
-            _xd = boost::lexical_cast<double>(_x);
-            _yd = boost::lexical_cast<double>(_y);
-            _zd = boost::lexical_cast<double>(_z);
+            _xd = stod(_x);
+            _yd = stod(_y);
+            _zd = stod(_z);
             _resNumInt = boost::lexical_cast<int>(_resNum);
             }
             catch(boost::bad_lexical_cast &)
@@ -330,7 +329,7 @@ void PDB2Top::readPDB(){
             if ( _newResNum != _resNumInt ){
 
                 _newResNum = _resNumInt;
-                string _newResName = _resName+'_'+_resNum;
+                std::string _newResName = _resName+'_'+_resNum;
                 
                 // direct
                 _fragPtr = _topPtr->AddFragment(_newResName);
@@ -370,7 +369,7 @@ void PDB2Top::readPDB(){
 }
 
 void PDB2Top::readGRO(){
-    cout << endl << "... ... Assuming: GRO";
+    std::cout << std::endl << "... ... Assuming: GRO";
 
     // set molecule >> segment >> fragment
     // reconnect them all
@@ -398,13 +397,13 @@ void PDB2Top::readGRO(){
                 "... ... Does it exist? Is it correct file name?\n");
     }
     else{
-        cout << endl << 
+        std::cout << std::endl << 
                 ("... ... File " + _input_gro + ""
                  " was opened successfully.\n");
     }
 
     // read GRO line by line
-    string _line;
+    std::string _line;
     
     // counters for loops
     int _newResNum = -1; // res reference
@@ -434,13 +433,13 @@ void PDB2Top::readGRO(){
     while ( std::getline(_file, _line,'\n') ){
         if (_atCntr < _atTotl){
             
-            string _resNum     (_line, 0,5); // int,  Residue number
-            string _resName    (_line, 5,5); // str,  Residue name
-            string _atName     (_line,10,5); // str,  Atom name
-            string _atNum      (_line,15,5); // int,  Atom number
-            string _x          (_line,20,8); // float 8.3 ,x
-            string _y          (_line,28,8); // float 8.3 ,y
-            string _z          (_line,36,8); // float 8.3 ,z
+            std::string _resNum     (_line, 0,5); // int,  Residue number
+            std::string _resName    (_line, 5,5); // str,  Residue name
+            std::string _atName     (_line,10,5); // str,  Atom name
+            std::string _atNum      (_line,15,5); // int,  Atom number
+            std::string _x          (_line,20,8); // float 8.3 ,x
+            std::string _y          (_line,28,8); // float 8.3 ,y
+            std::string _z          (_line,36,8); // float 8.3 ,z
             
             ba::trim(_atNum);
             ba::trim(_atName);
@@ -458,9 +457,9 @@ void PDB2Top::readGRO(){
                 _resNumInt = boost::lexical_cast<int>(_resNum);
                 //_atNumInt  = boost::lexical_cast<int>(_atNum);
 
-                _xd = boost::lexical_cast<double>(_x);
-                _yd = boost::lexical_cast<double>(_y);
-                _zd = boost::lexical_cast<double>(_z);
+                _xd = stod(_x);
+                _yd = stod(_y);
+                _zd = stod(_z);
             }
             catch (boost::bad_lexical_cast &)
             {
@@ -479,7 +478,7 @@ void PDB2Top::readGRO(){
             if ( _newResNum != _resNumInt ){
 
                 _newResNum = _resNumInt;
-                string _newResName = _resName+'_'+_resNum;
+                std::string _newResName = _resName+'_'+_resNum;
                 
                 // direct
                 _fragPtr = _topPtr->AddFragment(_newResName);

@@ -26,8 +26,6 @@
 
 namespace votca { namespace ctp {
 
-using namespace std;
-
 class CtpApplication : public votca::tools::Application
 {
 public:

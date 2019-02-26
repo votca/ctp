@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{book}
+\documentclass[a4paper,oneside,11pt]{book}
 
 \usepackage[usenames]{color}
 \usepackage{bm}
@@ -14,7 +14,7 @@
 \usepackage{longtable}
 \usepackage{paralist}
 %\usepackage{fancyvrb}
-\usepackage{listings}
+%\usepackage{listings}
 \usepackage{array}
 \usepackage[table]{xcolor}
 \usepackage{units}
@@ -24,6 +24,7 @@
 \usepackage{palatino}
 \usepackage{sidecap}
 \usepackage{epstopdf} 
+
 
 \usepackage[tikz]{bclogo}
 % \usepackage[framemethod=tikz]{mdframed}
@@ -51,7 +52,7 @@ pdfpagemode=UseNone]{hyperref}
 %\usepackage{times}
 \usepackage{type1cm}
 %\usepackage{showidx}
-\usepackage[draft,color,notref,notcite]{showkeys}
+%\usepackage[draft,color,notref,notcite]{showkeys}
 
 \usepackage{braket}
 \usepackage{amssymb}
@@ -72,13 +73,31 @@ pdfpagemode=UseNone]{hyperref}
 \input{newcommands}
 \input{gitid}
 
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\bfseries}{}{0pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{5.5ex plus 1ex minus .2ex}{10pt}
+
+\usepackage[
+%   a4paper,
+   bindingoffset=0cm,
+   margin=1.5cm,
+%   inner=1.0cm,
+%   outer=1.0cm,
+   top=2.5cm,
+   bottom=2.5cm,
+%   headsep=1.2cm
+]{geometry}
+
+\setcounter{secnumdepth}{-1} % levels under \section are not numbered
+\setcounter{tocdepth}{1}  % levels under \subsection are not listed in the TOC
+
 \begin{document}
 
-\addtolength{\oddsidemargin}{0cm}
-\addtolength{\evensidemargin}{0cm}
-\addtolength{\textwidth}{0cm}
-\addtolength{\topmargin}{0cm}
-\addtolength{\textheight}{0cm}
+%\addtolength{\oddsidemargin}{0cm}
+%\addtolength{\evensidemargin}{0cm}
+%\addtolength{\textwidth}{0cm}
+%\addtolength{\topmargin}{0cm}
+%\addtolength{\textheight}{0cm}
 
 \lstset{
   language=XML,
@@ -91,47 +110,62 @@ pdfpagemode=UseNone]{hyperref}
   mathescape=false
 }
 
-\setlength\parindent{0pt}
+
+\setlength\parindent{15pt}
 \frontmatter
 \include{titlepage}
 \thispagestyle{empty}
 \cleardoublepage
 
-\tableofcontents
+{\small \tableofcontents }
 \cleardoublepage
 \mainmatter
 
-\printindex
-\vfill
+%{\small \printindex }
+%\vfill
 
-\linenumbers
+%\linenumbers
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 
 \input{theory/introduction}
-
-\chapter{Theoretical background}
-\label{sec:theory}
-
 \input{theory/workflow}	
+
+% MORPHOLOGY PARTITIONING
 \input{theory/morphology}
-\input{theory/fragments}
+%\input{input/topology_atomistic}
+%\input{input/topology_coarsegrained}
+%\input{input/topology_conjseg}
+
+% NEIGHBOURLIST
 \input{theory/neighborlist}
+
+% REORGANIZATION ENERGY
 \input{theory/reorganization_energy}
+
+% SITE ENERGIES
 \input{theory/energetic_disorder}
 \input{theory/gdma}
 \input{theory/thole}
+\input{theory/ewald}
+
+% ELECTRONIC COUPLINGS
 \input{theory/electronic_couplings}
+
+% RATES
 \input{theory/rate}
+
+% KINETIC MONTE CARLO
 \input{theory/kmc}
 \input{theory/nondispersive}
+
+% ANALYSIS
 \input{theory/analysis}
 \input{theory/correlations}
-\input{theory/dft}
 
 \chapter{Input and output files}
 \label{sec:io}
-\input{input/topology_atomistic}
-\input{input/topology_coarsegrained}
-\input{input/topology_conjseg}
+
 \input{input/orbitals_zindo}
 \input{input/header_edft}
 \input{input/header_idft}
