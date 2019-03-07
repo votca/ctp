@@ -231,6 +231,11 @@
       <itemPath>../../include/votca/ctp/xjob.h</itemPath>
       <itemPath>../../include/votca/ctp/xmapper.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="f6" displayName="Linalg" projectFiles="true" kind="ROOT">
+      <itemPath>../../src/libctp/linalg.cc</itemPath>
+      <itemPath>../../include/votca/ctp/linalg.h</itemPath>
+      <itemPath>../../include/votca/ctp/votca_gsl_boost_ublas_matrix_prod.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="f5" displayName="Manual" projectFiles="true">
       <logicalFolder name="f1" displayName="theory" projectFiles="true">
         <itemPath>../../manual/theory/CMakeLists.txt</itemPath>
@@ -268,6 +273,11 @@
       <itemPath>../../src/libctp/qmpackagefactory.cc</itemPath>
       <itemPath>../../src/libctp/qmpackages/turbomole.cc</itemPath>
       <itemPath>../../src/libctp/qmpackages/turbomole.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f7" displayName="Scripts" projectFiles="true" kind="ROOT">
+      <itemPath>../../scripts/ctp_dipro.in</itemPath>
+      <itemPath>../../scripts/ctp_testsuite.in</itemPath>
+      <itemPath>../../scripts/ctp_update.in</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -410,6 +420,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/linalg.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/logger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/molecule.h" ex="false" tool="3" flavor2="0">
@@ -531,6 +543,11 @@
       </item>
       <item path="../../include/votca/ctp/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/votca_gsl_boost_ublas_matrix_prod.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/xinductor.h"
             ex="false"
             tool="3"
@@ -615,6 +632,12 @@
       <item path="../../manual/theory/workflow.tex" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../scripts/ctp_dipro.in" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../scripts/ctp_testsuite.in" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../scripts/ctp_update.in" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/ctp/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -955,6 +978,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libctp/linalg.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/molecule.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -1157,6 +1182,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/linalg.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/logger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/molecule.h" ex="false" tool="3" flavor2="0">
@@ -1278,6 +1305,11 @@
       </item>
       <item path="../../include/votca/ctp/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/votca_gsl_boost_ublas_matrix_prod.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/xinductor.h"
             ex="false"
             tool="3"
@@ -1362,6 +1394,12 @@
       <item path="../../manual/theory/workflow.tex" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../manual/titlepage.tex" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../scripts/ctp_dipro.in" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../scripts/ctp_testsuite.in" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../scripts/ctp_update.in" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../share/ctp/xml/eanalyze.xml" ex="false" tool="3" flavor2="0">
       </item>
@@ -1702,6 +1740,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../src/libctp/linalg.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/molecule.cc" ex="false" tool="1" flavor2="0">
       </item>
