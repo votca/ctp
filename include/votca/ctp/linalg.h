@@ -17,7 +17,6 @@
 
 #ifndef __VOTCA_CTP_LINALG_H
 #define	__VOTCA_CTP_LINALG_H
-#include "votca_gsl_boost_ublas_matrix_prod.h"  
 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
@@ -25,6 +24,11 @@
 #include <boost/numeric/ublas/banded.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 
+#if GSL
+#include <votca/ctp/gsl.h>  
+#else
+#include <votca/ctp/eigen.h>  
+#endif
 
 namespace votca { namespace ctp {
     namespace ub = boost::numeric::ublas;
@@ -44,14 +48,31 @@ namespace votca { namespace ctp {
      * @param V input: matrix to diagonalize
      * @param V output: eigenvectors      
      * 
-     * This function wrapps gsl_eigen_symmv / DSYEV
+     * This function wraps gsl_eigen_symmv / DSYEV
      * 
      */
-
     bool linalg_eigenvalues(const ub::matrix<double> &A, ub::vector<double> &E, ub::matrix<double> &V );
-       
+}}        
+
+/**
+ * \brief product of two matreces
+ * @param m1 matrix
+ * @param m2 matrix
+ * @param return m1*m2 
+ * 
+ * overwrites the ublas version either with Eigen or GSL products 
+ */
+namespace boost { namespace numeric { namespace ublas {
+    namespace ub = boost::numeric::ublas;
+
+    template<class T, class F, class A>
+    inline ub::matrix<T,F,A>
+    prod(const ub::matrix<T,F,A> &m1, const ub::matrix<T,F,A> &m2)
+    {
+       return prod(m1,m2);
+    }    
    
-}}
+}}}
 
 
 

@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2012 The VOTCA Development Team
+ *         Copyright 2009-2019 The VOTCA-MPIP Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -25,14 +25,18 @@
 
 namespace votca { namespace ctp {
 
-
 /**
-* \brief Evaluates electronic coupling elements
-*
-* B. Baumeier, J. Kirkpatrick, D. Andrienko, 
-* Phys. Chem. Chem. Phys., 12, 11103-11113, 2010
-* 
-*/
+ * \brief Evaluates electronic coupling elements by projection
+ * 
+ * @param _orbitalsA molecular orbitals of molecule A
+ * @param _orbitalsB molecular orbitals of molecule B
+ * @param _orbitalsAB molecular orbitals of the dimer AB
+ * @param _JAB matrix with electronic couplings
+ *
+ * B. Baumeier, J. Kirkpatrick, D. Andrienko, 
+ * Phys. Chem. Chem. Phys., 12, 11103-11113, 2010
+ * 
+ */
 
 class Overlap 
 {
@@ -58,6 +62,7 @@ public:
                                boost::numeric::ublas::matrix<double>* _JAB,
                                double _energy_difference = 0
                                 );
+    Eigen::MatrixXd JAB;
     
     void setLogger( Logger* pLog ) { _pLog = pLog; }
     

@@ -202,24 +202,26 @@ private:
     int                                     _number_of_electrons;
     
     std::map<int, std::vector<int> >        _level_degeneracy;
-    
-    ub::vector<double>                      _mo_energies; 
-    ub::matrix<double>                      _mo_coefficients;
-
-    ub::symmetric_matrix<double>            _overlap;
-    //ub::symmetric_matrix<double>            _vxc;
-    
+        
     std::vector< QMAtom* >                  _atoms;   
 
     double                                  _qm_energy;
     double                                  _self_energy;
-    
-    ub::matrix<double>                      _mo_couplings;
-   
+       
     bool                                    _has_basis_set;
      
-    std::string                                  _qm_package;
-   
+    std::string                             _qm_package;
+
+    ub::vector<double>                      _mo_energies; 
+    ub::matrix<double>                      _mo_coefficients;
+    ub::symmetric_matrix<double>            _overlap;
+    ub::matrix<double>                      _mo_couplings;
+    
+    Eigen::VectorXd mo_energies_;
+    Eigen::MatrixXd mo_coefficients_;
+    Eigen::MatrixXd overlap_;
+    Eigen::MatrixXd mo_couplings_;
+
     
 private:
 

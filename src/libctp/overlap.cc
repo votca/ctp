@@ -140,10 +140,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
         }
         
     }
-    
-    
-    
-        
+         
     // constructing the direct product orbA x orbB
     int _basisA = _orbitalsA->getBasisSetSize();
     int _basisB = _orbitalsB->getBasisSetSize();
@@ -173,16 +170,44 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     ub::zero_matrix<double> zeroA( _levelsB, _basisA ) ;
     ub::matrix<double> _psi_AxB ( _levelsA + _levelsB, _basisA + _basisB  );
     
-
-    CTP_LOG(logDEBUG,*_pLog) << "Constructing direct product AxB [" 
+    CTP_LOG(logDEBUG,*_pLog) << "BOOST: Constructing direct product AxB [" 
             << _psi_AxB.size1() << "x" 
             << _psi_AxB.size2() << "]" << std::flush;    
+     
     
+/*
+    // TEST CASE FOR EIGEN   
+       ub::matrix<double> m1_(2,3);
+       m1_(0,0) = 1;
+       m1_(0,1) = 2;
+       m1_(0,2) = 3;
+       m1_(1,0) = 4;
+       m1_(1,1) = 5;
+       m1_(1,2) = 6;
+       //std::cout << std::endl << m1_ << std::endl ;
+
+       ub::matrix<double> m2_(3,2);
+       m2_(0,0) = 7;
+       m2_(0,1) = 8;
+       m2_(1,0) = 9;
+       m2_(1,1) = 10;
+       m2_(2,0) = 11;
+       m2_(2,1) = 12;
+       //std::cout << std::endl << m2_ << std::endl ;
+
+       ub::prod(m1_, m2_);
+ */
+       
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( _basisA, _basisA +_basisB ) ) = zeroB;
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( 0, _basisA ) ) = zeroA;    
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( 0, _basisA ) ) = *_orbitalsA->getOrbitals();
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( _basisA, _basisA + _basisB ) ) = *_orbitalsB->getOrbitals(); 
 
+    
+    //Now with Eigen
+    // psi_AxB.block(0,0, _basisA, _levelsA) = _orbitalsA->MOCoefficients().block(0, _levelsA, 0, _basisA );
+    // psi_AxB.block(_basisA, _levelsA, _basisB, _levelsB) = _orbitalsB->MOCoefficients().block(_levelsA, _levelsA + _levelsB, _basisA, _basisA + _basisB);
+           
     // psi_AxB * S_AB * psi_AB
     CTP_LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals" << std::flush; 
     ub::matrix<double> _orbitalsAB_Transposed = ub::trans( *_orbitalsAB->getOrbitals() );  
@@ -203,7 +228,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
             
     }
         if (mag<0.95){
-	  throw std::runtime_error("\nERROR: Projection of monomer orbitals on dimer is insufficient, maybe the orbital order is screwed up, otherwise increase dimer basis.\n");
+	  throw std::runtime_error("\nERROR: Projection of monomer orbitals on dimer is insufficient, increase dimer basis.\n");
         }
     }
  

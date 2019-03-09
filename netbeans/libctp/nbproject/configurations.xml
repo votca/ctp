@@ -231,10 +231,11 @@
       <itemPath>../../include/votca/ctp/xjob.h</itemPath>
       <itemPath>../../include/votca/ctp/xmapper.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f6" displayName="Linalg" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f6" displayName="Linalg" projectFiles="true">
+      <itemPath>../../include/votca/ctp/eigen.h</itemPath>
+      <itemPath>../../include/votca/ctp/gsl.h</itemPath>
       <itemPath>../../src/libctp/linalg.cc</itemPath>
       <itemPath>../../include/votca/ctp/linalg.h</itemPath>
-      <itemPath>../../include/votca/ctp/votca_gsl_boost_ublas_matrix_prod.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f5" displayName="Manual" projectFiles="true">
       <logicalFolder name="f1" displayName="theory" projectFiles="true">
@@ -274,7 +275,7 @@
       <itemPath>../../src/libctp/qmpackages/turbomole.cc</itemPath>
       <itemPath>../../src/libctp/qmpackages/turbomole.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f7" displayName="Scripts" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f7" displayName="Scripts" projectFiles="true">
       <itemPath>../../scripts/ctp_dipro.in</itemPath>
       <itemPath>../../scripts/ctp_testsuite.in</itemPath>
       <itemPath>../../scripts/ctp_update.in</itemPath>
@@ -394,6 +395,8 @@
       </item>
       <item path="../../include/votca/ctp/dmaspace.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/eigen.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/ewdspace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/extractorfactory.h"
@@ -402,6 +405,8 @@
             flavor2="0">
       </item>
       <item path="../../include/votca/ctp/fragment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/gsl.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/job.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -542,11 +547,6 @@
       <item path="../../include/votca/ctp/topology.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/version.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/votca_gsl_boost_ublas_matrix_prod.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../include/votca/ctp/xinductor.h"
             ex="false"
@@ -1156,6 +1156,8 @@
       </item>
       <item path="../../include/votca/ctp/dmaspace.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../include/votca/ctp/eigen.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../include/votca/ctp/ewdspace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/extractorfactory.h"
@@ -1164,6 +1166,8 @@
             flavor2="0">
       </item>
       <item path="../../include/votca/ctp/fragment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../include/votca/ctp/gsl.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/job.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -1304,11 +1308,6 @@
       <item path="../../include/votca/ctp/topology.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../include/votca/ctp/version.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../include/votca/ctp/votca_gsl_boost_ublas_matrix_prod.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../include/votca/ctp/xinductor.h"
             ex="false"
