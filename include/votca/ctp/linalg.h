@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009-2018 The VOTCA Development Team (http://www.votca.org)
+ * Copyright 2009-2018 The VOTCA-MPIP Development Team (http://www.votca.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * author: Denis Andrienko
  */
 
 #ifndef __VOTCA_CTP_LINALG_H
@@ -24,7 +25,8 @@
 #include <boost/numeric/ublas/banded.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 
-#if GSL
+#include "votca_config.h"
+#ifdef GSL
 #include <votca/ctp/gsl.h>  
 #else
 #include <votca/ctp/eigen.h>  
@@ -37,37 +39,38 @@ namespace votca { namespace ctp {
      * \brief inverts A
      * @param A symmetric positive definite matrix
      * @param V inverse matrix
-     *
-     * This function wraps the inversion of a matrix
      */
-    void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V );
+    void linalg_invert( const boost::numeric::ublas::matrix<double> &A, 
+                              boost::numeric::ublas::matrix<double> &V 
+    );
  
      /**
      * \brief eigenvalues of a symmetric matrix A*x=E*x
      * @param E vector of eigenvalues
      * @param V input: matrix to diagonalize
-     * @param V output: eigenvectors      
-     * 
-     * This function wraps gsl_eigen_symmv / DSYEV
-     * 
+     * @param V output: eigenvectors
      */
-    bool linalg_eigenvalues(const ub::matrix<double> &A, ub::vector<double> &E, ub::matrix<double> &V );
+    void linalg_eigenvalues(const boost::numeric::ublas::matrix<double> &A, 
+                                  boost::numeric::ublas::vector<double> &E, 
+                                  boost::numeric::ublas::matrix<double> &V 
+    );
 }}        
 
-/**
- * \brief product of two matreces
- * @param m1 matrix
- * @param m2 matrix
- * @param return m1*m2 
- * 
- * overwrites the ublas version either with Eigen or GSL products 
- */
-namespace boost { namespace numeric { namespace ublas {
-    namespace ub = boost::numeric::ublas;
 
+namespace boost { namespace numeric { namespace ublas {
+
+    /**
+    * \brief product of two matreces
+    * @param m1 matrix
+    * @param m2 matrix
+    * @param return m1*m2 
+    * 
+    * overwrites the ublas version either with Eigen or GSL products 
+    */
     template<class T, class F, class A>
-    inline ub::matrix<T,F,A>
-    prod(const ub::matrix<T,F,A> &m1, const ub::matrix<T,F,A> &m2)
+    inline boost::numeric::ublas::matrix<T,F,A>
+    prod(   const boost::numeric::ublas::matrix<T,F,A> &m1, 
+            const boost::numeric::ublas::matrix<T,F,A> &m2)
     {
        return prod(m1,m2);
     }    

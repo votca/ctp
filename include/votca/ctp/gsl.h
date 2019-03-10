@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * author: Denis Andrienko
  */
 
-#ifndef _GSL_BOOST_UBLAS_MATRIX_PROD_
-#define _GSL_BOOST_UBLAS_MATRIX_PROD_
+#ifndef __VOTCA_CTP_GSL_H
+#define __VOTCA_CTP_GSL_H
 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -35,7 +36,12 @@ namespace ub = boost::numeric::ublas;
 
 
 namespace votca { namespace ctp {
-    
+
+    /**
+     * \brief inverts A
+     * @param A symmetric positive definite matrix
+     * @param V inverse matrix
+     */    
 inline void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V){
         // matrix inversion using gsl
         
@@ -59,12 +65,20 @@ inline void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V){
 	(void)gsl_linalg_LU_invert (&A_view.matrix, perm, &V_view.matrix);
 
         gsl_set_error_handler(handler);
-        
-	// return (status != 0);
 }
 
-
-inline bool linalg_eigenvalues(const ub::matrix<double> &A, ub::vector<double> &E, ub::matrix<double> &V)
+     /**
+     * \brief eigenvalues of a symmetric matrix A*x=E*x
+     * @param E vector of eigenvalues
+     * @param V input: matrix to diagonalize
+     * @param V output: eigenvectors      
+     * 
+     * This function wraps gsl_eigen_symmv / DSYEV
+     * 
+     */
+inline void linalg_eigenvalues(const ub::matrix<double> &A, 
+                                     ub::vector<double> &E, 
+                                     ub::matrix<double> &V)
 {
 	gsl_error_handler_t *handler = gsl_set_error_handler_off();
 	const size_t N = A.size1();
@@ -81,10 +95,11 @@ inline bool linalg_eigenvalues(const ub::matrix<double> &A, ub::vector<double> &
 	gsl_eigen_symmv_workspace *w = gsl_eigen_symmv_alloc(N);
 
 	int status = gsl_eigen_symmv(&A_view.matrix, &E_view.vector, &V_view.matrix, w);
+        assert(status == 0);
 	gsl_eigen_symmv_sort(&E_view.vector, &V_view.matrix, GSL_EIGEN_SORT_VAL_ASC);
 	gsl_eigen_symmv_free(w);
 	gsl_set_error_handler(handler);
-	return (status == 0);
+	//return (status == 0);
 };
 
 }}
@@ -114,11 +129,12 @@ namespace boost { namespace numeric { namespace ublas {
        boost::numeric::ublas::matrix<double,F,A> AxB( m1.size1(), m2.size2() );
        gsl_matrix_view mC = gsl_matrix_view_array (&AxB(0,0), AxB.size1(), AxB.size2());
 
-       gsl_blas_dgemm (CblasNoTrans, CblasNoTrans,
+       int status = gsl_blas_dgemm (CblasNoTrans, CblasNoTrans,
                   1.0, &mA.matrix, &mB.matrix,
                   0.0, &mC.matrix);
+       assert(status == 0);
 
-        return AxB;
+       return AxB;
        
     }    
     
@@ -297,4 +313,4 @@ namespace boost { namespace numeric { namespace ublas {
     
 }}}
 
-#endif  // _GSL_BOOST_UBLAS_MATRIX_PROD_   
+#endif  // __VOTCA_CTP_GSL_H

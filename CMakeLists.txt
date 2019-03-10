@@ -57,10 +57,11 @@ if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
 endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
 
-
-find_package(GSL REQUIRED)
-include_directories(${GSL_INCLUDE_DIRS})
-set(GSL true)
+set(GSL ON)
+if(GSL)
+  find_package(GSL REQUIRED)
+  include_directories(${GSL_INCLUDE_DIRS})
+endif(GSL)
 
 find_package(Boost 1.48.0 REQUIRED COMPONENTS program_options serialization filesystem system timer)
 include_directories(${Boost_INCLUDE_DIRS})

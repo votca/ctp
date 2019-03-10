@@ -47,7 +47,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1ce03da5/jobapplication.o \
 	${OBJECTDIR}/_ext/1ce03da5/jobcalculatorfactory.o \
 	${OBJECTDIR}/_ext/d63b377e/idft.o \
-	${OBJECTDIR}/_ext/1ce03da5/linalg.o \
 	${OBJECTDIR}/_ext/1ce03da5/molecule.o \
 	${OBJECTDIR}/_ext/1ce03da5/orbitals.o \
 	${OBJECTDIR}/_ext/1ce03da5/overlap.o \
@@ -175,11 +174,6 @@ ${OBJECTDIR}/_ext/d63b377e/idft.o: ../../src/libctp/jobcalculators/idft.cc nbpro
 	${MKDIR} -p ${OBJECTDIR}/_ext/d63b377e
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d63b377e/idft.o ../../src/libctp/jobcalculators/idft.cc
-
-${OBJECTDIR}/_ext/1ce03da5/linalg.o: ../../src/libctp/linalg.cc nbproject/Makefile-${CND_CONF}.mk
-	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce03da5/linalg.o ../../src/libctp/linalg.cc
 
 ${OBJECTDIR}/_ext/1ce03da5/molecule.o: ../../src/libctp/molecule.cc nbproject/Makefile-${CND_CONF}.mk
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5

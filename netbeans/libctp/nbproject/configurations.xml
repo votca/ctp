@@ -234,7 +234,6 @@
     <logicalFolder name="f6" displayName="Linalg" projectFiles="true">
       <itemPath>../../include/votca/ctp/eigen.h</itemPath>
       <itemPath>../../include/votca/ctp/gsl.h</itemPath>
-      <itemPath>../../src/libctp/linalg.cc</itemPath>
       <itemPath>../../include/votca/ctp/linalg.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f5" displayName="Manual" projectFiles="true">
@@ -978,8 +977,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../src/libctp/linalg.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/molecule.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -1739,8 +1736,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../src/libctp/linalg.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/molecule.cc" ex="false" tool="1" flavor2="0">
       </item>

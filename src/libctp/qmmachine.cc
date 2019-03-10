@@ -20,7 +20,7 @@
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 #include <votca/ctp/logger.h>
-#include <votca/ctp/linalg.h>
+//#include <votca/ctp/linalg.h>
 
 using boost::format;
 

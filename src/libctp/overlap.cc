@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2018 The VOTCA Development Team
+ *            Copyright 2009-2019 The VOTCA-MPIP Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * author: Denis Andrienko
  */
 
 
@@ -49,7 +50,7 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
 
     _eigenvalues.resize( _size );
     _eigenvectors.resize( _size, _size );
-    //convert from symmatrix to matrix for faster evaluation
+    //convert from symmetric to matrix for faster evaluation
     ub::matrix<double> temp=S;
     linalg_eigenvalues(temp, _eigenvalues, _eigenvectors);
     
@@ -202,11 +203,6 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( 0, _basisA ) ) = zeroA;    
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( 0, _basisA ) ) = *_orbitalsA->getOrbitals();
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( _basisA, _basisA + _basisB ) ) = *_orbitalsB->getOrbitals(); 
-
-    
-    //Now with Eigen
-    // psi_AxB.block(0,0, _basisA, _levelsA) = _orbitalsA->MOCoefficients().block(0, _levelsA, 0, _basisA );
-    // psi_AxB.block(_basisA, _levelsA, _basisB, _levelsB) = _orbitalsB->MOCoefficients().block(_levelsA, _levelsA + _levelsB, _basisA, _basisA + _basisB);
            
     // psi_AxB * S_AB * psi_AB
     CTP_LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals" << std::flush; 

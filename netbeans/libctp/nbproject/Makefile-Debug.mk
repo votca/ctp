@@ -47,7 +47,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1ce03da5/jobapplication.o \
 	${OBJECTDIR}/_ext/1ce03da5/jobcalculatorfactory.o \
 	${OBJECTDIR}/_ext/d63b377e/idft.o \
-	${OBJECTDIR}/_ext/1ce03da5/linalg.o \
 	${OBJECTDIR}/_ext/1ce03da5/molecule.o \
 	${OBJECTDIR}/_ext/1ce03da5/orbitals.o \
 	${OBJECTDIR}/_ext/1ce03da5/overlap.o \
@@ -175,11 +174,6 @@ ${OBJECTDIR}/_ext/d63b377e/idft.o: ../../src/libctp/jobcalculators/idft.cc
 	${MKDIR} -p ${OBJECTDIR}/_ext/d63b377e
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I../../include -I../../../tools/include -I../../../csg/include -I../../../moo/include -I/usr/include/libxml2 -I/sw/linux/intel/XE13u2/mkl/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d63b377e/idft.o ../../src/libctp/jobcalculators/idft.cc
-
-${OBJECTDIR}/_ext/1ce03da5/linalg.o: ../../src/libctp/linalg.cc
-	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../include -I../../../tools/include -I../../../csg/include -I../../../moo/include -I/usr/include/libxml2 -I/sw/linux/intel/XE13u2/mkl/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1ce03da5/linalg.o ../../src/libctp/linalg.cc
 
 ${OBJECTDIR}/_ext/1ce03da5/molecule.o: ../../src/libctp/molecule.cc
 	${MKDIR} -p ${OBJECTDIR}/_ext/1ce03da5
