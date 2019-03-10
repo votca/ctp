@@ -47,9 +47,11 @@ if(ENABLE_TESTING)
   enable_testing()
 endif(ENABLE_TESTING)
 
-#for votca_ctp_config.h
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+#this has to be the first include directive
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+#for votca_config.h
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+
 ########################################################################
 #Find external packages
 ########################################################################
@@ -62,6 +64,8 @@ if(GSL)
   find_package(GSL REQUIRED)
   include_directories(${GSL_INCLUDE_DIRS})
 endif(GSL)
+
+set(DEBUG_LINALG ON)
 
 find_package(Boost 1.48.0 REQUIRED COMPONENTS program_options serialization filesystem system timer)
 include_directories(${Boost_INCLUDE_DIRS})

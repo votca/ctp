@@ -25,11 +25,16 @@
 #include <boost/numeric/ublas/banded.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 
-#include "votca_config.h"
+#include <votca/ctp/votca_config.h>
+
 #ifdef GSL
 #include <votca/ctp/gsl.h>  
 #else
 #include <votca/ctp/eigen.h>  
+#endif
+
+#ifdef DEBUG_LINALG
+#include <chrono>
 #endif
 
 namespace votca { namespace ctp {
@@ -70,9 +75,20 @@ namespace boost { namespace numeric { namespace ublas {
     template<class T, class F, class A>
     inline boost::numeric::ublas::matrix<T,F,A>
     prod(   const boost::numeric::ublas::matrix<T,F,A> &m1, 
-            const boost::numeric::ublas::matrix<T,F,A> &m2)
-    {
+            const boost::numeric::ublas::matrix<T,F,A> &m2) {
+
+#ifdef DEBUG_LINALG
+    auto start = std::chrono::system_clock::now();
+#endif
        return prod(m1,m2);
+#ifdef DEBUG_LINALG
+    auto end = std::chrono::system_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+    std::cout << " elapsed time: " << elapsed_seconds.count() << "s\n";
+#endif       
     }    
    
 }}}

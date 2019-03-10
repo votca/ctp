@@ -1,6 +1,6 @@
 
-configure_file(votca_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/votca_config.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+#configure_file(votca_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/votca_config.h)
+#include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_custom_target(gitversion-ctp COMMAND ${CMAKE_COMMAND} -DTOP_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
   -DGIT_EXECUTABLE="${GIT_EXECUTABLE}"
