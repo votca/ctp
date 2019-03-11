@@ -33,10 +33,6 @@
 #include <votca/ctp/eigen.h>  
 #endif
 
-#ifdef DEBUG_LINALG
-#include <chrono>
-#endif
-
 namespace votca { namespace ctp {
     namespace ub = boost::numeric::ublas;
 
@@ -61,7 +57,10 @@ namespace votca { namespace ctp {
     );
 }}        
 
-
+/* boost has extremely slow linear algebra operations
+ * as a wworkaround, we override prod and other functions
+ * with function provided by gsl or eigen 
+ */
 namespace boost { namespace numeric { namespace ublas {
 
     /**
@@ -76,19 +75,7 @@ namespace boost { namespace numeric { namespace ublas {
     inline boost::numeric::ublas::matrix<T,F,A>
     prod(   const boost::numeric::ublas::matrix<T,F,A> &m1, 
             const boost::numeric::ublas::matrix<T,F,A> &m2) {
-
-#ifdef DEBUG_LINALG
-    auto start = std::chrono::system_clock::now();
-#endif
-       return prod(m1,m2);
-#ifdef DEBUG_LINALG
-    auto end = std::chrono::system_clock::now();
-
-    std::chrono::duration<double> elapsed_seconds = end - start;
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-    std::cout << " elapsed time: " << elapsed_seconds.count() << "s\n";
-#endif       
+        return prod(m1,m2);
     }    
    
 }}}

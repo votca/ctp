@@ -7,6 +7,7 @@
         <itemPath>../../src/libctp/extractorfactory.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="ctp_map" projectFiles="true">
+        <itemPath>../../src/tools/Md2QmEngine.cc</itemPath>
         <itemPath>../../src/tools/ctp_map.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="ctp_parallel" projectFiles="true">
@@ -29,6 +30,7 @@
         <itemPath>../../src/tools/moo_overlap.cc</itemPath>
       </logicalFolder>
       <itemPath>../../src/libctp/ctpapplication.cc</itemPath>
+      <itemPath>../../include/votca/ctp/ctpapplication.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="Calculators" projectFiles="true">
       <logicalFolder name="f5" displayName="cgpolar" projectFiles="true">
@@ -174,23 +176,25 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../../src/tools/Md2QmEngine.cc</itemPath>
+      <logicalFolder name="f1" displayName="Factories" projectFiles="true">
+        <itemPath>../../include/votca/ctp/calculatorfactory.h</itemPath>
+        <itemPath>../../include/votca/ctp/extractorfactory.h</itemPath>
+        <itemPath>../../include/votca/ctp/jobcalculatorfactory.h</itemPath>
+        <itemPath>../../include/votca/ctp/qmpackagefactory.h</itemPath>
+        <itemPath>../../include/votca/ctp/toolfactory.h</itemPath>
+      </logicalFolder>
       <itemPath>../../include/votca/ctp/apolarsite.h</itemPath>
       <itemPath>../../include/votca/ctp/atom.h</itemPath>
-      <itemPath>../../include/votca/ctp/calculatorfactory.h</itemPath>
-      <itemPath>../../include/votca/ctp/ctpapplication.h</itemPath>
       <itemPath>../../include/votca/ctp/dmaspace.h</itemPath>
       <itemPath>../../include/votca/ctp/ewald2d.h</itemPath>
       <itemPath>../../include/votca/ctp/ewald3d.h</itemPath>
       <itemPath>../../include/votca/ctp/ewaldactor.h</itemPath>
       <itemPath>../../include/votca/ctp/ewaldnd.h</itemPath>
       <itemPath>../../include/votca/ctp/ewdspace.h</itemPath>
-      <itemPath>../../include/votca/ctp/extractorfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/fragment.h</itemPath>
       <itemPath>../../include/votca/ctp/job.h</itemPath>
       <itemPath>../../include/votca/ctp/jobapplication.h</itemPath>
       <itemPath>../../include/votca/ctp/jobcalculator.h</itemPath>
-      <itemPath>../../include/votca/ctp/jobcalculatorfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/logger.h</itemPath>
       <itemPath>../../include/votca/ctp/molecule.h</itemPath>
       <itemPath>../../include/votca/ctp/molpolengine.h</itemPath>
@@ -214,7 +218,6 @@
       <itemPath>../../include/votca/ctp/qmmachine.h</itemPath>
       <itemPath>../../include/votca/ctp/qmnblist.h</itemPath>
       <itemPath>../../include/votca/ctp/qmpackage.h</itemPath>
-      <itemPath>../../include/votca/ctp/qmpackagefactory.h</itemPath>
       <itemPath>../../include/votca/ctp/qmpair.h</itemPath>
       <itemPath>../../include/votca/ctp/qmthread.h</itemPath>
       <itemPath>../../include/votca/ctp/qmtool.h</itemPath>
@@ -223,7 +226,6 @@
       <itemPath>../../include/votca/ctp/sqlapplication.h</itemPath>
       <itemPath>../../include/votca/ctp/statesaversqlite.h</itemPath>
       <itemPath>../../include/votca/ctp/threadforce.h</itemPath>
-      <itemPath>../../include/votca/ctp/toolfactory.h</itemPath>
       <itemPath>../../include/votca/ctp/topology.h</itemPath>
       <itemPath>../../include/votca/ctp/version.h</itemPath>
       <itemPath>../../include/votca/ctp/xinductor.h</itemPath>
@@ -313,8 +315,6 @@
       <itemPath>../../src/libctp/statesaversqlite.cc</itemPath>
       <itemPath>../../src/libctp/version.cc</itemPath>
       <itemPath>../../src/libctp/version_nb.cc</itemPath>
-      <itemPath>../../src/libctp/votca_config.h</itemPath>
-      <itemPath>../../src/libctp/votca_config.h.in</itemPath>
       <itemPath>../../src/libctp/xinductor.cc</itemPath>
       <itemPath>../../src/libctp/xinteractor.cc</itemPath>
       <itemPath>../../src/libctp/xjob.cc</itemPath>
@@ -351,6 +351,7 @@
   <sourceRootList>
     <Elem>../../include</Elem>
     <Elem>../../../../include</Elem>
+    <Elem>../../../include</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -1091,10 +1092,6 @@
       <item path="../../src/libctp/version.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/version_nb.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libctp/votca_config.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../src/libctp/votca_config.h.in" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/xinductor.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -1850,10 +1847,6 @@
       <item path="../../src/libctp/version.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/libctp/version_nb.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../src/libctp/votca_config.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../src/libctp/votca_config.h.in" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/libctp/xinductor.cc" ex="false" tool="1" flavor2="0">
       </item>
