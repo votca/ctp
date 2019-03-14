@@ -2,6 +2,8 @@ For more detailed information about the changes see the history of the [reposito
 
 ## Version 1.6-dev
 * Updated manual
+* Eigen support
+* GSL dependency optional
 
 ## Version 1.5 (released 28.01.19)
 * Updated manual: EWALD3D documentation
