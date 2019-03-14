@@ -59,7 +59,7 @@ if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
 endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
 
-set(GSL ON)
+set(GSL OFF)
 if(GSL)
   find_package(GSL REQUIRED)
   include_directories(${GSL_INCLUDE_DIRS})

@@ -50,7 +50,11 @@ namespace votca { namespace ctp {
      */    
 inline void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V){
         // matrix inversion using gsl
-        
+
+    #ifdef DEBUG_LINALG
+        auto start = std::chrono::system_clock::now();
+    #endif
+    
         gsl_error_handler_t *handler = gsl_set_error_handler_off();
 	const size_t N = A.size1();
 	// signum s (for LU decomposition)
@@ -71,21 +75,38 @@ inline void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V){
 	(void)gsl_linalg_LU_invert (&A_view.matrix, perm, &V_view.matrix);
 
         gsl_set_error_handler(handler);
+
+    #ifdef DEBUG_LINALG
+        auto end = std::chrono::system_clock::now();
+
+        std::chrono::duration<double> elapsed_seconds = end - start;
+
+        std::cout << "\n... ... ... \x1b[0;34mGSL Invert" 
+                  << "[" << A.size1() << "x" << A.size2() << "]"
+                  << " time: " << elapsed_seconds.count() 
+                  << "s\x1b[0;39m";
+    #endif       
+        
 }
 
-     /**
-     * \brief eigenvalues of a symmetric matrix A*x=E*x
-     * @param E vector of eigenvalues
-     * @param V input: matrix to diagonalize
-     * @param V output: eigenvectors      
-     * 
-     * This function wraps gsl_eigen_symmv / DSYEV
-     * 
-     */
+/**
+ * \brief eigenvalues of a symmetric matrix A*x=E*x
+ * @param E vector of eigenvalues
+ * @param V input: matrix to diagonalize
+ * @param V output: eigenvectors      
+ * 
+ * This function wraps gsl_eigen_symmv / DSYEV
+ * 
+ */
 inline void linalg_eigenvalues(const ub::matrix<double> &A, 
                                      ub::vector<double> &E, 
                                      ub::matrix<double> &V)
 {
+    
+   #ifdef DEBUG_LINALG
+        auto start = std::chrono::system_clock::now();
+    #endif
+    
 	gsl_error_handler_t *handler = gsl_set_error_handler_off();
 	const size_t N = A.size1();
         
@@ -106,6 +127,16 @@ inline void linalg_eigenvalues(const ub::matrix<double> &A,
 	gsl_eigen_symmv_free(w);
 	gsl_set_error_handler(handler);
 	//return (status == 0);
+        
+    #ifdef DEBUG_LINALG
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::cout << "\n... ... ... \x1b[0;34mGSL Eigenvalues" 
+                  << "[" << A.size1() << "x" << A.size2() << "]"
+                  << " time: " << elapsed_seconds.count() 
+                  << "s\x1b[0;39m";
+    #endif       
+        
 };
 
 }}
@@ -120,7 +151,7 @@ inline void linalg_eigenvalues(const ub::matrix<double> &A,
  */
 namespace boost { namespace numeric { namespace ublas {
 
-// partial specialization for double precision (dgemm))
+// specialization for double precision (dgemm)
 template<class F, class A>
 inline matrix<double,F,A>    // prod( m1, m2 )
 prod(const matrix<double,F,A> &m1, const matrix<double,F,A> &m2)
@@ -157,14 +188,14 @@ prod(const matrix<double,F,A> &m1, const matrix<double,F,A> &m2)
        
 }    
     
-    // partial specialization for single precision (sgemm))
+    // specialization for single precision (sgemm)
     template<class F, class A>
     inline matrix<float,F,A>    // prod( m1, m2 )
     prod(const matrix<float,F,A> &m1, const matrix<float,F,A> &m2)
     {
-       //#ifdef GSLDEBUG 
-          std::cout << "\x1b[0;34mGSL [CMF,CMF]\x1b[0;39m\n" << std::flush;
-       //#endif
+    #ifdef DEBUG_LINALG
+        auto start = std::chrono::system_clock::now();
+    #endif
           
        gsl_matrix_float_const_view mA = gsl_matrix_float_const_view_array (&m1(0,0), m1.size1(), m1.size2());
        gsl_matrix_float_const_view mB = gsl_matrix_float_const_view_array (&m2(0,0), m2.size1(), m2.size2());
@@ -175,161 +206,20 @@ prod(const matrix<double,F,A> &m1, const matrix<double,F,A> &m2)
        gsl_blas_sgemm (CblasNoTrans, CblasNoTrans,
                   1.0, &mA.matrix, &mB.matrix,
                   0.0, &mC.matrix);
+
+    #ifdef DEBUG_LINALG
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::cout << "\n... ... ... \x1b[0;34mGSL " 
+                  << "[" << m1.size1() << "x" << m1.size2() << "]" 
+                  << "*[" << m2.size1() << "x" << m2.size2() << "]"
+                  << " time: " << elapsed_seconds.count() 
+                  << "s\x1b[0;39m";
+    #endif       
+       
+
        return AxB;
-    }     
-       
-
-    /// transpose products
-    template<class T, class F, class A>
-    inline matrix<T,F,A>    // prod( trans(m1), m2 )
-    prod(const matrix_unary2<matrix<T,F,A>,scalar_identity<T> > &m1, const matrix<T,F,A> &m2)
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [transpose mat, mat] to [mat, mat]\x1b[0;39m";
-        #endif
-
-        boost::numeric::ublas::matrix<T,F,A> _m1 = m1;
-        return prod(_m1,m2);
-    }    
-    
-    template<class T, class F, class A>
-    inline matrix<T,F,A>    // prod( m1, trans(m2) )
-    prod(const matrix<T,F,A> &m1, const matrix_unary2<matrix<T,F,A>,scalar_identity<T> > &m2)
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [mat, transpose mat] to [mat, mat]\x1b[0;39m";
-        #endif
-          
-       const boost::numeric::ublas::matrix<T,F,A> _m2 = m2;
-       return prod(m1,_m2);
-    }  
-    
-    template<class T, class F, class A>
-    inline matrix<T,F,A>    // prod( trans(m1), trans(m2) )
-    prod(const matrix_unary2<matrix<T,F,A>,scalar_identity<T> > &m1, const matrix_unary2<matrix<T,F,A>,scalar_identity<T> > &m2)    
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [transpose mat, transpose mat] to [mat, mat]\x1b[0;39m";
-        #endif
-          
-       boost::numeric::ublas::matrix<T,F,A> _m1 = m1;
-       boost::numeric::ublas::matrix<T,F,A> _m2 = m2;
-       
-       return prod(_m1,_m2);
-    }  
-
-    /// diagonal matrix
-    template<class T, class F, class L, class A>
-    inline matrix<T,F,A>    // prod( diagonal m1, m2 )
-    prod(const diagonal_matrix<T,L,A> &m1, const matrix<T,F,A> &m2 )       
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [diagonal mat, mat] to [mat, mat]\x1b[0;39m";
-        #endif
-       const matrix<T,F,A> _m1 = m1; 
-       return prod(_m1,m2);
-    }
-
-    template<class T, class F, class L, class A>
-    inline matrix<T,F,A>    // prod( m1, diagonal m2 )
-    prod(const matrix<T,F,A> &m1, const diagonal_matrix<T,L,A> &m2 )       
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [mat, diagonal mat] to [mat, mat]\x1b[0;39m";
-        #endif
-       const matrix<T,F,A> _m2 = m2; 
-       return prod(m1,_m2);
-    }
-
-    template<class T, class F, class L, class A>
-    inline matrix<T,F,A>    // prod( diagonal m1, diagonal m2 )
-    prod(const diagonal_matrix<T,L,A> &m1, const diagonal_matrix<T,L,A> &m2 )       
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [diagonal mat, diagonal mat] to [mat, mat]\x1b[0;39m";
-        #endif
-       const matrix<T,F,A> _m1 = m1; 
-       const matrix<T,F,A> _m2 = m2; 
-       return prod(_m1,_m2);
-    }    
-    
-    template<class T, class F, class L, class A>
-    inline matrix<T,F,A>    // prod( diagonal m1, transpose m2 )
-    prod(const diagonal_matrix<T,L,A> &m1, const matrix_unary2<matrix<T,F,A>,scalar_identity<T> > &m2)   
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [diagonal mat, transpose mat] to [mat, mat]\x1b[0;39m";
-        #endif
-
-       const matrix<T,F,A> _m1 = m1; 
-       const matrix<T,F,A> _m2 = m2; 
-       
-       return prod(_m1,_m2);
-       
-    }
-
-   template<class T, class F, class L, class A>
-    inline matrix<T,F,A>    // prod( transpose m1, diagonal m2 )
-    prod(const matrix_unary2<matrix<T,F,A>,scalar_identity<T> > &m1, const diagonal_matrix<T,L,A> &m2)   
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [transpose mat, diagonal mat] to [mat, mat]\x1b[0;39m";
-        #endif
-
-       const matrix<T,F,A> _m1 = m1; 
-       const matrix<T,F,A> _m2 = m2; 
-       
-       return prod(_m1,_m2);
-       
-    }
-    
-    // symmetric matrix 
-    template<class T, class F, class A, class TRI, class L>
-    inline matrix<T,F,A>    // prod( symmetric m1, m2 )
-    prod(symmetric_matrix<T, TRI, L, A> &m1, matrix<T,F,A> &m2 )   
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [symmetric mat, mat] to [mat, mat]\x1b[0;39m";
-        #endif
-          
-       assert( m1.size1() == m2.size1() );
-       const matrix<T,F,A> _m1 = m1; 
-       
-       return prod(_m1, m2 );
-    }   
-
-    template<class T, class F, class A, class TRI, class L>
-    inline matrix<T,F,A>    // prod( m1, symmetric m2 )
-    prod( matrix<T,F,A> &m1, symmetric_matrix<T, TRI, L, A> &m2 )   
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [mat, symmetric mat] to [mat, mat]\x1b[0;39m";
-        #endif
-          
-       assert( m1.size1() == m2.size1() );
-       const matrix<T,F,A> _m2 = m2; 
-       
-       return prod(m1, _m2 );
-    } 
-
-    template<class T, class F, class A, class TRI, class L>
-    inline matrix<T,F,A>    // prod( symmetric m1, symmetric m2 )
-    prod(symmetric_matrix<T, TRI, L, A> &m1, symmetric_matrix<T, TRI, L, A> &m2 )   
-    {
-        #ifdef DEBUG_LINALG 
-          std::cout << "\n... ... ... \x1b[0;33mRedirection of [symmetric mat, symmetric mat] to [mat, mat]\x1b[0;39m";
-        #endif
-          
-       assert( m1.size1() == m2.size1() );
-       const matrix<T,F,A> _m1 = m1; 
-       const matrix<T,F,A> _m2 = m2; 
-       
-       return prod(_m1, _m2 );
-    } 
-
-    
-
-     
+    }        
     
 }}}
 

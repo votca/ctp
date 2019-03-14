@@ -50,9 +50,61 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
 
     _eigenvalues.resize( _size );
     _eigenvectors.resize( _size, _size );
+    
     //convert from symmetric to matrix for faster evaluation
     ub::matrix<double> temp=S;
-    linalg_eigenvalues(temp, _eigenvalues, _eigenvectors);
+    
+
+    // TEST CASE FOR EIGEN   
+       ub::matrix<double> m(3,3);
+       /*
+       m(0,0) = -2;
+       m(0,1) = -4;
+       m(0,2) =  2;
+       m(1,0) = -2;
+       m(1,1) =  1;
+       m(1,2) =  2;
+       m(2,0) =  4;
+       m(2,1) =  2;
+       m(2,2) =  5;
+       */
+       
+       /* 4 -2 -2
+       m(0,0) =  1;
+       m(0,1) = -3;
+       m(0,2) =  3;
+       m(1,0) =  3;
+       m(1,1) = -5;
+       m(1,2) =  3;
+       m(2,0) =  6;
+       m(2,1) = -6;
+       m(2,2) =  4;
+       */
+
+       /*symmetric, -1, -1, 8
+       m(0,0) =    2;
+       m(0,1) =    1;
+       m(0,2) =    -2;
+       m(1,0) =    1;
+       m(1,1) =    0;
+       m(1,2) =    1;
+       m(2,0) =    -2;
+       m(2,1) =    1;
+       m(2,2) =    0;
+
+       
+    _eigenvalues.resize( 3 );
+    _eigenvectors.resize( 3, 3 );
+       
+    linalg::eigenvalues_symm(m, _eigenvalues, _eigenvectors);
+    
+    std::cout << "\nEigenvalues" << std::endl << _eigenvalues;
+    std::cout << "\nEigenvectors" << std::endl << _eigenvectors << std::endl;
+    exit(0);       
+    */
+
+    
+    linalg::eigenvalues_symm(temp, _eigenvalues, _eigenvectors);
     
     // compute inverse sqrt of all eigenvalues
     std::transform(_eigenvalues.begin(), _eigenvalues.end(), _eigenvalues.begin(),  _inv_sqrt );
