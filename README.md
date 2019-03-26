@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.com/votca/ctp/badges/master/pipeline.svg)](https://gitlab.com/votca/ctp/commits/master)
+
 Further information on VOTCA can be found at http://www.votca.org
 
 The development of VOTCA is mainly funded by academic research grants. If you use this package, please cite the following VOTCA papers:
