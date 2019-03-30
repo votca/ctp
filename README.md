@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/votca/ctp/branch/master/graph/badge.svg)](https://codecov.io/gh/votca/ctp)
 [![Build Status](https://travis-ci.org/votca/ctp.svg?branch=master)](https://travis-ci.org/votca/ctp)
 [![pipeline status](https://gitlab.com/votca/ctp/badges/master/pipeline.svg)](https://gitlab.com/votca/ctp/commits/master)
 
