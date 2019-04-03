@@ -29,10 +29,12 @@
 #include <votca/tools/eigen.h>
 #include <Eigen/Eigenvalues>
 
+/*
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_eigen.h>
+*/
 
 #ifdef DEBUG_LINALG
 #include <chrono>
