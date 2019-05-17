@@ -4,7 +4,7 @@ configure_file(votca_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/votca_config.h)
 
 add_library(votca_moo  ${VOTCA_SOURCES})
 set_target_properties(votca_moo PROPERTIES SOVERSION ${SOVERSION})
-target_link_libraries(votca_moo ${VOTCA_TOOLS_LIBRARIES})
+target_link_libraries(votca_moo VOTCA::votca_tools)
 
 add_custom_target(gitversion-moo COMMAND ${CMAKE_COMMAND} -DTOP_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
   -DGIT_EXECUTABLE="${GIT_EXECUTABLE}"
