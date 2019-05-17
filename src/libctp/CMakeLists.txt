@@ -13,7 +13,7 @@ list(REMOVE_ITEM VOTCA_SOURCES ${NOT_VOTCA_SOURCES})
 add_library(votca_ctp  ${VOTCA_SOURCES})
 add_dependencies(votca_ctp gitversion-ctp)
 set_target_properties(votca_ctp PROPERTIES SOVERSION ${SOVERSION})
-target_link_libraries(votca_ctp VOTCA::votca_csg ${GSL_LIBRARIES} votca_moo VOTCA::votca_tools ${Boost_LIBRARIES} )
+target_link_libraries(votca_ctp VOTCA::votca_csg ${GSL_LIBRARIES} votca_moo VOTCA::votca_tools Eigen3::Eigen ${Boost_LIBRARIES} )
 target_include_directories(votca_ctp PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
   PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>

@@ -85,6 +85,7 @@ endif()
 
 #message(STATUS "BOOST_LIBRARIES='${BOOST_LIBRARIES}'")
 
+find_package(Eigen3 3.3.0 REQUIRED)
 find_package(VOTCA_TOOLS REQUIRED NO_MODULE)
 find_package(VOTCA_CSG REQUIRED NO_MODULE)
 
