@@ -41,14 +41,14 @@ using namespace std;
 namespace ub = boost::numeric::ublas;
 
 
-namespace votca { namespace ctp {
+namespace votca { namespace ctp { namespace linalg {
 
     /**
      * \brief inverts A
      * @param A symmetric positive definite matrix
      * @param V inverse matrix
      */    
-inline void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V){
+inline void invert_symm( const ub::matrix<double> &A, ub::matrix<double> &V){
         // matrix inversion using gsl
 
     #ifdef DEBUG_LINALG
@@ -98,7 +98,7 @@ inline void linalg_invert( const ub::matrix<double> &A, ub::matrix<double> &V){
  * This function wraps gsl_eigen_symmv / DSYEV
  * 
  */
-inline void linalg_eigenvalues(const ub::matrix<double> &A, 
+inline void eigenvalues_symm(const ub::matrix<double> &A, 
                                      ub::vector<double> &E, 
                                      ub::matrix<double> &V)
 {
@@ -139,7 +139,7 @@ inline void linalg_eigenvalues(const ub::matrix<double> &A,
         
 };
 
-}}
+}}}
 
 /*
  * Since ublas has very slow prod() function, we overwrite it here 
