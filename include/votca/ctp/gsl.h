@@ -121,8 +121,12 @@ inline void eigenvalues_symm(const ub::matrix<double> &A,
 	gsl_matrix_view V_view = gsl_matrix_view_array(&V(0,0), N, N);
 	gsl_eigen_symmv_workspace *w = gsl_eigen_symmv_alloc(N);
 
+#ifdef NDEBUG
+	(void)gsl_eigen_symmv(&A_view.matrix, &E_view.vector, &V_view.matrix, w);
+#else        
 	int status = gsl_eigen_symmv(&A_view.matrix, &E_view.vector, &V_view.matrix, w);
         assert(status == 0);
+#endif
 	gsl_eigen_symmv_sort(&E_view.vector, &V_view.matrix, GSL_EIGEN_SORT_VAL_ASC);
 	gsl_eigen_symmv_free(w);
 	gsl_set_error_handler(handler);
@@ -167,10 +171,16 @@ prod(const matrix<double,F,A> &m1, const matrix<double,F,A> &m2)
        boost::numeric::ublas::matrix<double,F,A> AxB( m1.size1(), m2.size2() );
        gsl_matrix_view mC = gsl_matrix_view_array (&AxB(0,0), AxB.size1(), AxB.size2());
 
+#ifdef NDEBUG
+       (void)gsl_blas_dgemm (CblasNoTrans, CblasNoTrans,
+                  1.0, &mA.matrix, &mB.matrix,
+                  0.0, &mC.matrix);
+#else
        int status = gsl_blas_dgemm (CblasNoTrans, CblasNoTrans,
                   1.0, &mA.matrix, &mB.matrix,
                   0.0, &mC.matrix);
        assert(status == 0);
+#endif
 
     #ifdef DEBUG_LINALG
         auto end = std::chrono::system_clock::now();
