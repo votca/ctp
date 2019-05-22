@@ -85,10 +85,9 @@ endif()
 
 #message(STATUS "BOOST_LIBRARIES='${BOOST_LIBRARIES}'")
 
-find_package(VOTCA_TOOLS REQUIRED)
-include_directories(${VOTCA_TOOLS_INCLUDE_DIRS})
-find_package(VOTCA_CSG REQUIRED)
-include_directories(${VOTCA_CSG_INCLUDE_DIRS})
+find_package(Eigen3 3.3.0 REQUIRED NO_MODULE)
+find_package(VOTCA_TOOLS REQUIRED NO_MODULE)
+find_package(VOTCA_CSG REQUIRED NO_MODULE)
 
 ########################################################################
 # Basic system tests (standard libraries, headers, functions, types)   #

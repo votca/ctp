@@ -5,8 +5,6 @@ add_custom_target(gitversion-ctp COMMAND ${CMAKE_COMMAND} -DTOP_SOURCE_DIR="${CM
   -DGIT_EXECUTABLE="${GIT_EXECUTABLE}"
   -P ${CMAKE_MODULE_PATH}/gitversion.cmake)
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitversion.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 
 file(GLOB_RECURSE VOTCA_SOURCES *.cc)
 file(GLOB_RECURSE NOT_VOTCA_SOURCES version_nb.cc segmenttype.cc)
@@ -15,8 +13,13 @@ list(REMOVE_ITEM VOTCA_SOURCES ${NOT_VOTCA_SOURCES})
 add_library(votca_ctp  ${VOTCA_SOURCES})
 add_dependencies(votca_ctp gitversion-ctp)
 set_target_properties(votca_ctp PROPERTIES SOVERSION ${SOVERSION})
-target_link_libraries(votca_ctp ${VOTCA_CSG_LIBRARIES} ${GSL_LIBRARIES} votca_moo ${VOTCA_TOOLS_LIBRARIES} ${Boost_LIBRARIES} )
+target_link_libraries(votca_ctp VOTCA::votca_csg ${GSL_LIBRARIES} votca_moo VOTCA::votca_tools Eigen3::Eigen ${Boost_LIBRARIES} )
+target_include_directories(votca_ctp PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
+  PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 install(TARGETS votca_ctp LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 configure_file(libvotca_ctp.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libvotca_ctp.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libvotca_ctp.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+add_library(VOTCA::votca_ctp ALIAS votca_ctp)

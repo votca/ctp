@@ -9,7 +9,7 @@ foreach(PROG ctp_map ctp_run ctp_tools ctp_parallel ctp_dump moo_overlap kmc_run
   endif()
 
   target_link_libraries(${PROG} votca_ctp ${BOOST_LIBRARIES})
-  target_link_libraries(${PROG} votca_kmc ${VOTCA_TOOLS_LIBRARIES}  ${BOOST_LIBRARIES})
+  target_link_libraries(${PROG} votca_kmc VOTCA::votca_tools  ${BOOST_LIBRARIES})
 
   install(TARGETS ${PROG} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
