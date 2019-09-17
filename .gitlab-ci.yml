@@ -23,7 +23,7 @@ stages:
     - ccache -z
     - j="$(grep -c processor /proc/cpuinfo 2>/dev/null)" || j=0; ((j++))
     - git branch commit_of_build_${CI_BUILD_ID} ${CI_COMMIT_SHA}
-    - git clone https://github.com/votca/votca
+    - git clone -b ctp https://github.com/votca/votca
     - pushd votca
     - if [[ ${CI_COMMIT_TAG} = v[12].[0-9]* ]]; then
         git checkout -b ${CI_COMMIT_TAG} ${CI_COMMIT_TAG};
