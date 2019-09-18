@@ -20,7 +20,8 @@ add_custom_target(ctp-gitid COMMAND ${CMAKE_COMMAND}
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitid.tex)
 add_custom_command(OUTPUT gitid.tex DEPENDS ctp-gitid)
 
-foreach(prog votca_property inkscape dvipdf)
+find_package(INKSCAPE)
+foreach(prog votca_property dvipdf)
   string(TOUPPER "${prog}" PROG)
   if(TARGET ${prog})
     set(${PROG} $<TARGET_FILE:${prog}>)
