@@ -21,7 +21,7 @@ add_custom_target(ctp-gitid COMMAND ${CMAKE_COMMAND}
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitid.tex)
 add_custom_command(OUTPUT gitid.tex DEPENDS ctp-gitid)
 
-foreach(prog votca_property inkscape dvipdf)
+foreach(prog votca_property inkscape dvips ps2pdf)
   string(TOUPPER "${prog}" PROG)
   if(TARGET ${prog})
     set(${PROG} $<TARGET_FILE:${prog}>)
@@ -93,7 +93,8 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
 )
 
 add_custom_command(OUTPUT ctp-manual.pdf
-  COMMAND ${DVIPDF} ctp-manual.dvi ctp-manual.pdf
+  COMMAND ${DVIPS} ctp-manual.dvi ctp-manual.pdf
+  COMMAND ${PS2PDF} ctp-manual.ps ctp-manual.pdf
   DEPENDS ctp-manual_dvi
 )
 add_custom_target(ctp-manual_pdf ALL DEPENDS ctp-manual.pdf)
