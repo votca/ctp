@@ -93,7 +93,7 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
 )
 
 add_custom_command(OUTPUT ctp-manual.pdf
-  COMMAND ${DVIPS} ctp-manual.dvi ctp-manual.pdf
+  COMMAND ${DVIPS} ctp-manual.dvi
   COMMAND ${PS2PDF} ctp-manual.ps ctp-manual.pdf
   DEPENDS ctp-manual_dvi
 )
