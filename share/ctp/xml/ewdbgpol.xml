@@ -1,0 +1,26 @@
+2<options>
+	<ewdbgpol help="Calculates background polarisation needed for ewald calc" section="sec:ewdbgpol">
+		<multipoles help="Mapping of multipoles">system.xml</multipoles>
+		<control>
+			<mps_table>mps.tab</mps_table>
+			<pdb_check>1</pdb_check>
+		</control>
+		<coulombmethod>
+			<method>ewald</method>
+			<cutoff help="Cutoff for the real space sum" unit="eV" default="0">8.0</cutoff>
+			<shape help="Geometry" default="xyslab">xyslab</shape>
+		</coulombmethod>
+		<polarmethod>
+			<method>thole</method>
+			<induce help="Polarizable or static" default="1">1</induce>
+			<cutoff help="Polarization cutoff">0.0</cutoff>
+                        <wSOR_N>0.350</wSOR_N>
+                        <aDamp>0.390</aDamp>
+		</polarmethod>
+		<convergence>
+			<energy>1e-5</energy>
+			<kfactor default="100">100</kfactor>
+			<rfactor default="6">6.0</rfactor>
+		</convergence>
+	</ewdbgpol>
+</options>	

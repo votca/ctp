@@ -65,7 +65,7 @@ bool JobApplication::EvaluateOptions(void) {
     string jobstr = _op_vm["jobs"].as<string>();
     _generate_input = jobstr.find("write") != std::string::npos;
     _run = jobstr.find("run") != std::string::npos;
-    _import = jobstr.find("read") != std::string::npos;
+    _import = jobstr.find("import") != std::string::npos;
     
     return true;
 }

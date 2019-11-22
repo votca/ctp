@@ -18,7 +18,7 @@
  */
 
 
-#include "votca_config.h"
+#include <votca/ctp/votca_config.h>
 #include <votca/tools/version.h>
 #include <votca/csg/version.h>
 #include <iostream>

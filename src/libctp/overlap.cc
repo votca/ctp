@@ -1,5 +1,5 @@
 /*
- *            Copyright 2009-2018 The VOTCA Development Team
+ *            Copyright 2009-2019 The VOTCA-MPIP Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * author: Denis Andrienko
  */
 
 
@@ -49,9 +50,61 @@ void Overlap::SQRTOverlap(ub::symmetric_matrix<double> &S,
 
     _eigenvalues.resize( _size );
     _eigenvectors.resize( _size, _size );
-    //convert from symmatrix to matrix for faster evaluation
+    
+    //convert from symmetric to matrix for faster evaluation
     ub::matrix<double> temp=S;
-    linalg_eigenvalues(temp, _eigenvalues, _eigenvectors);
+    
+
+    // TEST CASE FOR EIGEN   
+       ub::matrix<double> m(3,3);
+       /*
+       m(0,0) = -2;
+       m(0,1) = -4;
+       m(0,2) =  2;
+       m(1,0) = -2;
+       m(1,1) =  1;
+       m(1,2) =  2;
+       m(2,0) =  4;
+       m(2,1) =  2;
+       m(2,2) =  5;
+       */
+       
+       /* 4 -2 -2
+       m(0,0) =  1;
+       m(0,1) = -3;
+       m(0,2) =  3;
+       m(1,0) =  3;
+       m(1,1) = -5;
+       m(1,2) =  3;
+       m(2,0) =  6;
+       m(2,1) = -6;
+       m(2,2) =  4;
+       */
+
+       /*symmetric, -1, -1, 8
+       m(0,0) =    2;
+       m(0,1) =    1;
+       m(0,2) =    -2;
+       m(1,0) =    1;
+       m(1,1) =    0;
+       m(1,2) =    1;
+       m(2,0) =    -2;
+       m(2,1) =    1;
+       m(2,2) =    0;
+
+       
+    _eigenvalues.resize( 3 );
+    _eigenvectors.resize( 3, 3 );
+       
+    linalg::eigenvalues_symm(m, _eigenvalues, _eigenvectors);
+    
+    std::cout << "\nEigenvalues" << std::endl << _eigenvalues;
+    std::cout << "\nEigenvectors" << std::endl << _eigenvectors << std::endl;
+    exit(0);       
+    */
+
+    
+    linalg::eigenvalues_symm(temp, _eigenvalues, _eigenvectors);
     
     // compute inverse sqrt of all eigenvalues
     std::transform(_eigenvalues.begin(), _eigenvalues.end(), _eigenvalues.begin(),  _inv_sqrt );
@@ -140,10 +193,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
         }
         
     }
-    
-    
-    
-        
+         
     // constructing the direct product orbA x orbB
     int _basisA = _orbitalsA->getBasisSetSize();
     int _basisB = _orbitalsB->getBasisSetSize();
@@ -173,16 +223,39 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
     ub::zero_matrix<double> zeroA( _levelsB, _basisA ) ;
     ub::matrix<double> _psi_AxB ( _levelsA + _levelsB, _basisA + _basisB  );
     
-
-    CTP_LOG(logDEBUG,*_pLog) << "Constructing direct product AxB [" 
+    CTP_LOG(logDEBUG,*_pLog) << "BOOST: Constructing direct product AxB [" 
             << _psi_AxB.size1() << "x" 
             << _psi_AxB.size2() << "]" << std::flush;    
+     
     
+/*
+    // TEST CASE FOR EIGEN   
+       ub::matrix<double> m1_(2,3);
+       m1_(0,0) = 1;
+       m1_(0,1) = 2;
+       m1_(0,2) = 3;
+       m1_(1,0) = 4;
+       m1_(1,1) = 5;
+       m1_(1,2) = 6;
+       //std::cout << std::endl << m1_ << std::endl ;
+
+       ub::matrix<double> m2_(3,2);
+       m2_(0,0) = 7;
+       m2_(0,1) = 8;
+       m2_(1,0) = 9;
+       m2_(1,1) = 10;
+       m2_(2,0) = 11;
+       m2_(2,1) = 12;
+       //std::cout << std::endl << m2_ << std::endl ;
+
+       ub::prod(m1_, m2_);
+ */
+       
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( _basisA, _basisA +_basisB ) ) = zeroB;
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( 0, _basisA ) ) = zeroA;    
     ub::project( _psi_AxB, ub::range (0, _levelsA ), ub::range ( 0, _basisA ) ) = *_orbitalsA->getOrbitals();
     ub::project( _psi_AxB, ub::range (_levelsA, _levelsA + _levelsB ), ub::range ( _basisA, _basisA + _basisB ) ) = *_orbitalsB->getOrbitals(); 
-
+           
     // psi_AxB * S_AB * psi_AB
     CTP_LOG(logDEBUG,*_pLog) << "Projecting dimer onto monomer orbitals" << std::flush; 
     ub::matrix<double> _orbitalsAB_Transposed = ub::trans( *_orbitalsAB->getOrbitals() );  
@@ -203,7 +276,7 @@ bool Overlap::CalculateIntegrals(Orbitals* _orbitalsA, Orbitals* _orbitalsB,
             
     }
         if (mag<0.95){
-	  throw std::runtime_error("\nERROR: Projection of monomer orbitals on dimer is insufficient, maybe the orbital order is screwed up, otherwise increase dimer basis.\n");
+	  throw std::runtime_error("\nERROR: Projection of monomer orbitals on dimer is insufficient, increase dimer basis.\n");
         }
     }
  

@@ -35,7 +35,6 @@ bool EnergyExtractor::EvaluateFrame(Topology *top) {
     
     Property state("state", "", "");
     Property &segs = state.add("segments","");
-    Property &pairs = state.add("pairs","");
     Property *next = NULL;
     
     
@@ -67,6 +66,7 @@ bool EnergyExtractor::EvaluateFrame(Topology *top) {
     
     if (tools::globals::verbose) {
         // PAIRS
+        Property &pairs = state.add("pairs","");
         QMNBList::iterator pit;
         QMNBList &nb = top->NBList();
         next = &pairs;

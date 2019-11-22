@@ -8,7 +8,6 @@ list(APPEND manual_SOURCES
     "theory/electronic_couplings.tex"
     "theory/energetic_disorder.tex"
     "theory/ewald.tex"
-    "theory/fragments.tex"
     "theory/gdma.tex"
     "theory/kmc.tex"
     "theory/lowdin.tex"

@@ -6,13 +6,10 @@
 #include <string>
 #include <votca/tools/property.h>
 
-using namespace std;
+
 using namespace votca::tools;
 
 namespace votca { namespace ctp {
-    
-
-    
     
 class Job
 {

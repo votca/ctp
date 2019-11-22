@@ -1,5 +1,5 @@
 /* 
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2019 The VOTCA-MPIP Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * author: Denis Andrienko
  */
 
 #ifndef __VOTCA_CTP_ORBITALS_H
@@ -202,24 +203,26 @@ private:
     int                                     _number_of_electrons;
     
     std::map<int, std::vector<int> >        _level_degeneracy;
-    
-    ub::vector<double>                      _mo_energies; 
-    ub::matrix<double>                      _mo_coefficients;
-
-    ub::symmetric_matrix<double>            _overlap;
-    //ub::symmetric_matrix<double>            _vxc;
-    
+        
     std::vector< QMAtom* >                  _atoms;   
 
     double                                  _qm_energy;
     double                                  _self_energy;
-    
-    ub::matrix<double>                      _mo_couplings;
-   
+       
     bool                                    _has_basis_set;
      
-    std::string                                  _qm_package;
-   
+    std::string                             _qm_package;
+
+    ub::vector<double>                      _mo_energies; 
+    ub::matrix<double>                      _mo_coefficients;
+    ub::symmetric_matrix<double>            _overlap;
+    ub::matrix<double>                      _mo_couplings;
+    
+    Eigen::VectorXd mo_energies_;
+    Eigen::MatrixXd mo_coefficients_;
+    Eigen::MatrixXd overlap_;
+    Eigen::MatrixXd mo_couplings_;
+
     
 private:
 

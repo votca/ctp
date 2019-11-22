@@ -1,5 +1,10 @@
 For more detailed information about the changes see the history of the [repository](https://github.com/votca/ctp/commits/master).
 
+## Version 1.6-dev
+* Updated manual
+* Eigen support
+* GSL dependency optional
+
 ## Version 1.5.1 (released 20.11.19)
 * fix bug on epel7
 

@@ -1,5 +1,5 @@
 /* 
- *            Copyright 2009-2012 The VOTCA Development Team
+ *            Copyright 2009-2019 The VOTCA Development Team
  *                       (http://www.votca.org)
  *
  *      Licensed under the Apache License, Version 2.0 (the "License")
@@ -28,12 +28,8 @@
 #include <votca/tools/matrix.h>
 
 
-
-
 namespace votca { namespace ctp {
 using namespace votca::tools;
-
-using namespace std;
 
 class Topology;
 class Molecule;

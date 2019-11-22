@@ -19,7 +19,6 @@
 
 
 #include <votca/ctp/qmpackagefactory.h>
-#include "votca_config.h"
 #include "qmpackages/gaussian.h"
 #include "qmpackages/turbomole.h"
 #include "qmpackages/nwchem.h"

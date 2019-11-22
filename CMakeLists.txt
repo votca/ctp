@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(votca-ctp)
 
-set(PROJECT_VERSION "1.5.1")
+set(PROJECT_VERSION "1.6-dev")
 set(PROJECT_CONTACT "bugs@votca.org")
 string(REGEX REPLACE "^[1-9]+\\.([1-9]+).*$" "\\1" SOVERSION "${PROJECT_VERSION}")
 if (NOT ${SOVERSION} MATCHES "[1-9]+")
@@ -19,7 +19,7 @@ enable_language(CXX)
 #####################################################################
 
 include(CheckCXXCompilerFlag)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND CMAKE_VERSION VERSION_LESS "3.6.0")
@@ -47,9 +47,11 @@ if(ENABLE_TESTING)
   enable_testing()
 endif(ENABLE_TESTING)
 
-#for votca_ctp_config.h
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+#this has to be the first include directive
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+#for votca_config.h
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+
 ########################################################################
 #Find external packages
 ########################################################################
@@ -57,9 +59,13 @@ if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
 endif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
 
+set(GSL ON)
+if(GSL)
+  find_package(GSL REQUIRED)
+  include_directories(${GSL_INCLUDE_DIRS})
+endif(GSL)
 
-find_package(GSL REQUIRED)
-include_directories(${GSL_INCLUDE_DIRS})
+set(DEBUG_LINALG ON)
 
 find_package(Boost 1.48.0 REQUIRED COMPONENTS program_options serialization filesystem system timer)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -79,15 +85,9 @@ endif()
 
 #message(STATUS "BOOST_LIBRARIES='${BOOST_LIBRARIES}'")
 
-find_package(VOTCA_TOOLS REQUIRED)
-include_directories(${VOTCA_TOOLS_INCLUDE_DIRS})
-find_package(VOTCA_CSG REQUIRED)
-include_directories(${VOTCA_CSG_INCLUDE_DIRS})
-
-########################################################################
-# Checks what linear algebra packages are installed                    #
-########################################################################
-
+find_package(Eigen3 3.3.0 REQUIRED NO_MODULE)
+find_package(VOTCA_TOOLS REQUIRED NO_MODULE)
+find_package(VOTCA_CSG REQUIRED NO_MODULE)
 
 ########################################################################
 # Basic system tests (standard libraries, headers, functions, types)   #

@@ -1,4 +1,5 @@
 #include <votca/tools/propertyiomanipulator.h>
+#include <votca/tools/globals.h>
 #include <votca/ctp/job.h>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp> 
@@ -128,10 +129,10 @@ void Job::ToStream(std::ofstream &ofs, string fileformat) {
         if (_has_sqlcmd)
             ofs << tab << tab << (format("<sqlcmd>%1$s</sqlcmd>\n") 
                 % _sqlcmd).str();    
-        if (_has_host)
+        if (_has_host && votca::tools::globals::verbose)
             ofs << tab << tab << (format("<host>%1$s</host>\n") 
                 % _host).str();    
-        if (_has_time)
+        if (_has_time && votca::tools::globals::verbose )
             ofs << tab << tab << (format("<time>%1$s</time>\n") 
                 % _time).str();
         if (_has_output)

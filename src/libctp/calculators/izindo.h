@@ -171,7 +171,7 @@ void IZindo::ParseOrbitalsXML(Property *opt) {
         for (segit = segs.begin(); segit != segs.end(); ++segit) {
 
             string segName = (*segit)->get("name").as<string> ();
-            string basisName = (*segit)->get("basisset").as<string> ();
+            // string basisName = (*segit)->get("basisset").as<string> ();
             string orbFile = (*segit)->get("orbitals").as<string> ();
 
             bool has_e = false;
@@ -188,7 +188,7 @@ void IZindo::ParseOrbitalsXML(Property *opt) {
                 has_h = (torbs_h.size()) ? true : false;
             }
 
-            _seg_basisName[segName] = basisName;
+            _seg_basisName[segName] = "INDO";
             _seg_orbFile[segName] = orbFile;
             _seg_has_e[segName] = has_e;
             _seg_has_h[segName] = has_h;

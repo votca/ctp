@@ -1,25 +1,94 @@
-\section{Workflow}
 \label{sec:wokflow}
 
-A typical workflow of charge transport simulations is depicted in \fig{workflow}. The first step is the simulation of an \slink{morphology}{atomistic morphology}, which is then partitioned on \slink{segments}{hopping sites}. The coordinates of the hopping sites are used to construct a list of pairs of molecules, or \slink{neighborlist}{neighbor list}. 
+\tikzstyle{decision} = [diamond, draw, fill=white]
+\tikzstyle{line} = [draw, -stealth, thick]
+\tikzstyle{block} = [draw, rectangle, fill=white, text width=0.6\linewidth]
+\tikzstyle{smallblock} = [draw, rectangle, fill=white, text width=0.4\linewidth]
+\tikzstyle{info} = [text width=0.35\linewidth]
+\tikzstyle{smallinfo} = [text width=0.25\linewidth]
+\tikzstyle{biginfo} = [text width=0.9\linewidth]
 
-\begin{figure}[h]
-   \label{fig:workflow}
-\includegraphics[width=\textwidth]{fig/workflow}
- \caption{%
-   Workflow for microscopic simulations of charge transport.  %
-}
+\begin{figure}
+\centering
+\newcommand{\vgap}{0.5cm}
+\begin{scriptsize}
+\noindent\begin{tikzpicture}
+
+\node [block] (mapping) {
+{\bf Mapping, generation of the sql database}\\
+Converts and partitions atomistic \gromacs trajectory \vskip 0.1cm
+{\noindent  \cmdmap} \\
+Useful tools: \calc{pdb2map}
+
+\vskip 0.1cm };
+
+\node[smallinfo, left=0.0 of mapping] (input) {{\bf Input files:}\\\texttt{conf.gro}\\\,\hskip 0.1cm\gromacs trajectory\\\texttt{topol.tpr}\\\hskip0.1cm\gromacs topology\\\texttt{\xmlcsg}\\\hskip0.1cm mapping and energies\\\texttt{options.xml}\\\hskip0.1cm options for \slink{sec:calculators}{calculators}\vskip 0.2cm {\bf Output files:}\\\texttt{\sqlstate}\\\hskip0.1cm \sqlite database file for\\\hskip0.1cm data transfer between\\\hskip0.1cm modules};
+
+\node [block, below=\vgap of mapping] (nbl) {{\bf Neighbor list}\\Indentifies close molecular pairs between which charge transfer rates will be calculated \vskip 0.1cm
+{\noindent \cmdnbl}
+\vskip 0.1cm};
+
+
+\node [block, below=\vgap of nbl] (site_energies) {{\bf Site energies}\\Calculates electrostatic and polarization contribution to site energies \vskip 0.1cm
+{\noindent  \cmdemlt} };
+
+\node [block, below=\vgap of site_energies] (int_energies) {{\bf Internal site and reorganization energies}\\Imports internal site energy (IP, EA) and reorganization energies for charging and discharging to \sqlstate \vskip 0.1cm
+{\noindent  \cmdeint}
+\vskip 0.1cm};
+
+
+% above right=0.7cm and 4cm of A
+\node[decision, below=\vgap of int_energies](decision1){Transfer integrals};
+
+%\node (AuxNode01) [text width=6em, below of = decision1, node distance=7em ] {};
+
+\node [smallblock, below left=\vgap of decision1] (DFT_TI) {{\bf Monomers with DFT}\\Calculate the relevant transport orbitals of monomers \vskip 0.1cm
+{ \cmdedft \job\, ''\wrt \run'' }};
+
+\node [smallblock, below=\vgap of DFT_TI] (DFT_TI2) {{\bf Transfer integrals with DFT}\\Calculate electronic coupling elements for all pairs in the neighbor list \vskip 0.1cm
+{ \cmdidft \job\, ''\wrt \run \rd'' }
+\vskip 0.1cm};
+
+\node [smallblock, below right=\vgap of decision1] (DFT_ZINDO) {{\bf Transfer integrals with ZINDO}\\Calculate electronic coupling elements for all pairs in the neighbor list  \vskip 0.1cm
+{\noindent  \cmdizindo }
+\vskip 0.1cm};
+
+
+\node[info, below=0.2cm of DFT_ZINDO] (ti_info) {{One can choose between quantum-chemical (computationally expensive) or semi-empirical (fast, but not always sufficiently accurate) evaluation of transfer integrals.}};
+
+\node (AuxNode01) [below=\vgap of DFT_TI2, xshift=0.25\linewidth] {};
+
+
+\node [block, below=\vgap of DFT_TI2, xshift=0.275\linewidth] (outer_reorg) {{\bf Outersphere reorganization energies}\\Contribution to reorganization of surrounding molecules due to polarization. (optional for Marcus rates)  \vskip 0.1cm
+{\noindent  \cmdouter}
+\vskip 0.1cm};
+
+\node [block, below=\vgap of outer_reorg] (rates) {{\bf Charge transfer rates}\\Calculates rates for charge transfer among all pairs in the neighborlist \vskip 0.1cm
+{\noindent \cmdrates}
+};
+
+\node [block, below=\vgap of rates] (kmc) {{\bf Charge dynamics via kMC}\\Hopping of charge carriers simulated via kinetic Monte Carlo \vskip 0.1cm
+{\noindent \cmdkmc }
+};
+
+\node [biginfo, below=\vgap of kmc] (calc) {{\noindent Get list of available calculators: \ctprun/\ctpparallel/\kmcrun  \texttt{ -l}}\\ Get help and list of options for a calculator: \ctprun/\ctpparallel/\kmcrun  \texttt{ -d }\calc{neighborlist}};
+
+\path [line] (mapping) -- (nbl);
+\path [line] (nbl) -- (site_energies);
+\path [line] (site_energies) -- (int_energies);
+\path [line] (int_energies) -- (decision1);
+\path [line] (DFT_TI) -- (DFT_TI2);
+\path [line] (decision1) -| node[yshift=0.5em, xshift=1em] {DFT} (DFT_TI);
+\path [line] (decision1) -| node[yshift=0.5em, xshift=-1em] {ZINDO} (DFT_ZINDO);
+\path [line] (DFT_TI2.east) -| (outer_reorg.north);
+\path [line] (DFT_ZINDO.west) -| (outer_reorg);
+\path [line] (outer_reorg) -- (rates);
+\path [line] (rates) -- (kmc);
+\end{tikzpicture}
+
+
+\end{scriptsize}
+\caption{A cheat sheet for charge and exciton transport simulations. }
+\label{fig:summary}
 \end{figure}
-
-For each pair an \slink{transfer_integrals}{electronic coupling element}, a \slink{reorganization}{reorganization energy}, a \slink{site_energies}{driving force}, and eventually the \slink{rates}{hopping rate} are evaluated. The neighbor list and hopping rates define a directed graph. The corresponding master equation is solved using the \slink{kmc}{kinetic Monte Carlo} method, which allows to explicitly monitor the charge dynamics in the system as well as to calculate time or ensemble averages of occupation probabilities, charge fluxes, correlation functions, and field-dependent mobilities.
-
-% 
-% \begin{figure}[p]
-% \includegraphics[width=\textwidth]{fig/workflow_practical/workflow_practical}
-%  \caption{%
-%    Workflow for microscopic simulations of charge transport including calls.  %
-%    \label{fig:workflow}}
-% \end{figure}
-
-
 

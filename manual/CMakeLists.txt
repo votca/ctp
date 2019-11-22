@@ -6,7 +6,6 @@ latex_get_output_path(CMAKE_BUILD_DIR)
 
 MESSAGE( STATUS "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR} ) 
 MESSAGE( STATUS "CMAKE_MODULE_PATH: " ${CMAKE_MODULE_PATH} ) 
-MESSAGE( STATUS "MANUAL_SOURCES: " ${manual_SOURCES} ) 
 MESSAGE( STATUS "OUTPUT_PATH: " ${CMAKE_BUILD_DIR} ) 
 
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.git)
@@ -21,7 +20,8 @@ add_custom_target(ctp-gitid COMMAND ${CMAKE_COMMAND}
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES gitid.tex)
 add_custom_command(OUTPUT gitid.tex DEPENDS ctp-gitid)
 
-foreach(prog votca_property inkscape dvips ps2pdf)
+find_package(INKSCAPE)
+foreach(prog votca_property dvips ps2pdf)
   string(TOUPPER "${prog}" PROG)
   if(TARGET ${prog})
     set(${PROG} $<TARGET_FILE:${prog}>)
@@ -37,6 +37,7 @@ include(theory/CMakeLists.txt)        # manual_SOURCES
 include(fig/CMakeLists.txt)           # manual_FIGURES
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fig)
 include(input/CMakeLists.txt)         # manual_XML
+MESSAGE( STATUS "MANUAL_SOURCES: " ${manual_SOURCES} )
 
 set(CTP_PROGS_FULL)
 foreach(prog ${CTP_PROGS})
@@ -54,7 +55,7 @@ endforeach()
 
 
 set(VOTCASHARE ${CMAKE_CURRENT_SOURCE_DIR}/../share)
-# generates tex refernce for all calculators 
+# generates tex reference for all calculators 
 add_custom_command(OUTPUT ${CMAKE_BUILD_DIR}/reference/calculators.tex
     COMMAND VOTCASHARE=${VOTCASHARE} VOTCA_PROPERTY=${VOTCA_PROPERTY}
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_calculators.sh
@@ -85,7 +86,7 @@ ADD_LATEX_DOCUMENT( ctp-manual.tex
             ${manual_SOURCES} 
             ${manual_PROGRAMS}
             ${manual_XML}
-    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex ${manual_FIGURES}
+    DEPENDS reference/calculators.tex reference/programs.tex  gitid.tex ${manual_FIGURES} 
     TARGET_NAME ctp-manual
     BIBFILES manual.bib
     USE_INDEX
