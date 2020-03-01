@@ -1137,7 +1137,7 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
     
     
     // calculate mobilities
-    //double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
+    double absolute_field = sqrt(_fieldX*_fieldX + _fieldY*_fieldY + _fieldZ*_fieldZ);
 
     // THIS HAS TO BE FIXED FOR THE TENSOR OUTPUT. BUG!
     
@@ -1146,17 +1146,20 @@ vector<double> KMCMultiple::RunVSSM(vector<Node*> node, double runtime, unsigned
         votca::tools::vec average_mobility = votca::tools::vec (0.0,0.0,0.0);
         votca::tools::vec fieldfactors = votca::tools::vec (0.0, 0.0, 0.0);
         
+	// use correct projection of velocity onto external field to evaluate mobility
+	// mu = <v> * F_ext / abs( F_ext )**2 where F_ext is the vector of external field
+	// and <v> is the average velocity
         if (_fieldX != 0)
         {
-            fieldfactors.setX(1.0E4/_fieldX);
+            fieldfactors.setX(1.0E4*_fieldX / (absolute_field*absolute_field) );
         }
         if (_fieldY != 0)
         {
-            fieldfactors.setY(1.0E4/_fieldY);
+            fieldfactors.setY(1.0E4*_fieldY / (absolute_field*absolute_field));
         }
         if (_fieldZ != 0)
         {
-            fieldfactors.setZ(1.0E4/_fieldZ);
+            fieldfactors.setZ(1.0E4*_fieldZ / (absolute_field*absolute_field));
         }
 
         cout << endl << "Mobilities (cm^2/Vs): " << endl;
