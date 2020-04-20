@@ -1,4 +1,0 @@
-file(GLOB VOTCA_SCRIPTS *.sh *.pl *.py)
-
-install(FILES ${VOTCA_FILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/votca/scripts/dipro)
-install(PROGRAMS ${VOTCA_SCRIPTS} DESTINATION ${CMAKE_INSTALL_DATADIR}/votca/scripts/dipro)
